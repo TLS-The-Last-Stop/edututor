@@ -3,7 +3,11 @@ package com.tls.edututor.course.course.entity;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "COURSE")
 public class Course extends BaseEntity {
