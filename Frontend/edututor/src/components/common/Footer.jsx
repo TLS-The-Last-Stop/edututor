@@ -11,9 +11,9 @@ const Footer = () => {
 
 
   return (
-    <FooterContainer>
-      <h3>푸터</h3>
-    </FooterContainer>
+      <FooterContainer>
+        <h3>푸터</h3>
+      </FooterContainer>
   );
 };
 
