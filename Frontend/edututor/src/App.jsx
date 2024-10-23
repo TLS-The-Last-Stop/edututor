@@ -1,3 +1,4 @@
+import MainLayout from './Layout/MainLayout.jsx';
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
