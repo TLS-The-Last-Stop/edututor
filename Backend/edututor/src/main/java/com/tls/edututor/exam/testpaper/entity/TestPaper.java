@@ -3,7 +3,11 @@ package com.tls.edututor.exam.testpaper.entity;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.unit.entity.Unit;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "TEST_PAPER")
 public class TestPaper extends BaseEntity {
