@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import instance from "../../api/axios";
-import '../../css/CourseCreationPage.css';
+import '../../assets/css/CourseCreationPage.css';
 
 const CourseCreationPage = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ const CourseCreationPage = () => {
       ...formData,
       sections: [
         ...formData.sections,
-        { content: '', units: [{ content: '' }] },  // 새 단원 추가
+        { content: '', units: [{ content: '' }] },
       ],
     });
   };
@@ -61,7 +61,7 @@ const CourseCreationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await instance.post('/api/course', formData);  // API 호출
+      const response = await instance.post('/api/course', formData);
       console.log('Response:', response.data);
     } catch (error) {
       console.error('Error:', error);
