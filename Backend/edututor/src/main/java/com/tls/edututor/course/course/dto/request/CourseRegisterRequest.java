@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class CourseRegisterRequest {
   private Long classroomId;
+  private String courseName;
   private Long writer;
   private List<SectionRegisterRequest> sections;
 }
