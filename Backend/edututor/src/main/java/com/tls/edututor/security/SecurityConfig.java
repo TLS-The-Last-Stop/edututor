@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class SecurityConfig {
 
   private final AuthenticationConfiguration authenticationConfiguration;
@@ -51,7 +51,9 @@ public class SecurityConfig {
             .requestMatchers("/admin").hasRole("ADMIN")
             .anyRequest().authenticated());*/
 
-    http.addFilterAt(new LoginFilter(refreshRepository, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
+    LoginFilter loginFilter = new LoginFilter(refreshRepository, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper);
+    loginFilter.setFilterProcessesUrl("/api/login");
+    http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
     http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
 
