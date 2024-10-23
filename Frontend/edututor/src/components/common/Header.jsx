@@ -3,9 +3,7 @@ import styled from 'styled-components';
 const HeaderContainer = styled.header`
     background: aquamarine;
     width: 100%;
-    z-index: 99;
     height: 120px;
-    position: fixed;
     top: 0;
 `;
 
@@ -34,23 +32,23 @@ const HeaderLogo = styled.div`
 
 const Header = () => {
   return (
-      <HeaderContainer>
-        <HeaderContent>
-          <HeaderNav>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-          </HeaderNav>
-          <HeaderLogo>
-            <h3>헤더</h3>
-          </HeaderLogo>
-        </HeaderContent>
-      </HeaderContainer>
+    <HeaderContainer>
+      <HeaderContent>
+        <HeaderNav>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+          <li>7</li>
+          <li>8</li>
+        </HeaderNav>
+        <HeaderLogo>
+          <h3>헤더</h3>
+        </HeaderLogo>
+      </HeaderContent>
+    </HeaderContainer>
   );
 };
 
