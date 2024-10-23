@@ -16,7 +16,6 @@ public class JwtUtil {
   private SecretKey secretKey;
 
   public JwtUtil(@Value("${spring.jwt.secret}") String secretKey) {
-    // secretKey를 직접 사용하는게 아닌, 이걸 이용해 SecretKey라는 객체 키를 만들어 사용한다.
     this.secretKey = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
   }
 
@@ -26,6 +25,18 @@ public class JwtUtil {
 
   public String getType(String token) {
     return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("type", String.class);
+  }
+
+  public String getUsername(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+  }
+
+  public String getEmail(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
+  }
+
+  public String getRoles(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("roles", String.class);
   }
 
   public boolean isExpired(String token) {

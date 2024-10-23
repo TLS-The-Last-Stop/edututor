@@ -1,9 +1,5 @@
 package com.tls.edututor.user.dto;
 
-import com.tls.edututor.code.CodeDetailRepository;
-import com.tls.edututor.code.codedetail.entity.CodeDetail;
-import com.tls.edututor.user.entity.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class CustomUser implements UserDetails {
 
-  private final User user;
-  private final CodeDetailRepository codeDetailRepository;
+  private final AuthUser user;
+  private final Collection<? extends GrantedAuthority> authorities;
+  private String password;
+
+  public CustomUser(AuthUser user, String password) {
+    this.user = user;
+    this.password = password;
+    this.authorities = List.of(new SimpleGrantedAuthority(user.getRole()));
+  }
 
   @Override
   public boolean isAccountNonExpired() {
@@ -39,18 +41,12 @@ public class CustomUser implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    if(user.getPhoneNum() != null && user.getBirthDay() != null) {
-      CodeDetail te = codeDetailRepository.findRoleById("TE").orElseThrow();
-      return List.of(new SimpleGrantedAuthority(te.getId()));
-    }else{
-      CodeDetail su = codeDetailRepository.findRoleById("SU").orElseThrow();
-      return List.of(new SimpleGrantedAuthority(su.getId()));
-    }
+    return authorities;
   }
 
   @Override
   public String getPassword() {
-    return user.getPassword();
+    return password;
   }
 
   @Override
@@ -61,4 +57,9 @@ public class CustomUser implements UserDetails {
   public Long getId() {
     return user.getId();
   }
+
+  public String getEmail() {
+    return user.getEmail();
+  }
+
 }

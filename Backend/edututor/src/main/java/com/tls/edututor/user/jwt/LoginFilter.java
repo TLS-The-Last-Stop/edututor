@@ -16,10 +16,12 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -60,6 +62,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     Map<String, String> claims = new HashMap<>();
     claims.put("id", id);
     claims.put("loginId", loginId);
+    claims.put("username", customUser.getUsername());
+    claims.put("email", customUser.getEmail());
+    List<String> rolls = customUser.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList());
+    claims.put("roles", String.join(",", rolls));
 
     String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L); // 1시간 => 더 줄이기
     String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L); // 24시간 => 더 줄이기
