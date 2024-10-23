@@ -1,12 +1,11 @@
 import Header from '../components/common/Header.jsx';
 import Footer from '../components/common/Footer.jsx';
-import Content from '../components/common/Content.jsx';
 
-const MainLayout = () => {
+const MainLayout = ( { children }) => {
   return (
     <>
       <Header />
-      <Content />
+      { children }
       <Footer />
     </>
   );
