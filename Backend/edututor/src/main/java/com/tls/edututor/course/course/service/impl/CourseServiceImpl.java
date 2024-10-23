@@ -3,6 +3,7 @@ package com.tls.edututor.course.course.service.impl;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.course.course.dto.request.CourseRegisterRequest;
+import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.entity.Course;
 import com.tls.edututor.course.course.repository.CourseRepository;
 import com.tls.edututor.course.course.service.CourseService;
@@ -17,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -29,11 +33,8 @@ public class CourseServiceImpl implements CourseService {
   @Override
   @Transactional
   public Course createCourseWithSectionsAndUnits(CourseRegisterRequest request) {
-    Classroom classroom = classroomRepository.findById(request.getClassroomId())
-            .orElseThrow(() -> new EntityNotFoundException("클래스룸이 없음: " + request.getClassroomId()));
 
     Course course = new Course();
-    course.setClassroom(classroom);
     course.setWriter(request.getWriter());
     Course savedCourse = courseRepository.save(course);
 
@@ -54,5 +55,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     return savedCourse;
+  }
+
+  @Override
+  public List<CourseNameListResponse> selectAllCourseList() {
+    return courseRepository.findAll().stream()
+            .map(course -> new CourseNameListResponse(course.getId(), course.getCourseName()))
+            .collect(Collectors.toList());
   }
 }

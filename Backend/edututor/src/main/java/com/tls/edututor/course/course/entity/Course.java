@@ -1,10 +1,11 @@
 package com.tls.edututor.course.course.entity;
 
-import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +16,9 @@ public class Course extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "CLASSROOM_ID", nullable = false)
-  private Classroom classroom;
+  @Column(name = "COURSE_NAME")
+  private String courseName;
+
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+  private Set<CourseClassroom> courseClassrooms;
 }
