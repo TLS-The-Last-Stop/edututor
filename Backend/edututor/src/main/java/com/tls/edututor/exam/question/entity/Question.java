@@ -1,10 +1,13 @@
 package com.tls.edututor.exam.question.entity;
 
 import com.tls.edututor.common.entity.BaseEntity;
+import com.tls.edututor.exam.option.entity.Option;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,5 +30,8 @@ public class Question extends BaseEntity {
 
   @Column(name = "COMMENTARY", columnDefinition = "TEXT")
   private String commentary;
+
+  @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Option> options;
 }
 

@@ -11,6 +11,5 @@ import java.util.List;
 public class TestPaperRegisterRequest {
   private Long unitId;
   private String title;
-  private String content;
   private List<QuestionRegisterRequest> questions;
 }

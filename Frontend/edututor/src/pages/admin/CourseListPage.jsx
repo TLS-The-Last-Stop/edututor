@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../../api/axios';  // axios 인스턴스를 가져옵니다.
+import instance from "../../api/axios";
 
 const CourseListPage = () => {
   const [courses, setCourses] = useState([]);
@@ -8,7 +8,7 @@ const CourseListPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get('/api/course');  // API 호출
+      const response = await instance.get('/api/course');
       setCourses(response.data);
       setLoading(false);
     } catch (error) {
@@ -17,7 +17,6 @@ const CourseListPage = () => {
     }
   };
 
-  // 컴포넌트가 처음 렌더링될 때 데이터를 가져옴
   useEffect(() => {
     fetchCourses();
   }, []);

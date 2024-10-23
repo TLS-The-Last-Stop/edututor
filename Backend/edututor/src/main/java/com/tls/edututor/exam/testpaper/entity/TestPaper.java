@@ -2,9 +2,12 @@ package com.tls.edututor.exam.testpaper.entity;
 
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.unit.entity.Unit;
+import com.tls.edututor.exam.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +25,7 @@ public class TestPaper extends BaseEntity {
   @Column(name = "TITLE", nullable = false)
   private String title;
 
-  @Column(name = "CONTENT")
-  private String content;
+  @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Question> questions;
+
 }

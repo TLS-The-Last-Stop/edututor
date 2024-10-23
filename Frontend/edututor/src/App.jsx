@@ -1,10 +1,11 @@
-import MainLayout from './Layout/MainLayout.jsx';
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
+import MaterialCreationPage from "./pages/admin/MaterialCreationPage.jsx";
+import TestPaperCreationPage from "./pages/admin/TestPaperCreationPage.jsx";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -51,6 +52,14 @@ function App() {
 
           <Route path="create-course" element={
             <Suspense fallback={<LoadingSpinner />}><CourseCreationPage /></Suspense>
+          } />
+
+          <Route path="create-material" element={
+            <Suspense fallback={<LoadingSpinner />}><MaterialCreationPage /></Suspense>
+          } />
+
+          <Route path="create-test-paper" element={
+            <Suspense fallback={<LoadingSpinner />}><TestPaperCreationPage /></Suspense>
           } />
         </Route>
         {/* 어드민 route 끝 */}
