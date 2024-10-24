@@ -1,4 +1,4 @@
-package com.tls.edututor.code;
+package com.tls.edututor.code.codedetail.repository;
 
 import com.tls.edututor.code.codedetail.entity.CodeDetail;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -23,4 +23,5 @@ public interface CodeDetailRepository extends JpaRepository<CodeDetail, Long> {
 
   @Query("SELECT cd FROM CodeDetail cd WHERE cd.codeGroup.id = :codeGroupId AND cd.id = :codeId")
   Optional<CodeDetail> findRoleById(@Param("codeGroupId") String codeGroupId, @Param("codeId") String codeId);
+
 }

@@ -5,11 +5,14 @@ import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.entity.Course;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CourseService {
 
-  Course createCourseWithSectionsAndUnits(CourseRegisterRequest request);
+	Course createCourseWithSectionsAndUnits(CourseRegisterRequest request);
 
-  List<CourseNameListResponse> selectAllCourseList();
+	List<CourseNameListResponse> selectAllCourseList();
 
+
+	List<Map<String, String>> getCourseDetails(String codeId);
 }

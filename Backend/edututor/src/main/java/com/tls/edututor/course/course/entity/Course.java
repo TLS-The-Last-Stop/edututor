@@ -12,13 +12,16 @@ import java.util.Set;
 @Entity
 @Table(name = "COURSE")
 public class Course extends BaseEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Column(name = "COURSE_NAME")
-  private String courseName;
+	@Column(name = "COURSE_NAME")
+	private String courseName;
 
-  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-  private Set<CourseClassroom> courseClassrooms;
+	@Column
+	private int codeGroupId;
+
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+	private Set<CourseClassroom> courseClassrooms;
 }
