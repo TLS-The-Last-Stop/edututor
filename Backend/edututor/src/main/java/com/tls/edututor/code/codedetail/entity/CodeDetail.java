@@ -26,7 +26,6 @@ public class CodeDetail extends BaseEntity {
     this.id = id;
     this.codeGroup = codeGroup;
     this.codeDetailValue = codeDetailValue;
-    //group.setWriter(10051L);
   }
 
 }
