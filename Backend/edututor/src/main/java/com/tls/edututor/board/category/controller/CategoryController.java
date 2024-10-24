@@ -17,6 +17,6 @@ public class CategoryController {
   @GetMapping("/categories")
   public CommonApiResponse<List<CategoryResult>> getCategories() {
     List<CategoryResult> list = categoryService.findAll();
-    return CommonApiResponse.createCreated("list", list);
+    return CommonApiResponse.createSuccess("list", list);
   }
 }

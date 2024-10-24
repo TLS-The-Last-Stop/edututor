@@ -17,21 +17,20 @@ import java.util.List;
 public class Category extends BaseEntity {
   @Id
   @GeneratedValue
-  @Column(name = "category_id")
+  @Column(name = "CATEGORY_ID")
   private Long id;
 
-  @Column(name = "name")
+  @Column(name = "NAME")
   private String name;
 
-  @Column(name = "depth")
+  @Column(name = "DEPTH")
   private int depth;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "parent_id")
+  @JoinColumn(name = "PARENT_ID")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private Category parent;
 
   @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
   private List<Category> children = new ArrayList<>();
-
 }
