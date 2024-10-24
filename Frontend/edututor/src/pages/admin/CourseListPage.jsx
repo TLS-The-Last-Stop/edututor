@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import instance from "../../api/axios";
+import '../../assets/css/CourseListPage.css';
 
 const CourseListPage = () => {
   const [courses, setCourses] = useState([]);
@@ -9,7 +11,7 @@ const CourseListPage = () => {
   const fetchCourses = async () => {
     try {
       const response = await instance.get('/api/course');
-      setCourses(response.data);
+      setCourses(response.data.data);
       setLoading(false);
     } catch (error) {
       setError(error);
@@ -35,7 +37,7 @@ const CourseListPage = () => {
         <ul>
           {courses.map(course => (
               <li key={course.courseId}>
-                {course.courseName} - {course.classroomName}
+                <Link to={`/admin/course-detail/${course.courseId}`}>{course.courseName}</Link>
               </li>
           ))}
         </ul>

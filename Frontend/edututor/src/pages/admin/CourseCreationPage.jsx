@@ -4,7 +4,6 @@ import '../../assets/css/CourseCreationPage.css';
 
 const CourseCreationPage = () => {
   const [formData, setFormData] = useState({
-    classroomId: '',
     courseName: '',
     sections: [
       {
@@ -72,16 +71,6 @@ const CourseCreationPage = () => {
       <div className="course-creation-container">
         <h2>과정 생성</h2>
         <form onSubmit={handleSubmit} className="course-form">
-          <div className="form-field">
-            <label>클래스룸 ID:</label>
-            <input
-                type="text"
-                name="classroomId"
-                value={formData.classroomId}
-                onChange={(e) => handleInputChange(e)}
-                className="input-field"
-            />
-          </div>
           <div className="form-field">
             <label>과정명:</label>
             <input

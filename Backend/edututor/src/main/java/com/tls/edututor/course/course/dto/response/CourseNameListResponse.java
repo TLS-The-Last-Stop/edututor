@@ -1,12 +1,17 @@
 package com.tls.edututor.course.course.dto.response;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class CourseNameListResponse {
 
-  Long CourseId;
-  String CourseName;
+  Long courseId;
+  String courseName;
 
   public CourseNameListResponse(Long courseId, String courseName) {
-    CourseId = courseId;
-    CourseName = courseName;
+    this.courseId = courseId;
+    this.courseName = courseName;
   }
 }
