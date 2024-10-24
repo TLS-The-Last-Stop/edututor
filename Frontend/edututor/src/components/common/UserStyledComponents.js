@@ -108,7 +108,7 @@ export const Button = styled.button`
     min-width: 80px;
     font-weight: 500;
 
-    ${props => props.primary ? css`
+    ${props => props.$primary ? css`
         background-color: #1890ff;
         color: white;
         border: none;
