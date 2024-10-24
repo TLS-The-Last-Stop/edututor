@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import UserJoinForm from '../../components/user/UserJoinForm.jsx';
 import SchoolSearchModal from '../../components/user/SchoolSearchModal.jsx';
+import { checkDuplicateId } from '../../api/user/user.js';
 
 
-const formData = {
+const initForm = {
   fullName         : '',
-  loginId          : '',
+  joinId           : '',
   password         : '',
   passwordCheck    : '',
   email            : '',
@@ -26,6 +27,8 @@ const initErrors = {
   birthYear    : false,
   birthMonth   : false,
   birthDay     : false,
+  joinId       : false,
+  password     : false,
   passwordMatch: false
 };
 
@@ -46,11 +49,12 @@ const initSchool = {
 };
 
 const UserJoin = () => {
-  const [form, setForm] = useState(formData);
+  const [form, setForm] = useState(initForm);
   const [selectedSchool, setSelectedSchool] = useState(initSchool);
   const [errors, setErrors] = useState(initErrors);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
+  /* input 값 변경 */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -59,10 +63,56 @@ const UserJoin = () => {
       [name]: value
     }));
 
+    if (['joinId', 'password', 'passwordCheck'].includes(name)) {
+      validateInput(name, value);
+    }
+
     if (name === 'password' || name === 'passwordCheck') {
       handlePasswordCheck(name, value);
     }
 
+  };
+
+  const validateInput = (name, value) => {
+    console.log(name, value);
+    switch (name) {
+      case 'joinId':
+        // 영문 대/소문자 + 숫자 조합 (6~20자)
+        const joinIdRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/;
+        setErrors(prev => ({
+          ...prev,
+          joinId: !joinIdRegex.test(value)
+        }));
+        break;
+      case 'password':
+        // 영문 대/소문자 + 특수문자 조합 (9-20자)
+        const passwordRegex = /^(?=.*[A-Za-z)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{9,20}$/;
+        setErrors(prev => ({
+          ...prev,
+          password: !passwordRegex.test(value)
+        }));
+
+        if (form.passwordCheck) {
+          setErrors(prev => ({
+            ...prev,
+            passwordMatch: value !== form.passwordCheck
+          }));
+        }
+        break;
+
+      case 'passwordCheck':
+        setErrors(prev => ({
+          ...prev,
+          passwordMatch: form.password !== value
+        }));
+        break;
+    }
+  };
+
+  /* 아이디 중복체크 */
+  const handleCheckDuplicatedId = async () => {
+    const result = await checkDuplicateId(form.joinId);
+    console.log('아이디 중복체크 result', result);
   };
 
   /* 이메일 처리 */
@@ -154,6 +204,7 @@ const UserJoin = () => {
     <>
       <UserJoinForm errors={errors} form={form} getInputHandler={getInputHandler}
                     handleSchoolSearch={handleSchoolSearch} selectedSchool={selectedSchool}
+                    handleCheckDuplicatedId={handleCheckDuplicatedId}
       />
       <SchoolSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)}
                          onSelectSchool={handleSelectSchool}
