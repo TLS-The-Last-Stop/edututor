@@ -18,7 +18,7 @@ public class TestPaper extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "UNIT_ID", nullable = false)
   private Unit unit;
 

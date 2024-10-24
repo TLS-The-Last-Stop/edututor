@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'; // useLocation 추가
 import axios from 'axios';
 import '../../assets/css/TestPaperCreationPage.css';
 
@@ -19,6 +20,16 @@ const TestPaperCreationPage = () => {
     ],
   });
 
+  const location = useLocation(); // 쿼리 파라미터 가져오기
+  const queryParams = new URLSearchParams(location.search);
+  const unitId = queryParams.get('unitId'); // 쿼리 파라미터에서 unitId 가져오기
+
+  useEffect(() => {
+    if (unitId) {
+      setFormData((prevData) => ({ ...prevData, unitId })); // unitId 값을 폼 데이터에 설정
+    }
+  }, [unitId]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -29,13 +40,10 @@ const TestPaperCreationPage = () => {
     const updatedFormData = { ...formData };
 
     if (optionIndex !== undefined) {
-      // 옵션 값 변경
       updatedFormData.questions[questionIndex].options[optionIndex][name] = type === 'checkbox' ? checked : value;
     } else if (questionIndex !== undefined) {
-      // 질문 값 변경
       updatedFormData.questions[questionIndex][name] = value;
     } else {
-      // 시험지 정보 변경
       updatedFormData[name] = value;
     }
 
@@ -116,6 +124,7 @@ const TestPaperCreationPage = () => {
                 onChange={(e) => handleInputChange(e)}
                 className="input-field"
                 required
+                readOnly // 쿼리 파라미터로 전달된 unitId는 수정 불가
             />
           </div>
           <div className="form-field">
