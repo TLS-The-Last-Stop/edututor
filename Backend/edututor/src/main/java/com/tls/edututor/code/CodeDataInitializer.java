@@ -29,11 +29,11 @@ public class CodeDataInitializer implements CommandLineRunner {
 
     // 공통 코드 그룹 생성
     List<CodeGroup> codeGroups = Arrays.asList(
-            createCodeGroup(1001L, "과목"),
-            createCodeGroup(1002L, "학기"),
-            createCodeGroup(1003L, "학년"),
-            createCodeGroup(1004L, "급수"),
-            createCodeGroup(1005L, "역할")
+            createCodeGroup("1001", "과목"),
+            createCodeGroup("1002", "학기"),
+            createCodeGroup("1003", "학년"),
+            createCodeGroup("1004", "급수"),
+            createCodeGroup("1005", "역할")
     );
 
     // 그룹 저장
@@ -76,7 +76,7 @@ public class CodeDataInitializer implements CommandLineRunner {
     createAndPersistCodeDetail("AD", codeGroups.get(4), "관리자");
   }
 
-  private CodeGroup createCodeGroup(long id, String name) {
+  private CodeGroup createCodeGroup(String id, String name) {
     CodeGroup codeGroup = CodeGroup.withName()
             .id(id)
             .codeGroupName(name)

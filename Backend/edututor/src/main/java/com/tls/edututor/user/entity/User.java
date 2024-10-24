@@ -2,7 +2,7 @@ package com.tls.edututor.user.entity;
 
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.common.entity.BaseEntity;
-import com.tls.edututor.user.dto.UserTERequest;
+import com.tls.edututor.user.dto.request.UserTERequest;
 import jakarta.persistence.*;
 import lombok.*;
 
