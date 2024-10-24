@@ -2,9 +2,12 @@ package com.tls.edututor.course.section.entity;
 
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.course.entity.Course;
+import com.tls.edututor.course.unit.entity.Unit;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +24,7 @@ public class Section extends BaseEntity {
 
   @Column(name = "CONTENT")
   private String content;
+
+  @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Unit> units;
 }

@@ -1,10 +1,12 @@
 package com.tls.edututor.course.course.entity;
 
 import com.tls.edututor.common.entity.BaseEntity;
+import com.tls.edututor.course.section.entity.Section;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -22,6 +24,9 @@ public class Course extends BaseEntity {
 	@Column
 	private String codeGroupId;
 
-	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-	private Set<CourseClassroom> courseClassrooms;
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+  private Set<CourseClassroom> courseClassrooms;
+
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Section> sections;
 }

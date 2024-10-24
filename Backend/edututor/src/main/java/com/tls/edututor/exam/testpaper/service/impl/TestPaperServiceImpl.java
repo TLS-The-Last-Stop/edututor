@@ -68,8 +68,7 @@ public class TestPaperServiceImpl implements TestPaperService {
 
   private TestPaperResponse mapToTestPaperResponse(TestPaper testPaper) {
     TestPaperResponse response = new TestPaperResponse();
-    response.setId(testPaper.getId());
-    response.setTitle(testPaper.getTitle());
+    response.builder().testPaperId(testPaper.getId()).title(testPaper.getTitle());
 
     List<QuestionResponse> questionResponses = testPaper.getQuestions().stream().map(question -> {
       QuestionResponse questionResponse = new QuestionResponse();

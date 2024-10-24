@@ -6,6 +6,7 @@ import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
 import MaterialCreationPage from "./pages/admin/MaterialCreationPage.jsx";
 import TestPaperCreationPage from "./pages/admin/TestPaperCreationPage.jsx";
+import CourseDetailPage from "./pages/admin/CourseDetailPage.jsx";
 import CourseRegister from "./pages/course/CourseRegister.jsx";
 
 
@@ -23,23 +24,22 @@ const MainLayout = lazy(() => import('./Layout/MainLayout.jsx'));
 const UserLogin = lazy(() => import('./pages/user/UserLogin.jsx'));
 const UserJoin = lazy(() => import('./pages/user/UserJoin.jsx'));
 const CourseCreationPage = lazy(() => import('./pages/admin/CourseCreationPage.jsx'));
-const CourseListPage = lazy(() => import('./pages/admin/CourseCreationPage.jsx'));
+const CourseListPage = lazy(() => import('./pages/admin/CourseListPage.jsx'));
 
 const LoadingSpinner = () => <Loading/>;
 
 function App() {
-    return (
-        <BrowserRouter>
-            <GlobalStyle/>
-            <Routes>
-                {/* 어드민 route 시작 */}
-                <Route path="/admin" element={
-                    <Suspense fallback={<LoadingSpinner/>}>
-                        <AdminLayout>
-                            <Outlet/>
-                        </AdminLayout>
-                    </Suspense>
-                }>
+  return (
+    <BrowserRouter>
+      <GlobalStyle />
+      <Routes>
+        <Route path="/admin" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <AdminLayout>
+              <Outlet />
+            </AdminLayout>
+          </Suspense>
+        }>
 
                     <Route index element={<AdminHome/>}/>
 
@@ -51,28 +51,31 @@ function App() {
                         <Suspense fallback={<LoadingSpinner/>}><CourseListPage/></Suspense>
                     }/>
 
-                    <Route path="create-course" element={
-                        <Suspense fallback={<LoadingSpinner/>}><CourseCreationPage/></Suspense>
-                    }/>
+          <Route path="course-detail/:courseId" element={
+            <Suspense fallback={<LoadingSpinner />}><CourseDetailPage /></Suspense>
+          } />
+
+          <Route path="create-course" element={
+            <Suspense fallback={<LoadingSpinner />}><CourseCreationPage /></Suspense>
+          } />
 
                     <Route path="create-material" element={
                         <Suspense fallback={<LoadingSpinner/>}><MaterialCreationPage/></Suspense>
                     }/>
 
-                    <Route path="create-test-paper" element={
-                        <Suspense fallback={<LoadingSpinner/>}><TestPaperCreationPage/></Suspense>
-                    }/>
-                </Route>
-                {/* 어드민 route 끝 */}
+          <Route path="create-test-paper" element={
+            <Suspense fallback={<LoadingSpinner />}><TestPaperCreationPage /></Suspense>
+          } />
+        </Route>
 
-                {/* 유저 시작 */}
-                <Route path="/" element={
-                    <Suspense fallback={<LoadingSpinner/>}>
-                        <MainLayout>
-                            <Outlet/>
-                        </MainLayout>
-                    </Suspense>
-                }>
+        {/* 유저 시작 */}
+        <Route path="/" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <MainLayout>
+              <Outlet />
+            </MainLayout>
+          </Suspense>
+        }>
 
                     <Route index element={
                         <Suspense fallback={<LoadingSpinner/>}><Home/></Suspense>
