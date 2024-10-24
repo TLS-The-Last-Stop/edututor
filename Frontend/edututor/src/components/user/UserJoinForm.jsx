@@ -12,9 +12,11 @@ import {
   FormHeader,
   FormSection,
   Input,
-  InputGroup, JoinButtonGroup,
+  InputGroup,
+  JoinButtonGroup,
   Label,
-  RadioGroup, RadioInput,
+  RadioGroup,
+  RadioInput,
   RadioLabel,
   Required,
   Select,
@@ -22,7 +24,7 @@ import {
   Title
 } from '../common/UserStyledComponents.js';
 
-const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSearch, onSubmit }) => {
+const UserJoinForm = ({ errors, form, getInputHandler, handleSchoolSearch, selectedSchool, onSubmit }) => {
 
   return (
     <Container>
@@ -41,7 +43,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                 id="fullName"
                 name="fullName"
                 value={form.fullName}
-                onChange={handleInputChange}
+                onChange={getInputHandler}
                 placeholder="이름을 입력해주세요."
               />
             </FormGroup>
@@ -55,7 +57,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                   id="loginId"
                   name="loginId"
                   value={form.loginId}
-                  onChange={handleInputChange}
+                  onChange={getInputHandler}
                   placeholder="영문 대/소문자+숫자조합 (6~20자 이내)"
                 />
                 <Button type="button">
@@ -72,8 +74,9 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                 id="password"
                 name="password"
                 value={form.password}
-                onChange={handleInputChange}
+                onChange={getInputHandler}
                 placeholder="영문 대/소문자+특수문자조합(9~20자 이내)"
+                $hasError={errors.passwordMatch}
               />
             </FormGroup>
 
@@ -83,11 +86,16 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
               </Label>
               <Input
                 id="passwordCheck"
+                name="passwordCheck"
                 value={form.passwordCheck}
+                onChange={getInputHandler}
                 placeholder="비밀번호 확인을 위해 다시 한번 입력해주세요"
+                $hasError={errors.passwordMatch}
               />
             </FormGroup>
-
+            {errors.passwordMatch && (
+              <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
+            )}
             <FormGroup>
               <Label htmlFor="email">
                 이메일<Required>*</Required>
@@ -97,7 +105,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                   id="email"
                   name="email"
                   value={form.email}
-                  onChange={handleInputChange}
+                  onChange={getInputHandler}
                   placeholder="이메일"
                 />
                 <Divider>@</Divider>
@@ -105,12 +113,12 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                   id="emailDomain"
                   name="emailDomain"
                   value={form.emailDomain || form.emailDomainSelect}
-                  onChange={handleInputChange}
+                  onChange={getInputHandler}
                 />
                 <Select
                   name="emailDomainSelect"
                   value={form.emailDomainSelect}
-                  onChange={handleInputChange}
+                  onChange={getInputHandler}
                 >
                   <option value="">직접입력</option>
                   <option value="naver.com">naver.com</option>
@@ -128,7 +136,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                 <Select
                   name="phoneFirst"
                   value={form.phoneFirst}
-                  onChange={handleInputChange}
+                  onChange={getInputHandler}
                 >
                   <option value="010">010</option>
                   <option value="011">011</option>
@@ -139,16 +147,16 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                   name="phoneMiddle"
                   maxLength="4"
                   value={form.phoneMiddle}
-                  onChange={handleInputChange}
-                  hasError={errors.phoneMiddle}
+                  onChange={getInputHandler}
+                  $hasError={errors.phoneMiddle}
                 />
                 <Divider>-</Divider>
                 <Input
                   name="phoneLast"
                   maxLength="4"
                   value={form.phoneLast}
-                  onChange={handleInputChange}
-                  hasError={errors.phoneLast}
+                  onChange={getInputHandler}
+                  $hasError={errors.phoneLast}
                 />
               </SelectGroup>
               {(errors.phoneMiddle || errors.phoneLast) && (
@@ -167,8 +175,8 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                   maxLength="4"
                   placeholder="YYYY"
                   value={form.birthYear}
-                  onChange={handleInputChange}
-                  hasError={errors.birthYear}
+                  onChange={getInputHandler}
+                  $hasError={errors.birthYear}
                 />
                 <Divider>년</Divider>
                 <DateInput
@@ -177,8 +185,8 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                   maxLength="2"
                   placeholder="MM"
                   value={form.birthMonth}
-                  onChange={handleInputChange}
-                  hasError={errors.birthMonth}
+                  onChange={getInputHandler}
+                  $hasError={errors.birthMonth}
                 />
                 <Divider>월</Divider>
                 <DateInput
@@ -187,8 +195,8 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                   maxLength="2"
                   placeholder="DD"
                   value={form.birthDay}
-                  onChange={handleInputChange}
-                  hasError={errors.birthDay}
+                  onChange={getInputHandler}
+                  $hasError={errors.birthDay}
                 />
                 <Divider>일</Divider>
               </DateGroup>
@@ -207,7 +215,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                     name="schoolType"
                     value="초등"
                     checked={form.schoolType === '초등'}
-                    onChange={handleInputChange}
+                    onChange={getInputHandler}
                   />
                   초등
                 </RadioLabel>
@@ -217,7 +225,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                     name="schoolType"
                     value="중등"
                     checked={form.schoolType === '중등'}
-                    onChange={handleInputChange}
+                    onChange={getInputHandler}
                   />
                   중등
                 </RadioLabel>
@@ -227,7 +235,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                     name="schoolType"
                     value="고등"
                     checked={form.schoolType === '고등'}
-                    onChange={handleInputChange}
+                    onChange={getInputHandler}
                   />
                   고등
                 </RadioLabel>
@@ -243,11 +251,11 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
                 <Input
                   id="schoolName"
                   name="schoolName"
-                  value={form.schoolName}
-                  placeholder="학교명을 입력해주세요"
+                  value={selectedSchool.name}
+                  placeholder="학교를 검색해주세요"
                   readOnly
                 />
-                <Button type="button" primary>
+                <Button type="button" $primary onClick={handleSchoolSearch}>
                   학교검색
                 </Button>
               </InputGroup>
@@ -259,7 +267,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
               <Input
                 id="schoolAddress"
                 name="schoolAddress"
-                value={form.schoolAddress}
+                value={selectedSchool.address}
                 readOnly
                 placeholder="학교 주소"
               />
@@ -268,7 +276,7 @@ const UserJoinForm = ({ errors, form, school, handleInputChange, handleSchoolSea
             {/* 이전/가입하기 버튼 - InputGroup 스타일 활용 */}
             <JoinButtonGroup>
               <Button type="button" style={{ width: '50%' }}>이전</Button>
-              <Button type="submit" style={{ width: '50%' }} primary>가입하기</Button>
+              <Button type="submit" style={{ width: '50%' }} $primary>가입하기</Button>
             </JoinButtonGroup>
 
           </FieldSet>
