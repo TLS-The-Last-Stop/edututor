@@ -1,8 +1,8 @@
 package com.tls.edututor.user.service;
 
-import com.tls.edututor.code.CodeDetailRepository;
-import com.tls.edututor.user.dto.AuthUser;
-import com.tls.edututor.user.dto.CustomUser;
+import com.tls.edututor.code.repository.CodeDetailRepository;
+import com.tls.edututor.user.dto.response.AuthUser;
+import com.tls.edututor.user.dto.response.CustomUser;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

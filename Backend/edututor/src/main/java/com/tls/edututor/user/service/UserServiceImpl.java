@@ -1,6 +1,6 @@
 package com.tls.edututor.user.service;
 
-import com.tls.edututor.user.dto.UserTERequest;
+import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,10 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder passwordEncoder;
 
+  public boolean checkJoinAvailable(String joinId) {
+    return userRepository.findByLoginId(joinId).isPresent();
+  }
+
   @Transactional
   public Long saveUser(UserTERequest request) {
     request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -26,4 +30,5 @@ public class UserServiceImpl implements UserService {
 
     return userRepository.save(user).getId();
   }
+
 }

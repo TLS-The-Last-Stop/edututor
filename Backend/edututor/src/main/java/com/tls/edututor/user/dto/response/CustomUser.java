@@ -1,4 +1,4 @@
-package com.tls.edututor.user.dto;
+package com.tls.edututor.user.dto.response;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

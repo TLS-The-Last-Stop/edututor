@@ -114,6 +114,8 @@ const UserJoin = () => {
   const handleCheckDuplicatedId = async () => {
     const result = await checkDuplicateId(form.joinId);
     console.log('아이디 중복체크 result', result);
+    if (result.status === 204) alert('회원가입이 가능합니다.');
+    else alert('다른 아이디를 사용해주세요.');
   };
 
   /* 이메일 처리 */

@@ -1,5 +1,6 @@
-package com.tls.edututor.user.dto;
+package com.tls.edututor.user.dto.request;
 
+import com.tls.edututor.school.dto.request.SchoolRequest;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,4 +20,6 @@ public class UserTERequest {
 
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private LocalDate birthDay;
+
+  private SchoolRequest school;
 }
