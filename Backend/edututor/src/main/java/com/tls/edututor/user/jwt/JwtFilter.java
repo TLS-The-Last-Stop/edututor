@@ -1,6 +1,6 @@
 package com.tls.edututor.user.jwt;
 
-import com.tls.edututor.user.dto.AuthUser;
+import com.tls.edututor.user.dto.response.AuthUser;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

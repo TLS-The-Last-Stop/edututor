@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import UserJoinForm from '../../components/user/UserJoinForm.jsx';
 import SchoolSearchModal from '../../components/user/SchoolSearchModal.jsx';
-import { checkDuplicateId } from '../../api/user/user.js';
+import { checkDuplicateId, join } from '../../api/user/user.js';
+import { SlCallOut } from 'react-icons/sl';
 
 
 const initForm = {
@@ -200,11 +201,33 @@ const UserJoin = () => {
 
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    /* 전송 */
+    const submitData = {
+      fullName: form.fullName,
+      loginId : form.joinId,
+      password: form.password,
+      email   : `${form.email}@${form.emailDomain || form.emailDomainSelect}`,
+      phoneNum: `${form.phoneFirst}-${form.phoneMiddle}-${form.phoneLast}`,
+      birthDay: `${form.birthYear}-${String(form.birthMonth).padStart(2, '0')}-${String(form.birthDay).padStart(2, '0')}`,
+
+      school: {
+        type      : selectedSchool.type,
+        name      : selectedSchool.name,
+        officeCode: selectedSchool.officeCode,
+        address   : selectedSchool.address
+      }
+    };
+
+    const result = await join(submitData);
+    console.log('회원가입 결과', result);
+  };
   return (
     <>
       <UserJoinForm errors={errors} form={form} getInputHandler={getInputHandler}
                     handleSchoolSearch={handleSchoolSearch} selectedSchool={selectedSchool}
-                    handleCheckDuplicatedId={handleCheckDuplicatedId}
+                    handleCheckDuplicatedId={handleCheckDuplicatedId} handleSubmit={handleSubmit}
       />
       <SchoolSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)}
                          onSelectSchool={handleSelectSchool}

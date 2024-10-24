@@ -24,7 +24,15 @@ import {
   Title
 } from '../common/UserStyledComponents.js';
 
-const UserJoinForm = ({ errors, form, getInputHandler, handleSchoolSearch, selectedSchool, onSubmit }) => {
+const UserJoinForm = ({
+                        errors,
+                        form,
+                        getInputHandler,
+                        handleSchoolSearch,
+                        selectedSchool,
+                        handleCheckDuplicatedId,
+                        handleSubmit
+                      }) => {
 
   return (
     <Container>
@@ -49,21 +57,25 @@ const UserJoinForm = ({ errors, form, getInputHandler, handleSchoolSearch, selec
             </FormGroup>
 
             <FormGroup>
-              <Label htmlFor="loginId">
+              <Label htmlFor="joinId">
                 아이디<Required>*</Required>
               </Label>
               <InputGroup>
                 <Input
-                  id="loginId"
-                  name="loginId"
-                  value={form.loginId}
+                  id="joinId"
+                  name="joinId"
+                  value={form.joinId}
                   onChange={getInputHandler}
                   placeholder="영문 대/소문자+숫자조합 (6~20자 이내)"
+                  $hasError={errors.joinId}
                 />
-                <Button type="button">
+                <Button type="button" onClick={handleCheckDuplicatedId}>
                   중복 확인
                 </Button>
               </InputGroup>
+              {errors.joinId && (
+                <ErrorText>영문 대/소문자 + 숫자조합 (6~20자 이내)</ErrorText>
+              )}
             </FormGroup>
 
             <FormGroup>
@@ -76,8 +88,11 @@ const UserJoinForm = ({ errors, form, getInputHandler, handleSchoolSearch, selec
                 value={form.password}
                 onChange={getInputHandler}
                 placeholder="영문 대/소문자+특수문자조합(9~20자 이내)"
-                $hasError={errors.passwordMatch}
+                $hasError={errors.password}
               />
+              {errors.passwordMatch && (
+                <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
+              )}
             </FormGroup>
 
             <FormGroup>
@@ -92,10 +107,10 @@ const UserJoinForm = ({ errors, form, getInputHandler, handleSchoolSearch, selec
                 placeholder="비밀번호 확인을 위해 다시 한번 입력해주세요"
                 $hasError={errors.passwordMatch}
               />
+              {errors.passwordMatch && (
+                <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
+              )}
             </FormGroup>
-            {errors.passwordMatch && (
-              <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
-            )}
             <FormGroup>
               <Label htmlFor="email">
                 이메일<Required>*</Required>
@@ -276,7 +291,7 @@ const UserJoinForm = ({ errors, form, getInputHandler, handleSchoolSearch, selec
             {/* 이전/가입하기 버튼 - InputGroup 스타일 활용 */}
             <JoinButtonGroup>
               <Button type="button" style={{ width: '50%' }}>이전</Button>
-              <Button type="submit" style={{ width: '50%' }} $primary>가입하기</Button>
+              <Button type="submit" style={{ width: '50%' }} $primary onClick={handleSubmit}>가입하기</Button>
             </JoinButtonGroup>
 
           </FieldSet>

@@ -1,7 +1,7 @@
 package com.tls.edututor.user.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tls.edututor.user.dto.CustomUser;
+import com.tls.edututor.user.dto.response.CustomUser;
 import com.tls.edututor.user.entity.Refresh;
 import com.tls.edututor.user.repository.RefreshRepository;
 import jakarta.servlet.FilterChain;
