@@ -1,5 +1,6 @@
 import {
   Button,
+  ClassroomGroup,
   Container,
   DateGroup,
   DateInput,
@@ -15,12 +16,10 @@ import {
   InputGroup,
   JoinButtonGroup,
   Label,
-  RadioGroup,
-  RadioInput,
-  RadioLabel,
   Required,
   Select,
   SelectGroup,
+  SuccessText,
   Title
 } from '../common/UserStyledComponents.js';
 
@@ -31,7 +30,11 @@ const UserJoinForm = ({
                         handleSchoolSearch,
                         selectedSchool,
                         handleCheckDuplicatedId,
-                        handleSubmit
+                        handleSubmit,
+                        isIdChecked,
+                        idCheckMessage,
+                        handleCreateClassroom,
+                        classroom
                       }) => {
 
   return (
@@ -57,24 +60,27 @@ const UserJoinForm = ({
             </FormGroup>
 
             <FormGroup>
-              <Label htmlFor="joinId">
+              <Label htmlFor="loginId">
                 아이디<Required>*</Required>
               </Label>
               <InputGroup>
                 <Input
-                  id="joinId"
-                  name="joinId"
-                  value={form.joinId}
+                  id="loginId"
+                  name="loginId"
+                  value={form.loginId}
                   onChange={getInputHandler}
                   placeholder="영문 대/소문자+숫자조합 (6~20자 이내)"
-                  $hasError={errors.joinId}
+                  $hasError={errors.loginId}
                 />
                 <Button type="button" onClick={handleCheckDuplicatedId}>
                   중복 확인
                 </Button>
               </InputGroup>
-              {errors.joinId && (
+              {errors.loginId && (
                 <ErrorText>영문 대/소문자 + 숫자조합 (6~20자 이내)</ErrorText>
+              )}
+              {idCheckMessage && (
+                <SuccessText $isSuccess={isIdChecked}>{idCheckMessage}</SuccessText>
               )}
             </FormGroup>
 
@@ -90,8 +96,8 @@ const UserJoinForm = ({
                 placeholder="영문 대/소문자+특수문자조합(9~20자 이내)"
                 $hasError={errors.password}
               />
-              {errors.passwordMatch && (
-                <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
+              {errors.password && (
+                <ErrorText>영문 대/소문자, 숫자, 특수문자(!@#$%^&*)를 모두 포함하여 9-20자로 입력해주세요.</ErrorText>
               )}
             </FormGroup>
 
@@ -108,7 +114,9 @@ const UserJoinForm = ({
                 $hasError={errors.passwordMatch}
               />
               {errors.passwordMatch && (
-                <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
+                <ErrorText>
+                  {!errors.password ? '비밀번호가 일치하지 않습니다.' : '비밀번호가 형식에 맞지 않습니다.'}
+                </ErrorText>
               )}
             </FormGroup>
             <FormGroup>
@@ -221,7 +229,7 @@ const UserJoinForm = ({
             </FormGroup>
 
             {/* 학교 유형 선택 - RadioGroup 활용 */}
-            <FormGroup>
+            {/*<FormGroup>
               <Label>학교 유형</Label>
               <RadioGroup>
                 <RadioLabel>
@@ -255,7 +263,7 @@ const UserJoinForm = ({
                   고등
                 </RadioLabel>
               </RadioGroup>
-            </FormGroup>
+            </FormGroup>*/}
 
             {/* 학교명 검색 - InputGroup 활용 */}
             <FormGroup>
@@ -286,6 +294,43 @@ const UserJoinForm = ({
                 readOnly
                 placeholder="학교 주소"
               />
+            </FormGroup>
+
+            {/* 반 정보 입력 */}
+            <FormGroup>
+              <Label>연도/학년/반<Required>*</Required></Label>
+              <ClassroomGroup>
+                {/* 연도 선택 */}
+                <Select name="year" value={classroom.year} onChange={handleCreateClassroom}>
+                  <option value="">연도</option>
+                  {Array.from({ length: new Date().getFullYear() - 1999 }, (_, i) => (
+                    <option key={2000 + i} value={2000 + i}>
+                      {2000 + i}
+                    </option>
+                  ))}
+                </Select>
+
+                {/* 학년 선택 */}
+                <Select name="grade" value={classroom.grade} onChange={handleCreateClassroom}
+                        disabled={!selectedSchool.type}>
+                  <option value="">학년</option>
+                  {selectedSchool.type && Array.from(
+                    { length: selectedSchool.type.includes('초등') ? 6 : 3 },
+                    (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1}학년
+                      </option>
+                    )
+                  )}
+                </Select>
+
+                {/* 반 이름 입력 */}
+                <Input name="classroomName" value={classroom.classroomName} onChange={handleCreateClassroom}
+                       placeholder="반 이름 입력 (최대 10자)"
+                       maxLength={10}
+                       style={{ width: '200px' }}
+                />
+              </ClassroomGroup>
             </FormGroup>
 
             {/* 이전/가입하기 버튼 - InputGroup 스타일 활용 */}
