@@ -11,14 +11,13 @@ import lombok.*;
 public class CodeGroup extends BaseEntity {
 
   @Id
-  //@GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private String id;
 
   @Column(name = "CODE_GROUP_NAME", nullable = false)
   private String codeGroupName;
 
   @Builder(builderMethodName = "withName")
-  public CodeGroup(Long id, String codeGroupName) {
+  public CodeGroup(String id, String codeGroupName) {
     this.id = id;
     this.codeGroupName = codeGroupName;
     //group.setWriter(10051L);
