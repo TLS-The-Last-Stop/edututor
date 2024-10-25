@@ -11,10 +11,12 @@ public class CustomUser implements UserDetails {
 
   private final AuthUser user;
   private final Collection<? extends GrantedAuthority> authorities;
+  private String loginId;
   private String password;
 
-  public CustomUser(AuthUser user, String password) {
+  public CustomUser(AuthUser user, String loginId, String password) {
     this.user = user;
+    this.loginId = loginId;
     this.password = password;
     this.authorities = List.of(new SimpleGrantedAuthority(user.getRole()));
   }
@@ -49,14 +51,9 @@ public class CustomUser implements UserDetails {
     return password;
   }
 
-  /**
-   * 로그인 아이디 아니고, 입력받은 이름(ex. 이수완)
-   *
-   * @return 입력시 받은 이름
-   */
   @Override
   public String getUsername() {
-    return user.getFullName();
+    return loginId;
   }
 
   public Long getId() {
@@ -67,4 +64,7 @@ public class CustomUser implements UserDetails {
     return user.getEmail();
   }
 
+  public String getFullName() {
+    return user.getFullName();
+  }
 }
