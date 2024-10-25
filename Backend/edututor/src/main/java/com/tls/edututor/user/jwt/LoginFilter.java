@@ -77,7 +77,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     response.addCookie(createCookie("access", accessToken));
     response.addCookie(createCookie("refresh", refreshToken));
     response.setContentType("application/json; charset=utf-8");
-    response.getWriter().write(objectMapper.writeValueAsString(new String(customUser.getUsername().getBytes(StandardCharsets.UTF_8))));
+    response.getWriter().write(objectMapper.writeValueAsString(customUser.getFullName()));
   }
 
   private void addRefreshEntity(String loginId, String refreshToken, long expiredMs) {

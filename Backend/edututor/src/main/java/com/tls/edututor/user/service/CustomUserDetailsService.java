@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), role);
 
-    return new CustomUser(authUser, user.getPassword());
+    return new CustomUser(authUser, user.getLoginId(), user.getPassword());
   }
 
   private String determineUserRole(User user) {

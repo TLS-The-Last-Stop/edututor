@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+axios.defaults.withCredentials = true;
 
 /**
  * 회원가입 아이디 중복체크
