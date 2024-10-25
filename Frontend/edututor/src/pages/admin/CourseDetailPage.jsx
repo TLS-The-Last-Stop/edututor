@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // useNavigate 추가
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
-import '../../assets/css/CourseDetailPage.css'; // 스타일 추가
+import '../../assets/css/CourseDetailPage.css';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 추가
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`/api/course/${courseId}`)
@@ -22,28 +22,30 @@ const CourseDetailPage = () => {
         });
   }, [courseId]);
 
-  // 학습자료 등록 페이지로 이동
   const registerMaterial = (unitId) => {
-    navigate(`/admin/create-material?unitId=${unitId}`); // unitId를 쿼리 파라미터로 전달
+    navigate(`/admin/create-material?unitId=${unitId}`);
   };
 
-  // 학습자료 보기 페이지로 이동
   const viewMaterial = (unitId) => {
-    navigate(`/admin/materials/${unitId}`); // 예: 학습자료 보기 페이지로 이동할 경로
+    navigate(`/admin/materials/${unitId}`);
   };
 
-  // 시험지 등록 페이지로 이동
   const registerTestPaper = (unitId) => {
-    navigate(`/admin/create-test-paper?unitId=${unitId}`); // unitId를 쿼리 파라미터로 전달
+    navigate(`/admin/create-test-paper?unitId=${unitId}`);
   };
 
-  // 시험지 보기 페이지로 이동
-  const viewTestPaper = (unitId) => {
-    navigate(`/admin/test-papers/${unitId}`); // 예: 시험지 보기 페이지로 이동할 경로
+  const viewTestPaper = (testPaper) => {
+    console.log('TestPaper:', testPaper);
+    if (testPaper && (testPaper.id || testPaper.testPaperId)) {
+      const testPaperId = testPaper.id || testPaper.testPaperId;
+      navigate(`/admin/test-paper-detail/${testPaperId}`);
+    } else {
+      alert('시험지 ID가 존재하지 않습니다.');
+    }
   };
 
   const goToEditPage = () => {
-    navigate(`/course/edit/${courseId}`); // 수정 페이지로 이동
+    navigate(`/course/edit/${courseId}`);
   };
 
   if (loading) return <p>로딩 중...</p>;
@@ -57,10 +59,8 @@ const CourseDetailPage = () => {
               <h2>과정 ID: {courseData.courseId}</h2>
               <h3>과정명 : {courseData.courseName || 'N/A'}</h3>
 
-              {/* 수정하기 버튼 추가 */}
               <button onClick={goToEditPage} className="edit-button">수정하기</button>
 
-              {/* 단원 및 차수 정보 */}
               {courseData.sections.length > 0 ? (
                   courseData.sections.map((section) => (
                       <div key={section.sectionId} className="section">
@@ -73,16 +73,14 @@ const CourseDetailPage = () => {
                                   <h5>차수 ID: {unit.unitId}</h5>
                                   <p>차수 명: {unit.content}</p>
 
-                                  {/* 학습자료 처리 */}
                                   {unit.materials.length > 0 ? (
                                       <button onClick={() => viewMaterial(unit.unitId)} className="view-button">학습자료 보기</button>
                                   ) : (
                                       <button onClick={() => registerMaterial(unit.unitId)} className="add-button">학습자료 등록</button>
                                   )}
 
-                                  {/* 시험지 처리 */}
                                   {unit.testPaper ? (
-                                      <button onClick={() => viewTestPaper(unit.unitId)} className="view-button">시험지 보기</button>
+                                      <button onClick={() => viewTestPaper(unit.testPaper)} className="view-button">시험지 보기</button>
                                   ) : (
                                       <button onClick={() => registerTestPaper(unit.unitId)} className="add-button">시험지 등록</button>
                                   )}

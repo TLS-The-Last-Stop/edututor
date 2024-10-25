@@ -24,12 +24,16 @@ public class MaterialServiceImpl implements MaterialService {
     Unit unit = unitRepository.findById(request.getUnitId())
             .orElseThrow(() -> new IllegalArgumentException("차수가 존재하지 않습니다.: " + request.getUnitId()));
 
-    Material material = new Material();
-    material.setUnit(unit);
-    material.setTitle(request.getTitle());
-    material.setContent(request.getContent());
-    material.setWriter(request.getWriterId());
+    Material material = buildMaterial(unit, request);
 
     return materialRepository.save(material);
+  }
+
+  private Material buildMaterial(Unit unit, MaterialRegisterRequest request) {
+    return Material.builder()
+            .unit(unit)
+            .title(request.getTitle())
+            .content(request.getContent())
+            .build();
   }
 }

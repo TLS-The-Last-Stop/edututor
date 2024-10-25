@@ -1,9 +1,9 @@
-package com.tls.edututor.code.service;
+package com.tls.edututor.code.codedetail.service;
 
 import com.tls.edututor.code.codedetail.entity.CodeDetail;
+import com.tls.edututor.code.codedetail.repository.CodeDetailRepository;
 import com.tls.edututor.code.codegroup.entity.CodeGroup;
-import com.tls.edututor.code.repository.CodeDetailRepository;
-import com.tls.edututor.code.repository.CodeGroupRepository;
+import com.tls.edututor.code.codegroup.repository.CodeGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

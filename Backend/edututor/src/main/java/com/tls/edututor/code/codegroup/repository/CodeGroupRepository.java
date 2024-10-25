@@ -1,4 +1,4 @@
-package com.tls.edututor.code.repository;
+package com.tls.edututor.code.codegroup.repository;
 
 import com.tls.edututor.code.codegroup.entity.CodeGroup;
 import org.springframework.data.jpa.repository.JpaRepository;

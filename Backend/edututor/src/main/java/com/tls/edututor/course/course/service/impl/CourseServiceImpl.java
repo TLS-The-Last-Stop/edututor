@@ -1,7 +1,7 @@
 package com.tls.edututor.course.course.service.impl;
 
 import com.tls.edututor.classroom.repository.ClassroomRepository;
-import com.tls.edututor.code.repository.CodeDetailRepository;
+import com.tls.edututor.code.codedetail.repository.CodeDetailRepository;
 import com.tls.edututor.course.course.dto.request.CourseRegisterRequest;
 import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.dto.response.CourseResponse;
@@ -40,30 +40,42 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	@Transactional
 	public Course createCourseWithSectionsAndUnits(CourseRegisterRequest request) {
-
-    Course course = new Course();
-    course.setCourseName(request.getCourseName());
-    course.setWriter(request.getWriter());
-    Course savedCourse = courseRepository.save(course);
+		Course course = buildCourse(request);
+		Course savedCourse = courseRepository.save(course);
 
 		for (SectionRegisterRequest sectionRegister : request.getSections()) {
-			Section section = new Section();
-			section.setCourse(savedCourse);
-			section.setContent(sectionRegister.getContent());
-			section.setWriter(sectionRegister.getWriter());
+			Section section = buildSection(savedCourse, sectionRegister);
 			Section savedSection = sectionRepository.save(section);
 
 			for (UnitRegisterRequest unitRegister : sectionRegister.getUnits()) {
-				Unit unit = new Unit();
-				unit.setSection(savedSection);
-				unit.setContent(unitRegister.getContent());
-				unit.setWriter(unitRegister.getWriter());
+				Unit unit = buildUnit(savedSection, unitRegister);
 				unitRepository.save(unit);
 			}
 		}
 
 		return savedCourse;
 	}
+
+	private Course buildCourse(CourseRegisterRequest request) {
+		return Course.builder()
+						.courseName(request.getCourseName())
+						.build();
+	}
+
+	private Section buildSection(Course course, SectionRegisterRequest sectionRegister) {
+		return Section.builder()
+						.course(course)
+						.content(sectionRegister.getContent())
+						.build();
+	}
+
+	private Unit buildUnit(Section section, UnitRegisterRequest unitRegister) {
+		return Unit.builder()
+						.section(section)
+						.content(unitRegister.getContent())
+						.build();
+	}
+
 
   @Override
   public List<CourseNameListResponse> selectAllCourseList() {

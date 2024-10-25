@@ -14,9 +14,9 @@ public class TestPaperController {
 
   private final TestPaperService testPaperService;
 
-  @GetMapping("/{id}")
-  public CommonApiResponse<TestPaperResponse> getTestPaperById(@PathVariable Long id) {
-    return CommonApiResponse.createCreated("시험지 조회 성공", testPaperService.getTestPaperById(id));
+  @GetMapping("/{testPaperId}")
+  public CommonApiResponse<TestPaperResponse> getTestPaperById(@PathVariable("testPaperId") Long testPaperId) {
+    return CommonApiResponse.createCreated("시험지 조회 성공", testPaperService.getTestPaperById(testPaperId));
   }
 
   @PostMapping
