@@ -4,14 +4,16 @@ import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.course.entity.Course;
 import com.tls.edututor.course.unit.entity.Unit;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "SECTION")
 public class Section extends BaseEntity {
   @Id

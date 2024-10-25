@@ -1,4 +1,4 @@
-package com.tls.edututor.code.repository;
+package com.tls.edututor.code.codedetail.repository;
 
 import com.tls.edututor.code.codedetail.entity.CodeDetail;
 import io.lettuce.core.dynamic.annotation.Param;

@@ -3,12 +3,14 @@ package com.tls.edututor.course.material.entity;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.unit.entity.Unit;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "MATERIAL")
 public class Material extends BaseEntity {
   @Id

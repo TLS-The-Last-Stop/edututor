@@ -3,8 +3,7 @@ package com.tls.edututor.course.course.entity;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.section.entity.Section;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Set;
@@ -12,6 +11,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "COURSE")
 public class Course extends BaseEntity {
 	@Id

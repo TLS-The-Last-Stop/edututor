@@ -20,13 +20,13 @@ const TestPaperCreationPage = () => {
     ],
   });
 
-  const location = useLocation(); // 쿼리 파라미터 가져오기
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const unitId = queryParams.get('unitId'); // 쿼리 파라미터에서 unitId 가져오기
+  const unitId = queryParams.get('unitId');
 
   useEffect(() => {
     if (unitId) {
-      setFormData((prevData) => ({ ...prevData, unitId })); // unitId 값을 폼 데이터에 설정
+      setFormData((prevData) => ({ ...prevData, unitId }));
     }
   }, [unitId]);
 
@@ -34,7 +34,6 @@ const TestPaperCreationPage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // 입력값 변경 핸들러
   const handleInputChange = (e, questionIndex, optionIndex) => {
     const { name, value, type, checked } = e.target;
     const updatedFormData = { ...formData };
@@ -50,7 +49,6 @@ const TestPaperCreationPage = () => {
     setFormData(updatedFormData);
   };
 
-  // 문제 추가 핸들러
   const addQuestion = () => {
     setFormData({
       ...formData,
@@ -69,14 +67,12 @@ const TestPaperCreationPage = () => {
     });
   };
 
-  // 옵션 추가 핸들러
   const addOption = (questionIndex) => {
     const updatedQuestions = [...formData.questions];
     updatedQuestions[questionIndex].options.push({ content: '', isCorrect: false });
     setFormData({ ...formData, questions: updatedQuestions });
   };
 
-  // 폼 제출 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -84,7 +80,6 @@ const TestPaperCreationPage = () => {
     setErrorMessage('');
 
     try {
-      // POST 요청을 통해 시험지 데이터 전송
       const response = await axios.post('http://localhost:8080/api/test-paper', formData);
       setSuccessMessage('시험지가 성공적으로 등록되었습니다!');
       setFormData({
@@ -124,7 +119,7 @@ const TestPaperCreationPage = () => {
                 onChange={(e) => handleInputChange(e)}
                 className="input-field"
                 required
-                readOnly // 쿼리 파라미터로 전달된 unitId는 수정 불가
+                readOnly
             />
           </div>
           <div className="form-field">
@@ -149,7 +144,6 @@ const TestPaperCreationPage = () => {
             />
           </div>
 
-          {/* 질문 추가 */}
           {formData.questions.map((question, questionIndex) => (
               <div key={questionIndex} className="question-block">
                 <h4>질문 {questionIndex + 1}</h4>
@@ -175,7 +169,6 @@ const TestPaperCreationPage = () => {
                   />
                 </div>
 
-                {/* 옵션 추가 */}
                 {question.options.map((option, optionIndex) => (
                     <div key={optionIndex} className="option-block">
                       <h5>옵션 {optionIndex + 1}</h5>

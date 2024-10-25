@@ -34,11 +34,9 @@ public class CourseController {
     return CommonApiResponse.createSuccess("조회성공", courseService.selectCourseDetails(courseId));
   }
 
-  @GetMapping("/{codeId}")
+  @GetMapping("/code/{codeId}")
   public CommonApiResponse<List<Map<String, String>>> getCourseDetails(@PathVariable String codeId) {
-    System.out.println("codeId@@@@@@@@@@@@ = " + codeId);
     List<Map<String, String>> courseDetails = courseService.getCourseDetails(codeId);
-    System.out.println("courseDetails = " + courseDetails.get(0));
-    return CommonApiResponse.createCreated("courseDetails", courseDetails);
+    return CommonApiResponse.createCreated("공통 코드 조회 성공", courseDetails);
   }
 }
