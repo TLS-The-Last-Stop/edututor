@@ -10,8 +10,4 @@ public class CourseNameListResponse {
   Long courseId;
   String courseName;
 
-  public CourseNameListResponse(Long courseId, String courseName) {
-    this.courseId = courseId;
-    this.courseName = courseName;
-  }
 }

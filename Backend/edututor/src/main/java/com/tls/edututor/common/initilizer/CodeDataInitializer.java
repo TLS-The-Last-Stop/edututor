@@ -1,4 +1,4 @@
-package com.tls.edututor.code;
+package com.tls.edututor.common.initilizer;
 
 import com.tls.edututor.code.codedetail.entity.CodeDetail;
 import com.tls.edututor.code.codegroup.entity.CodeGroup;

@@ -25,4 +25,10 @@ public class GlobalExceptionHandler {
   public CommonApiResponse<Void> handleBadRequestException(IllegalArgumentException ex) {
     return CommonApiResponse.createBadRequest("(┬┬﹏┬┬) 서버에서 뭔가 잘못됨 ㅅㄱ    " + ex.getMessage());
   }
+
+  @ExceptionHandler(DuplicateUserException.class)
+  public CommonApiResponse<Void> handleDuplicateUserException(DuplicateUserException ex) {
+    return CommonApiResponse.createBadRequest("왓더쀀 ㅠㅠ 이미 가입했어용!" + ex.getMessage());
+  }
+
 }

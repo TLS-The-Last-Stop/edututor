@@ -9,6 +9,7 @@ import TestPaperCreationPage from './pages/admin/TestPaperCreationPage.jsx';
 import CourseDetailPage from './pages/admin/CourseDetailPage.jsx';
 import CourseRegister from './pages/course/CourseRegister.jsx';
 import Board from './pages/board/Board.jsx';
+import TestPaperDetailPage from "./pages/admin/TestPaperDetailPage.jsx";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -55,7 +56,9 @@ function App() {
           <Route path="course-detail/:courseId" element={
             <Suspense fallback={<LoadingSpinner />}><CourseDetailPage /></Suspense>
           } />
-
+          <Route path="test-paper-detail/:testPaperId" element={
+            <Suspense fallback={<LoadingSpinner />}><TestPaperDetailPage /></Suspense>
+          } />
           <Route path="create-course" element={
             <Suspense fallback={<LoadingSpinner />}><CourseCreationPage /></Suspense>
           } />
@@ -69,7 +72,6 @@ function App() {
           } />
         </Route>
 
-        {/* 유저 시작 */}
         <Route path="/" element={
           <Suspense fallback={<LoadingSpinner />}>
             <MainLayout>
@@ -96,7 +98,6 @@ function App() {
         } />
 
         <Route path="courseregister" element={<CourseRegister />}></Route>
-        {/* 유저 끝 */}
       </Routes>
     </BrowserRouter>
   );

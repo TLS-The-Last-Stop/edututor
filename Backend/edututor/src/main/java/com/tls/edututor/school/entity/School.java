@@ -30,7 +30,13 @@ public class School {
 
   @Builder(builderMethodName = "withDto")
   public School(SchoolRequest request) {
-    type = request.getType();
+    type = switch (request.getType()) {
+      case "초등학교" -> "EL";
+      case "중학교" -> "MI";
+      case "고등학교" -> "HI";
+      default -> throw new IllegalStateException("Unexpected school type value: " + type);
+    };
+
     name = request.getName();
     officeCode = request.getOfficeCode();
     address = request.getAddress();

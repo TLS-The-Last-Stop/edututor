@@ -1,5 +1,6 @@
 package com.tls.edututor.user.dto.request;
 
+import com.tls.edututor.classroom.dto.request.ClassroomRequest;
 import com.tls.edututor.school.dto.request.SchoolRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,4 +23,5 @@ public class UserTERequest {
   private LocalDate birthDay;
 
   private SchoolRequest school;
+  private ClassroomRequest classroom;
 }

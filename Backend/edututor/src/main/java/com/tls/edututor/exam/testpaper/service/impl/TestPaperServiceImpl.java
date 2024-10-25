@@ -68,7 +68,8 @@ public class TestPaperServiceImpl implements TestPaperService {
 
   private TestPaperResponse mapToTestPaperResponse(TestPaper testPaper) {
     TestPaperResponse response = new TestPaperResponse();
-    response.builder().testPaperId(testPaper.getId()).title(testPaper.getTitle());
+    response.setTestPaperId(testPaper.getId());
+    response.setTitle(testPaper.getTitle());
 
     List<QuestionResponse> questionResponses = testPaper.getQuestions().stream().map(question -> {
       QuestionResponse questionResponse = new QuestionResponse();
@@ -91,5 +92,6 @@ public class TestPaperServiceImpl implements TestPaperService {
     response.setQuestions(questionResponses);
     return response;
   }
+
 }
 

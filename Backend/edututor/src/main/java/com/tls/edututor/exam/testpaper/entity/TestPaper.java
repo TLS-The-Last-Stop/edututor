@@ -25,7 +25,7 @@ public class TestPaper extends BaseEntity {
   @Column(name = "TITLE", nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Question> questions;
 
 }

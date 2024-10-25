@@ -4,7 +4,7 @@ import instance from "../../api/axios";
 import '../../assets/css/CourseCreationPage.css';
 
 const CourseEditPage = () => {
-  const { courseId } = useParams(); // URL에서 courseId를 가져옴
+  const { courseId } = useParams();
   const [formData, setFormData] = useState({
     courseName: '',
     sections: [
@@ -19,7 +19,6 @@ const CourseEditPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 기존 데이터를 불러오기
     const fetchCourseData = async () => {
       try {
         const response = await instance.get(`/api/course/${courseId}`);
@@ -85,7 +84,7 @@ const CourseEditPage = () => {
       const response = await instance.put(`/api/course/${courseId}`, formData);
       console.log('Response:', response.data);
       alert('과정이 성공적으로 수정되었습니다.');
-      navigate(`/course/${courseId}`); // 수정 후 상세 페이지로 이동
+      navigate(`/course/${courseId}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error);
     }
@@ -95,7 +94,7 @@ const CourseEditPage = () => {
     try {
       await instance.delete(`/api/course/${courseId}`);
       alert('과정이 성공적으로 삭제되었습니다.');
-      navigate('/courses'); // 삭제 후 과정 리스트 페이지로 이동
+      navigate('/courses');
     } catch (error) {
       console.error('삭제 중 오류 발생:', error);
     }

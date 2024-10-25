@@ -13,7 +13,7 @@ const fullWidthInputStyles = css`
 const inputStyles = css`
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid ${props => props.hasError ? '#ff4d4f' : '#d9d9d9'};
+    border: 1px solid ${props => props.$hasError ? '#ff4d4f' : '#d9d9d9'};
     border-radius: 4px;
     font-size: 0.875rem;
     height: 42px;
@@ -22,8 +22,8 @@ const inputStyles = css`
 
     &:focus {
         outline: none;
-        border-color: ${props => props.hasError ? '#ff4d4f' : '#40a9ff'};
-        box-shadow: 0 0 0 2px ${props => props.hasError ?
+        border-color: ${props => props.$hasError ? '#ff4d4f' : '#40a9ff'};
+        box-shadow: 0 0 0 2px ${props => props.$hasError ?
                 'rgba(255, 77, 79, 0.2)' :
                 'rgba(24, 144, 255, 0.2)'};
     }
@@ -275,5 +275,26 @@ export const JoinButtonGroup = styled.div`
     ${Button} {
         flex: 1; // 버튼이 공간을 균등하게 나눠 가짐
         width: auto; // width: 50% 대신 flex: 1 사용
+    }
+`;
+
+export const SuccessText = styled.div`
+    margin-top: 4px;
+    font-size: 0.875rem;
+    color: ${props => props.$isSuccess ? '#2196F3' : '#f44336'};
+`;
+
+export const ClassroomGroup = styled.div`
+    display: flex;
+    gap: 8px;
+    width: 100%;
+
+    select {
+        flex: 2;
+        max-width: 100px;
+    }
+
+    input {
+        flex: 3;
     }
 `;
