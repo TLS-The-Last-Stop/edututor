@@ -21,20 +21,21 @@ public class BoardController {
   public CommonApiResponse<List<BoardResponse>> getBoardsByCategory(
           @PathVariable Long categoryId,
           @RequestParam(required = false, defaultValue = "false") boolean includeChildren) {
-      List<BoardResponse> boards = includeChildren ?
-              boardService.getBoardsByCategoryWithChildren(categoryId) :
-              boardService.getBoardsByCategory(categoryId);
-      return CommonApiResponse.createSuccess("board", boards);
+    log.info("카테고리ID: {}, 하위카테고리포함: {}", categoryId, includeChildren);
+    List<BoardResponse> boards = includeChildren ?
+            boardService.getBoardsByCategoryWithChildren(categoryId) :
+            boardService.getBoardsByCategory(categoryId);
+    return CommonApiResponse.createSuccess("board", boards);
   }
 
   @PostMapping("/inquiry/create")
-  public CommonApiResponse<Void> createBoard(@RequestBody BoardRequest request){
+  public CommonApiResponse<Void> createBoard(@RequestBody BoardRequest request) {
     boardService.saveInquiry(request);
     return CommonApiResponse.createSuccessWithNoContent("게시판 등록 성공!");
   }
 
   @DeleteMapping("/inquiry/delete/{boardId}")
-  public CommonApiResponse<Void> deleteBoard(@PathVariable Long boardId){
+  public CommonApiResponse<Void> deleteBoard(@PathVariable Long boardId) {
     boardService.deleteInquiry(boardId);
     return CommonApiResponse.createSuccessWithNoContent("게시판 삭제 성공!");
   }

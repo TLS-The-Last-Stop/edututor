@@ -1,79 +1,75 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BoardList from '../../components/board/BoardList';
+import { getBoardsByCategory } from '../../api/board/board.js';
 import '../../assets/css/BoardPage.css';
 
 const Board = () => {
   const [selectedMainMenu, setSelectedMainMenu] = useState('자주묻는질문');
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [openFaqId, setOpenFaqId] = useState(null);
+  const [boardData, setBoardData] = useState(false);
+
+  const menuCategoryMap = {
+    '공지사항': 1,
+    '자주묻는질문': 2,
+    '1:1 문의': 3
+  };
+
+  // FAQ 카테고리와 ID 매핑
+  const faqCategoryMap = {
+    '전체': 2,
+    '클래스 운영': 4,
+    '서비스 이용': 5
+  };
 
   const mainMenus = ['공지사항', '자주묻는질문', '1:1 문의'];
   const faqCategories = ['전체', '클래스 운영', '서비스 이용'];
 
-  const contentList = {
-    '공지사항': [
-      {
-        id: 1,
-        title: '[공지] 서비스 이용 안내',
-        content: '서비스 이용 안내 내용...'
-      },
-      {
-        id: 2,
-        title: '[업데이트] 새로운 기능 안내',
-        content: '업데이트 내용...'
-      }
-    ],
-    '자주묻는질문': [
-      {
-        id: 1,
-        category: '클래스 운영',
-        title: '[클래스 운영] 학생 계정은 어떻게 생성하나요?',
-        content: '학생 계정 생성 방법에 대한 답변...'
-      },
-      {
-        id: 2,
-        category: '서비스 이용',
-        title: '[서비스 이용] 코스웨이는 어떤 기준으로 설정되어 있나요?',
-        content: '지니어튜터의 코스웨이는 크게 2가지 기준으로 나뉩니다.'
-      }
-    ],
-    '1:1 문의': [
-      {
-        id: 1,
-        title: '[문의] 비밀번호를 잊어버렸어요',
-        content: '비밀번호 재설정 방법 안내...'
-      },
-      {
-        id: 2,
-        title: '[문의] 결제 관련 문의드립니다',
-        content: '결제 관련 답변...'
-      }
-    ]
-  };
+  // 게시글 데이터 조회
+  const fetchBoardData = async (categoryId, includeChildren = false) => {
+    console.log('요청 시작:', categoryId, includeChildren);
+    const response = await getBoardsByCategory(categoryId, includeChildren);
 
-  // FAQ 목록 필터링
-  const getFilteredFaqList = () => {
-    const currentList = contentList[selectedMainMenu];
-    if (selectedMainMenu !== '자주묻는질문' || selectedCategory === '전체') {
-      return currentList;
+    if (response && response.data) {
+      setBoardData(response.data);
+    } else {
+      setBoardData([]);
     }
-    return currentList.filter(item => item.category === selectedCategory);
   };
 
-  const handleMainMenuClick = (menu) => {
+  // 메인 메뉴 클릭 핸들러
+  const handleMainMenuClick = async (menu) => {
     setSelectedMainMenu(menu);
     setSelectedCategory('전체');
     setOpenFaqId(null);
+
+    const categoryId = menuCategoryMap[menu];
+    console.log('선택된 메뉴:', menu, '카테고리ID:', categoryId);
+
+    const includeChildren = menu === '자주묻는질문';
+    await fetchBoardData(categoryId, includeChildren);
   };
 
-  const handleCategoryClick = (category) => {
+  // FAQ 카테고리 클릭 핸들러
+  const handleCategoryClick = async (category) => {
     setSelectedCategory(category);
     setOpenFaqId(null);
+
+    const categoryId = faqCategoryMap[category];
+    if (category === '전체') {
+      await fetchBoardData(menuCategoryMap['자주묻는질문'], true);
+    } else {
+      await fetchBoardData(categoryId);
+    }
   };
 
   const handleFaqClick = (faqId) => {
     setOpenFaqId(openFaqId === faqId ? null : faqId);
   };
+
+  useEffect(() => {
+    handleMainMenuClick(selectedMainMenu);
+  }, []);
 
   return (
     <div className="board-container">
@@ -126,10 +122,10 @@ const Board = () => {
 
       {/* 컨텐츠 목록 */}
       <BoardList
-        faqList={getFilteredFaqList()}
+        faqList={boardData}
         openFaqId={openFaqId}
         onFaqClick={handleFaqClick}
-        showCategories={false}
+        showCategories={selectedMainMenu === '자주묻는질문'}
       />
     </div>
   );
