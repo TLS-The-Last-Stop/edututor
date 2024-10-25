@@ -174,7 +174,6 @@ const UserJoin = () => {
 
   /* 숫자만 입력 가능한 필드 처리 */
   const handleNumberInput = (e) => {
-    console.log('이게 안되는구나');
     const { name, value } = e.target;
     const hasNonNumber = /[^0-9]/.test(value);
     const numberOnly = value.replace(/[^0-9]/g, '');

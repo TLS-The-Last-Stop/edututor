@@ -172,6 +172,7 @@ const UserJoinForm = ({
                   value={form.phoneMiddle}
                   onChange={getInputHandler}
                   $hasError={errors.phoneMiddle}
+                  $isFilled={form.phoneMiddle.length === 4}
                 />
                 <Divider>-</Divider>
                 <Input
@@ -180,6 +181,7 @@ const UserJoinForm = ({
                   value={form.phoneLast}
                   onChange={getInputHandler}
                   $hasError={errors.phoneLast}
+                  $isFilled={form.phoneLast.length === 4}
                 />
               </SelectGroup>
               {(errors.phoneMiddle || errors.phoneLast) && (
@@ -200,6 +202,7 @@ const UserJoinForm = ({
                   value={form.birthYear}
                   onChange={getInputHandler}
                   $hasError={errors.birthYear}
+                  $isFilled={form.birthYear.length === 4}
                 />
                 <Divider>년</Divider>
                 <DateInput
@@ -210,6 +213,7 @@ const UserJoinForm = ({
                   value={form.birthMonth}
                   onChange={getInputHandler}
                   $hasError={errors.birthMonth}
+                  $isFilled={form.birthMonth.length === 2}
                 />
                 <Divider>월</Divider>
                 <DateInput
@@ -220,6 +224,7 @@ const UserJoinForm = ({
                   value={form.birthDay}
                   onChange={getInputHandler}
                   $hasError={errors.birthDay}
+                  $isFilled={form.birthDay.length === 2}
                 />
                 <Divider>일</Divider>
               </DateGroup>
