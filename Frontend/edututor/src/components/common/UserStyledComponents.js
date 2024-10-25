@@ -116,25 +116,42 @@ export const Button = styled.button`
     min-width: 80px;
     font-weight: 500;
 
-    ${props => props.$primary ? css`
-        background-color: #1890ff;
-        color: white;
-        border: none;
+    ${props => {
+        if (props.$primary) {
+            return css`
+                background-color: #1890ff;
+                color: white;
+                border: none;
 
-        &:hover {
-            background-color: #40a9ff;
-        }
-    ` : css`
-        background-color: #f5f5f5;
-        color: #333;
-        border: 1px solid #d9d9d9;
+                &:hover {
+                    background-color: #40a9ff;
+                }
+            `;
+        } else if (props.$karina) {
+            return css`
+                background-color: white;
+                color: #1890ff;
+                border: 1px solid #1890ff;
 
-        &:hover {
-            background-color: #e8e8e8;
+                &:hover {
+                    background-color: white;
+                    color: #40a9ff;
+                    border-color: #40a9ff;
+                }
+            `;
+        } else {
+            return css`
+                background-color: #f5f5f5;
+                color: #333;
+                border: 1px solid #d9d9d9;
+
+                &:hover {
+                    background-color: #e8e8e8;
+                }
+            `;
         }
-    `}
+    }}
 `;
-
 export const Input = styled.input`
     ${inputStyles}
     width: 100%; // 부모 컨테이너의 전체 너비 사용
@@ -286,6 +303,93 @@ export const JoinButtonGroup = styled.div`
     }
 `;
 
+
+/* 로그인 구분 화면 */
+export const LoginTypeContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+
+    &::before {
+        content: '로그인 유형을 선택해주세요';
+        position: absolute;
+        top: -3rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.125rem;
+        color: #333;
+        white-space: nowrap;
+    }
+`;
+
+
+export const LoginTypeBox = styled.div`
+    position: relative;
+    width: 200px;
+    padding: 2rem;
+    border: 2px solid ${props => props.$active ? '#1890ff' : '#e1e1e1'};
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 200px; /* 높이 고정으로 버튼 위치 통일 */
+
+    &:hover {
+        border-color: #1890ff;
+    }
+
+    ${props => props.$active && css`
+        &::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            right: 100px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #1890ff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+            background-size: 16px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    `}
+    .image-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: auto;
+    }
+
+    img {
+        margin-bottom: 1rem;
+    }
+
+    .image-container::after {
+        content: ${props => props.$type === 'teacher' ? '"선생님"' : '"학생"'};
+        display: block;
+        font-size: 1.125rem;
+        font-weight: 500;
+        margin-top: 1rem;
+        color: #333;
+    }
+
+    /* 버튼 컨테이너 */
+
+    .button-container {
+        width: 100%;
+        margin-top: 1rem;
+    }
+`;
+
+/* 로그인 화면 */
 export const SuccessText = styled.div`
     margin-top: 4px;
     font-size: 0.875rem;
@@ -453,3 +557,4 @@ export const LogoText = styled.span`
     font-size: 0.875rem;
     font-weight: 500;
 `;
+
