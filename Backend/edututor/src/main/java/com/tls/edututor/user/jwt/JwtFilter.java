@@ -34,10 +34,16 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
 
+
     try {
       for (Cookie cookie : cookies) {
         if (cookie.getName().startsWith("access"))
           accessToken = cookie.getValue();
+      }
+      
+      if (accessToken.isBlank()) {
+        filterChain.doFilter(request, response);
+        return;
       }
 
       jwtUtil.isExpired(accessToken);

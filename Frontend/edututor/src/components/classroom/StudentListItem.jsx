@@ -34,7 +34,7 @@ const DeleteButton = styled.button`
     background: transparent;
     font-size: 1rem; // 폰트 크기 증가
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.5s;
 
     &:hover {
         background-color: #FEF2F2;

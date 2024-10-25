@@ -72,7 +72,8 @@ const UserJoinForm = ({
                   placeholder="영문 대/소문자+숫자조합 (6~20자 이내)"
                   $hasError={errors.loginId}
                 />
-                <Button type="button" onClick={handleCheckDuplicatedId}>
+                <Button type="button" onClick={handleCheckDuplicatedId}
+                        disabled={!form.loginId || form.loginId.length < 6 || errors.loginId}>
                   중복 확인
                 </Button>
               </InputGroup>
