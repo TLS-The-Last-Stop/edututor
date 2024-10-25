@@ -5,18 +5,18 @@ import {
   FormGroup,
   FormHeader,
   FormSection, Input,
-  Label,
+  Label, SubTitle,
   Title
-} from '../common/UserStyledComponents.js';
+} from '../../components/common/UserStyledComponents.js';
 
-const StudentLoginForm = () => {
+const StudentLogin = () => {
   return (
     <>
       <Container>
         <FormSection>
           <FormHeader>
             <Title>로그인</Title>
-            선생님이 만들어준 계정으로 로그인하기
+            <SubTitle>선생님이 만들어준 계정으로 로그인하기</SubTitle>
           </FormHeader>
 
 
@@ -43,4 +43,4 @@ const StudentLoginForm = () => {
   );
 };
 
-export default StudentLoginForm;
+export default StudentLogin;

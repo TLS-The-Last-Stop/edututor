@@ -8,6 +8,7 @@ import {
 import teacher from '../../assets/icon/teacher.png';
 import student from '../../assets/icon/student.png';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const LoginType = () => {
   const [selectedType, setSelectedType] = useState('teacher');
@@ -26,7 +27,7 @@ const LoginType = () => {
                 <img src={teacher} alt="선생님 이미지" />
               </div>
               <div className="button-container">
-                <Button $primary>로그인</Button>
+                <Link to="/teacher-login"><Button $primary>로그인</Button></Link>
               </div>
             </LoginTypeBox>
 
@@ -39,7 +40,7 @@ const LoginType = () => {
                 <img src={student} alt="학생 이미지" />
               </div>
               <div className="button-container">
-                <Button $karina>로그인</Button>
+                <Link to="/student-login"><Button $karina>로그인</Button></Link>
               </div>
             </LoginTypeBox>
           </LoginTypeContainer>

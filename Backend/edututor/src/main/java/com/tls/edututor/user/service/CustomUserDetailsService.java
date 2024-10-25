@@ -6,6 +6,7 @@ import com.tls.edututor.user.dto.response.CustomUser;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-    User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException("User not found with loginId: " + loginId));
+    User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
     String role = determineUserRole(user);
 

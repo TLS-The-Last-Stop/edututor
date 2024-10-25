@@ -35,10 +35,6 @@ public class UserServiceImpl implements UserService {
 
     request.setPassword(passwordEncoder.encode(request.getPassword()));
 
-    User user = User.withDto()
-            .dto(request)
-            .build();
-
     School school = School.withDto()
             .request(request.getSchool())
             .build();
@@ -46,6 +42,11 @@ public class UserServiceImpl implements UserService {
     Classroom classroom = Classroom.withDto()
             .request(request.getClassroom())
             .type(school.getType())
+            .build();
+
+    User user = User.withDto()
+            .dto(request)
+            .classroom(classroom)
             .build();
 
     schoolRepository.save(school);

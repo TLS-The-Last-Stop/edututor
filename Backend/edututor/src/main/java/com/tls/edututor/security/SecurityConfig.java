@@ -51,9 +51,7 @@ public class SecurityConfig {
             .requestMatchers("/admin").hasRole("ADMIN")
             .anyRequest().authenticated());*/
 
-    LoginFilter loginFilter = new LoginFilter(refreshRepository, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper);
-    loginFilter.setFilterProcessesUrl("/api/login");
-    http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterAt(new LoginFilter(refreshRepository, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
 
     http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
 

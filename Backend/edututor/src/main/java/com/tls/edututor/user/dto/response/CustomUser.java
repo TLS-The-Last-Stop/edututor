@@ -49,9 +49,14 @@ public class CustomUser implements UserDetails {
     return password;
   }
 
+  /**
+   * 로그인 아이디 아니고, 입력받은 이름(ex. 이수완)
+   *
+   * @return 입력시 받은 이름
+   */
   @Override
   public String getUsername() {
-    return user.getEmail();
+    return user.getFullName();
   }
 
   public Long getId() {

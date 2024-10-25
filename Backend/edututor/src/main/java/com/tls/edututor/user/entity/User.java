@@ -40,7 +40,8 @@ public class User extends BaseEntity {
   private LocalDate birthDay;
 
   @Builder(builderMethodName = "withDto")
-  public User(UserTERequest dto) {
+  public User(UserTERequest dto, Classroom classroom) {
+    this.classroom = classroom;
     loginId = dto.getLoginId();
     password = dto.getPassword();
     fullName = dto.getFullName();
