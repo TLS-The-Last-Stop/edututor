@@ -1,5 +1,6 @@
 // UserStyledComponents.js
 import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 
 // 공통 스타일
 
@@ -63,6 +64,13 @@ export const FormHeader = styled.header`
 
 export const Title = styled.h1`
     font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+`;
+
+export const SubTitle = styled.h3`
+    font-size: 1rem;
+    margin: 1rem;
     font-weight: bold;
     color: #333;
 `;
@@ -297,4 +305,151 @@ export const ClassroomGroup = styled.div`
     input {
         flex: 3;
     }
+`;
+
+
+export const LinkGroup = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+`;
+
+// Link 컴포넌트를 기반으로 한 스타일 컴포넌트
+export const StyledRouterLink = styled(Link)`
+    color: #666;
+    text-decoration: none;
+    position: relative;
+
+    &:hover {
+        color: #40a9ff;
+    }
+
+    /* 구분선을 가상 요소로 추가 */
+
+    &:not(:last-child) {
+        padding-right: 1rem;
+
+        &:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 12px;
+            width: 1px;
+            background-color: #d9d9d9;
+        }
+    }
+`;
+
+export const SNSLoginSection = styled.div`
+    margin-top: 1rem;
+    text-align: center;
+`;
+
+export const SNSTitle = styled.div`
+    position: relative;
+    margin: 1rem 0;
+    text-align: center;
+    font-weight: bold;
+
+    &::before, &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background-color: #e1e1e1;
+    }
+
+    &::before {
+        left: 0;
+    }
+
+    &::after {
+        right: 0;
+    }
+`;
+
+export const SNSButtonGroup = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+`;
+
+export const SNSButton = styled.button`
+    width: 100%;
+    height: 45px;
+    border: 1px solid #e1e1e1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    ${props => {
+        switch (props.$provider) {
+            case 'naver':
+                return css`
+                    background: #00c73c;
+                    border: none;
+                    color: white;
+
+                    img {
+                        height: 30px;
+                        width: auto;
+                    }
+
+                    &:hover {
+                        background: #00b336;
+                    }
+                `;
+            case 'kakao':
+                return css`
+                    background: #ffeb1e;
+                    border: none;
+                    color: #333;
+
+                    img {
+                        height: 30px;
+                        width: auto;
+                    }
+
+                    &:hover {
+                        background: #ffd700;
+                    }
+                `;
+            case 'google':
+                return css`
+                    background: #fff;
+                    border: 1px solid #e1e1e1;
+                    color: #333;
+
+                    img {
+                        height: 24px;
+                        width: auto;
+                    }
+
+                    &:hover {
+                        background: #f8f8f8;
+                    }
+                `;
+            default:
+                return '';
+        }
+    }
+    }
+
+`;
+
+export const LogoText = styled.span`
+    font-size: 0.875rem;
+    font-weight: 500;
 `;
