@@ -2,19 +2,20 @@ import BoardItem from './BoardItem';
 
 const BoardList = ({
                      categories,
-                     faqList,
+                     faqList = [],
                      selectedCategory,
                      openFaqId,
                      onCategoryClick,
                      onFaqClick,
                      showCategories
                    }) => {
+
   return (
     <div className={`${showCategories ? 'flex gap-6' : ''}`}>
       {/* FAQ일 때만 카테고리 메뉴 표시 */}
       {showCategories && (
         <div className="w-48">
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <div
               key={category}
               onClick={() => onCategoryClick(category)}
@@ -34,23 +35,23 @@ const BoardList = ({
       <div className="flex-1">
         {showCategories
           ? // FAQ일 때는 카테고리 필터링 적용
-          faqList
+          (Array.isArray(faqList) ? faqList : [])
             .filter(faq => selectedCategory === '전체' || faq.category === selectedCategory)
             .map(faq => (
               <BoardItem
-                key={faq.id}
+                key={faq.boardId}
                 faq={faq}
-                isOpen={openFaqId === faq.id}
-                onFaqClick={() => onFaqClick(faq.id)}
+                isOpen={openFaqId === faq.boardId}
+                onFaqClick={() => onFaqClick(faq.boardId)}
               />
             ))
           : // 다른 메뉴는 전체 목록 표시
-          faqList.map(faq => (
+          (Array.isArray(faqList) ? faqList : [])?.map(faq => (
             <BoardItem
-              key={faq.id}
+              key={faq.boardId}
               faq={faq}
-              isOpen={openFaqId === faq.id}
-              onFaqClick={() => onFaqClick(faq.id)}
+              isOpen={openFaqId === faq.boardId}
+              onFaqClick={() => onFaqClick(faq.boardId)}
             />
           ))
         }

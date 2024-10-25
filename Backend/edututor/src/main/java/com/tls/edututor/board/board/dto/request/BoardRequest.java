@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BoardRequest extends BaseEntity {
+public class BoardRequest {
   private String title;
   private String content;
 }
