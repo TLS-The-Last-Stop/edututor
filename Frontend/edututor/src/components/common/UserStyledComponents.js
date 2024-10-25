@@ -1,5 +1,6 @@
 // UserStyledComponents.js
 import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 
 // 공통 스타일
 
@@ -67,6 +68,13 @@ export const Title = styled.h1`
     color: #333;
 `;
 
+export const SubTitle = styled.h3`
+    font-size: 1rem;
+    margin: 1rem;
+    font-weight: bold;
+    color: #333;
+`;
+
 // 폼 그룹 컴포넌트
 export const FieldSet = styled.fieldset`
     border: none;
@@ -108,25 +116,42 @@ export const Button = styled.button`
     min-width: 80px;
     font-weight: 500;
 
-    ${props => props.$primary ? css`
-        background-color: #1890ff;
-        color: white;
-        border: none;
+    ${props => {
+        if (props.$primary) {
+            return css`
+                background-color: #1890ff;
+                color: white;
+                border: none;
 
-        &:hover {
-            background-color: #40a9ff;
-        }
-    ` : css`
-        background-color: #f5f5f5;
-        color: #333;
-        border: 1px solid #d9d9d9;
+                &:hover {
+                    background-color: #40a9ff;
+                }
+            `;
+        } else if (props.$karina) {
+            return css`
+                background-color: white;
+                color: #1890ff;
+                border: 1px solid #1890ff;
 
-        &:hover {
-            background-color: #e8e8e8;
+                &:hover {
+                    background-color: white;
+                    color: #40a9ff;
+                    border-color: #40a9ff;
+                }
+            `;
+        } else {
+            return css`
+                background-color: #f5f5f5;
+                color: #333;
+                border: 1px solid #d9d9d9;
+
+                &:hover {
+                    background-color: #e8e8e8;
+                }
+            `;
         }
-    `}
+    }}
 `;
-
 export const Input = styled.input`
     ${inputStyles}
     width: 100%; // 부모 컨테이너의 전체 너비 사용
@@ -278,6 +303,93 @@ export const JoinButtonGroup = styled.div`
     }
 `;
 
+
+/* 로그인 구분 화면 */
+export const LoginTypeContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+
+    &::before {
+        content: '로그인 유형을 선택해주세요';
+        position: absolute;
+        top: -3rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.125rem;
+        color: #333;
+        white-space: nowrap;
+    }
+`;
+
+
+export const LoginTypeBox = styled.div`
+    position: relative;
+    width: 200px;
+    padding: 2rem;
+    border: 2px solid ${props => props.$active ? '#1890ff' : '#e1e1e1'};
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 200px; /* 높이 고정으로 버튼 위치 통일 */
+
+    &:hover {
+        border-color: #1890ff;
+    }
+
+    ${props => props.$active && css`
+        &::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            right: 100px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #1890ff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+            background-size: 16px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    `}
+    .image-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: auto;
+    }
+
+    img {
+        margin-bottom: 1rem;
+    }
+
+    .image-container::after {
+        content: ${props => props.$type === 'teacher' ? '"선생님"' : '"학생"'};
+        display: block;
+        font-size: 1.125rem;
+        font-weight: 500;
+        margin-top: 1rem;
+        color: #333;
+    }
+
+    /* 버튼 컨테이너 */
+
+    .button-container {
+        width: 100%;
+        margin-top: 1rem;
+    }
+`;
+
+/* 로그인 화면 */
 export const SuccessText = styled.div`
     margin-top: 4px;
     font-size: 0.875rem;
@@ -298,3 +410,151 @@ export const ClassroomGroup = styled.div`
         flex: 3;
     }
 `;
+
+
+export const LinkGroup = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+`;
+
+// Link 컴포넌트를 기반으로 한 스타일 컴포넌트
+export const StyledRouterLink = styled(Link)`
+    color: #666;
+    text-decoration: none;
+    position: relative;
+
+    &:hover {
+        color: #40a9ff;
+    }
+
+    /* 구분선을 가상 요소로 추가 */
+
+    &:not(:last-child) {
+        padding-right: 1rem;
+
+        &:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 12px;
+            width: 1px;
+            background-color: #d9d9d9;
+        }
+    }
+`;
+
+export const SNSLoginSection = styled.div`
+    margin-top: 1rem;
+    text-align: center;
+`;
+
+export const SNSTitle = styled.div`
+    position: relative;
+    margin: 1rem 0;
+    text-align: center;
+    font-weight: bold;
+
+    &::before, &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background-color: #e1e1e1;
+    }
+
+    &::before {
+        left: 0;
+    }
+
+    &::after {
+        right: 0;
+    }
+`;
+
+export const SNSButtonGroup = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+`;
+
+export const SNSButton = styled.button`
+    width: 100%;
+    height: 45px;
+    border: 1px solid #e1e1e1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    ${props => {
+        switch (props.$provider) {
+            case 'naver':
+                return css`
+                    background: #00c73c;
+                    border: none;
+                    color: white;
+
+                    img {
+                        height: 30px;
+                        width: auto;
+                    }
+
+                    &:hover {
+                        background: #00b336;
+                    }
+                `;
+            case 'kakao':
+                return css`
+                    background: #ffeb1e;
+                    border: none;
+                    color: #333;
+
+                    img {
+                        height: 30px;
+                        width: auto;
+                    }
+
+                    &:hover {
+                        background: #ffd700;
+                    }
+                `;
+            case 'google':
+                return css`
+                    background: #fff;
+                    border: 1px solid #e1e1e1;
+                    color: #333;
+
+                    img {
+                        height: 24px;
+                        width: auto;
+                    }
+
+                    &:hover {
+                        background: #f8f8f8;
+                    }
+                `;
+            default:
+                return '';
+        }
+    }
+    }
+
+`;
+
+export const LogoText = styled.span`
+    font-size: 0.875rem;
+    font-weight: 500;
+`;
+

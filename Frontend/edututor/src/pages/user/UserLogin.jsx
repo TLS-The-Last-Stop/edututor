@@ -1,7 +1,9 @@
+import LoginType from '../../components/user/LoginType.jsx';
+
 const UserLogin = () => {
   return (
     <>
-      <h2>일반 로그인</h2>
+      <LoginType />
     </>
   );
 };

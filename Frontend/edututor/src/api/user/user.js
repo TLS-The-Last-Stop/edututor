@@ -16,3 +16,8 @@ export const join = async (data) => {
   const response = await axios.post(`${BASE_URL}/users`, data);
   return response.data;
 };
+
+export const login = async (data) => {
+  const response = await axios.post(`${BASE_URL}/login`, data);
+  return response.data;
+};

@@ -9,7 +9,7 @@ import TestPaperCreationPage from './pages/admin/TestPaperCreationPage.jsx';
 import CourseDetailPage from './pages/admin/CourseDetailPage.jsx';
 import CourseRegister from './pages/course/CourseRegister.jsx';
 import Board from './pages/board/Board.jsx';
-import TestPaperDetailPage from "./pages/admin/TestPaperDetailPage.jsx";
+import TestPaperDetailPage from './pages/admin/TestPaperDetailPage.jsx';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -18,15 +18,19 @@ const GlobalStyle = createGlobalStyle`
         height: 100%;
     }
 `;
-
+/* 관리자 라우팅 */
 const AdminHome = lazy(() => import('./pages/admin/AdminHome.jsx'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin.jsx'));
-const Home = lazy(() => import('./pages/main/Home.jsx'));
-const MainLayout = lazy(() => import('./Layout/MainLayout.jsx'));
-const UserLogin = lazy(() => import('./pages/user/UserLogin.jsx'));
-const UserJoin = lazy(() => import('./pages/user/UserJoin.jsx'));
 const CourseCreationPage = lazy(() => import('./pages/admin/CourseCreationPage.jsx'));
 const CourseListPage = lazy(() => import('./pages/admin/CourseListPage.jsx'));
+
+/* 유저 라우팅 */
+const Home = lazy(() => import('./pages/main/Home.jsx'));
+const MainLayout = lazy(() => import('./Layout/MainLayout.jsx'));
+const UserJoin = lazy(() => import('./pages/user/UserJoin.jsx'));
+const UserLogin = lazy(() => import('./pages/user/UserLogin.jsx'));
+const TeacherLogin = lazy(() => import('./pages/user/TeacherLogin.jsx'));
+const StudentLogin = lazy(() => import('./pages/user/StudentLogin.jsx'));
 
 const LoadingSpinner = () => <Loading />;
 
@@ -89,15 +93,24 @@ function App() {
           } />
         </Route>
 
-        <Route path="/login" index element={
+        <Route path="/login" element={
           <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
         } />
 
-        <Route path="/join" index element={
+        <Route path="/join" element={
           <Suspense fallback={<LoadingSpinner />}><UserJoin /></Suspense>
         } />
 
+        <Route path="/teacher-login" element={
+          <Suspense fallback={<LoadingSpinner />}><TeacherLogin /></Suspense>
+        } />
+
+        <Route path="/student-login" element={
+          <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
+        } />
+
         <Route path="courseregister" element={<CourseRegister />}></Route>
+
       </Routes>
     </BrowserRouter>
   );

@@ -11,15 +11,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,6 +76,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     response.setStatus(HttpServletResponse.SC_OK);
     response.addCookie(createCookie("access", accessToken));
     response.addCookie(createCookie("refresh", refreshToken));
+    response.setContentType("application/json; charset=utf-8");
+    response.getWriter().write(objectMapper.writeValueAsString(new String(customUser.getUsername().getBytes(StandardCharsets.UTF_8))));
   }
 
   private void addRefreshEntity(String loginId, String refreshToken, long expiredMs) {
@@ -104,11 +105,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType("application/json;charset=UTF-8");
-
     Map<String, Object> errorResponse = new HashMap<>();
-    errorResponse.put("message", failed.getMessage());
-    errorResponse.put("status", HttpServletResponse.SC_UNAUTHORIZED);
 
-    objectMapper.writeValue(response.getWriter(), errorResponse);
+    if (failed instanceof InternalAuthenticationServiceException) {
+      String errorMessage = failed.getMessage();
+      if (errorMessage != null && errorMessage.contains("AUTH001")) {
+        errorResponse.put("code", "AUTH001");
+        errorResponse.put("message", "존재하지 않는 아이디입니다.");
+      } else {
+        errorResponse.put("code", "AUTH003");
+        errorResponse.put("message", "로그인에 실패하였습니다.");
+      }
+    } else if (failed instanceof BadCredentialsException) {
+      errorResponse.put("code", "AUTH002");
+      errorResponse.put("message", "비밀번호가 일치하지 않습니다.");
+    } else {
+      errorResponse.put("code", "AUTH003");
+      errorResponse.put("message", "로그인에 실패하였습니다.");
+    }
+
+    response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
   }
 }
