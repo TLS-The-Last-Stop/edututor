@@ -23,22 +23,25 @@ public class CustomUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
     User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
-    String role = determineUserRole(user);
+    String role = determineUserRole(user.getRole());
 
     AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), role);
 
     return new CustomUser(authUser, user.getLoginId(), user.getPassword());
   }
 
-  private String determineUserRole(User user) {
-    if (user.getPhoneNum() != null && user.getBirthDay() != null) {
-      return codeDetailRepository.findRoleById("1005", "TE")
+  private String determineUserRole(String type) {
+    String role = type;
+    if (role.startsWith("TE")) {
+      role = codeDetailRepository.findRoleById("1005", "TE")
               .orElseThrow(() -> new RuntimeException("Role TE not found"))
               .getId();
-    } else {
-      return codeDetailRepository.findRoleById("1005", "SU")
+    } else if (role.startsWith("SU")) {
+      role = codeDetailRepository.findRoleById("1005", "SU")
               .orElseThrow(() -> new RuntimeException("Role SU not found"))
               .getId();
     }
+
+    return role;
   }
 }

@@ -321,7 +321,8 @@ const UserJoin = () => {
         classroomName: classroom.classroomName,
         year         : classroom.year,
         grade        : classroom.grade
-      }
+      },
+      type     : 'TE'
     };
 
     try {
