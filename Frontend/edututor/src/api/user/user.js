@@ -12,8 +12,13 @@ export const checkDuplicateId = async (loginId) => {
   return response.data;
 };
 
-export const join = async (data) => {
-  const response = await axios.post(`${BASE_URL}/users`, data);
+export const teacherJoin = async (data) => {
+  const response = await axios.post(`${BASE_URL}/users/teachers`, data);
+  return response.data;
+};
+
+export const createStudent = async (data) => {
+  const response = await axios.post(`${BASE_URL}/users/students`, data);
   return response.data;
 };
 

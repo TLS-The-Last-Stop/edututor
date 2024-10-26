@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Long saveTeacher(UserTERequest request) {
     if (userRepository.existsByLoginId(request.getLoginId())) {
-      throw new DuplicateUserException(String.format("이미 {}로 회원가입이 되어있습니다.", request.getLoginId()));
+      throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
 
     request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Long saveStudent(UserSURequest request) {
     if (userRepository.existsByLoginId(request.getLoginId())) {
-      throw new DuplicateUserException(String.format("이미 {}로 회원가입이 되어있습니다.", request.getLoginId()));
+      throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
     request.setPassword(passwordEncoder.encode(request.getPassword()));
 

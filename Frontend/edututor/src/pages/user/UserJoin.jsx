@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import UserJoinForm from '../../components/user/UserJoinForm.jsx';
 import SchoolSearchModal from '../../components/user/SchoolSearchModal.jsx';
-import { checkDuplicateId, join } from '../../api/user/user.js';
+import { checkDuplicateId, teacherJoin } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -326,7 +326,7 @@ const UserJoin = () => {
     };
 
     try {
-      const result = await join(submitData);
+      const result = await teacherJoin(submitData);
 
       if (result.status === 204) navigate('/login');
       if (result.status === 400) alert(result.message);

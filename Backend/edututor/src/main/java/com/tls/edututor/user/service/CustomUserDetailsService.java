@@ -19,31 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomUserDetailsService implements UserDetailsService {
 
   private final UserRepository userRepository;
-  private final CodeDetailRepository codeDetailRepository;
 
   @Override
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
     User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
-    String role = determineUserRole(user.getRole());
-
-    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), user.getClassroom(), role);
+    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), user.getClassroom(), user.getRole());
 
     return new CustomUser(authUser, user.getLoginId(), user.getPassword());
-  }
-
-  private String determineUserRole(String type) {
-    String role = type;
-    if (role.startsWith("TE")) {
-      role = codeDetailRepository.findRoleById("1005", "TE")
-              .orElseThrow(() -> new RuntimeException("Role TE not found"))
-              .getId();
-    } else if (role.startsWith("SU")) {
-      role = codeDetailRepository.findRoleById("1005", "SU")
-              .orElseThrow(() -> new RuntimeException("Role SU not found"))
-              .getId();
-    }
-
-    return role;
   }
 }

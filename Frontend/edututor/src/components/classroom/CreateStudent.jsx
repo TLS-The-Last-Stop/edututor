@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import CreateStudentModal from './CreateStudentModal.jsx';
 import { useState } from 'react';
-import { checkDuplicateId } from '../../api/user/user.js';
+import { checkDuplicateId, createStudent } from '../../api/user/user.js';
 
 const CreateButton = styled.button`
     padding: 0.5rem 1rem;
@@ -18,14 +18,13 @@ const CreateButton = styled.button`
 `;
 
 const initForm = {
-  name         : '',
+  teacherId    : '',
+  fullName     : '',
   loginId      : '',
   password     : '',
   passwordCheck: '',
-  grade        : '',
   classNumber  : ''
 };
-
 
 const CreateStudent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +32,9 @@ const CreateStudent = () => {
   const [errors, setErrors] = useState({});
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [idCheckMessage, setIdCheckMessage] = useState('');
+
+  const userInfo = JSON.parse(localStorage.getItem('info'));
+  const { classroomName } = userInfo?.classroom;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,10 +53,10 @@ const CreateStudent = () => {
 
   const validateInput = (name, value) => {
     switch (name) {
-      case 'name':
+      case 'fullName':
         setErrors(prev => ({
           ...prev,
-          name: !value ? '이름을 입력해주세요' : ''  // 에러 메시지를 문자열로 설정
+          fullName: !value ? '이름을 입력해주세요' : ''  // 에러 메시지를 문자열로 설정
         }));
         break;
 
@@ -89,16 +91,10 @@ const CreateStudent = () => {
       case 'classNumber':
         setErrors(prev => ({
           ...prev,
-          classNumber: !value ? '반 이름을 입력해주세요' : ''
+          classNumber: !value ? '반을 입력해주세요' : ''
         }));
         break;
 
-      case 'grade':
-        setErrors(prev => ({
-          ...prev,
-          grade: !value ? '학년을 선택해주세요' : ''
-        }));
-        break;
     }
   };
 
@@ -137,7 +133,50 @@ const CreateStudent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // ... 제출 로직
+
+    const submitData = {
+      teacherId  : userInfo.classroom.writer,
+      fullName   : form.fullName,
+      loginId    : form.loginId,
+      password   : form.password,
+      classNumber: form.classNumber,
+      classroom  : userInfo.classroom,
+      school     : userInfo.classroom.school,
+      type       : 'SU'
+
+    };
+
+    if (!isIdChecked) {
+      alert('아이디 중복확인을 해주세요');
+      return;
+    }
+
+    if (!form.fullName || !form.loginId || !form.password || !form.passwordCheck || !form.classNumber) {
+      alert('모든 필수 항목을 입력해주세요.');
+      return false;
+    }
+
+    try {
+      const result = await createStudent(submitData);
+      if (result.status === 204) {
+        alert(result?.message || '학생이 등록되었습니다.?');
+        handleCloseModal();
+      }
+
+      if (result.status === 400) {
+        alert(`이미 ${form.loginId}로 회원가입 되어 있습니다.`);
+      }
+    } catch (error) {
+      console.error('학생 등록에 실패하였습니다.', error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setForm(initForm);
+    setErrors({});
+    setIsIdChecked(false);
+    setIdCheckMessage('');
   };
 
   return (
@@ -147,7 +186,7 @@ const CreateStudent = () => {
       </CreateButton>
       <CreateStudentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         form={form}
         errors={errors}
         isIdChecked={isIdChecked}
@@ -155,6 +194,7 @@ const CreateStudent = () => {
         handleInputChange={handleInputChange}
         handleCheckDuplicatedId={handleCheckDuplicatedId}
         handleSubmit={handleSubmit}
+        classroomName={classroomName}
       />
     </>
   );

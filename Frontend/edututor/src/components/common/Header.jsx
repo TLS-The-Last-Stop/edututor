@@ -36,9 +36,12 @@ const Header = () => {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const name = localStorage.getItem('username');
-    if (name) setUsername(name);
+    const userinfo = JSON.parse(localStorage.getItem('info'));
+    const { fullName } = userinfo;
+
+    if (fullName) setUsername(fullName);
   }, [username]);
+
   return (
     <HeaderContainer>
       <HeaderContent>

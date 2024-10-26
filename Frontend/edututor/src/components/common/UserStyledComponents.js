@@ -70,7 +70,7 @@ export const Title = styled.h1`
 
 export const SubTitle = styled.h3`
     font-size: 1rem;
-    margin: 1rem;
+    margin: ${props => props.$isModal ? 0 : '1rem'};
     font-weight: bold;
     color: #333;
 `;
@@ -115,6 +115,12 @@ export const Button = styled.button`
     white-space: nowrap;
     min-width: 80px;
     font-weight: 500;
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
 
     ${props => {
         if (props.$primary) {

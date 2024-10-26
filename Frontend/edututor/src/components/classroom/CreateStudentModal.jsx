@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   Button,
-  ClassroomGroup,
-  ErrorText, FieldSet,
-  FormGroup, FormHeader,
-  Input, InputGroup,
+  ErrorText,
+  FieldSet,
+  FormGroup,
+  FormHeader,
+  Input,
+  InputGroup,
   Label,
   Required,
-  Select, SuccessText, Title
+  SubTitle,
+  SuccessText,
+  Title
 } from '../common/UserStyledComponents.js';
 import styled from 'styled-components';
 
@@ -53,7 +57,8 @@ const CreateStudentModal = ({
                               idCheckMessage,
                               handleInputChange,
                               handleCheckDuplicatedId,
-                              handleSubmit
+                              handleSubmit,
+                              classroomName
                             }) => {
 
   useEffect(() => {
@@ -84,8 +89,8 @@ const CreateStudentModal = ({
                   이름<Required>*</Required>
                 </Label>
                 <Input
-                  name="name"
-                  value={form.name}
+                  name="fullName"
+                  value={form.fullName}
                   onChange={handleInputChange}
                   placeholder="이름을 입력해주세요"
                   $hasError={!!errors.name}
@@ -148,34 +153,18 @@ const CreateStudentModal = ({
 
               <FormGroup>
                 <Label>
-                  반 정보<Required>*</Required>
+                  <SubTitle $isModal>{classroomName} 반 정보<Required>*</Required></SubTitle>
                 </Label>
-                <ClassroomGroup>
-                  <Select
-                    name="grade"
-                    value={form.grade}
-                    onChange={handleInputChange}
-                    $hasError={!!errors.grade}
-                  >
-                    <option value="">학년</option>
-                    <option value="1">1학년</option>
-                    <option value="2">2학년</option>
-                    <option value="3">3학년</option>
-                  </Select>
+                <InputGroup>
                   <Input
                     name="classNumber"
                     value={form.classNumber}
                     onChange={handleInputChange}
-                    placeholder="반 이름"
-                    maxLength={10}
+                    placeholder="몇반인지 입력해주세요."
                     $hasError={!!errors.classNumber}
                   />
-                </ClassroomGroup>
-                {(errors.grade || errors.classNumber) && (
-                  <ErrorText>
-                    {errors.grade || errors.classNumber}
-                  </ErrorText>
-                )}
+                </InputGroup>
+                {errors.classNumber && <ErrorText>{errors.classNumber}</ErrorText>}
               </FormGroup>
 
               <FormGroup>
