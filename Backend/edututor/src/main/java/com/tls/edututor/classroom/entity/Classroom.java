@@ -2,6 +2,7 @@ package com.tls.edututor.classroom.entity;
 
 import com.tls.edututor.classroom.dto.request.ClassroomRequest;
 import com.tls.edututor.common.entity.BaseEntity;
+import com.tls.edututor.school.entity.School;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,6 +19,10 @@ public class Classroom extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "SCHOOL_ID", nullable = false)
+  private School school;
+
   @Column(name = "CLASSROOM_NAME", nullable = false)
   private String classroomName;
 
@@ -28,7 +33,8 @@ public class Classroom extends BaseEntity {
   private String grade;
 
   @Builder(builderMethodName = "withDto")
-  public Classroom(ClassroomRequest request, String type) {
+  public Classroom(ClassroomRequest request, School school, String type) {
+    this.school = school;
     classroomName = request.getClassroomName();
     year = request.getYear();
     grade = request.getGrade();

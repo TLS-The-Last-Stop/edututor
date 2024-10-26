@@ -24,4 +24,6 @@ public class UserTERequest {
 
   private SchoolRequest school;
   private ClassroomRequest classroom;
+
+  private String type;
 }

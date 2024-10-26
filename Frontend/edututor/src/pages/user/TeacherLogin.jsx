@@ -67,7 +67,7 @@ const TeacherLogin = () => {
 
     try {
       const result = await login(formData);
-      localStorage.setItem('username', result);
+      localStorage.setItem('info', JSON.stringify(result));
 
       if (result) navigate('/');
     } catch (error) {

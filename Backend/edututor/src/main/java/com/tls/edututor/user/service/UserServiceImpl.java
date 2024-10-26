@@ -5,6 +5,7 @@ import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.common.exception.DuplicateUserException;
 import com.tls.edututor.school.entity.School;
 import com.tls.edututor.school.repository.SchoolRepository;
+import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
@@ -28,31 +29,50 @@ public class UserServiceImpl implements UserService {
   }
 
   @Transactional
-  public Long saveUser(UserTERequest request) {
+  @Override
+  public Long saveTeacher(UserTERequest request) {
     if (userRepository.existsByLoginId(request.getLoginId())) {
-      throw new DuplicateUserException(String.format("이미 {}로 회원가입이 되어있습니다.", request.getLoginId()));
+      throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
 
     request.setPassword(passwordEncoder.encode(request.getPassword()));
 
+    User user = User.createTeacher(request);
+    userRepository.save(user).getId();
+
     School school = School.withDto()
             .request(request.getSchool())
             .build();
+    school.setWriter(user.getId());
+    schoolRepository.save(school);
 
     Classroom classroom = Classroom.withDto()
             .request(request.getClassroom())
+            .school(school)
             .type(school.getType())
             .build();
-
-    User user = User.withDto()
-            .dto(request)
-            .classroom(classroom)
-            .build();
-
-    schoolRepository.save(school);
+    classroom.setWriter(user.getId());
     classroomRepository.save(classroom);
 
-    return userRepository.save(user).getId();
+    user.setClassroom(classroom);
+    user.setWriter(user.getId());
+
+    return user.getId();
   }
 
+  @Transactional
+  @Override
+  public Long saveStudent(UserSURequest request) {
+    if (userRepository.existsByLoginId(request.getLoginId())) {
+      throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
+    }
+    request.setPassword(passwordEncoder.encode(request.getPassword()));
+
+    User user = User.createStudent(request);
+    user.setWriter(request.getTeacherId());
+
+    userRepository.save(user);
+
+    return user.getId();
+  }
 }

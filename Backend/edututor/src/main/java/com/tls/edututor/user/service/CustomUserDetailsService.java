@@ -11,34 +11,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CustomUserDetailsService implements UserDetailsService {
 
   private final UserRepository userRepository;
-  private final CodeDetailRepository codeDetailRepository;
 
   @Override
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
     User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
-    String role = determineUserRole(user);
-
-    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), role);
+    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), user.getClassroom(), user.getRole());
 
     return new CustomUser(authUser, user.getLoginId(), user.getPassword());
-  }
-
-  private String determineUserRole(User user) {
-    if (user.getPhoneNum() != null && user.getBirthDay() != null) {
-      return codeDetailRepository.findRoleById("1005", "TE")
-              .orElseThrow(() -> new RuntimeException("Role TE not found"))
-              .getId();
-    } else {
-      return codeDetailRepository.findRoleById("1005", "SU")
-              .orElseThrow(() -> new RuntimeException("Role SU not found"))
-              .getId();
-    }
   }
 }

@@ -31,6 +31,7 @@ const UserJoin = lazy(() => import('./pages/user/UserJoin.jsx'));
 const UserLogin = lazy(() => import('./pages/user/UserLogin.jsx'));
 const TeacherLogin = lazy(() => import('./pages/user/TeacherLogin.jsx'));
 const StudentLogin = lazy(() => import('./pages/user/StudentLogin.jsx'));
+const Classroom = lazy(() => import('./pages/classroom/Classroom.jsx'));
 
 const LoadingSpinner = () => <Loading />;
 
@@ -91,6 +92,13 @@ function App() {
           <Route path="cmmn" element={
             <Suspense fallback={<LoadingSpinner />}><Board /></Suspense>
           } />
+
+          {/* class room */}
+          <Route path="classroom">
+            <Route index element={
+              <Suspense fallback={<LoadingSpinner />}><Classroom /></Suspense>
+            } />
+          </Route>
         </Route>
 
         <Route path="/login" element={

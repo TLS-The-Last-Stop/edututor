@@ -16,14 +16,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
   private final RefreshRepository refreshRepository;
@@ -63,10 +64,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     claims.put("loginId", loginId);
     claims.put("username", customUser.getUsername());
     claims.put("email", customUser.getEmail());
-    List<String> rolls = customUser.getAuthorities().stream()
+    List<String> roles = customUser.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
-    claims.put("roles", String.join(",", rolls));
+    claims.put("roles", String.join(",", roles));
 
     String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L); // 1시간 => 더 줄이기
     String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L); // 24시간 => 더 줄이기
@@ -77,7 +78,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     response.addCookie(createCookie("access", accessToken));
     response.addCookie(createCookie("refresh", refreshToken));
     response.setContentType("application/json; charset=utf-8");
-    response.getWriter().write(objectMapper.writeValueAsString(customUser.getFullName()));
+
+    Map<String, Object> data = new HashMap<>();
+    data.put("classroom", customUser.getClassroom());
+    data.put("role", roles.get(0));
+    data.put("fullName", customUser.getFullName());
+    response.getWriter().write(objectMapper.writeValueAsString(data));
   }
 
   private void addRefreshEntity(String loginId, String refreshToken, long expiredMs) {
@@ -96,6 +102,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     Cookie cookie = new Cookie(key, value);
     if (key.startsWith("refresh")) cookie.setMaxAge(24 * 60 * 60); // 토큰을 만들때와 동일하게
     else if (key.startsWith("access")) cookie.setMaxAge(60 * 60);
+
+    cookie.setPath("/");
     cookie.setHttpOnly(true);
 
     return cookie;

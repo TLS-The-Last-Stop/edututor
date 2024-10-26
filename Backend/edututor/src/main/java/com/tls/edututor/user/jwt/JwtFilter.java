@@ -34,10 +34,16 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
 
+
     try {
       for (Cookie cookie : cookies) {
         if (cookie.getName().startsWith("access"))
           accessToken = cookie.getValue();
+      }
+
+      if (accessToken.isBlank()) {
+        filterChain.doFilter(request, response);
+        return;
       }
 
       jwtUtil.isExpired(accessToken);
@@ -67,7 +73,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roles);
 
-    AuthUser authUser = new AuthUser(userId, username, email, authority.getAuthority());
+    AuthUser authUser = new AuthUser(userId, username, email, null, authority.getAuthority());
 
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser, null, List.of(authority));
 

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-axios.defaults.withCredentials = true;
 
 /**
  * 회원가입 아이디 중복체크
@@ -13,12 +12,19 @@ export const checkDuplicateId = async (loginId) => {
   return response.data;
 };
 
-export const join = async (data) => {
-  const response = await axios.post(`${BASE_URL}/users`, data);
+export const teacherJoin = async (data) => {
+  const response = await axios.post(`${BASE_URL}/users/teachers`, data);
+  return response.data;
+};
+
+export const createStudent = async (data) => {
+  const response = await axios.post(`${BASE_URL}/users/students`, data);
   return response.data;
 };
 
 export const login = async (data) => {
-  const response = await axios.post(`${BASE_URL}/login`, data);
+  const response = await axios.post(`${BASE_URL}/login`, data, {
+    withCredentials: true
+  });
   return response.data;
 };

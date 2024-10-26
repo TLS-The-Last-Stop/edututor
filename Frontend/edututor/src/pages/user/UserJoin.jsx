@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import UserJoinForm from '../../components/user/UserJoinForm.jsx';
 import SchoolSearchModal from '../../components/user/SchoolSearchModal.jsx';
-import { checkDuplicateId, join } from '../../api/user/user.js';
+import { checkDuplicateId, teacherJoin } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -174,7 +174,6 @@ const UserJoin = () => {
 
   /* 숫자만 입력 가능한 필드 처리 */
   const handleNumberInput = (e) => {
-    console.log('이게 안되는구나');
     const { name, value } = e.target;
     const hasNonNumber = /[^0-9]/.test(value);
     const numberOnly = value.replace(/[^0-9]/g, '');
@@ -322,11 +321,12 @@ const UserJoin = () => {
         classroomName: classroom.classroomName,
         year         : classroom.year,
         grade        : classroom.grade
-      }
+      },
+      type     : 'TE'
     };
 
     try {
-      const result = await join(submitData);
+      const result = await teacherJoin(submitData);
 
       if (result.status === 204) navigate('/login');
       if (result.status === 400) alert(result.message);

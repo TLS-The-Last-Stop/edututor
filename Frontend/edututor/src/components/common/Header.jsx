@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 
 const HeaderContainer = styled.header`
     background: aquamarine;
@@ -28,9 +29,19 @@ const HeaderNav = styled.ul`
 const HeaderLogo = styled.div`
     height: 80px;
     background: darkblue;
+    color: white;
 `;
 
 const Header = () => {
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const userinfo = JSON.parse(localStorage.getItem('info'));
+    const { fullName } = userinfo;
+
+    if (fullName) setUsername(fullName);
+  }, [username]);
+
   return (
     <HeaderContainer>
       <HeaderContent>
@@ -45,7 +56,7 @@ const Header = () => {
           <li>8</li>
         </HeaderNav>
         <HeaderLogo>
-          <h3>헤더</h3>
+          {username}
         </HeaderLogo>
       </HeaderContent>
     </HeaderContainer>

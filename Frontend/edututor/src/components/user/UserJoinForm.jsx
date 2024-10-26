@@ -72,7 +72,8 @@ const UserJoinForm = ({
                   placeholder="영문 대/소문자+숫자조합 (6~20자 이내)"
                   $hasError={errors.loginId}
                 />
-                <Button type="button" onClick={handleCheckDuplicatedId}>
+                <Button type="button" onClick={handleCheckDuplicatedId}
+                        disabled={!form.loginId || form.loginId.length < 6 || errors.loginId}>
                   중복 확인
                 </Button>
               </InputGroup>
@@ -172,6 +173,7 @@ const UserJoinForm = ({
                   value={form.phoneMiddle}
                   onChange={getInputHandler}
                   $hasError={errors.phoneMiddle}
+                  $isFilled={form.phoneMiddle.length === 4}
                 />
                 <Divider>-</Divider>
                 <Input
@@ -180,6 +182,7 @@ const UserJoinForm = ({
                   value={form.phoneLast}
                   onChange={getInputHandler}
                   $hasError={errors.phoneLast}
+                  $isFilled={form.phoneLast.length === 4}
                 />
               </SelectGroup>
               {(errors.phoneMiddle || errors.phoneLast) && (
@@ -200,6 +203,7 @@ const UserJoinForm = ({
                   value={form.birthYear}
                   onChange={getInputHandler}
                   $hasError={errors.birthYear}
+                  $isFilled={form.birthYear.length === 4}
                 />
                 <Divider>년</Divider>
                 <DateInput
@@ -210,6 +214,7 @@ const UserJoinForm = ({
                   value={form.birthMonth}
                   onChange={getInputHandler}
                   $hasError={errors.birthMonth}
+                  $isFilled={form.birthMonth.length === 2}
                 />
                 <Divider>월</Divider>
                 <DateInput
@@ -220,6 +225,7 @@ const UserJoinForm = ({
                   value={form.birthDay}
                   onChange={getInputHandler}
                   $hasError={errors.birthDay}
+                  $isFilled={form.birthDay.length === 2}
                 />
                 <Divider>일</Divider>
               </DateGroup>
@@ -326,7 +332,7 @@ const UserJoinForm = ({
 
                 {/* 반 이름 입력 */}
                 <Input name="classroomName" value={classroom.classroomName} onChange={handleCreateClassroom}
-                       placeholder="반 이름 입력 (최대 10자)"
+                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 갱스터반 x, 갱스터 o)"
                        maxLength={10}
                        style={{ width: '200px' }}
                 />
