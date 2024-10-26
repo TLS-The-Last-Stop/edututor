@@ -2,6 +2,7 @@ package com.tls.edututor.user.entity;
 
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.common.entity.BaseEntity;
+import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +18,8 @@ public class User extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  // 학생들도 같은 classroom을 참조할 수 있도록
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "CLASS_ID")
   private Classroom classroom;
 
@@ -30,24 +32,40 @@ public class User extends BaseEntity {
   @Column(name = "FULL_NAME", nullable = false)
   private String fullName;
 
-  @Column(name = "EMAIL", nullable = false)
+  @Column(name = "EMAIL")
   private String email;
 
-  @Column(name = "PHONE_NUM", nullable = false)
+  @Column(name = "PHONE_NUM")
   private String phoneNum;
 
-  @Column(name = "BIRTH", nullable = false)
+  @Column(name = "BIRTH")
   private LocalDate birthDay;
 
-  @Builder(builderMethodName = "withDto")
-  public User(UserTERequest dto, Classroom classroom) {
-    this.classroom = classroom;
-    loginId = dto.getLoginId();
-    password = dto.getPassword();
-    fullName = dto.getFullName();
-    email = dto.getEmail();
-    phoneNum = dto.getPhoneNum();
-    birthDay = dto.getBirthDay();
+  @Column(name = "role", nullable = false)
+  private String role;
+
+  public static User createTeacher(UserTERequest dto) {
+    User user = new User();
+    user.loginId = dto.getLoginId();
+    user.password = dto.getPassword();
+    user.fullName = dto.getFullName();
+    user.email = dto.getEmail();
+    user.phoneNum = dto.getPhoneNum();
+    user.birthDay = dto.getBirthDay();
+    user.role = dto.getType();
+    return user;
   }
 
+  public static User createStudent(UserSURequest dto) {
+    User user = new User();
+    user.loginId = dto.getLoginId();
+    user.password = dto.getPassword();
+    user.fullName = dto.getFullName();
+    user.role = dto.getType();
+    return user;
+  }
+
+  public void setClassroom(Classroom classroom) {
+    this.classroom = classroom;
+  }
 }

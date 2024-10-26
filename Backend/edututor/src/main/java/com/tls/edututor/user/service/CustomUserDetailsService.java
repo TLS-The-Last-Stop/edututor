@@ -11,9 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CustomUserDetailsService implements UserDetailsService {
 
   private final UserRepository userRepository;
@@ -25,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     String role = determineUserRole(user.getRole());
 
-    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), role);
+    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), user.getClassroom(), role);
 
     return new CustomUser(authUser, user.getLoginId(), user.getPassword());
   }

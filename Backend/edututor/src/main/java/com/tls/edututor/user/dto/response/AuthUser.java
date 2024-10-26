@@ -1,5 +1,6 @@
 package com.tls.edututor.user.dto.response;
 
+import com.tls.edututor.classroom.entity.Classroom;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -8,9 +9,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class AuthUser {
-
   private Long id;
   private String fullName;
   private String email;
+  private Classroom classroom;
   private String role;
 }

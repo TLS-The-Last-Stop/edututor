@@ -1,5 +1,6 @@
 package com.tls.edututor.school.entity;
 
+import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.school.dto.request.SchoolRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class School {
+public class School extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

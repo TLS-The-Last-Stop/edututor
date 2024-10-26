@@ -1,5 +1,6 @@
 package com.tls.edututor.user.dto.response;
 
+import com.tls.edututor.classroom.entity.Classroom;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,5 +67,9 @@ public class CustomUser implements UserDetails {
 
   public String getFullName() {
     return user.getFullName();
+  }
+
+  public Classroom getClassroom() {
+    return user.getClassroom();
   }
 }
