@@ -115,10 +115,10 @@ const Board = () => {
           ))}
         </div>
       )}
-      {/* TODO 관리자일 경우에만 보이도록 */}
+      {/* TODO 관리자일 경우에만 보이도록
       <div className="menu-category-container">
         <button className="post-button">등록</button>
-      </div>
+      </div>*/}
 
       {/* 컨텐츠 목록 */}
       <BoardList
