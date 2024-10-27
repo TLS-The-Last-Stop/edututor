@@ -4,6 +4,7 @@ import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
 import com.tls.edututor.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class ReportController {
     private final ReportService reportService;
 
+    @GetMapping
     public CommonApiResponse<List<TestPaperResponse2>> getTestPapers(Long classroomId){
         return CommonApiResponse.createSuccess("report", reportService.getTestPapers(classroomId));
     }
