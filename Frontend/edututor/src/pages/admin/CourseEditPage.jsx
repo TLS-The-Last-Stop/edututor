@@ -84,7 +84,7 @@ const CourseEditPage = () => {
       const response = await instance.put(`/api/course/${courseId}`, formData);
       console.log('Response:', response.data);
       alert('과정이 성공적으로 수정되었습니다.');
-      navigate(`/course/${courseId}`);
+      navigate(`/admin/course-detail/${courseId}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error);
     }
