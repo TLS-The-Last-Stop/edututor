@@ -17,4 +17,8 @@ public interface CourseService {
   CourseResponse selectCourseDetails(Long courseId);
 
 	List<Map<String, String>> getCourseDetails(String codeId);
+
+  void updateCourse(Long courseId, CourseRegisterRequest request);
+
+  void deleteCourse(Long courseId);
 }

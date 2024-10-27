@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../../assets/css/MaterialCreationPage.css';
 
-
 const MaterialCreationPage = () => {
   const [formData, setFormData] = useState({
-    unitId: '',
     title: '',
     content: '',
   });
@@ -13,6 +12,16 @@ const MaterialCreationPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const unitId = queryParams.get('unitId');
+
+  useEffect(() => {
+    if (!unitId) {
+      setErrorMessage('단원 ID를 찾을 수 없습니다.');
+    }
+  }, [unitId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,9 +38,9 @@ const MaterialCreationPage = () => {
     setErrorMessage('');
 
     try {
-      const response = await axios.post('/api/material', formData);
+      const response = await axios.post('/api/material', { ...formData, unitId });
       setSuccessMessage('학습자료가 성공적으로 등록되었습니다!');
-      setFormData({ unitId: '', title: '', content: '' });
+      setFormData({ title: '', content: '' });
     } catch (error) {
       setErrorMessage('학습자료 등록 중 오류가 발생했습니다.');
       console.error('Error:', error);
@@ -44,17 +53,6 @@ const MaterialCreationPage = () => {
       <div className="material-creation-container">
         <h2>학습자료 등록</h2>
         <form onSubmit={handleSubmit} className="material-form">
-          <div className="form-field">
-            <label>단원 ID (Unit ID):</label>
-            <input
-                type="number"
-                name="unitId"
-                value={formData.unitId}
-                onChange={handleInputChange}
-                className="input-field"
-                required
-            />
-          </div>
           <div className="form-field">
             <label>제목 (Title):</label>
             <input

@@ -31,50 +31,42 @@ import java.util.stream.Collectors;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-	private final ClassroomRepository classroomRepository;
-	private final CourseRepository courseRepository;
-	private final SectionRepository sectionRepository;
-	private final UnitRepository unitRepository;
-	private final CodeDetailRepository codeDetailRepository;
+  private final ClassroomRepository classroomRepository;
+  private final CourseRepository courseRepository;
+  private final SectionRepository sectionRepository;
+  private final UnitRepository unitRepository;
+  private final CodeDetailRepository codeDetailRepository;
 
-	@Override
-	@Transactional
-	public Course createCourseWithSectionsAndUnits(CourseRegisterRequest request) {
-		Course course = buildCourse(request);
-		Course savedCourse = courseRepository.save(course);
+  @Override
+  @Transactional
+  public Course createCourseWithSectionsAndUnits(CourseRegisterRequest request) {
+    Course course = buildCourse(request);
+    Course savedCourse = courseRepository.save(course);
 
-		for (SectionRegisterRequest sectionRegister : request.getSections()) {
-			Section section = buildSection(savedCourse, sectionRegister);
-			Section savedSection = sectionRepository.save(section);
+    for (SectionRegisterRequest sectionRegister : request.getSections()) {
+      Section section = buildSection(savedCourse, sectionRegister);
+      Section savedSection = sectionRepository.save(section);
 
-			for (UnitRegisterRequest unitRegister : sectionRegister.getUnits()) {
-				Unit unit = buildUnit(savedSection, unitRegister);
-				unitRepository.save(unit);
-			}
-		}
+      for (UnitRegisterRequest unitRegister : sectionRegister.getUnits()) {
+        Unit unit = buildUnit(savedSection, unitRegister);
+        unitRepository.save(unit);
+      }
+    }
 
-		return savedCourse;
-	}
+    return savedCourse;
+  }
 
-	private Course buildCourse(CourseRegisterRequest request) {
-		return Course.builder()
-						.courseName(request.getCourseName())
-						.build();
-	}
+  private Course buildCourse(CourseRegisterRequest request) {
+    return Course.builder().courseName(request.getCourseName()).build();
+  }
 
-	private Section buildSection(Course course, SectionRegisterRequest sectionRegister) {
-		return Section.builder()
-						.course(course)
-						.content(sectionRegister.getContent())
-						.build();
-	}
+  private Section buildSection(Course course, SectionRegisterRequest sectionRegister) {
+    return Section.builder().course(course).content(sectionRegister.getContent()).build();
+  }
 
-	private Unit buildUnit(Section section, UnitRegisterRequest unitRegister) {
-		return Unit.builder()
-						.section(section)
-						.content(unitRegister.getContent())
-						.build();
-	}
+  private Unit buildUnit(Section section, UnitRegisterRequest unitRegister) {
+    return Unit.builder().section(section).content(unitRegister.getContent()).build();
+  }
 
 
   @Override
@@ -138,4 +130,35 @@ public class CourseServiceImpl implements CourseService {
             .collect(Collectors.toList());
   }
 
+	@Override
+	@Transactional
+	public void updateCourse(Long courseId, CourseRegisterRequest request) {
+		Course course = courseRepository.findById(courseId)
+						.orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
+
+		course.setCourseName(request.getCourseName());
+
+		sectionRepository.deleteAll(course.getSections());
+		course.setSections(null);
+
+		for (SectionRegisterRequest sectionRegister : request.getSections()) {
+			Section section = buildSection(course, sectionRegister);
+			Section savedSection = sectionRepository.save(section);
+
+			for (UnitRegisterRequest unitRegister : sectionRegister.getUnits()) {
+				Unit unit = buildUnit(savedSection, unitRegister);
+				unitRepository.save(unit);
+			}
+		}
+
+		courseRepository.save(course);
+	}
+
+	@Override
+	@Transactional
+	public void deleteCourse(Long courseId) {
+		Course course = courseRepository.findById(courseId)
+						.orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
+		courseRepository.delete(course);
+	}
 }

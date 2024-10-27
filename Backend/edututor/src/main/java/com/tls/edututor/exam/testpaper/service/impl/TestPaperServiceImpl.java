@@ -9,6 +9,7 @@ import com.tls.edututor.exam.option.repository.OptionRepository;
 import com.tls.edututor.exam.question.dto.request.QuestionRegisterRequest;
 import com.tls.edututor.exam.question.dto.response.QuestionResponse;
 import com.tls.edututor.exam.question.entity.Question;
+import com.tls.edututor.exam.question.entity.QuestionType;
 import com.tls.edututor.exam.question.repository.QuestionRepository;
 import com.tls.edututor.exam.testpaper.dto.request.TestPaperRegisterRequest;
 import com.tls.edututor.exam.testpaper.dto.response.TestPaperResponse;
@@ -47,6 +48,7 @@ public class TestPaperServiceImpl implements TestPaperService {
       question.setContent(questionRegister.getContent());
       question.setPassage(questionRegister.getPassage());
       question.setCommentary(questionRegister.getCommentary());
+      question.setType(QuestionType.OBJECTIVE);
       Question savedQuestion = questionRepository.save(question);
 
       for (OptionRegisterRequest optionRegister : questionRegister.getOptions()) {
@@ -77,11 +79,12 @@ public class TestPaperServiceImpl implements TestPaperService {
       questionResponse.setContent(question.getContent());
       questionResponse.setCommentary(question.getCommentary());
 
+
       List<OptionResponse> optionResponses = question.getOptions().stream().map(option -> {
         OptionResponse optionResponse = new OptionResponse();
         optionResponse.setId(option.getId());
         optionResponse.setContent(option.getContent());
-        optionResponse.setCorrect(option.getIsCorrect());
+        optionResponse.setIsCorrect(option.getIsCorrect());
         return optionResponse;
       }).toList();
 

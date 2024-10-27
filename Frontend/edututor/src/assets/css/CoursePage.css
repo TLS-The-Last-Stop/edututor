@@ -1,0 +1,61 @@
+.course-page {
+    display: flex;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 20%;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.new-course-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.course-details {
+    width: 80%;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.students-icon {
+    display: flex;
+    align-items: center;
+}
+
+.section {
+    margin-top: 20px;
+}
+
+.unit {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.preview-btn, .share-btn, .material-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.testpaper {
+    margin-top: 10px;
+}

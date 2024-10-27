@@ -22,20 +22,23 @@ const CourseDetailPage = () => {
         });
   }, [courseId]);
 
+  // 학습자료 등록 페이지로 이동
   const registerMaterial = (unitId) => {
     navigate(`/admin/create-material?unitId=${unitId}`);
   };
 
-  const viewMaterial = (unitId) => {
-    navigate(`/admin/materials/${unitId}`);
+  // 학습자료 보기 페이지로 이동
+  const viewMaterial = (materialId) => {
+    navigate(`/admin/materials/${materialId}`);
   };
 
+  // 시험지 등록 페이지로 이동
   const registerTestPaper = (unitId) => {
     navigate(`/admin/create-test-paper?unitId=${unitId}`);
   };
 
+  // 시험지 보기 페이지로 이동
   const viewTestPaper = (testPaper) => {
-    console.log('TestPaper:', testPaper);
     if (testPaper && (testPaper.id || testPaper.testPaperId)) {
       const testPaperId = testPaper.id || testPaper.testPaperId;
       navigate(`/admin/test-paper-detail/${testPaperId}`);
@@ -44,8 +47,9 @@ const CourseDetailPage = () => {
     }
   };
 
+  // 과정 수정 페이지로 이동
   const goToEditPage = () => {
-    navigate(`/course/edit/${courseId}`);
+    navigate(`/admin/course/edit/${courseId}`);
   };
 
   if (loading) return <p>로딩 중...</p>;
@@ -61,6 +65,7 @@ const CourseDetailPage = () => {
 
               <button onClick={goToEditPage} className="edit-button">수정하기</button>
 
+              {/* 단원 및 차수 정보 */}
               {courseData.sections.length > 0 ? (
                   courseData.sections.map((section) => (
                       <div key={section.sectionId} className="section">
@@ -73,16 +78,32 @@ const CourseDetailPage = () => {
                                   <h5>차수 ID: {unit.unitId}</h5>
                                   <p>차수 명: {unit.content}</p>
 
+                                  {/* 학습자료 처리 */}
                                   {unit.materials.length > 0 ? (
-                                      <button onClick={() => viewMaterial(unit.unitId)} className="view-button">학습자료 보기</button>
+                                      unit.materials.map((material) => (
+                                          <button
+                                              key={material.materialId}
+                                              onClick={() => viewMaterial(material.materialId)}
+                                              className="view-button"
+                                          >
+                                            학습자료 보기
+                                          </button>
+                                      ))
                                   ) : (
-                                      <button onClick={() => registerMaterial(unit.unitId)} className="add-button">학습자료 등록</button>
+                                      <button onClick={() => registerMaterial(unit.unitId)} className="add-button">
+                                        학습자료 등록
+                                      </button>
                                   )}
 
+                                  {/* 시험지 처리 */}
                                   {unit.testPaper ? (
-                                      <button onClick={() => viewTestPaper(unit.testPaper)} className="view-button">시험지 보기</button>
+                                      <button onClick={() => viewTestPaper(unit.testPaper)} className="view-button">
+                                        시험지 보기
+                                      </button>
                                   ) : (
-                                      <button onClick={() => registerTestPaper(unit.unitId)} className="add-button">시험지 등록</button>
+                                      <button onClick={() => registerTestPaper(unit.unitId)} className="add-button">
+                                        시험지 등록
+                                      </button>
                                   )}
                                 </div>
                             ))

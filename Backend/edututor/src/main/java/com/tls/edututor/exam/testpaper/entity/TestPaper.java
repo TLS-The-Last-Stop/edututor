@@ -1,5 +1,6 @@
 package com.tls.edututor.exam.testpaper.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.unit.entity.Unit;
 import com.tls.edututor.exam.question.entity.Question;
@@ -26,6 +27,7 @@ public class TestPaper extends BaseEntity {
   private String title;
 
   @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  @JsonManagedReference
   private List<Question> questions;
 
 }
