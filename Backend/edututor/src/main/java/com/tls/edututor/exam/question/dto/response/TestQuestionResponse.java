@@ -3,7 +3,6 @@ package com.tls.edututor.exam.question.dto.response;
 import com.tls.edututor.exam.option.dto.response.OptionResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -11,11 +10,11 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class QuestionResponse {
+public class TestQuestionResponse {
   private Long id;
   private String content;
-  private String commentary;
+  private String type;
   private List<OptionResponse> options;
+
 
 }

@@ -9,7 +9,12 @@ import TestPaperCreationPage from './pages/admin/TestPaperCreationPage.jsx';
 import CourseDetailPage from './pages/admin/CourseDetailPage.jsx';
 import CourseRegister from './pages/course/CourseRegister.jsx';
 import Board from './pages/board/Board.jsx';
-import TestPaperDetailPage from './pages/admin/TestPaperDetailPage.jsx';
+import TestPaperDetailPage from "./pages/admin/TestPaperDetailPage.jsx";
+import MaterialDetailPage from "./pages/admin/MaterialDetailPage.jsx";
+import MaterialEditPage from "./pages/admin/MaterialEditPage.jsx";
+import CourseEditPage from "./pages/admin/CourseEditPage.jsx";
+import CoursePage from "./pages/course/CoursePage.jsx";
+import ExamPage from "./pages/exam/ExamPage.jsx";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -68,6 +73,10 @@ function App() {
             <Suspense fallback={<LoadingSpinner />}><CourseCreationPage /></Suspense>
           } />
 
+          <Route path="course/edit/:courseId" element={
+            <Suspense fallback={<LoadingSpinner />}><CourseEditPage /></Suspense>
+          } />
+
           <Route path="create-material" element={
             <Suspense fallback={<LoadingSpinner />}><MaterialCreationPage /></Suspense>
           } />
@@ -75,6 +84,15 @@ function App() {
           <Route path="create-test-paper" element={
             <Suspense fallback={<LoadingSpinner />}><TestPaperCreationPage /></Suspense>
           } />
+
+          <Route path="materials/:materialId" element={
+            <Suspense fallback={<LoadingSpinner />}><MaterialDetailPage /></Suspense>
+          } />
+          <Route path="edit-material/:materialId" element={
+            <Suspense fallback={<LoadingSpinner />}><MaterialEditPage /></Suspense>
+          } />
+
+
         </Route>
 
         <Route path="/" element={
@@ -93,7 +111,6 @@ function App() {
             <Suspense fallback={<LoadingSpinner />}><Board /></Suspense>
           } />
 
-          {/* class room */}
           <Route path="classroom">
             <Route index element={
               <Suspense fallback={<LoadingSpinner />}><Classroom /></Suspense>
@@ -117,8 +134,15 @@ function App() {
           <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
         } />
 
-        <Route path="courseregister" element={<CourseRegister />}></Route>
+        <Route path="/test" element={
+          <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
+        } />
 
+        <Route path="/course/:courseId" index element={
+          <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
+        } />
+
+        <Route path="courseregister" element={<CourseRegister />}></Route>
       </Routes>
     </BrowserRouter>
   );
