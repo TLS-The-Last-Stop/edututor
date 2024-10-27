@@ -2,7 +2,9 @@ package com.tls.edututor.course.course.entity;
 
 import com.tls.edututor.classroom.entity.Classroom;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "COURSE_CLASSROOM")
 public class CourseClassroom {
