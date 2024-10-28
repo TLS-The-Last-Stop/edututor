@@ -19,12 +19,16 @@ public class JwtUtil {
     this.secretKey = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
   }
 
-  public Long getUserId(String token) {
-    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", Long.class);
+  public String getId(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", String.class);
   }
 
   public String getType(String token) {
     return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("type", String.class);
+  }
+
+  public String getLoginId(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("loginId", String.class);
   }
 
   public String getUsername(String token) {
@@ -43,7 +47,7 @@ public class JwtUtil {
     return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
   }
 
-  public String createToken(String type, Map<String, String> claims, Long expiredMs) {
+  public String createToken(String type, Map<String, Object> claims, Long expiredMs) {
     return Jwts.builder()
             .claim("type", type)
             .claims(claims)
