@@ -10,11 +10,17 @@ import java.util.List;
 
 @Repository
 public interface TestPaperRepository2 extends JpaRepository<TestPaper, Long> {
-    @Query("SELECT tp FROM TestPaper tp " +
-            "JOIN FETCH tp.unit u " +
-            "JOIN FETCH u.section s " +
-            "JOIN FETCH s.course c " +
-            "WHERE u.section.course.id IN :courseIds " +
-            "AND tp.isDeleted = false")
-    List<TestPaper> findByUnitCourseIdInAndIsDeletedFalse(Collection<Long> courseIds);
+  @Query("SELECT tp FROM TestPaper tp " +
+          "JOIN FETCH tp.unit u " +
+          "JOIN FETCH u.section s " +
+          "JOIN FETCH s.course c " +
+          "WHERE u.section.course.id IN :courseIds " +
+          "AND tp.isDeleted = false")
+  List<TestPaper> findByUnitCourseIdInAndIsDeletedFalse(Collection<Long> courseIds);
+
+  @Query("SELECT tp FROM TestPaper tp " +
+          "JOIN FETCH tp.unit u " +
+          "JOIN FETCH u.section s " +
+          "WHERE tp.unit.id = :unitId")
+  TestPaper findByUnitId(Long unitId);
 }
