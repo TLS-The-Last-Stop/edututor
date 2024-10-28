@@ -105,39 +105,43 @@ const TeacherLogin = () => {
 
           <FormContainer>
             <FieldSet>
-              <FormGroup>
-                <Label htmlFor="loginId">아이디</Label>
-                <Input
-                  id="loginId"
-                  name="loginId"
-                  onChange={handleInputChange}
-                  $hasError={!!errors.loginId}
-                />
-                {errors.loginId && <ErrorText>{errors.loginId}</ErrorText>}
-              </FormGroup>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}>
+                <FormGroup>
+                  <Label htmlFor="loginId">아이디</Label>
+                  <Input
+                    id="loginId"
+                    name="loginId"
+                    onChange={handleInputChange}
+                    $hasError={!!errors.loginId}
+                  />
+                  {errors.loginId && <ErrorText>{errors.loginId}</ErrorText>}
+                </FormGroup>
 
-              <FormGroup>
-                <Label htmlFor="password">비밀번호</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  onChange={handleInputChange}
-                  $hasError={!!errors.password}
-                />
-                {errors.password && <ErrorText>{errors.password}</ErrorText>}
-              </FormGroup>
+                <FormGroup>
+                  <Label htmlFor="password">비밀번호</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    onChange={handleInputChange}
+                    $hasError={!!errors.password}
+                  />
+                  {errors.password && <ErrorText>{errors.password}</ErrorText>}
+                </FormGroup>
 
-              <LinkGroup>
-                <StyledRouterLink to="/find-id">아이디 찾기</StyledRouterLink>
-                <StyledRouterLink to="/find-password">비밀번호 찾기</StyledRouterLink>
-                <StyledRouterLink to="/join">회원가입</StyledRouterLink>
-              </LinkGroup>
+                <LinkGroup>
+                  <StyledRouterLink to="/find-id">아이디 찾기</StyledRouterLink>
+                  <StyledRouterLink to="/find-password">비밀번호 찾기</StyledRouterLink>
+                  <StyledRouterLink to="/join">회원가입</StyledRouterLink>
+                </LinkGroup>
 
-              <FormGroup>
-                <Button $primary onClick={handleSubmit}>로그인</Button>
-              </FormGroup>
-
+                <FormGroup>
+                  <Button $primary onClick={handleSubmit}>로그인</Button>
+                </FormGroup>
+              </form>
               <SNSLoginSection>
                 <SNSTitle>SNS 로그인</SNSTitle>
                 <SNSButtonGroup>

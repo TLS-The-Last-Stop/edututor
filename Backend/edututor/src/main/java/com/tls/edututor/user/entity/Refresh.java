@@ -3,10 +3,13 @@ package com.tls.edututor.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Refresh {
 
   @Id
@@ -35,6 +38,14 @@ public class Refresh {
 
   public void markAsUsed() {
     this.used = true;
+  }
+
+  public void updateToken(Long id, String loginId, String newToken, Long newExpiration) {
+    this.id = id;
+    this.loginId = loginId;
+    this.refreshToken = newToken;
+    this.expiration = new Date(System.currentTimeMillis() + newExpiration).toString();
+    this.used = false;
   }
 
 }

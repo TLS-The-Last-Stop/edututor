@@ -153,7 +153,7 @@ const CreateStudentModal = ({
 
               <FormGroup>
                 <Label>
-                  <SubTitle $isModal>{classroomName} 반 정보<Required>*</Required></SubTitle>
+                  <SubTitle $isModal>{classroomName} 반 번호<Required>*</Required></SubTitle>
                 </Label>
                 <InputGroup>
                   <Input

@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import CreateStudent from '../../components/classroom/CreateStudent.jsx';
 import StudentList from '../../components/classroom/StudentList.jsx';
 import styled from 'styled-components';
+import { getAllStudent } from '../../api/classroom/classroom.js';
+import { getUserInfo } from '../../utils/auth.js';
+import Loading from '../../components/common/Loading.jsx';
+import { ErrorText } from '../../components/common/UserStyledComponents.js';
+import EmptyState from '../../components/classroom/EmptyState.jsx';
 
 const initStudent = {
   id      : '',
@@ -35,23 +40,50 @@ const Title = styled.h1`
 
 const Classroom = () => {
   const [students, setStudents] = useState([initStudent]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setStudents([{ id: 1, loginId: 'suwan', fullName: '이수완' }, { id: '2', loginId: 'duwan', fullName: '이두완' }]);
+    fetchAllStudent();
   }, []);
+
+  const fetchAllStudent = async () => {
+    try {
+      const userInfo = getUserInfo(true);
+      const result = await getAllStudent(userInfo.classroom.id);
+
+      if (result.status === 200) {
+        setStudents(result.data);
+      } else {
+        setError('학생 목록을 불러오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Error fetching students: ', error);
+      setError('서버 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleDelete = (studentId) => {
     setStudents(students.filter(student => student.loginId !== studentId));
   };
+
+  if (isLoading) return <Loading />;
+  if (error) return <ErrorText>{error}</ErrorText>;
 
   return (
     <Container>
       <ContentWrapper>
         <Header>
           <Title>구성원 관리</Title>
-          <CreateStudent />
+          <CreateStudent fetchAllStudent={fetchAllStudent} />
         </Header>
-        <StudentList students={students} handleDelete={handleDelete} />
+        {students.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <StudentList students={students} handleDelete={handleDelete} />
+        )}
       </ContentWrapper>
     </Container>
   );
