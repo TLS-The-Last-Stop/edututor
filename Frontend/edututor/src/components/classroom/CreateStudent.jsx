@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import CreateStudentModal from './CreateStudentModal.jsx';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { checkDuplicateId, createStudent } from '../../api/user/user.js';
+import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../../utils/auth.js';
 
 const CreateButton = styled.button`
     padding: 0.5rem 1rem;
@@ -26,15 +28,31 @@ const initForm = {
   classNumber  : ''
 };
 
-const CreateStudent = () => {
+const CreateStudent = ({ fetchAllStudent }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState(initForm);
   const [errors, setErrors] = useState({});
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [idCheckMessage, setIdCheckMessage] = useState('');
+  const [userInfo, setUserInfo] = useState('');
+  const [classroomName, setClassroomName] = useState('');
 
-  const userInfo = JSON.parse(localStorage.getItem('info'));
-  const { classroomName } = userInfo?.classroom;
+  const hasAlerted = useRef(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      const info = getUserInfo(true);
+      setUserInfo(info);
+      setClassroomName(info.classroom.classroomName);
+    } catch (error) {
+      if (!hasAlerted.current) {
+        alert('로그인 해주세요.');
+        hasAlerted.current = true;
+      }
+      navigate('/teacher-login');
+    }
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -161,6 +179,7 @@ const CreateStudent = () => {
       if (result.status === 204) {
         alert(result?.message || '학생이 등록되었습니다.?');
         handleCloseModal();
+        fetchAllStudent();
       }
 
       if (result.status === 400) {

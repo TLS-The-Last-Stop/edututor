@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { privateApi, publicApi } from '../axios.js';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -18,13 +19,13 @@ export const teacherJoin = async (data) => {
 };
 
 export const createStudent = async (data) => {
-  const response = await axios.post(`${BASE_URL}/users/students`, data);
+  const response = await axios.post(`${BASE_URL}/users/students`, data, {
+    withCredentials: true
+  });
   return response.data;
 };
 
 export const login = async (data) => {
-  const response = await axios.post(`${BASE_URL}/login`, data, {
-    withCredentials: true
-  });
+  const response = await publicApi.post('login', data);
   return response.data;
 };

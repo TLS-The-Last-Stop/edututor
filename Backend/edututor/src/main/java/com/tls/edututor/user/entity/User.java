@@ -18,9 +18,8 @@ public class User extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  // 학생들도 같은 classroom을 참조할 수 있도록
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-  @JoinColumn(name = "CLASS_ID")
+  @JoinColumn(name = "CLASSROOM_ID")
   private Classroom classroom;
 
   @Column(name = "LOGIN_ID", unique = true, nullable = false)

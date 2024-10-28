@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import { getUserInfo } from '../../utils/auth.js';
 
 const HeaderContainer = styled.header`
     background: aquamarine;
@@ -33,14 +34,12 @@ const HeaderLogo = styled.div`
 `;
 
 const Header = () => {
-  const [username, setUsername] = useState('');
+  const [userInfo, setUserInfo] = useState('');
 
   useEffect(() => {
-    const userinfo = JSON.parse(localStorage.getItem('info'));
-    const { fullName } = userinfo;
-
-    if (fullName) setUsername(fullName);
-  }, [username]);
+    const info = getUserInfo();
+    setUserInfo(info);
+  }, []);
 
   return (
     <HeaderContainer>
@@ -56,7 +55,7 @@ const Header = () => {
           <li>8</li>
         </HeaderNav>
         <HeaderLogo>
-          {username}
+          {userInfo?.fullName}
         </HeaderLogo>
       </HeaderContent>
     </HeaderContainer>
