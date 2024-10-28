@@ -25,6 +25,15 @@ public class JwtFilter extends OncePerRequestFilter {
   private final JwtUtil jwtUtil;
 
   @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    return path.equals("/api/auth/refresh") ||
+            path.equals("/api/users/teachers") ||
+            path.equals("/api/login") ||
+            path.equals("/api/logout");
+  }
+
+  @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     Cookie[] cookies = request.getCookies();
     String accessToken = "";
@@ -33,7 +42,6 @@ public class JwtFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-
 
     try {
       for (Cookie cookie : cookies) {
@@ -66,15 +74,14 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     // 토큰에서 가져오기
-    Long userId = jwtUtil.getUserId(accessToken);
+    Long userId = Long.parseLong(jwtUtil.getId(accessToken));
     String username = jwtUtil.getUsername(accessToken);
     String email = jwtUtil.getEmail(accessToken);
     String roles = jwtUtil.getRoles(accessToken);
 
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roles);
+    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + roles);
 
-    AuthUser authUser = new AuthUser(userId, username, email, null, authority.getAuthority());
-
+    AuthUser authUser = new AuthUser(userId, username, email, null, null);
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser, null, List.of(authority));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);

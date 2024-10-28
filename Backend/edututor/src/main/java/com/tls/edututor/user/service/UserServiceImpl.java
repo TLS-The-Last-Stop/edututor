@@ -66,11 +66,14 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByLoginId(request.getLoginId())) {
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
+    Classroom classroom = classroomRepository.findById(request.getClassroom().getId()).orElseThrow(() -> new IllegalArgumentException("찾는 classroom이 없습니다."));
+
     request.setPassword(passwordEncoder.encode(request.getPassword()));
 
     User user = User.createStudent(request);
+    user.setClassroom(classroom);
     user.setWriter(request.getTeacherId());
-
+    
     userRepository.save(user);
 
     return user.getId();

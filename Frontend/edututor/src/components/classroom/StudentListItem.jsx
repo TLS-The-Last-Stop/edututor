@@ -46,7 +46,7 @@ const StudentListItem = ({ student, handleDelete }) => {
     <StudentItem>
       <StudentInfo>
         <Avatar />
-        <StudentName>{student.fullName} ({student.loginId})</StudentName>
+        <StudentName>{student.studentFullName} ({student.studentLoginId})</StudentName>
       </StudentInfo>
       <DeleteButton onClick={() => handleDelete()}>계정 삭제</DeleteButton>
     </StudentItem>

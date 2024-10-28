@@ -8,6 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ClassroomRequest {
+  private Long id;
   private String classroomName;
   private int year;
   private String grade;

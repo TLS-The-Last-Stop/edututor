@@ -59,7 +59,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     String loginId = customUser.getUsername();
     String id = String.valueOf(customUser.getId());
 
-    Map<String, String> claims = new HashMap<>();
+    Map<String, Object> claims = new HashMap<>();
     claims.put("id", id);
     claims.put("loginId", loginId);
     claims.put("username", customUser.getUsername());
@@ -89,13 +89,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   private void addRefreshEntity(String loginId, String refreshToken, long expiredMs) {
     Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-    Refresh build = Refresh.builder()
+    Refresh refresh = Refresh.builder()
             .loginId(loginId)
             .refreshToken(refreshToken)
             .expiration(date.toString())
             .build();
 
-    refreshRepository.save(build);
+    refreshRepository.save(refresh);
   }
 
   private Cookie createCookie(String key, String value) {
