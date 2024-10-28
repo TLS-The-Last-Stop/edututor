@@ -6,12 +6,15 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
+/**
+ * 리포트 리스트
+ */
 @Getter
 @Builder
-public class TestPaperResponse2 extends BaseEntity {
-    private Long id;
-    private String title;
-    private String courseName;
-    private String unitName;
-    private LocalDate createAt;
+public class TestPaperResponse2 {
+  private Long id;
+  private String title;
+  private String courseName;
+  private String unitName;
+  private LocalDate createAt;
 }

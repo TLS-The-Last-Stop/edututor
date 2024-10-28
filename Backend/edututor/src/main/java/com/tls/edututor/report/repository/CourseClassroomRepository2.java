@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface CourseClassroomRepository2 extends JpaRepository<CourseClassroom, Long> {
   @Query("SELECT cc FROM CourseClassroom cc JOIN FETCH cc.course WHERE cc.classroom.id = :classroomId")
-  List<CourseClassroom> findByClassroomId(Long classroom);
+  List<CourseClassroom> findByClassroomId(Long classroomId);
 }

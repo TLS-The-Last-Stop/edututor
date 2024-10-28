@@ -4,7 +4,9 @@ import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import com.tls.edututor.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "USER_TEST")
 public class UserTest extends BaseEntity {
