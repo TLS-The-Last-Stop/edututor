@@ -1,16 +1,16 @@
 package com.tls.edututor.report.service.impl;
 
 import com.tls.edututor.course.course.entity.CourseClassroom;
+import com.tls.edututor.exam.question.entity.Question;
 import com.tls.edututor.exam.question.repository.QuestionRepository;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
+import com.tls.edututor.exam.useransewer.entity.UserAnswer;
 import com.tls.edututor.exam.useransewer.repositroy.UserAnswerRepository;
 import com.tls.edututor.exam.usertest.entity.UserTest;
 import com.tls.edututor.report.dto.response.TestPaperDetailResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
 import com.tls.edututor.report.dto.response.UserTestResponse2;
-import com.tls.edututor.report.repository.CourseClassroomRepository2;
-import com.tls.edututor.report.repository.TestPaperRepository2;
-import com.tls.edututor.report.repository.UserTestRepository2;
+import com.tls.edututor.report.repository.*;
 import com.tls.edututor.report.service.ReportService;
 import com.tls.edututor.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,8 @@ public class ReportServiceImpl implements ReportService {
   private final CourseClassroomRepository2 courseClassroomRepository2;
   private final TestPaperRepository2 testPaperRepository2;
   private final UserTestRepository2 userTestRepository2;
+  private final UserAnswerRepository2 userAnswerRepository2;
+  private final QuestionRepository2 questionRepository2;
 
   public List<TestPaperResponse2> getTestPapers(Long classroomId) {
     List<Long> courseIds = new ArrayList<>();
@@ -52,20 +54,34 @@ public class ReportServiceImpl implements ReportService {
   }
 
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
-    //시험지 조회
     TestPaper testPaper = testPaperRepository2.findByUnitId(testPaperId);
     if (testPaper == null) {
       log.error("TestPaper not found for ID: {}", testPaperId);
     }
 
-    //해당 시험에 대한 학생 정보
     List<UserTest> userTests = userTestRepository2.findByTestPaperId(testPaperId);
 
-    //
     List<UserTestResponse2> userTestResponses = new ArrayList<>();
     for (UserTest userTest : userTests) {
+      List<String> userAnswers = new ArrayList<>();
+      List<UserAnswer> userAnswersList = userAnswerRepository2.findByUserTestId(userTest.getId());
+      for (UserAnswer userAnswer : userAnswersList) {
+        userAnswers.add(userAnswer.getAnswer());
+      }
+
+      List<String> correctAnswers = new ArrayList<>();
+      List<Question> correctAnswersList = questionRepository2.findByTestPaperId(testPaperId);
+      for (Question question : correctAnswersList) {
+        correctAnswers.add(question.getAnswerText());
+      }
+
+      //성취율 계산
+
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
               .userName(userTest.getShareTest().getUser().getFullName())
+//              .achievementRate(achievementRate)
+              .userAnswers(userAnswers)
+              .correctAnswers(correctAnswers)
               .build();
       userTestResponses.add(userTestResponse);
     }
