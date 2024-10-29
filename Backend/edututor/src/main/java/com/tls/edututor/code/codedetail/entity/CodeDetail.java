@@ -9,23 +9,23 @@ import lombok.*;
 @Table(name = "CODE_DETAIL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@AllArgsConstructor
 public class CodeDetail extends BaseEntity {
 
   @Id
-  private String id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-  @ManyToOne
+  @Column(name = "CODE_DETAIL_ID")
+  private Integer codeDetailId;
+
+  @Column(name = "CODE_DETAIL_VALUE")
+  private Integer codeDetailValue;
+
+  @Column(name = "COMMON_CODE_NAME")
+  private String commonCodeName;
+
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CODE_GROUP_ID", nullable = false)
   private CodeGroup codeGroup;
-
-  @Column(name = "CODE_DETAIL_VALUE", nullable = false)
-  private String codeDetailValue;
-
-  @Builder(builderMethodName = "withCode")
-  public CodeDetail(String id, CodeGroup codeGroup, String codeDetailValue) {
-    this.id = id;
-    this.codeGroup = codeGroup;
-    this.codeDetailValue = codeDetailValue;
-  }
-
 }
