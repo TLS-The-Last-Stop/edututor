@@ -1,11 +1,15 @@
 package com.tls.edututor.exam.usertest.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tls.edututor.common.entity.BaseEntity;
-import com.tls.edututor.exam.testpaper.entity.TestPaper;
-import com.tls.edututor.user.entity.User;
+import com.tls.edututor.exam.sharetest.entity.ShareTest;
+import com.tls.edututor.exam.useransewer.entity.UserAnswer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,17 +20,18 @@ public class UserTest extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "USER_ID", nullable = false)
-  private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "SHARE_TEST_ID", nullable = false)
+  @JsonBackReference
+  private ShareTest shareTest;
 
-  @ManyToOne
-  @JoinColumn(name = "TEST_PAPER_ID", nullable = false)
-  private TestPaper testPaper;
-
-  @Column(name = "RESULT", nullable = false)
-  private Long result;
+  @Column(name = "RESULT")
+  private Double result;
 
   @Column(name = "EXAM_TAKEN")
   private Boolean examTaken;
+
+  @OneToMany(mappedBy = "userTest", cascade = CascadeType.ALL)
+  @JsonManagedReference
+  private List<UserAnswer> userAnswers;
 }
