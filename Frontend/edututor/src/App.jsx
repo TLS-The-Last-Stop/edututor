@@ -9,12 +9,13 @@ import TestPaperCreationPage from './pages/admin/TestPaperCreationPage.jsx';
 import CourseDetailPage from './pages/admin/CourseDetailPage.jsx';
 import CourseRegister from './pages/course/CourseRegister.jsx';
 import Board from './pages/board/Board.jsx';
-import TestPaperDetailPage from './pages/admin/TestPaperDetailPage.jsx';
-import MaterialDetailPage from './pages/admin/MaterialDetailPage.jsx';
-import MaterialEditPage from './pages/admin/MaterialEditPage.jsx';
-import CourseEditPage from './pages/admin/CourseEditPage.jsx';
-import CoursePage from './pages/course/CoursePage.jsx';
-import ExamPage from './pages/exam/ExamPage.jsx';
+import TestPaperDetailPage from "./pages/admin/TestPaperDetailPage.jsx";
+import MaterialDetailPage from "./pages/admin/MaterialDetailPage.jsx";
+import MaterialEditPage from "./pages/admin/MaterialEditPage.jsx";
+import CourseEditPage from "./pages/admin/CourseEditPage.jsx";
+import CoursePage from "./pages/course/CoursePage.jsx";
+import ExamPage from "./pages/exam/ExamPage.jsx";
+import CourseFilterPage from "./pages/course/CourseFilterPage.jsx";
 import ProtectedRout from './utils/ProtectedRout.jsx';
 
 
@@ -144,6 +145,10 @@ function App() {
 
         <Route path="/course/:courseId" index element={
           <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
+        } />
+
+        <Route path="/course/enroll" index element={
+          <Suspense fallback={<LoadingSpinner />}><CourseFilterPage /></Suspense>
         } />
 
         <Route path="courseregister" element={<CourseRegister />}></Route>

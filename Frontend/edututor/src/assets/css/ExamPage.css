@@ -1,97 +1,23 @@
-/* 전체 레이아웃 */
 .exam-page {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    position: relative;
+}
+
+.exam-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.exam-header {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.exam-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    color: #333;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* 페이지 제목 */
-.exam-page h1 {
-    font-size: 2em;
-    color: #2a8bf2;
-    margin-bottom: 20px;
-}
-
-/* 문제 리스트 */
-.question-list {
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.question-list h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-.question-list p {
-    font-size: 1.1em;
-    margin-bottom: 15px;
-}
-
-.question-list input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-}
-
-/* 문제 내비게이션 */
-.question-navigation {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 20px;
-}
-
-.question-navigation button {
-    width: 35px;
-    height: 35px;
-    font-size: 1em;
-    font-weight: bold;
-    color: white;
-    background-color: #2a8bf2;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.question-navigation button.active {
-    background-color: #f54242;
-}
-
-.question-navigation button:hover {
-    background-color: #005cbf;
-}
-
-/* 제출 버튼 */
-.submit-button {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 1.2em;
-    font-weight: bold;
-    color: white;
-    background-color: #2a8bf2;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.submit-button:hover {
-    background-color: #005cbf;
 }

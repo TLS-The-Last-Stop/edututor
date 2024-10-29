@@ -1,6 +1,5 @@
 package com.tls.edututor.user.service;
 
-import com.tls.edututor.code.codedetail.repository.CodeDetailRepository;
 import com.tls.edututor.user.dto.response.AuthUser;
 import com.tls.edututor.user.dto.response.CustomUser;
 import com.tls.edututor.user.entity.User;
