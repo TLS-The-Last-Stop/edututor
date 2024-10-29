@@ -51,19 +51,21 @@ public class ReportServiceImpl implements ReportService {
     return testPapers;
   }
 
-  public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
+  public TestPaperDetailResponse getTestPaperDetail(Long shareTestId) {
     //시험지 조회
-    TestPaper testPaper = testPaperRepository2.findByUnitId(testPaperId);
+    TestPaper testPaper = testPaperRepository2.findByUnitId(shareTestId);
     if (testPaper == null) {
-      log.error("TestPaper not found for ID: {}", testPaperId);
+      log.error("TestPaper not found for ID: {}", shareTestId);
     }
 
     //해당 시험에 대한 학생 정보
-    List<UserTest> userTests = userTestRepository2.findByTestPaperId(testPaperId);
+    List<UserTest> userTests = userTestRepository2.findByShareTestId(shareTestId);
+
+    //
     List<UserTestResponse2> userTestResponses = new ArrayList<>();
     for (UserTest userTest : userTests) {
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
-              .userName(userTest.getUser().getFullName())
+              .userName(userTest.getShareTest().getUser().getFullName())
               .build();
       userTestResponses.add(userTestResponse);
     }
