@@ -4,10 +4,13 @@ import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.exam.question.entity.Question;
 import com.tls.edututor.exam.usertest.entity.UserTest;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "USER_ANSWER")
 public class UserAnswer extends BaseEntity {
