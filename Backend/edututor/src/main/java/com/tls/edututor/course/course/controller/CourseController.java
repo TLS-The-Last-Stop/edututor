@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,11 +33,6 @@ public class CourseController {
     return CommonApiResponse.createSuccess("조회성공", courseService.selectCourseDetails(courseId));
   }
 
-  @GetMapping("/code/{codeId}")
-  public CommonApiResponse<List<Map<String, String>>> getCourseDetails(@PathVariable String codeId) {
-    List<Map<String, String>> courseDetails = courseService.getCourseDetails(codeId);
-    return CommonApiResponse.createCreated("공통 코드 조회 성공", courseDetails);
-  }
 
   @PutMapping("/{courseId}")
   public CommonApiResponse<Void> updateCourse(@PathVariable Long courseId, @RequestBody CourseRegisterRequest request) {
@@ -55,5 +49,13 @@ public class CourseController {
   @PostMapping("aa")
   public CommonApiResponse<Void> enrollCourse(@RequestBody CourseRegisterRequest request) {
     return CommonApiResponse.createSuccessWithNoContent("과정 등록 성공");
+  }
+
+  @GetMapping("/filtered")
+  public CommonApiResponse<List<CourseNameListResponse>> getFilteredCourses(
+          @RequestParam(required = false) String gradeLevel, @RequestParam(required = false) String year,
+          @RequestParam(required = false) String semester, @RequestParam(required = false) String subject) {
+    List<CourseNameListResponse> courses = courseService.getFilteredCourses(gradeLevel, year, semester, subject);
+    return CommonApiResponse.createSuccess("조회 성공", courses);
   }
 }

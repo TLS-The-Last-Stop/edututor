@@ -1,5 +1,6 @@
 package com.tls.edututor.course.course.entity;
 
+import com.tls.edututor.code.codegroup.entity.CodeGroup;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.section.entity.Section;
 import jakarta.persistence.*;
@@ -23,12 +24,13 @@ public class Course extends BaseEntity {
 	@Column(name = "COURSE_NAME")
 	private String courseName;
 
-	@Column
-	private String codeGroupId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "GROUP_CODE_ID", nullable = false)
+	private CodeGroup groupCode;
 
-  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-  private Set<CourseClassroom> courseClassrooms;
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+	private Set<CourseClassroom> courseClassrooms;
 
-  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Section> sections;
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Section> sections;
 }
