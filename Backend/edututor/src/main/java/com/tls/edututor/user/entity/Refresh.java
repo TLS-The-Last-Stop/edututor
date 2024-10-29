@@ -19,7 +19,7 @@ public class Refresh {
   @Column(nullable = false)
   private String loginId;
 
-  @Column(name = "token", length = 300, unique = true)
+  @Column(name = "token", length = 300, unique = false, nullable = false)
   private String refreshToken;
 
   @Column(nullable = false)

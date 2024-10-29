@@ -3,7 +3,7 @@ package com.tls.edututor.user.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tls.edututor.user.dto.response.CustomUser;
 import com.tls.edututor.user.entity.Refresh;
-import com.tls.edututor.user.repository.RefreshRepository;
+import com.tls.edututor.user.service.RefreshService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -16,18 +16,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
-  private final RefreshRepository refreshRepository;
+  private final RefreshService refreshService;
   private final AuthenticationManager authenticationManager;
   private final JwtUtil jwtUtil;
   private final ObjectMapper objectMapper;
@@ -37,17 +38,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     try {
       Map map = objectMapper.readValue(request.getInputStream(), Map.class);
 
-      if (map.get("loginId") == null || map.get("password") == null) {
-        throw new AuthenticationServiceException("로그인 정보가 누락되었습니다.");
-      }
-
       String loginId = map.get("loginId").toString();
       String password = map.get("password").toString();
-
+      String type = map.get("type").toString();
       UsernamePasswordAuthenticationToken token =
               new UsernamePasswordAuthenticationToken(loginId, password, null);
-      return authenticationManager.authenticate(token);
 
+      token.setDetails(Map.of("loginType", type));
+
+      return authenticationManager.authenticate(token);
     } catch (IOException e) {
       throw new AuthenticationServiceException("로그인 요청 처리 중 오류가 발생했습니다.", e);
     }
@@ -56,8 +55,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
     CustomUser customUser = (CustomUser) authResult.getPrincipal();
-    String loginId = customUser.getUsername();
+    Map<String, String> details = (Map<String, String>) authResult.getDetails();
+
     String id = String.valueOf(customUser.getId());
+    String loginId = customUser.getUsername();
+    String loginType = details.get("loginType");
 
     Map<String, Object> claims = new HashMap<>();
     claims.put("id", id);
@@ -68,6 +70,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
     claims.put("roles", String.join(",", roles));
+
+    if (!roles.get(0).equals(loginType)) throw new InternalAuthenticationServiceException("AUTH004");
 
     String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L); // 1시간 => 더 줄이기
     String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L); // 24시간 => 더 줄이기
@@ -95,7 +99,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             .expiration(date.toString())
             .build();
 
-    refreshRepository.save(refresh);
+    refreshService.saveRefreshToken(refresh);
   }
 
   private Cookie createCookie(String key, String value) {
@@ -120,6 +124,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       if (errorMessage != null && errorMessage.contains("AUTH001")) {
         errorResponse.put("code", "AUTH001");
         errorResponse.put("message", "존재하지 않는 아이디입니다.");
+      } else if (errorMessage != null && errorMessage.contains("AUTH004")) {
+        errorResponse.put("code", "AUTH004");
+        errorResponse.put("message", "잘못된 계정 유형입니다.");
       } else {
         errorResponse.put("code", "AUTH003");
         errorResponse.put("message", "로그인에 실패하였습니다.");
