@@ -1,8 +1,9 @@
-package com.tls.edututor.classroom.service;
+package com.tls.edututor.classroom.service.impl;
 
 import com.tls.edututor.classroom.dto.request.ClassroomRequest;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
+import com.tls.edututor.classroom.service.ClassroomService;
 import com.tls.edututor.user.dto.response.UserSTResponse;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;

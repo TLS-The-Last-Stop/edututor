@@ -1,6 +1,6 @@
 package com.tls.edututor.exam.testpaper.dto.response;
 
-import com.tls.edututor.exam.question.dto.response.QuestionResponse;
+import com.tls.edututor.exam.question.dto.response.TestQuestionResponse;
 import lombok.*;
 
 import java.util.List;
@@ -9,12 +9,12 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
-public class TestPaperResponse {
+public class StudentTestPaperResponse {
   private Long testPaperId;
   private String title;
-  private List<QuestionResponse> questions;
+  private List<TestQuestionResponse> questions;
 
-  public TestPaperResponse(Long testPaperId, String title, List<QuestionResponse> questions) {
+  public StudentTestPaperResponse(Long testPaperId, String title, List<TestQuestionResponse> questions) {
     this.testPaperId = testPaperId;
     this.title = title;
     this.questions = questions;

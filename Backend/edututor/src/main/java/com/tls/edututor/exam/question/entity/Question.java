@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -40,5 +41,5 @@ public class Question extends BaseEntity {
   private String answerText;
 
   @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Option> options;
+  private List<Option> options = new ArrayList<>();
 }

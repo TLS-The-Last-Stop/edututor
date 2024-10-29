@@ -1,6 +1,7 @@
 package com.tls.edututor.exam.question.dto.request;
 
 import com.tls.edututor.exam.option.dto.request.OptionRegisterRequest;
+import com.tls.edututor.exam.question.entity.QuestionType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,5 +13,7 @@ public class QuestionRegisterRequest {
   private String content;
   private String passage;
   private String commentary;
+  private QuestionType type;
+  private String answerText;
   private List<OptionRegisterRequest> options;
 }

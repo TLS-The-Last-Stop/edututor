@@ -7,12 +7,12 @@ import '../../assets/css/ExamPage.css';
 
 function ExamPage() {
   const [questions, setQuestions] = useState([]);
-  const [title, setTitle] = useState("");  // 시험지 제목 상태 추가
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [title, setTitle] = useState("");
   const [answers, setAnswers] = useState({});
+  const [answeredCount, setAnsweredCount] = useState(0);
 
   useEffect(() => {
-    fetchQuestions(1)
+    fetchQuestions(7)
         .then(response => {
           setTitle(response.data.data.title);
           setQuestions(response.data.data.questions);
@@ -20,17 +20,23 @@ function ExamPage() {
         .catch(error => console.error("문제 불러오기 실패:", error));
   }, []);
 
-  const handleAnswerChange = (questionId, answer) => {
-    setAnswers({
-      ...answers,
-      [questionId]: answer,
+  const handleAnswerChange = (questionId, answer, questionType) => {
+    setAnswers(prevAnswers => {
+      const updatedAnswers = {
+        ...prevAnswers,
+        [questionId]: questionType === 'OBJECTIVE' ? answer : answer.trim() // 객관식은 배열, 주관식은 문자열로 저장
+      };
+      const newAnsweredCount = Object.keys(updatedAnswers).filter(id => updatedAnswers[id] && updatedAnswers[id].length > 0).length;
+      setAnsweredCount(newAnsweredCount);
+      return updatedAnswers;
     });
   };
 
   const handleSubmit = () => {
     const userTest = {
       user: { id: 1 },
-      testPaper: { id: 1 },
+      testPaper: { id: 7 },
+      answers: answers,
       result: 0,
       examTaken: true,
     };
@@ -42,22 +48,25 @@ function ExamPage() {
 
   return (
       <div className="exam-page">
-        <h1>시험지: {title}</h1>
-        {questions.length > 0 && (
-            <QuestionList
-                question={questions[currentQuestion]}
-                onAnswerChange={handleAnswerChange}
-                answer={answers[questions[currentQuestion]?.id] || ''}
-                className="question-list"
-            />
-        )}
-        <QuestionNavigation
-            total={questions.length}
-            current={currentQuestion}
-            onNavigate={setCurrentQuestion}
-            className="question-navigation"
-        />
-        <SubmitButton onSubmit={handleSubmit} className="submit-button" />
+        <h1 className="exam-title">시험지: {title}</h1>
+        <div className="exam-header">
+          <span>{answeredCount} / {questions.length} 푼 문제</span>
+        </div>
+        <div className="exam-content">
+          <QuestionNavigation
+              questions={questions}
+              answers={answers}
+              onNavigate={(id) => {
+                document.getElementById(`question-${id}`).scrollIntoView({ behavior: "smooth" });
+              }}
+          />
+          <QuestionList
+              questions={questions}
+              answers={answers}
+              onAnswerChange={handleAnswerChange}
+          />
+        </div>
+        <SubmitButton onSubmit={handleSubmit} />
       </div>
   );
 }

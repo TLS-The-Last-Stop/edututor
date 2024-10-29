@@ -48,16 +48,21 @@ public class TestPaperServiceImpl implements TestPaperService {
       question.setContent(questionRegister.getContent());
       question.setPassage(questionRegister.getPassage());
       question.setCommentary(questionRegister.getCommentary());
-      question.setType(QuestionType.OBJECTIVE);
-      Question savedQuestion = questionRepository.save(question);
+      question.setType(questionRegister.getType());
 
-      for (OptionRegisterRequest optionRegister : questionRegister.getOptions()) {
-        Option option = new Option();
-        option.setQuestion(savedQuestion);
-        option.setContent(optionRegister.getContent());
-        option.setIsCorrect(optionRegister.getIsCorrect());
-        optionRepository.save(option);
+      if (questionRegister.getType() == QuestionType.SUBJECTIVE) {
+        question.setAnswerText(questionRegister.getAnswerText());
+      } else {
+        // options 리스트에 Option 추가
+        for (OptionRegisterRequest optionRegister : questionRegister.getOptions()) {
+          Option option = new Option();
+          option.setContent(optionRegister.getContent());
+          option.setIsCorrect(optionRegister.getIsCorrect());
+          option.setQuestion(question); // 관계 설정
+          question.getOptions().add(option);
+        }
       }
+      questionRepository.save(question);
     }
   }
 
