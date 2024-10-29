@@ -12,5 +12,6 @@ public class CourseRegisterRequest {
   private Long classroomId;
   private String courseName;
   private Long writer;
+  private String groupCode;
   private List<SectionRegisterRequest> sections;
 }

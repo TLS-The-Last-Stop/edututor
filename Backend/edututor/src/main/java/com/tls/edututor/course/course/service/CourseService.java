@@ -1,12 +1,12 @@
 package com.tls.edututor.course.course.service;
 
 import com.tls.edututor.course.course.dto.request.CourseRegisterRequest;
+import com.tls.edututor.course.course.dto.response.CourseFilterResponse;
 import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.dto.response.CourseResponse;
 import com.tls.edututor.course.course.entity.Course;
 
 import java.util.List;
-import java.util.Map;
 
 public interface CourseService {
 
@@ -16,9 +16,9 @@ public interface CourseService {
 
   CourseResponse selectCourseDetails(Long courseId);
 
-	List<Map<String, String>> getCourseDetails(String codeId);
-
   void updateCourse(Long courseId, CourseRegisterRequest request);
 
   void deleteCourse(Long courseId);
+
+  List<CourseNameListResponse> getFilteredCourses(String gradeLevel, String year, String semester, String subject);
 }

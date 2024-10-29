@@ -2,7 +2,10 @@ package com.tls.edututor.course.course.service.impl;
 
 import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.code.codedetail.repository.CodeDetailRepository;
+import com.tls.edututor.code.codegroup.entity.CodeGroup;
+import com.tls.edututor.code.codegroup.repository.CodeGroupRepository;
 import com.tls.edututor.course.course.dto.request.CourseRegisterRequest;
+import com.tls.edututor.course.course.dto.response.CourseFilterResponse;
 import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.dto.response.CourseResponse;
 import com.tls.edututor.course.course.entity.Course;
@@ -22,9 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class CourseServiceImpl implements CourseService {
   private final CourseRepository courseRepository;
   private final SectionRepository sectionRepository;
   private final UnitRepository unitRepository;
+  private final CodeGroupRepository codeGroupRepository;
   private final CodeDetailRepository codeDetailRepository;
 
   @Override
@@ -57,8 +59,27 @@ public class CourseServiceImpl implements CourseService {
   }
 
   private Course buildCourse(CourseRegisterRequest request) {
-    return Course.builder().courseName(request.getCourseName()).build();
+    String groupCode = request.getGroupCode();
+    String[] parts = groupCode.split("-");
+    if (parts.length != 4) {
+      throw new IllegalArgumentException("데이터가 맞지 않음 급수-학년-학기-과목");
+    }
+
+    List<String> names = List.of(parts[0], parts[1], parts[2], parts[3]);
+    long count = names.size();
+
+    Long codeGroupId = codeDetailRepository.findCodeGroupIdByCommonCodeNames(names, count)
+            .orElseThrow(() -> new RuntimeException("해당 groupCode에 해당하는 공통 코드 그룹이 존재하지 않음: " + groupCode));
+
+    CodeGroup codeGroup = codeGroupRepository.findById(codeGroupId)
+            .orElseThrow(() -> new RuntimeException("해당 그룹 ID에 해당하는 CodeGroup이 존재하지 않음: " + codeGroupId));
+
+    return Course.builder()
+            .courseName(request.getCourseName())
+            .groupCode(codeGroup)
+            .build();
   }
+
 
   private Section buildSection(Course course, SectionRegisterRequest sectionRegister) {
     return Section.builder().course(course).content(sectionRegister.getContent()).build();
@@ -116,20 +137,6 @@ public class CourseServiceImpl implements CourseService {
             .build();
   }
 
-  @Override
-  public List<Map<String, String>> getCourseDetails(String codeId) {
-    List<Object[]> results = courseRepository.findCourseDetailsByCodeId(codeId);
-
-    return results.stream()
-            .map(result -> {
-              Map<String, String> map = new HashMap<>();
-              map.put("codeDetailValue", result[0].toString());
-              map.put("id", result[1].toString());
-              return map;
-            })
-            .collect(Collectors.toList());
-  }
-
 	@Override
 	@Transactional
 	public void updateCourse(Long courseId, CourseRegisterRequest request) {
@@ -161,4 +168,15 @@ public class CourseServiceImpl implements CourseService {
 						.orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
 		courseRepository.delete(course);
 	}
+
+  @Override
+  public List<CourseNameListResponse> getFilteredCourses(String gradeLevel, String year, String semester, String subject) {
+    List<Long> groupCodeIds = codeDetailRepository.findGroupCodeIdsByDetails(gradeLevel, year, semester, subject);
+    List<Course> courses = courseRepository.findByGroupCodeIdIn(groupCodeIds);
+
+    return courses.stream().map(course -> new CourseNameListResponse(
+            course.getId(),
+            course.getCourseName()
+    )).collect(Collectors.toList());
+  }
 }

@@ -1,25 +1,27 @@
 package com.tls.edututor.code.codegroup.entity;
 
+import com.tls.edututor.code.codedetail.entity.CodeDetail;
 import com.tls.edututor.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "CODE_GROUP")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
+@Builder
 public class CodeGroup extends BaseEntity {
 
   @Id
-  private String id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-  @Column(name = "CODE_GROUP_NAME", nullable = false)
+  @Column(name = "CODE_GROUP_NAME")
   private String codeGroupName;
 
-  @Builder(builderMethodName = "withName")
-  public CodeGroup(String id, String codeGroupName) {
-    this.id = id;
-    this.codeGroupName = codeGroupName;
-    //group.setWriter(10051L);
-  }
+  @OneToMany(mappedBy = "codeGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<CodeDetail> codeDetails;
 }
