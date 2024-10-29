@@ -309,9 +309,12 @@ const UserJoinForm = ({
                 {/* 연도 선택 */}
                 <Select name="year" value={classroom.year} onChange={handleCreateClassroom}>
                   <option value="">연도</option>
-                  {Array.from({ length: new Date().getFullYear() - 1999 }, (_, i) => (
-                    <option key={2000 + i} value={2000 + i}>
-                      {2000 + i}
+                  {Array.from(
+                    { length: new Date().getFullYear() - 1999 },
+                    (_, i) => new Date().getFullYear() - i
+                  ).map(year => (
+                    <option key={year} value={year}>
+                      {year}
                     </option>
                   ))}
                 </Select>

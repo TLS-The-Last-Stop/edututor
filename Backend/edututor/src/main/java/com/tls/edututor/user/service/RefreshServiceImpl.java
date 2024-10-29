@@ -23,6 +23,12 @@ public class RefreshServiceImpl implements RefreshService {
 
   @Override
   @Transactional
+  public void saveRefreshToken(Refresh refresh) {
+    refreshRepository.save(refresh);
+  }
+
+  @Override
+  @Transactional
   public UpdateTokenResponse createNewAccessToken(HttpServletRequest request) {
     Cookie[] cookies = request.getCookies();
     String refreshToken = "";

@@ -15,11 +15,10 @@ import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 
-
 const initForm = {
   loginId : '',
   password: '',
-  type    : 'teacher'
+  type    : 'TE'
 };
 
 const initErrors = {
@@ -48,7 +47,6 @@ const TeacherLogin = () => {
   };
 
   const handleSubmit = async () => {
-
     if (!formData.loginId) {
       setErrors(prev => ({
         ...prev,
@@ -84,12 +82,17 @@ const TeacherLogin = () => {
             ...prev,
             password: message
           }));
+        } else if (code === 'AUTH004') {
+          setErrors(prev => ({
+            ...prev,
+            loginId : '마 니 학생 아이가?',
+            password: message
+          }));
         }
       } else {
         alert('로그인에 실패하셨습니다.');
       }
     }
-
   };
 
   return (
@@ -139,7 +142,7 @@ const TeacherLogin = () => {
                 </LinkGroup>
 
                 <FormGroup>
-                  <Button $primary onClick={handleSubmit}>로그인</Button>
+                  <Button $primary>로그인</Button>
                 </FormGroup>
               </form>
               <SNSLoginSection>

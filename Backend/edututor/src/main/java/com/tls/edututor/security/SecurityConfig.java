@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tls.edututor.user.jwt.JwtFilter;
 import com.tls.edututor.user.jwt.JwtUtil;
 import com.tls.edututor.user.jwt.LoginFilter;
-import com.tls.edututor.user.repository.RefreshRepository;
+import com.tls.edututor.user.service.RefreshService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class SecurityConfig {
   private final AuthenticationConfiguration authenticationConfiguration;
   private final JwtUtil jwtUtil;
   private final ObjectMapper objectMapper;
-  private final RefreshRepository refreshRepository;
+  private final RefreshService refreshService;
 
   @Bean
   public BCryptPasswordEncoder passwordEncoder() {
@@ -53,7 +53,7 @@ public class SecurityConfig {
             .requestMatchers("/admin").hasRole("ADMIN")
             .anyRequest().authenticated());*/
 
-    http.addFilterAt(new LoginFilter(refreshRepository, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterAt(new LoginFilter(refreshService, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
 
     http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
 
