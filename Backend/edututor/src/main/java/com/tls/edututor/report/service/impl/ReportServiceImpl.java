@@ -64,9 +64,11 @@ public class ReportServiceImpl implements ReportService {
     List<UserTestResponse2> userTestResponses = new ArrayList<>();
     for (UserTest userTest : userTests) {
       List<String> userAnswers = new ArrayList<>();
+      List<Boolean> isCorrect = new ArrayList<>();
       List<UserAnswer> userAnswersList = userAnswerRepository2.findByUserTestId(userTest.getId());
       for (UserAnswer userAnswer : userAnswersList) {
         userAnswers.add(userAnswer.getAnswer());
+        isCorrect.add(userAnswer.getIsCorrect());
       }
 
       List<String> correctAnswers = new ArrayList<>();
@@ -75,11 +77,13 @@ public class ReportServiceImpl implements ReportService {
         correctAnswers.add(question.getAnswerText());
       }
 
-      //성취율 계산
+      int correctAnswersCnt = 0;
+      if (true) correctAnswersCnt++;
+      double achievementRate = (double) correctAnswersCnt / isCorrect.size() * 100;
 
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
               .userName(userTest.getShareTest().getUser().getFullName())
-//              .achievementRate(achievementRate)
+              .achievementRate((long) achievementRate)
               .userAnswers(userAnswers)
               .correctAnswers(correctAnswers)
               .build();
