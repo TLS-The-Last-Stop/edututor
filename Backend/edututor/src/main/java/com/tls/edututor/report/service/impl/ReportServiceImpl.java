@@ -77,13 +77,9 @@ public class ReportServiceImpl implements ReportService {
         correctAnswers.add(question.getAnswerText());
       }
 
-      int correctAnswersCnt = 0;
-      if (true) correctAnswersCnt++;
-      double achievementRate = (double) correctAnswersCnt / isCorrect.size() * 100;
-
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
               .userName(userTest.getShareTest().getUser().getFullName())
-              .achievementRate((long) achievementRate)
+              .achievementRate((long) achievementRate(isCorrect))
               .userAnswers(userAnswers)
               .correctAnswers(correctAnswers)
               .build();
@@ -99,5 +95,15 @@ public class ReportServiceImpl implements ReportService {
             .build();
 
     return testPaperDetailResponse;
+  }
+
+  private double achievementRate(List<Boolean> icCorrect) {
+    int correctAnswersCnt = 0;
+    for (Boolean correct : icCorrect) {
+      if (correct) {
+        correctAnswersCnt++;
+      }
+    }
+    return (double) correctAnswersCnt / icCorrect.size() * 100;
   }
 }
