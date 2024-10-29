@@ -11,8 +11,8 @@ import java.util.List;
 @Getter
 @Builder
 public class UserTestResponse2 {
-  private String userName; //유저명
-  private Long achievementRate; //성취율(정답률)
-  private List<String> userAnswers; //유저 답안
-  private List<String> correctAnswers; //답안
+  private String userName;
+  private Long achievementRate;
+  private List<String> userAnswers;
+  private List<String> correctAnswers;
 }

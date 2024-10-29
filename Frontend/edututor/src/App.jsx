@@ -139,7 +139,7 @@ function App() {
           <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
         } />
 
-        <Route path="/test" element={
+        <Route path="/exam/:testPaperId" element={
           <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
         } />
 
