@@ -46,7 +46,8 @@ const TeacherLogin = () => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!formData.loginId) {
       setErrors(prev => ({
         ...prev,
@@ -86,7 +87,7 @@ const TeacherLogin = () => {
           setErrors(prev => ({
             ...prev,
             loginId : '마 니 학생 아이가?',
-            password: message
+            password: '마 니 학생 아이가?'
           }));
         }
       } else {
@@ -108,10 +109,7 @@ const TeacherLogin = () => {
 
           <FormContainer>
             <FieldSet>
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit();
-              }}>
+              <form onSubmit={handleSubmit}>
                 <FormGroup>
                   <Label htmlFor="loginId">아이디</Label>
                   <Input
