@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.unit.entity.Unit;
 import com.tls.edututor.exam.question.entity.Question;
+import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,15 +20,18 @@ public class TestPaper extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "UNIT_ID", nullable = false)
   private Unit unit;
 
   @Column(name = "TITLE", nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
   private List<Question> questions;
 
+  @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL)
+  @JsonManagedReference
+  private List<ShareTest> shareTests;
 }
