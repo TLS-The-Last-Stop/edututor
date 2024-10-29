@@ -1,13 +1,13 @@
 package com.tls.edututor.exam.usertest.dto.request;
 
+import com.tls.edututor.exam.useransewer.dto.request.UserAnswerRequest;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 @Getter
 @Setter
 public class UserTestRequest {
-  private Long userId;
   private Long testPaperId;
-  private int result;
-  private boolean examTaken;
+  private List<UserAnswerRequest> answers;
 }

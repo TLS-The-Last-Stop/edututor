@@ -1,74 +1,130 @@
 import React, { useState, useEffect } from 'react';
-import { fetchQuestions, submitAnswer } from '../../api/exam/ExamApi';
-import QuestionList from '../../components/exam/QuestionList';
-import QuestionNavigation from '../../components/exam/QuestionNavigation';
-import SubmitButton from '../../components/exam/SubmitButton';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import '../../assets/css/ExamPage.css';
 
-function ExamPage() {
-  const [questions, setQuestions] = useState([]);
-  const [title, setTitle] = useState("");
+const fetchQuestions = (testPaperId) => axios.get(`/api/test/${testPaperId}`);
+const submitAnswer = (userTest) => axios.post(`/api/test/submit`, userTest);
+
+const ExamPage = () => {
+  const { testPaperId } = useParams();
+  const [testData, setTestData] = useState(null);
   const [answers, setAnswers] = useState({});
-  const [answeredCount, setAnsweredCount] = useState(0);
+  const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
 
   useEffect(() => {
-    fetchQuestions(7)
-        .then(response => {
-          setTitle(response.data.data.title);
-          setQuestions(response.data.data.questions);
-        })
-        .catch(error => console.error("문제 불러오기 실패:", error));
-  }, []);
+    if (testPaperId) {
+      fetchQuestions(testPaperId)
+          .then((response) => {
+            setTestData(response.data);
+          })
+          .catch((error) => {
+            console.error("문제를 가져오는 중 오류 발생:", error);
+          });
+    }
+  }, [testPaperId]);
 
-  const handleAnswerChange = (questionId, answer, questionType) => {
-    setAnswers(prevAnswers => {
-      const updatedAnswers = {
-        ...prevAnswers,
-        [questionId]: questionType === 'OBJECTIVE' ? answer : answer.trim() // 객관식은 배열, 주관식은 문자열로 저장
-      };
-      const newAnsweredCount = Object.keys(updatedAnswers).filter(id => updatedAnswers[id] && updatedAnswers[id].length > 0).length;
-      setAnsweredCount(newAnsweredCount);
-      return updatedAnswers;
-    });
+  const solvedQuestions = Object.keys(answers).length;
+
+  const scrollToQuestion = (questionId) => {
+    document.getElementById(`question-${questionId}`).scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleObjectiveAnswer = (questionId, optionId) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: optionId,
+    }));
+    setAnsweredQuestions((prev) => new Set(prev).add(questionId)); // 답변 완료 처리
+  };
+
+  const handleSubjectiveAnswer = (questionId, answer) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: answer,
+    }));
+    setAnsweredQuestions((prev) => new Set(prev).add(questionId)); // 답변 완료 처리
   };
 
   const handleSubmit = () => {
     const userTest = {
-      user: { id: 1 },
-      testPaper: { id: 7 },
-      answers: answers,
-      result: 0,
-      examTaken: true,
+      testPaperId,
+      answers: Object.keys(answers).map((questionId) => ({
+        questionId: Number(questionId),
+        answer: answers[questionId],
+      })),
     };
 
     submitAnswer(userTest)
-        .then(() => alert("답안이 제출되었습니다!"))
-        .catch(error => console.error("답안 제출 실패:", error));
+        .then((response) => {
+          alert("답안 제출 완료!");
+        })
+        .catch((error) => {
+          console.error("답안 제출 중 오류 발생:", error);
+        });
   };
+
+  if (!testData) return <div>로딩 중...</div>;
+
+  const { questions, title } = testData.data;
 
   return (
       <div className="exam-page">
-        <h1 className="exam-title">시험지: {title}</h1>
-        <div className="exam-header">
-          <span>{answeredCount} / {questions.length} 푼 문제</span>
-        </div>
-        <div className="exam-content">
-          <QuestionNavigation
-              questions={questions}
-              answers={answers}
-              onNavigate={(id) => {
-                document.getElementById(`question-${id}`).scrollIntoView({ behavior: "smooth" });
-              }}
-          />
-          <QuestionList
-              questions={questions}
-              answers={answers}
-              onAnswerChange={handleAnswerChange}
-          />
-        </div>
-        <SubmitButton onSubmit={handleSubmit} />
+        <header>
+          <h2>{title || "시험지"}</h2>
+          <div>
+            <span>푼 문제: {solvedQuestions} / 전체 문제: {questions.length}</span>
+          </div>
+        </header>
+
+        <aside className="question-nav">
+          {questions.map((question, index) => (
+              <button
+                  key={question.questionId}
+                  onClick={() => scrollToQuestion(question.questionId)}
+                  className={answeredQuestions.has(question.questionId) ? 'answered' : ''}
+              >
+                {index + 1}
+              </button>
+          ))}
+        </aside>
+
+        <main className="questions">
+          {questions.map((question) => (
+              <div key={question.questionId} id={`question-${question.questionId}`} className="question">
+                <h3>문제 {question.questionId}</h3>
+                <p>{question.content}</p>
+                {question.type === "OBJECTIVE" ? (
+                    <div className="options">
+                      {question.options.map((option) => (
+                          <label key={option.optionId}>
+                            <input
+                                type="radio"
+                                name={`question-${question.questionId}`}
+                                value={option.optionId}
+                                checked={answers[question.questionId] === option.optionId}
+                                onChange={() => handleObjectiveAnswer(question.questionId, option.optionId)}
+                            />
+                            {option.content}
+                          </label>
+                      ))}
+                    </div>
+                ) : (
+                    <div className="subjective-answer">
+                <textarea
+                    placeholder="답변을 입력하세요."
+                    value={answers[question.questionId] || ''}
+                    onChange={(e) => handleSubjectiveAnswer(question.questionId, e.target.value)}
+                />
+                    </div>
+                )}
+              </div>
+          ))}
+        </main>
+
+        <button className="submit" onClick={handleSubmit}>답안 제출</button>
       </div>
   );
-}
+};
 
 export default ExamPage;
