@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../assets/css/MaterialDetailPage.css';
-import axios from 'axios';
+import { publicApi } from '../../api/axios.js';
 
 const MaterialDetailPage = () => {
   const { materialId } = useParams();
@@ -12,7 +12,7 @@ const MaterialDetailPage = () => {
   useEffect(() => {
     const fetchMaterial = async () => {
       try {
-        const response = await axios.get(`/api/material/${materialId}`);
+        const response = await publicApi.get(`/material/${materialId}`);
         setMaterialData(response.data.data);
         setLoading(false);
       } catch (err) {
@@ -27,17 +27,17 @@ const MaterialDetailPage = () => {
   if (error) return <p>{error}</p>;
 
   return (
-      <div className="material-detail-page">
-        <h1>학습자료 상세</h1>
-        {materialData ? (
-            <div>
-              <h2>제목: {materialData.title}</h2>
-              <p>내용: {materialData.content}</p>
-            </div>
-        ) : (
-            <p>학습자료가 존재하지 않습니다.</p>
-        )}
-      </div>
+    <div className="material-detail-page">
+      <h1>학습자료 상세</h1>
+      {materialData ? (
+        <div>
+          <h2>제목: {materialData.title}</h2>
+          <p>내용: {materialData.content}</p>
+        </div>
+      ) : (
+        <p>학습자료가 존재하지 않습니다.</p>
+      )}
+    </div>
   );
 };
 

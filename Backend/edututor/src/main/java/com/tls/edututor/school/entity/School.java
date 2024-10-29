@@ -17,16 +17,16 @@ public class School extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(name = "TYPE", nullable = false)
   private String type;
 
-  @Column(nullable = false)
+  @Column(name = "NAME", nullable = false)
   private String name;
 
-  @Column(nullable = false)
+  @Column(name = "OFFICE_CODE", nullable = false)
   private String officeCode;
 
-  @Column(nullable = false)
+  @Column(name = "ADDRESS", nullable = false)
   private String address;
 
   @Builder(builderMethodName = "withDto")

@@ -1,5 +1,5 @@
-import axios from 'axios';
+import { publicApi } from '../axios.js';
 
-export const fetchQuestions = (testPaperId) => axios.get(`/api/questions/${testPaperId}`);
+export const fetchQuestions = (testPaperId) => publicApi.get(`/questions/${testPaperId}`);
 
-export const submitAnswer = (userTest) => axios.post(`/api/submit`, userTest);
+export const submitAnswer = (userTest) => publicApi.post(`/submit`, userTest);

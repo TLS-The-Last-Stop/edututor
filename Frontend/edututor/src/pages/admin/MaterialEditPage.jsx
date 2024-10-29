@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { publicApi } from '../../api/axios.js';
 
 const MaterialEditPage = () => {
   const { materialId } = useParams();
@@ -12,7 +12,7 @@ const MaterialEditPage = () => {
   useEffect(() => {
     const fetchMaterial = async () => {
       try {
-        const response = await axios.get(`/api/material/${materialId}`);
+        const response = await publicApi.get(`/material/${materialId}`);
         setFormData({ title: response.data.data.title, content: response.data.data.content });
         setLoading(false);
       } catch (err) {
@@ -32,7 +32,7 @@ const MaterialEditPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/material/${materialId}`, formData);
+      await publicApi.put(`/material/${materialId}`, formData);
       alert('학습자료가 성공적으로 수정되었습니다!');
       navigate(-1); // 이전 페이지로 이동
     } catch (error) {
@@ -42,7 +42,7 @@ const MaterialEditPage = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/material/${materialId}`);
+      await publicApi.delete(`/material/${materialId}`);
       alert('학습자료가 성공적으로 삭제되었습니다!');
       navigate(-1); // 이전 페이지로 이동
     } catch (error) {
@@ -54,33 +54,33 @@ const MaterialEditPage = () => {
   if (error) return <p>{error}</p>;
 
   return (
-      <div className="material-edit-page">
-        <h2>학습자료 수정</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-field">
-            <label>제목 (Title):</label>
-            <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                required
-            />
-          </div>
-          <div className="form-field">
-            <label>내용 (Content):</label>
-            <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleInputChange}
-                required
-            />
-          </div>
+    <div className="material-edit-page">
+      <h2>학습자료 수정</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-field">
+          <label>제목 (Title):</label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="form-field">
+          <label>내용 (Content):</label>
+          <textarea
+            name="content"
+            value={formData.content}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
 
-          <button type="submit">수정하기</button>
-          <button type="button" onClick={handleDelete} className="delete-button">삭제하기</button>
-        </form>
-      </div>
+        <button type="submit">수정하기</button>
+        <button type="button" onClick={handleDelete} className="delete-button">삭제하기</button>
+      </form>
+    </div>
   );
 };
 
