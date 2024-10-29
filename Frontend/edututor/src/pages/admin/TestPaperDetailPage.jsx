@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { publicApi } from '../../api/axios.js';
 
 const TestPaperDetailPage = () => {
   const { testPaperId } = useParams();
@@ -11,7 +11,7 @@ const TestPaperDetailPage = () => {
   useEffect(() => {
     const fetchTestPaper = async () => {
       try {
-        const response = await axios.get(`/api/test-paper/${testPaperId}`);
+        const response = await publicApi.get(`/test-paper/${testPaperId}`);
         console.log(response.data.data); // 데이터를 콘솔에 출력하여 구조 확인
         setTestPaperData(response.data.data);
         setLoading(false);
@@ -28,33 +28,33 @@ const TestPaperDetailPage = () => {
   if (error) return <p>{error}</p>;
 
   return (
-      <div className="test-paper-detail">
-        <h1>시험지 상세</h1>
-        {testPaperData && (
-            <div>
-              <h2>시험지 제목: {testPaperData.title || '제목 없음'}</h2>
+    <div className="test-paper-detail">
+      <h1>시험지 상세</h1>
+      {testPaperData && (
+        <div>
+          <h2>시험지 제목: {testPaperData.title || '제목 없음'}</h2>
 
-              {testPaperData.questions && testPaperData.questions.length > 0 ? (
-                  testPaperData.questions.map((question) => (
-                      <div key={question.id} className="question-block">
-                        <h3>질문 {question.id}: {question.content}</h3>
-                        <p>설명: {question.commentary}</p>
+          {testPaperData.questions && testPaperData.questions.length > 0 ? (
+            testPaperData.questions.map((question) => (
+              <div key={question.id} className="question-block">
+                <h3>질문 {question.id}: {question.content}</h3>
+                <p>설명: {question.commentary}</p>
 
-                        <ul>
-                          {question.options.map((option) => (
-                              <li key={option.id}>
-                                {option.content} {option.correct ? '(정답)' : ''}
-                              </li>
-                          ))}
-                        </ul>
-                      </div>
-                  ))
-              ) : (
-                  <p>질문이 없습니다.</p>
-              )}
-            </div>
-        )}
-      </div>
+                <ul>
+                  {question.options.map((option) => (
+                    <li key={option.id}>
+                      {option.content} {option.correct ? '(정답)' : ''}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          ) : (
+            <p>질문이 없습니다.</p>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 

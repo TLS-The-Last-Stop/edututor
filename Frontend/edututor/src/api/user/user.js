@@ -1,7 +1,4 @@
-import axios from 'axios';
 import { privateApi, publicApi } from '../axios.js';
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 /**
  * 회원가입 아이디 중복체크
@@ -9,17 +6,17 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
  * @returns Response.status (400 === 이미 존재하는 아이디, 204 === 가입 가능한 아이디)
  */
 export const checkDuplicateId = async (loginId) => {
-  const response = await axios.get(`${BASE_URL}/users/${loginId}`);
+  const response = await publicApi.get(`/users/${loginId}`);
   return response.data;
 };
 
 export const teacherJoin = async (data) => {
-  const response = await axios.post(`${BASE_URL}/users/teachers`, data);
+  const response = await publicApi.post(`/users/teachers`, data);
   return response.data;
 };
 
 export const createStudent = async (data) => {
-  const response = await axios.post(`${BASE_URL}/users/students`, data, {
+  const response = await privateApi().post(`/users/students`, data, {
     withCredentials: true
   });
   return response.data;

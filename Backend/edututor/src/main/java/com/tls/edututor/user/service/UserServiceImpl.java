@@ -2,7 +2,7 @@ package com.tls.edututor.user.service;
 
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
-import com.tls.edututor.common.exception.DuplicateUserException;
+import com.tls.edututor.user.exception.DuplicateUserException;
 import com.tls.edututor.school.entity.School;
 import com.tls.edututor.school.repository.SchoolRepository;
 import com.tls.edututor.user.dto.request.UserSURequest;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     User user = User.createStudent(request);
     user.setClassroom(classroom);
     user.setWriter(request.getTeacherId());
-    
+
     userRepository.save(user);
 
     return user.getId();

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import instance from "../../api/axios";
+import { useNavigate, useParams } from 'react-router-dom';
+import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseCreationPage.css';
 
 const CourseEditPage = () => {
   const { courseId } = useParams();
   const [formData, setFormData] = useState({
     courseName: '',
-    sections: [
+    sections  : [
       {
         content: '',
-        units: [{ content: '' }],
-      },
-    ],
+        units  : [{ content: '' }]
+      }
+    ]
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ const CourseEditPage = () => {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await instance.get(`/api/course/${courseId}`);
+        const response = await publicApi.get(`/course/${courseId}`);
         setFormData(response.data.data); // 기존 데이터 설정
         setLoading(false);
       } catch (error) {
@@ -54,8 +54,8 @@ const CourseEditPage = () => {
       ...formData,
       sections: [
         ...formData.sections,
-        { content: '', units: [{ content: '' }] },
-      ],
+        { content: '', units: [{ content: '' }] }
+      ]
     });
   };
 
@@ -81,7 +81,7 @@ const CourseEditPage = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await instance.put(`/api/course/${courseId}`, formData);
+      const response = await publicApi.put(`/course/${courseId}`, formData);
       console.log('Response:', response.data);
       alert('과정이 성공적으로 수정되었습니다.');
       navigate(`/admin/course-detail/${courseId}`);
@@ -92,7 +92,7 @@ const CourseEditPage = () => {
 
   const handleDelete = async () => {
     try {
-      await instance.delete(`/api/course/${courseId}`);
+      await publicApi.delete(`/course/${courseId}`);
       alert('과정이 성공적으로 삭제되었습니다.');
       navigate('/courses');
     } catch (error) {

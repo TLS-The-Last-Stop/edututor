@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import instance from "../../api/axios";
+import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseListPage.css';
 
 const CourseListPage = () => {
@@ -10,7 +10,7 @@ const CourseListPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await instance.get('/api/course');
+      const response = await publicApi.get('/course');
       setCourses(response.data.data);
       setLoading(false);
     } catch (error) {
@@ -32,16 +32,16 @@ const CourseListPage = () => {
   }
 
   return (
-      <div>
-        <h1>모든 과정 리스트</h1>
-        <ul>
-          {courses.map(course => (
-              <li key={course.courseId}>
-                <Link to={`/admin/course-detail/${course.courseId}`}>{course.courseName}</Link>
-              </li>
-          ))}
-        </ul>
-      </div>
+    <div>
+      <h1>모든 과정 리스트</h1>
+      <ul>
+        {courses.map(course => (
+          <li key={course.courseId}>
+            <Link to={`/admin/course-detail/${course.courseId}`}>{course.courseName}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

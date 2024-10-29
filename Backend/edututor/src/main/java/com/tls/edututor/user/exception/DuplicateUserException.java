@@ -1,4 +1,4 @@
-package com.tls.edututor.common.exception;
+package com.tls.edututor.user.exception;
 
 public class DuplicateUserException extends RuntimeException {
   public DuplicateUserException(String message) {
