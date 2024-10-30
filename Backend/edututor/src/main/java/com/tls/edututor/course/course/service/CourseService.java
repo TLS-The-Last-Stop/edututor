@@ -5,6 +5,7 @@ import com.tls.edututor.course.course.dto.response.CourseFilterResponse;
 import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.dto.response.CourseResponse;
 import com.tls.edututor.course.course.entity.Course;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface CourseService {
 
   void deleteCourse(Long courseId);
 
-  List<CourseNameListResponse> getFilteredCourses(String gradeLevel, String year, String semester, String subject);
+  List<CourseNameListResponse> getFilteredCourses(String gradeLevel, String year, String semester, String subject, Authentication authentication);
+
+  void enrollCourseInClassroom(Long courseId,Authentication authentication);
 }

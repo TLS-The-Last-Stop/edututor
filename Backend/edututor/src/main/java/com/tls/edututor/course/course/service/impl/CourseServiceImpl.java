@@ -1,5 +1,6 @@
 package com.tls.edututor.course.course.service.impl;
 
+import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.code.codedetail.repository.CodeDetailRepository;
 import com.tls.edututor.code.codegroup.entity.CodeGroup;
@@ -9,8 +10,10 @@ import com.tls.edututor.course.course.dto.response.CourseFilterResponse;
 import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.dto.response.CourseResponse;
 import com.tls.edututor.course.course.entity.Course;
+import com.tls.edututor.course.course.entity.CourseClassroom;
 import com.tls.edututor.course.course.repository.CourseRepository;
 import com.tls.edututor.course.course.service.CourseService;
+import com.tls.edututor.course.courseclassroom.repository.CourseClassroomRepository;
 import com.tls.edututor.course.material.dto.response.MaterialResponse;
 import com.tls.edututor.course.section.dto.request.SectionRegisterRequest;
 import com.tls.edututor.course.section.dto.response.SectionResponse;
@@ -21,7 +24,9 @@ import com.tls.edututor.course.unit.dto.response.UnitResponse;
 import com.tls.edututor.course.unit.entity.Unit;
 import com.tls.edututor.course.unit.repository.UnitRepository;
 import com.tls.edututor.exam.testpaper.dto.response.TestPaperResponse;
+import com.tls.edututor.user.dto.response.AuthUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +37,7 @@ import java.util.stream.Collectors;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-  private final ClassroomRepository classroomRepository;
+  private final CourseClassroomRepository courseClassroomRepository;
   private final CourseRepository courseRepository;
   private final SectionRepository sectionRepository;
   private final UnitRepository unitRepository;
@@ -170,13 +175,33 @@ public class CourseServiceImpl implements CourseService {
 	}
 
   @Override
-  public List<CourseNameListResponse> getFilteredCourses(String gradeLevel, String year, String semester, String subject) {
+  public List<CourseNameListResponse> getFilteredCourses(String gradeLevel, String year, String semester, String subject, Authentication authentication) {
     List<Long> groupCodeIds = codeDetailRepository.findGroupCodeIdsByDetails(gradeLevel, year, semester, subject);
     List<Course> courses = courseRepository.findByGroupCodeIdIn(groupCodeIds);
-
+    ((AuthUser) authentication.getPrincipal()).getClassroom();
     return courses.stream().map(course -> new CourseNameListResponse(
             course.getId(),
             course.getCourseName()
     )).collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional
+  public void enrollCourseInClassroom(Long courseId, Authentication authentication) {
+    Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new IllegalArgumentException("courseId 틀림"));
+    AuthUser authUser =  (AuthUser) authentication.getPrincipal();
+    System.out.println(authUser.toString());
+    Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
+    boolean exists = courseClassroomRepository.existsByCourseIdAndClassroomId(courseId, classroom.getId());
+    if (exists) {
+      throw new IllegalStateException("이미 등록된 과정입니다.");
+    }
+
+    CourseClassroom courseClassroom = new CourseClassroom();
+    courseClassroom.setCourse(course);
+    courseClassroom.setClassroom(classroom);
+
+    courseClassroomRepository.save(courseClassroom);
   }
 }
