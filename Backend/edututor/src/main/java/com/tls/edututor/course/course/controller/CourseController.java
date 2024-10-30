@@ -53,6 +53,12 @@ public class CourseController {
     return CommonApiResponse.createSuccessWithNoContent("클래스룸-과정 등록 성공");
   }
 
+  @GetMapping("/class-courses")
+  public CommonApiResponse<List<CourseNameListResponse>> getClassroomCourses(Authentication authentication) {
+    List<CourseNameListResponse> courses = courseService.getClassroomCourses(authentication);
+    return CommonApiResponse.createSuccess("조회 성공", courses);
+  }
+
   @GetMapping("/filtered")
   public CommonApiResponse<List<CourseNameListResponse>> getFilteredCourses(
           @RequestParam(required = false) String gradeLevel, @RequestParam(required = false) String year,

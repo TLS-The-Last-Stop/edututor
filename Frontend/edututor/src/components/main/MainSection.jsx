@@ -54,15 +54,10 @@ const MainSection = () => {
   const fetchFilteredCourses = async () => {
     setLoading(true);
     try {
-      const response = await publicApi.get('/course/filtered', {
-        params: {
-          gradeLevel: activeTab === 'elementary' ? '초등학교' : activeTab === 'middle' ? '중학교' : '고등학교',
-          year: activeGrade !== '전체' ? activeGrade.replace(/[^0-9]/g, '') : null,
-        },
-      });
+      const response = await publicApi.get('/course/class-courses');
       setCourses(response.data.data);
     } catch (error) {
-      console.error("Failed to fetch courses:", error);
+      console.error("과정을 불러오는데 실패했습니다 : ", error);
     } finally {
       setLoading(false);
     }
@@ -81,7 +76,6 @@ const MainSection = () => {
         <FirstSection>
           <FirstSectionInner>
             <TitleWrapper>지니아튜터 학습 과정</TitleWrapper>
-            {/* Course List */}
             <CourseList>
               {loading ? (
                   <p>Loading...</p>
