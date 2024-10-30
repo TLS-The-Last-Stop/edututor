@@ -1,0 +1,27 @@
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333;
+    color: #fff;
+}
+
+.admin-header .header-left h2 {
+    margin: 0;
+}
+
+.admin-header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-header button {
+    background-color: #ff5c5c;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+}

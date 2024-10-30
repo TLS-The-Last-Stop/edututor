@@ -24,24 +24,26 @@ const CourseListPage = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error occurred: {error.message}</div>;
+    return <div className="error-message">Error occurred: {error.message}</div>;
   }
 
   return (
-    <div>
-      <h1>모든 과정 리스트</h1>
-      <ul>
-        {courses.map(course => (
-          <li key={course.courseId}>
-            <Link to={`/admin/course-detail/${course.courseId}`}>{course.courseName}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <div className="course-list-page">
+        <h1 className="page-title">모든 과정 리스트</h1>
+        <div className="course-list">
+          {courses.map(course => (
+              <div key={course.courseId} className="course-card">
+                <Link to={`/admin/course-detail/${course.courseId}`} className="course-link">
+                  {course.courseName}
+                </Link>
+              </div>
+          ))}
+        </div>
+      </div>
   );
 };
 
