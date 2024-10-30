@@ -73,9 +73,7 @@ const StudentList = styled.div`
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     margin-top: 10px;
-
-    // 스크롤바 숨기기 
-
+    
     &::-webkit-scrollbar {
         display: none;
     }
@@ -114,8 +112,8 @@ const ButtonContainer = styled.div`
     width: 100%;
 
     button {
-        flex: 1; // 각 버튼이 동일한 비율로 공간을 차지
-        min-width: 0; // flex item이 너무 커지는 것을 방지
+        flex: 1;
+        min-width: 0;
     }
 `;
 
@@ -134,98 +132,104 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
 
   const handleStudentSelect = (studentId) => {
     setSelectedStudents(prev => prev.includes(studentId)
-      ? prev.filter(id => id !== studentId) : [...prev, studentId]);
+        ? prev.filter(id => id !== studentId) : [...prev, studentId]);
   };
 
   const handleShare = () => {
     console.log('공유하기: ', { classInfo, setSelectedTest, testType, selectedStudents, year, month });
-
-    /* 여기서부터 메서드 호출해서 보내기 */
   };
 
   const fetchAllStudent = async () => {
-    const userInfo = JSON.parse(localStorage.getItem('info'));
-    const result = await getAllStudent(userInfo.classroom.id);
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('info'));
+      const result = await getAllStudent(userInfo.classroom.id);
 
-    setClassInfo(prev => ({
-      ...prev,
-      classId      : userInfo.classroom.id,
-      classroomName: userInfo.classroom.classroomName
-    }));
+      setClassInfo(prev => ({
+        ...prev,
+        classId: userInfo.classroom.id,
+        classroomName: userInfo.classroom.classroomName
+      }));
 
-    setStudentInfo(result.data);
+      setStudentInfo(result.data || []);
+    } catch (error) {
+      console.error("Failed to fetch students", error);
+    }
   };
 
   useEffect(() => {
     fetchAllStudent();
-
   }, []);
 
   if (!isOpen) return null;
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContainer onClick={e => e.stopPropagation()}>
-        <ModalHeader>
-          <Title>공유하기</Title>
-          <CloseButton onClick={onClose}>&times;</CloseButton>
-        </ModalHeader>
-        <ModalContent>
-          <Section>
-            <SectionTitle>과제 공유</SectionTitle>
-            <Select value={year} onChange={(e) => setYear(e.target.value)}>
-              <option value="2024">2024년</option>
-              <option value="2023">2023년</option>
-            </Select>
-            <Select value={month} onChange={(e) => setMonth(e.target.value)}>
-              {[...Array(12)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>{i + 1}월</option>
-              ))}
-            </Select>
-            <Select
-              value={testType}
-              onChange={(e) => setTestType(e.target.value)}
-            >
-              <option value="">시험 선택</option>
-              <option value="중간고사">중간고사</option>
-              <option value="기말고사">기말고사</option>
-              <option value="수행평가">수행평가</option>
-            </Select>
-          </Section>
-          <Section>
-            <SectionTitle>과제 공유 대상 선택</SectionTitle>
-            <StudentList>
-              {studentInfo.map(student => (
-                <StudentItem key={student.id}>
-                  <Checkbox
-                    type="checkbox"
-                    id={`student-${student.id}`}
-                    checked={selectedStudents.includes(student.id)}
-                    onChange={() => handleStudentSelect(student.id)}
-                  />
-                  <div>
-                    <div>{student.studentFullName}<span
-                      style={{ fontSize: '0.8em', color: '#666' }}>({student.studentLoginId})</span></div>
-                  </div>
-                </StudentItem>
-              ))}
-            </StudentList>
-            <ButtonContainer>
-              <Button
-                onClick={handleShare}
-                disabled={!setSelectedTest || selectedStudents.length === 0}
-                $primary
+      <ModalOverlay onClick={onClose}>
+        <ModalContainer onClick={e => e.stopPropagation()}>
+          <ModalHeader>
+            <Title>공유하기</Title>
+            <CloseButton onClick={onClose}>&times;</CloseButton>
+          </ModalHeader>
+          <ModalContent>
+            <Section>
+              <SectionTitle>과제 공유</SectionTitle>
+              <Select value={year} onChange={(e) => setYear(e.target.value)}>
+                <option value="2024">2024년</option>
+                <option value="2023">2023년</option>
+              </Select>
+              <Select value={month} onChange={(e) => setMonth(e.target.value)}>
+                {[...Array(12)].map((_, i) => (
+                    <option key={i + 1} value={i + 1}>{i + 1}월</option>
+                ))}
+              </Select>
+              <Select
+                  value={testType}
+                  onChange={(e) => setTestType(e.target.value)}
               >
-                공유하기
-              </Button>
-              <Button $karina
-                      onClick={onClose}>
-                취소</Button>
-            </ButtonContainer>
-          </Section>
-        </ModalContent>
-      </ModalContainer>
-    </ModalOverlay>
+                <option value="">시험 선택</option>
+                <option value="중간고사">중간고사</option>
+                <option value="기말고사">기말고사</option>
+                <option value="수행평가">수행평가</option>
+              </Select>
+            </Section>
+            <Section>
+              <SectionTitle>과제 공유 대상 선택</SectionTitle>
+              <StudentList>
+                {studentInfo.length > 0 ? (
+                    studentInfo.map(student => (
+                        <StudentItem key={student.id}>
+                          <Checkbox
+                              type="checkbox"
+                              id={`student-${student.id}`}
+                              checked={selectedStudents.includes(student.id)}
+                              onChange={() => handleStudentSelect(student.id)}
+                          />
+                          <div>
+                            <div>{student.studentFullName}<span
+                                style={{ fontSize: '0.8em', color: '#666' }}>({student.studentLoginId})</span></div>
+                          </div>
+                        </StudentItem>
+                    ))
+                ) : (
+                    <p>학생 목록이 없습니다.</p>
+                )}
+              </StudentList>
+              <ButtonContainer>
+                <Button
+                    onClick={handleShare}
+                    disabled={!setSelectedTest || selectedStudents.length === 0}
+                    $primary
+                >
+                  공유하기
+                </Button>
+                <Button $karina onClick={onClose}>
+                  취소
+                </Button>
+              </ButtonContainer>
+            </Section>
+          </ModalContent>
+        </ModalContainer>
+      </ModalOverlay>
   );
 };
+
 
 export default ExamShareModal;

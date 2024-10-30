@@ -4,8 +4,7 @@ import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.exam.option.entity.Option;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "QUESTION")
 public class Question extends BaseEntity {
 

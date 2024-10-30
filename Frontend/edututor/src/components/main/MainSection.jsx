@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { publicApi } from "../../api/axios.js";
 
 const FirstSection = styled.section`
     margin: 0 auto;
@@ -12,158 +14,88 @@ const FirstSection = styled.section`
     height: 550px;
 `;
 
-const FirstSectionInner = styled.article`
-`;
+const FirstSectionInner = styled.article``;
 
 const TitleWrapper = styled.div`
     font-size: 22px;
     font-weight: 700;
-
 `;
 
-const SecondSection = styled.section`
-    margin: 0 auto;
-    padding: 40px 20px;
-    border: 1px solid #9b9b9b;
-    border-radius: 15px;
-    max-width: 1300px;
-    width: 100%;
-    background: khaki;
-    height: 480px; // gap의 절반만큼 빼줌
-    display: flex;
+const CourseList = styled.div`
+    margin-top: 20px;
 `;
 
-const LeftArticle = styled.article`
-    background: orange;
-    width: 50%;
-    border: 1px solid brown;
-    height: 100%;
-    padding-right: 30px;
-`;
-
-const RighttArticle = styled.article`
-    background: orange;
-    width: 45%;
-    border: 1px solid brown;
-    height: 100%;
-`;
-
-const TabContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #d7d7d7;
-`;
-
-const TabWrapper = styled.div`
-    display: flex;
-    gap: 20px;
-`;
-
-const TabButton = styled.div`
-    font-family: 'Noto Sans KR', sans-serif;
+const CourseItem = styled.div`
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background: #fff;
     cursor: pointer;
-    margin-top: 30px;
-    margin-bottom: 20px;
-    font-weight: 500;
-    position: relative;
-    padding-right: 20px;
 
-    &:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background: #721313;
+    &:hover {
+        background: #f0f0f0;
     }
-
-    ${props => props.isActive && `
-      color:#007aff;
-    `}
 `;
 
 const gradeData = {
-  elementary: {
-    label : '초등',
-    grades: ['전체', '초1', '초2', '초3', '초4', '초5', '초6']
-  },
-  middle    : {
-    label : '중등',
-    grades: ['전체', '중1', '중2', '중3']
-  },
-  high      : {
-    label : '고등',
-    grades: ['전체', '고1', '고2', '고3']
-  }
+  elementary: { label: '초등', grades: ['전체', '초1', '초2', '초3', '초4', '초5', '초6'] },
+  middle: { label: '중등', grades: ['전체', '중1', '중2', '중3'] },
+  high: { label: '고등', grades: ['전체', '고1', '고2', '고3'] },
 };
-
-const GradeList = styled.div`
-    display: flex;
-    gap: 10px;
-    align-items: center;
-`;
-
-const GradeItem = styled.div`
-    font-family: 'Noto Sans KR', sans-serif;
-    color: ${props => props.isActive ? '#333' : '#666'};
-    font-weight: ${props => props.isActive ? '600' : ''};
-    cursor: pointer;
-
-    &:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background: #721313;
-    }
-`;
 
 const MainSection = () => {
   const [activeTab, setActiveTab] = useState('elementary');
   const [activeGrade, setActiveGrade] = useState('전체');
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const fetchFilteredCourses = async () => {
+    setLoading(true);
+    try {
+      const response = await publicApi.get('/course/filtered', {
+        params: {
+          gradeLevel: activeTab === 'elementary' ? '초등학교' : activeTab === 'middle' ? '중학교' : '고등학교',
+          year: activeGrade !== '전체' ? activeGrade.replace(/[^0-9]/g, '') : null,
+        },
+      });
+      setCourses(response.data.data);
+    } catch (error) {
+      console.error("Failed to fetch courses:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFilteredCourses();
+  }, [activeTab, activeGrade]);
+
+  const handleCourseClick = (courseId) => {
+    navigate(`/course/${courseId}`);
+  };
 
   return (
-    <>
-      <FirstSection>
-        <FirstSectionInner>
-          <TitleWrapper>지니아튜터 학습 과정</TitleWrapper>
-          <TabContainer>
-            <TabWrapper>
-              <TabButton
-                isActive={activeTab === 'elementary'}
-                onClick={() => setActiveTab('elementary')}
-              >초등</TabButton>
-              <TabButton
-                isActive={activeTab === 'middle'}
-                onClick={() => setActiveTab('middle')}
-              >중등</TabButton>
-              <TabButton
-                isActive={activeTab === 'high'}
-                onClick={() => setActiveTab('high')}
-              >고등</TabButton>
-            </TabWrapper>
-
-            <GradeList>
-              {gradeData[activeTab].grades.map(grade => (
-                <GradeItem key={grade} isActive={activeGrade === grade} onClick={() => setActiveGrade(grade)}>
-                  {grade}
-                </GradeItem>
-              ))}
-            </GradeList>
-          </TabContainer>
-        </FirstSectionInner>
-      </FirstSection>
-      <SecondSection>
-        <LeftArticle></LeftArticle>
-        <RighttArticle></RighttArticle>
-      </SecondSection>
-    </>
+      <>
+        <FirstSection>
+          <FirstSectionInner>
+            <TitleWrapper>지니아튜터 학습 과정</TitleWrapper>
+            {/* Course List */}
+            <CourseList>
+              {loading ? (
+                  <p>Loading...</p>
+              ) : (
+                  courses.map(course => (
+                      <CourseItem key={course.courseId} onClick={() => handleCourseClick(course.courseId)}>
+                        {course.courseName}
+                      </CourseItem>
+                  ))
+              )}
+            </CourseList>
+          </FirstSectionInner>
+        </FirstSection>
+      </>
   );
 };
 

@@ -6,6 +6,7 @@ import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.dto.response.CourseResponse;
 import com.tls.edututor.course.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,16 +47,18 @@ public class CourseController {
     return CommonApiResponse.createSuccessWithNoContent("과정 삭제 성공");
   }
 
-  @PostMapping("aa")
-  public CommonApiResponse<Void> enrollCourse(@RequestBody CourseRegisterRequest request) {
-    return CommonApiResponse.createSuccessWithNoContent("과정 등록 성공");
+  @PostMapping("/enroll")
+  public CommonApiResponse<Void> enrollCourseInClassroom(@RequestParam Long courseId, Authentication authentication) {
+    courseService.enrollCourseInClassroom(courseId, authentication);
+    return CommonApiResponse.createSuccessWithNoContent("클래스룸-과정 등록 성공");
   }
 
   @GetMapping("/filtered")
   public CommonApiResponse<List<CourseNameListResponse>> getFilteredCourses(
           @RequestParam(required = false) String gradeLevel, @RequestParam(required = false) String year,
-          @RequestParam(required = false) String semester, @RequestParam(required = false) String subject) {
-    List<CourseNameListResponse> courses = courseService.getFilteredCourses(gradeLevel, year, semester, subject);
+          @RequestParam(required = false) String semester, @RequestParam(required = false) String subject,
+          Authentication authentication) {
+    List<CourseNameListResponse> courses = courseService.getFilteredCourses(gradeLevel, year, semester, subject, authentication);
     return CommonApiResponse.createSuccess("조회 성공", courses);
   }
 }

@@ -7,6 +7,25 @@ import com.tls.edututor.code.codedetail.entity.CodeDetail;
 import com.tls.edututor.code.codedetail.repository.CodeDetailRepository;
 import com.tls.edututor.code.codegroup.entity.CodeGroup;
 import com.tls.edututor.code.codegroup.repository.CodeGroupRepository;
+import com.tls.edututor.course.course.entity.Course;
+import com.tls.edututor.course.course.entity.CourseClassroom;
+import com.tls.edututor.course.course.repository.CourseRepository;
+import com.tls.edututor.course.courseclassroom.repository.CourseClassroomRepository;
+import com.tls.edututor.course.section.entity.Section;
+import com.tls.edututor.course.section.repository.SectionRepository;
+import com.tls.edututor.course.unit.entity.Unit;
+import com.tls.edututor.course.unit.repository.UnitRepository;
+import com.tls.edututor.course.material.entity.Material;
+import com.tls.edututor.course.material.repository.MaterialRepository;
+import com.tls.edututor.exam.option.entity.Option;
+import com.tls.edututor.exam.question.entity.Question;
+import com.tls.edututor.exam.question.entity.QuestionType;
+import com.tls.edututor.exam.sharetest.entity.ShareTest;
+import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
+import com.tls.edututor.exam.testpaper.entity.TestPaper;
+import com.tls.edututor.exam.testpaper.repository.TestPaperRepository;
+import com.tls.edututor.exam.question.repository.QuestionRepository;
+import com.tls.edututor.exam.option.repository.OptionRepository;
 import com.tls.edututor.school.dto.request.SchoolRequest;
 import com.tls.edututor.school.entity.School;
 import com.tls.edututor.school.repository.SchoolRepository;
@@ -20,7 +39,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -31,62 +49,179 @@ public class DataInitializer {
   private final BCryptPasswordEncoder passwordEncoder;
   private final SchoolRepository schoolRepository;
   private final ClassroomRepository classroomRepository;
+  private final CourseRepository courseRepository;
+  private final CourseClassroomRepository courseClassroomRepository;
+  private final SectionRepository sectionRepository;
+  private final UnitRepository unitRepository;
+  private final MaterialRepository materialRepository;
+  private final TestPaperRepository testPaperRepository;
+  private final ShareTestRepository shareTestRepository;
+  private final QuestionRepository questionRepository;
+  private final OptionRepository optionRepository;
+  private final CodeGroupRepository codeGroupRepository;
+  private final CodeDetailRepository codeDetailRepository;
 
-  public DataInitializer(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, SchoolRepository schoolRepository, ClassroomRepository classroomRepository) {
+  public DataInitializer(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+                         SchoolRepository schoolRepository, ClassroomRepository classroomRepository,
+                         CourseRepository courseRepository, CourseClassroomRepository courseClassroomRepository,
+                         SectionRepository sectionRepository, UnitRepository unitRepository,
+                         MaterialRepository materialRepository, TestPaperRepository testPaperRepository,
+                         ShareTestRepository shareTestRepository, QuestionRepository questionRepository,
+                         OptionRepository optionRepository, CodeGroupRepository codeGroupRepository, CodeDetailRepository codeDetailRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.schoolRepository = schoolRepository;
     this.classroomRepository = classroomRepository;
+    this.courseRepository = courseRepository;
+    this.courseClassroomRepository = courseClassroomRepository;
+    this.sectionRepository = sectionRepository;
+    this.unitRepository = unitRepository;
+    this.materialRepository = materialRepository;
+    this.testPaperRepository = testPaperRepository;
+    this.shareTestRepository = shareTestRepository;
+    this.questionRepository = questionRepository;
+    this.optionRepository = optionRepository;
+    this.codeGroupRepository = codeGroupRepository;
+    this.codeDetailRepository = codeDetailRepository;
   }
 
   @Bean
-  public ApplicationRunner initializer(CodeGroupRepository codeGroupRepository, CodeDetailRepository codeDetailRepository) {
+  public ApplicationRunner initializer() {
     return args -> {
-      if (codeGroupRepository.count() > 0) {
+      if (codeGroupRepository.count() > 0 || courseRepository.count() > 0) {
         return;
       }
 
       initAll();
 
+      List<String> courses = List.of("국어 - 초등학교 1학년 1학기", "수학 - 초등학교 1학년 1학기", "영어 - 중학교 1학년 1학기", "과학 - 고등학교 1학년 1학기");
       AtomicInteger codeGroupIdCounter = new AtomicInteger(1);
 
-      List<String> levels = Arrays.asList("초등학교", "중학교", "고등학교");
-      List<String> elementaryYears = Arrays.asList("1학년", "2학년", "3학년", "4학년", "5학년", "6학년");
-      List<String> middleHighYears = Arrays.asList("1학년", "2학년", "3학년");
-      List<String> semesters = Arrays.asList("1학기", "2학기");
-      List<String> subjects = Arrays.asList("국어", "수학", "영어", "사회", "과학", "역사", "도덕");
+      courses.forEach(courseName -> {
+        CodeGroup codeGroup = codeGroupRepository.getReferenceById(1L);
 
-      levels.forEach(level -> {
-        List<String> applicableYears = level.equals("초등학교") ? elementaryYears : middleHighYears;
-        applicableYears.forEach(year -> {
-          semesters.forEach(semester -> {
-            subjects.forEach(subject -> {
-              int codeGroupId = codeGroupIdCounter.getAndIncrement();
-              CodeGroup codeGroup = codeGroupRepository.save(
-                      new CodeGroup(null, "과정코드그룹-" + codeGroupId, null));
-              codeDetailRepository.saveAll(Arrays.asList(
-                      new CodeDetail(null, 1001, codeGroupId, subject, codeGroup),
-                      new CodeDetail(null, 1002, codeGroupId, semester, codeGroup),
-                      new CodeDetail(null, 1003, codeGroupId, year, codeGroup),
-                      new CodeDetail(null, 1004, codeGroupId, level, codeGroup)
-              ));
-            });
+        Course course = Course.builder()
+                .courseName(courseName)
+                .groupCode(codeGroup)
+                .build();
+        courseRepository.save(course);
+
+        CourseClassroom courseClassroom = new CourseClassroom();
+        courseClassroom.setCourse(course);
+        courseClassroom.setClassroom(classroomRepository.findById(1L).orElseThrow());
+        courseClassroomRepository.save(courseClassroom);
+
+        List<String> sectionTitles = List.of("기본 개념", "응용", "심화 학습");
+        sectionTitles.forEach(sectionTitle -> {
+          Section section = Section.builder()
+                  .course(course)
+                  .content(sectionTitle)
+                  .build();
+          sectionRepository.save(section);
+
+          List<String> unitTitles = List.of("개념 이해", "문제 풀이", "심화 학습");
+          unitTitles.forEach(unitTitle -> {
+            Unit unit = Unit.builder()
+                    .section(section)
+                    .content(sectionTitle + " - " + unitTitle)
+                    .build();
+            unitRepository.save(unit);
+
+            Material material = Material.builder()
+                    .unit(unit)
+                    .title(unitTitle + " 자료")
+                    .content(unitTitle + "에 대한 학습 자료입니다.")
+                    .build();
+            materialRepository.save(material);
+
+            TestPaper testPaper = TestPaper.builder()
+                    .unit(unit)
+                    .title(unitTitle + " 시험지")
+                    .build();
+            testPaperRepository.save(testPaper);
+
+            ShareTest shareTest = ShareTest.builder()
+                    .user(userRepository.findById(1L).orElseThrow())
+                    .testPaper(testPaper)
+                    .build();
+            shareTestRepository.save(shareTest);
+
+            for (int i = 1; i <= 3; i++) {
+              Question question = Question.builder()
+                      .testPaper(testPaper)
+                      .content("문제 " + i)
+                      .type(QuestionType.OBJECTIVE)
+                      .build();
+              questionRepository.save(question);
+
+              for (int j = 1; j <= 4; j++) {
+                Option option = Option.builder()
+                        .question(question)
+                        .content("선택지 " + j)
+                        .isCorrect(j == 1)
+                        .build();
+                optionRepository.save(option);
+              }
+            }
           });
         });
       });
     };
   }
 
+
+
   @Transactional
   protected void initAll() {
-    initializeSchools();
-    initializeClassrooms();
-    initializeTeachers();
+    if(codeGroupRepository.count() == 0){
+      initializeCodeGroupsAndDetails();
+    }
+
+    if (schoolRepository.count() == 0) {
+      initializeSchools();
+    }
+    if (classroomRepository.count() == 0) {
+      initializeClassrooms();
+    }
+    if (userRepository.count() == 0) {
+      initializeTeachers();
+    }
+
+  }
+
+  @Transactional
+  protected void initializeCodeGroupsAndDetails() {
+    AtomicInteger codeGroupIdCounter = new AtomicInteger(1);
+
+    List<String> levels = List.of("초등학교", "중학교", "고등학교");
+    List<String> elementaryYears = List.of("1학년", "2학년", "3학년", "4학년", "5학년", "6학년");
+    List<String> middleHighYears = List.of("1학년", "2학년", "3학년");
+    List<String> semesters = List.of("1학기", "2학기");
+    List<String> subjects = List.of("국어", "수학", "영어", "사회", "과학", "역사", "도덕");
+
+    levels.forEach(level -> {
+      List<String> applicableYears = level.equals("초등학교") ? elementaryYears : middleHighYears;
+      applicableYears.forEach(year -> {
+        semesters.forEach(semester -> {
+          subjects.forEach(subject -> {
+            int codeGroupId = codeGroupIdCounter.getAndIncrement();
+            CodeGroup codeGroup = codeGroupRepository.save(
+                    new CodeGroup(null, "과정코드그룹-" + codeGroupId, null));
+            codeDetailRepository.saveAll(List.of(
+                    new CodeDetail(null, 1001, codeGroupId, subject, codeGroup),
+                    new CodeDetail(null, 1002, codeGroupId, semester, codeGroup),
+                    new CodeDetail(null, 1003, codeGroupId, year, codeGroup),
+                    new CodeDetail(null, 1004, codeGroupId, level, codeGroup)
+            ));
+          });
+        });
+      });
+    });
   }
 
   @Transactional
   protected void initializeSchools() {
-    String[] classname = {"수완반", "두완반", "수완여자친구반"};
+    String[] classname = {"수완초등학교", "혁진중학교", "유리고등학교"};
     String[] schoolType = {"초등학교", "중학교", "고등학교"};
     String[] officeCode = {"1", "2", "3"};
     String[] address = {"충남 보령시", "서울 강남", "서울 을지로"};
@@ -108,7 +243,7 @@ public class DataInitializer {
 
   @Transactional
   protected void initializeClassrooms() {
-    String[] classroomName = {"수완", "두완", "카리나"};
+    String[] classroomName = {"수완반", "혁진반", "유리반"};
     String[] grade = {"1", "1", "1"};
     int[] year = {2024, 2023, 2022};
 
@@ -165,20 +300,15 @@ public class DataInitializer {
 
   @Transactional
   protected void initStudents(Classroom classroom, int idx) {
-    String[] studentBaseNames = {"이수완", "이두완", "카리나"};
-    String[] loginIdPrefixes = {"suwan", "duwan", "karina"};
-    String[] passwordBase = {"suwan12!@", "duwan12!@", "karina12!@"};
+    String[] studentBaseNames = {"이수완", "김혁진", "한유리"};
+    String[] loginIdPrefixes = {"suwan", "gurwls", "dbfl"};
+    String[] passwordBase = {"suwan12!@", "gurwls!@", "dbfl!@"};
 
-    // 각 반마다 3명의 학생 생성
     for (int studentNum = 1; studentNum <= 3; studentNum++) {
       UserTERequest userTERequest = new UserTERequest();
 
-      // fullName: "이수완학생1", "이수완학생2", "이수완학생3"
       userTERequest.setFullName(studentBaseNames[idx] + "학생" + studentNum);
-
-      // loginId: "suwan_student1", "suwan_student2", "suwan_student3"
       userTERequest.setLoginId(loginIdPrefixes[idx] + "_" + studentNum);
-
       userTERequest.setPassword(passwordEncoder.encode(passwordBase[idx]));
       userTERequest.setType("SU");
 

@@ -1,61 +1,92 @@
 .course-page {
     display: flex;
-    padding: 20px;
 }
 
 .sidebar {
-    width: 20%;
+    width: 250px;
     padding: 20px;
-    background-color: #f8f9fa;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ddd;
 }
 
 .new-course-btn {
+    display: block;
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
+    background-color: #ffebec;
+    color: #f00;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .course-details {
-    width: 80%;
+    flex: 1;
     padding: 20px;
-    background-color: #ffffff;
 }
 
 .course-header {
     display: flex;
     justify-content: space-between;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .students-icon {
     display: flex;
     align-items: center;
+    background-color: #eee;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .section {
-    margin-top: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
 }
 
 .unit {
-    margin-left: 20px;
-    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.unit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .actions {
-    margin-top: 10px;
     display: flex;
     gap: 10px;
 }
 
-.preview-btn, .share-btn, .material-btn {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
+.actions button {
+    background-color: #eee;
     border: none;
+    padding: 5px 10px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
+.preview-btn {
+    background-color: #f0f4ff;
+}
+
+.share-btn {
+    background-color: #eafff0;
+}
+
+.material-btn {
+    background-color: #fff0f4;
+}
+
+.material-item,
 .testpaper {
-    margin-top: 10px;
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #fafafa;
+    border-radius: 5px;
 }
