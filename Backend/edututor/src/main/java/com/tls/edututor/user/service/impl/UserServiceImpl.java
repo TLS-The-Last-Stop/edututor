@@ -1,4 +1,4 @@
-package com.tls.edututor.user.service;
+package com.tls.edututor.user.service.impl;
 
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
@@ -9,6 +9,7 @@ import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
+import com.tls.edututor.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

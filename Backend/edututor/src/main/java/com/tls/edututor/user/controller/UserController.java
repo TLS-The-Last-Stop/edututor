@@ -24,7 +24,7 @@ public class UserController {
 
 
   @PostMapping("/users/teachers")
-  public CommonApiResponse<?> teacherJoin(@RequestBody UserTERequest request) {
+  public CommonApiResponse<?> createTeacher(@RequestBody UserTERequest request) {
     userService.saveTeacher(request);
     return CommonApiResponse.createNoContent("회원가입이 완료되었습니다.");
   }

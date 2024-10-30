@@ -14,6 +14,7 @@ import google from '../../assets/icon/google.png';
 import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../utils/AuthContext.jsx';
 
 const initForm = {
   loginId : '',
@@ -29,6 +30,7 @@ const initErrors = {
 const TeacherLogin = () => {
   const [formData, setFormData] = useState(initForm);
   const [errors, setErrors] = useState(initErrors);
+  const { updateUserInfo } = useAuth();
 
   const navigate = useNavigate();
 
@@ -67,6 +69,7 @@ const TeacherLogin = () => {
     try {
       const result = await login(formData);
       localStorage.setItem('info', JSON.stringify(result));
+      updateUserInfo();
 
       if (result) navigate('/');
     } catch (error) {

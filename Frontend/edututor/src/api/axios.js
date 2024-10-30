@@ -22,12 +22,14 @@ privateApi.interceptors.response.use(
       try {
         // 리프레시 토큰으로 새로운 토큰 요청 (publicApi 사용)
         await publicApi.post('/auth/refresh');
-        alert('악 access 만료');
         // 새로운 액세스 토큰으로 원래 요청 재시도
         return privateApi(originalRequest);
       } catch (refreshError) {
+        localStorage.removeItem('userInfo');
+        window.dispatchEvent(new Event('auth-update'));
+        location.href = '/';
+
         console.error('Token refresh failed from server:', refreshError);
-        //window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
