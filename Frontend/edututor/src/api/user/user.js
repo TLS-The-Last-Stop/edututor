@@ -16,9 +16,7 @@ export const teacherJoin = async (data) => {
 };
 
 export const createStudent = async (data) => {
-  const response = await privateApi.post(`/users/students`, data, {
-    withCredentials: true
-  });
+  const response = await privateApi.post(`/users/students`, data);
   return response.data;
 };
 
