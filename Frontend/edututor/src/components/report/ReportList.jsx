@@ -2,7 +2,6 @@ import ReportItem from './ReportItem';
 
 const ReportList = ({
                       reports = [],
-                      selectedReportId,
                       onViewDetail
                     }) => {
   return (
@@ -23,7 +22,6 @@ const ReportList = ({
           <ReportItem
             key={report.id}
             report={report}
-            isSelected={selectedReportId === report.id}
             onViewDetail={onViewDetail}
           />
         ))

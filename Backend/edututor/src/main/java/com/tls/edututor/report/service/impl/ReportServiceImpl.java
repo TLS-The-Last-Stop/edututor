@@ -35,8 +35,6 @@ public class ReportServiceImpl implements ReportService {
     List<Long> courseIds = new ArrayList<>();
     Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
 
-    log.info("@@@@@@@@@@@@@@@@@@@@@@@classroom : {} ", classroom.getId());
-
     for (CourseClassroom cc : courseClassroomRepository2.findByClassroomId(classroom.getId())) {
       courseIds.add(cc.getCourse().getId());
     }

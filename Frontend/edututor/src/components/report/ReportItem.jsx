@@ -1,6 +1,5 @@
 const ReportItem = ({
                       report,
-                      isSelected,
                       onViewDetail
                     }) => {
   const formatDate = (date) => {
