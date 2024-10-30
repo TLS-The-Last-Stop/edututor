@@ -1,8 +1,9 @@
-package com.tls.edututor.school.service;
+package com.tls.edututor.school.service.impl;
 
 import com.tls.edututor.school.dto.request.SchoolRequest;
 import com.tls.edututor.school.entity.School;
 import com.tls.edututor.school.repository.SchoolRepository;
+import com.tls.edututor.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ public class SchoolServiceImpl implements SchoolService {
 
   @Transactional
   @Override
-  public Long save(SchoolRequest request) {
+  public Long saveSchool(SchoolRequest request) {
     School school = School.withDto()
             .request(request)
             .build();

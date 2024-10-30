@@ -1,4 +1,3 @@
-///tests/papers/{testPaper}
 import privateApi from '../axios.js';
 
 export const createShareTest = async (shareData) => {

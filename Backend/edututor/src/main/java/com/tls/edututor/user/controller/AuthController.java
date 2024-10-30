@@ -17,6 +17,6 @@ public class AuthController {
 
     AuthUser authUser = (AuthUser) authentication.getPrincipal();
 
-    return CommonApiResponse.createSuccess("사용 가능", authUser.getRole());
+    return CommonApiResponse.createSuccess("권한 설정", authUser.getRole());
   }
 }

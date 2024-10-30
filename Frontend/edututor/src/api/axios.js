@@ -20,9 +20,8 @@ privateApi.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // 리프레시 토큰으로 새로운 토큰 요청 (publicApi 사용)
         await publicApi.post('/auth/refresh');
-        // 새로운 액세스 토큰으로 원래 요청 재시도
+        
         return privateApi(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem('userInfo');

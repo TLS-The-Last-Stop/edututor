@@ -65,8 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
       jwtUtil.isExpired(accessToken);
     } catch (ExpiredJwtException eje) {
-      PrintWriter out = response.getWriter();
-      out.print("access token expired");
+      response.getWriter().print("access token expired");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
       return;
@@ -75,8 +74,7 @@ public class JwtFilter extends OncePerRequestFilter {
     // access 토큰인지 확인
     String type = jwtUtil.getType(accessToken);
     if (!type.startsWith("access")) {
-      PrintWriter out = response.getWriter();
-      out.print("invaild access token");
+      response.getWriter().print("invaild access token");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
       return;

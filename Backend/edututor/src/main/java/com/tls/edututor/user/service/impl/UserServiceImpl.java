@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     School school = School.withDto()
             .request(request.getSchool())
             .build();
-    school.setWriter(user.getId());
+    //school.setWriter(user.getId());
     schoolRepository.save(school);
 
     Classroom classroom = Classroom.withDto()
@@ -52,11 +52,11 @@ public class UserServiceImpl implements UserService {
             .school(school)
             .type(school.getType())
             .build();
-    classroom.setWriter(user.getId());
+    //classroom.setWriter(user.getId());
     classroomRepository.save(classroom);
 
     user.setClassroom(classroom);
-    user.setWriter(user.getId());
+    //user.setWriter(user.getId());
 
     return user.getId();
   }
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     User user = User.createStudent(request);
     user.setClassroom(classroom);
-    user.setWriter(request.getTeacherId());
+    //user.setWriter(request.getTeacherId());
 
     userRepository.save(user);
 
