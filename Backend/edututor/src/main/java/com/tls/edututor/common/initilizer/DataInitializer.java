@@ -94,8 +94,7 @@ public class DataInitializer {
 
       initAll();
 
-      List<String> courses = List.of("국어 - 초등학교 1학년 1학기", "수학 - 초등학교 1학년 1학기", "영어 - 중학교 1학년 1학기", "과학 - 고등학교 1학년 1학기");
-      AtomicInteger codeGroupIdCounter = new AtomicInteger(1);
+      List<String> courses = List.of("초등학교 국어 1학년 교과서", "초등학교 수학 1학년 참고서", "영어의 정석 참고서", "이것이 과학이다 교과서");
 
       courses.forEach(courseName -> {
         CodeGroup codeGroup = codeGroupRepository.getReferenceById(1L);
@@ -146,21 +145,31 @@ public class DataInitializer {
                     .build();
             shareTestRepository.save(shareTest);
 
-            for (int i = 1; i <= 3; i++) {
+            for (int i = 1; i <= 5; i++) {
               Question question = Question.builder()
                       .testPaper(testPaper)
-                      .content("문제 " + i)
+                      .content("매우 어려운 문제 철수 영희 로엠잇" + i)
                       .type(QuestionType.OBJECTIVE)
                       .build();
               questionRepository.save(question);
 
-              for (int j = 1; j <= 4; j++) {
+
+              for (int j = 1; j <= 5; j++) {
                 Option option = Option.builder()
                         .question(question)
                         .content("선택지 " + j)
                         .isCorrect(j == 1)
                         .build();
                 optionRepository.save(option);
+              }
+
+              for (int k = 1; k <= 2; k++) {
+                Question question2 = Question.builder()
+                        .testPaper(testPaper)
+                        .content("매우 어려운 주관식 문제 영어 국어 로엠잇" + i)
+                        .type(QuestionType.SUBJECTIVE)
+                        .build();
+                questionRepository.save(question2);
               }
             }
           });

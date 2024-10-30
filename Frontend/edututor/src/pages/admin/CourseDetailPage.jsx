@@ -22,22 +22,18 @@ const CourseDetailPage = () => {
       });
   }, [courseId]);
 
-  // 학습자료 등록 페이지로 이동
   const registerMaterial = (unitId) => {
     navigate(`/admin/create-material?unitId=${unitId}`);
   };
 
-  // 학습자료 보기 페이지로 이동
   const viewMaterial = (materialId) => {
     navigate(`/admin/materials/${materialId}`);
   };
 
-  // 시험지 등록 페이지로 이동
   const registerTestPaper = (unitId) => {
     navigate(`/admin/create-test-paper?unitId=${unitId}`);
   };
 
-  // 시험지 보기 페이지로 이동
   const viewTestPaper = (testPaper) => {
     if (testPaper && (testPaper.id || testPaper.testPaperId)) {
       const testPaperId = testPaper.id || testPaper.testPaperId;
@@ -47,7 +43,6 @@ const CourseDetailPage = () => {
     }
   };
 
-  // 과정 수정 페이지로 이동
   const goToEditPage = () => {
     navigate(`/admin/course/edit/${courseId}`);
   };
@@ -65,7 +60,6 @@ const CourseDetailPage = () => {
 
           <button onClick={goToEditPage} className="edit-button">수정하기</button>
 
-          {/* 단원 및 차수 정보 */}
           {courseData.sections.length > 0 ? (
             courseData.sections.map((section) => (
               <div key={section.sectionId} className="section">

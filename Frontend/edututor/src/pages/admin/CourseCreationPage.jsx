@@ -3,7 +3,6 @@ import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseCreationPage.css';
 
 const CourseCreationPage = () => {
-  // 각 선택 항목의 groupCodeId 매핑 데이터 설정
   const gradeLevels = { 초등학교: 1004, 중학교: 1004, 고등학교: 1004 }; // 급수에 해당하는 groupCodeId는 1004
   const years = {
     초등학교: { '1학년': 1003, '2학년': 1003, '3학년': 1003, '4학년': 1003, '5학년': 1003, '6학년': 1003 },
@@ -39,7 +38,6 @@ const CourseCreationPage = () => {
     } else {
       updatedFormData[name] = value;
 
-      // 선택된 값에 따라 groupCodeId 설정
       if (name === 'gradeLevel') {
         updatedFormData.groupCodeId = gradeLevels[value];
       } else if (name === 'year' && formData.gradeLevel) {
@@ -86,7 +84,6 @@ const CourseCreationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // gradeLevel, year, semester, subject 값을 조합하여 groupCode 생성
     const groupCode = `${formData.gradeLevel}-${formData.year}-${formData.semester}-${formData.subject}`;
 
     const requestData = {
@@ -135,7 +132,6 @@ const CourseCreationPage = () => {
           </select>
         </div>
 
-        {/* 학년 드롭다운 */}
         <div className="form-field">
           <label>학년:</label>
           <select
@@ -152,7 +148,6 @@ const CourseCreationPage = () => {
           </select>
         </div>
 
-        {/* 학기 드롭다운 */}
         <div className="form-field">
           <label>학기:</label>
           <select
@@ -168,7 +163,6 @@ const CourseCreationPage = () => {
           </select>
         </div>
 
-        {/* 과목 드롭다운 */}
         <div className="form-field">
           <label>과목:</label>
           <select

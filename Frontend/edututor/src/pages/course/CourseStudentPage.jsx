@@ -60,6 +60,13 @@ const CoursePage = () => {
     }
   };
 
+  // 학습자료 클릭 시 해당 학습자료 상세 페이지로 이동
+  const handleMaterialClick = (materialId) => {
+    if (materialId) {
+      navigate(`/student/material/${materialId}`);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -102,14 +109,18 @@ const CoursePage = () => {
                                 >
                                   형성평가
                                 </button>
-                                <button className="material-btn">학습자료</button>
                               </div>
                             </div>
 
                             <div className="materials">
                               {unit.materials.map(material => (
                                   <div key={material.materialId} className="material-item">
-                                    <p>학습자료: {material.title}</p>
+                                    <p
+                                        onClick={() => handleMaterialClick(material.materialId)}
+                                        className="material-link"
+                                    >
+                                      학습자료: {material.title}
+                                    </p>
                                   </div>
                               ))}
                             </div>

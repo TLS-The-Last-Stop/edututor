@@ -7,7 +7,6 @@ import AdminLayout from './Layout/AdminLayout.jsx';
 import MaterialCreationPage from './pages/admin/MaterialCreationPage.jsx';
 import TestPaperCreationPage from './pages/admin/TestPaperCreationPage.jsx';
 import CourseDetailPage from './pages/admin/CourseDetailPage.jsx';
-import CourseRegister from './pages/course/CourseRegister.jsx';
 import Board from './pages/board/Board.jsx';
 import TestPaperDetailPage from './pages/admin/TestPaperDetailPage.jsx';
 import MaterialDetailPage from './pages/admin/MaterialDetailPage.jsx';
@@ -21,6 +20,7 @@ import Report from './pages/report/Report.jsx';
 //import ReportDetail from './pages/report/ReportDetail.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 import CourseStudentPage from "./pages/course/CourseStudentPage.jsx";
+import MaterialDetailStudentPage from "./pages/material/MaterialDetailStudentPage.jsx";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -151,6 +151,25 @@ function App() {
                 {/*</ProtectedRout>*/}
               </Suspense>
             } />
+
+            <Route path="/student/test/:testPaperId" element={
+              <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
+            } />
+
+            <Route path="/student/material/:materialId" element={
+              <Suspense fallback={<LoadingSpinner />}><MaterialDetailStudentPage /></Suspense>
+            } />
+
+            <Route path="/course/:courseId" index element={
+              <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
+            } />
+            <Route path="/course0/:courseId" index element={
+              <Suspense fallback={<LoadingSpinner />}><CourseStudentPage /></Suspense>
+            } />
+
+            <Route path="/course/enroll" index element={
+              <Suspense fallback={<LoadingSpinner />}><CourseClassroomEnrollPage /></Suspense>
+            } />
           </Route>
 
           <Route path="/login" element={
@@ -169,22 +188,6 @@ function App() {
             <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
           } />
 
-          <Route path="/student/test/:testPaperId" element={
-            <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
-          } />
-
-          <Route path="/course/:courseId" index element={
-            <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
-          } />
-          <Route path="/course0/:courseId" index element={
-            <Suspense fallback={<LoadingSpinner />}><CourseStudentPage /></Suspense>
-          } />
-
-          <Route path="/course/enroll" index element={
-            <Suspense fallback={<LoadingSpinner />}><CourseClassroomEnrollPage /></Suspense>
-          } />
-
-          <Route path="courseregister" element={<CourseRegister />}></Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
