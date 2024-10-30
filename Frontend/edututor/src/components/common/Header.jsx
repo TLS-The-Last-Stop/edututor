@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { getUserInfo } from '../../utils/auth.js';
+import { useAuth } from '../../utils/AuthContext.jsx';
 
 const HeaderContainer = styled.header`
     background: aquamarine;
@@ -34,12 +33,7 @@ const HeaderLogo = styled.div`
 `;
 
 const Header = () => {
-  const [userInfo, setUserInfo] = useState('');
-
-  useEffect(() => {
-    const info = getUserInfo();
-    setUserInfo(info);
-  }, []);
+  const { userInfo } = useAuth();
 
   return (
     <HeaderContainer>

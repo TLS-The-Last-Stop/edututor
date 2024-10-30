@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../utils/AuthContext.jsx';
 
 const initForm = {
   loginId : '',
@@ -26,6 +27,7 @@ const initErrors = {
 const StudentLogin = () => {
   const [formData, setFormData] = useState(initForm);
   const [errors, setErrors] = useState(initErrors);
+  const { updateUserInfo } = useAuth();
 
   const navigate = useNavigate();
 
@@ -63,8 +65,8 @@ const StudentLogin = () => {
 
     try {
       const result = await login(formData);
-      console.log('학생 로그인 >> ', result);
       localStorage.setItem('info', JSON.stringify(result));
+      updateUserInfo();
 
       if (result) navigate('/');
     } catch (error) {
