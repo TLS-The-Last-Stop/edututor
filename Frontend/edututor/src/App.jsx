@@ -18,7 +18,7 @@ import ExamPage from './pages/exam/ExamPage.jsx';
 import CourseClassroomEnrollPage from './pages/course/CourseClassroomEnrollPage.jsx';
 import ProtectedRout from './utils/ProtectedRout.jsx';
 import Report from './pages/report/Report.jsx';
-import ReportDetail from './pages/report/ReportDetail.jsx';
+//import ReportDetail from './pages/report/ReportDetail.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 import CourseStudentPage from "./pages/course/CourseStudentPage.jsx";
 
@@ -124,9 +124,9 @@ function App() {
               <Suspense fallback={<LoadingSpinner />}><Report /></Suspense>
             } />
 
-            <Route path="report/:testPaperId" element={
-              <Suspense fallback={<LoadingSpinner />}><ReportDetail /></Suspense>
-            } />
+            {/*<Route path="report/:testPaperId" element={*/}
+            {/*  <Suspense fallback={<LoadingSpinner />}><ReportDetail /></Suspense>*/}
+            {/*} />*/}
 
             <Route path="classroom" element={
               <Suspense fallback={<LoadingSpinner />}>

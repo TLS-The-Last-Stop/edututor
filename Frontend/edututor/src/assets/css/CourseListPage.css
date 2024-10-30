@@ -1,56 +1,53 @@
-/* 전체 컨테이너 스타일 */
-.course-list-container {
-    max-width: 800px;
-    margin: 0 auto;
+.course-list-page {
     padding: 20px;
     font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.page-title {
     text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
     color: #333;
 }
 
-/* 로딩 및 에러 메시지 스타일 */
-.loading, .error {
-    text-align: center;
-    color: #ff6b6b;
-    font-size: 18px;
-    margin-top: 20px;
-}
-
-/* 과정 리스트 스타일 */
 .course-list {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
 }
 
-.course-item {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.course-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease;
 }
 
-.course-item:hover {
-    background-color: #e3f2fd;
+.course-card:hover {
+    transform: translateY(-5px);
 }
 
-/* 과정 링크 스타일 */
 .course-link {
     text-decoration: none;
     color: #007bff;
-    font-size: 18px;
+    font-size: 1.2rem;
     font-weight: bold;
 }
 
 .course-link:hover {
     color: #0056b3;
-    text-decoration: underline;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.error-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #d9534f;
 }
