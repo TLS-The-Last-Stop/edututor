@@ -3,12 +3,14 @@ package com.tls.edututor.exam.option.entity;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.exam.question.entity.Question;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "OPTION")
 public class Option extends BaseEntity {
   @Id

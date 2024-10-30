@@ -6,14 +6,16 @@ import com.tls.edututor.course.unit.entity.Unit;
 import com.tls.edututor.exam.question.entity.Question;
 import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "TEST_PAPER")
 public class TestPaper extends BaseEntity {
   @Id
