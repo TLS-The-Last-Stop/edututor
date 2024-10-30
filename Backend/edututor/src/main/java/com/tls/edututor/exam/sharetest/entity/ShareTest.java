@@ -35,4 +35,9 @@ public class ShareTest extends BaseEntity {
   @OneToMany(mappedBy = "shareTest", cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<UserTest> userTests;
+/*
+  @Override
+  public void setWriter(Long writer) {
+    super.setWriter(writer);
+  }*/
 }
