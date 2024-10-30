@@ -12,7 +12,6 @@ const TestPaperDetailPage = () => {
     const fetchTestPaper = async () => {
       try {
         const response = await publicApi.get(`/test-paper/${testPaperId}`);
-        console.log(response.data.data); // 데이터를 콘솔에 출력하여 구조 확인
         setTestPaperData(response.data.data);
         setLoading(false);
       } catch (err) {

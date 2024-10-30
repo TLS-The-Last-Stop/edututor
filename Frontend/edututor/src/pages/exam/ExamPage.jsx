@@ -35,7 +35,7 @@ const ExamPage = () => {
       ...prevAnswers,
       [questionId]: optionId
     }));
-    setAnsweredQuestions((prev) => new Set(prev).add(questionId)); // 답변 완료 처리
+    setAnsweredQuestions((prev) => new Set(prev).add(questionId));
   };
 
   const handleSubjectiveAnswer = (questionId, answer) => {
@@ -43,7 +43,7 @@ const ExamPage = () => {
       ...prevAnswers,
       [questionId]: answer
     }));
-    setAnsweredQuestions((prev) => new Set(prev).add(questionId)); // 답변 완료 처리
+    setAnsweredQuestions((prev) => new Set(prev).add(questionId));
   };
 
   const handleSubmit = () => {
@@ -92,7 +92,6 @@ const ExamPage = () => {
       <main className="questions">
         {questions.map((question) => (
           <div key={question.questionId} id={`question-${question.questionId}`} className="question">
-            <h3>문제 {question.questionId}</h3>
             <p>{question.content}</p>
             {question.type === 'OBJECTIVE' ? (
               <div className="options">
