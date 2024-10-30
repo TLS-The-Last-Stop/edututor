@@ -18,6 +18,7 @@ import ExamPage from './pages/exam/ExamPage.jsx';
 import CourseClassroomEnrollPage from './pages/course/CourseClassroomEnrollPage.jsx';
 import ProtectedRout from './utils/ProtectedRout.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
+import CourseStudentPage from "./pages/course/CourseStudentPage.jsx";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -150,12 +151,15 @@ function App() {
             <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
           } />
 
-          <Route path="/exam/:testPaperId" element={
+          <Route path="/student/test/:testPaperId" element={
             <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
           } />
 
           <Route path="/course/:courseId" index element={
             <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
+          } />
+          <Route path="/course0/:courseId" index element={
+            <Suspense fallback={<LoadingSpinner />}><CourseStudentPage /></Suspense>
           } />
 
           <Route path="/course/enroll" index element={

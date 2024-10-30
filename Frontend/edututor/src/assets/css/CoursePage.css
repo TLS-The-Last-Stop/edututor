@@ -22,6 +22,16 @@
     cursor: pointer;
 }
 
+.course-item {
+    padding: 10px;
+    cursor: pointer; /* 클릭 가능하도록 포인터 추가 */
+    transition: background-color 0.3s;
+}
+
+.course-item:hover {
+    background-color: #f0f0f0;
+}
+
 .course-details {
     flex: 1;
     padding: 20px;

@@ -175,6 +175,18 @@ public class CourseServiceImpl implements CourseService {
 	}
 
   @Override
+  public List<CourseNameListResponse> getClassroomCourses(Authentication authentication) {
+    Long classroomId = ((AuthUser) authentication.getPrincipal()).getClassroom().getId();
+    List<Long> courseIds = courseClassroomRepository.findCourseIdsByClassroomId(classroomId);
+    List<Course> courses = courseRepository.findByIdIn(courseIds);
+    return courses.stream()
+            .map(course -> new CourseNameListResponse(
+                    course.getId(),
+                    course.getCourseName()
+            ))
+            .collect(Collectors.toList());
+  }
+  @Override
   public List<CourseNameListResponse> getFilteredCourses(String gradeLevel, String year, String semester, String subject, Authentication authentication) {
     List<Long> groupCodeIds = codeDetailRepository.findGroupCodeIdsByDetails(gradeLevel, year, semester, subject);
     List<Course> courses = courseRepository.findByGroupCodeIdIn(groupCodeIds);
@@ -190,8 +202,8 @@ public class CourseServiceImpl implements CourseService {
   public void enrollCourseInClassroom(Long courseId, Authentication authentication) {
     Course course = courseRepository.findById(courseId)
             .orElseThrow(() -> new IllegalArgumentException("courseId 틀림"));
-    AuthUser authUser =  (AuthUser) authentication.getPrincipal();
-    System.out.println(authUser.toString());
+    AuthUser authUser = (AuthUser) authentication.getPrincipal();
+    authUser.getId();
     Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
     boolean exists = courseClassroomRepository.existsByCourseIdAndClassroomId(courseId, classroom.getId());
     if (exists) {
