@@ -5,6 +5,7 @@ import com.tls.edututor.exam.testpaper.dto.response.StudentTestPaperResponse;
 import com.tls.edututor.exam.usertest.dto.request.UserTestRequest;
 import com.tls.edututor.exam.usertest.service.UserTestService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/test")
@@ -21,8 +22,9 @@ public class UserTestController {
   }
 
   @PostMapping("/submit")
-  public CommonApiResponse<Void> submitUserTest(@RequestBody UserTestRequest userTestRequest) {
-    userTestService.submitAndGradeUserTest(userTestRequest);
-    return CommonApiResponse.createNoContent("시험 제출 및 채점 완료");
+  public CommonApiResponse<Void> submitUserTest(@RequestBody UserTestRequest userTestRequest, Authentication authentication) {
+    System.out.println(userTestRequest.toString());
+    userTestService.submitAndGradeUserTest(userTestRequest, authentication);
+    return CommonApiResponse.createNoContent("시험 제출");
   }
 }
