@@ -1,25 +1,24 @@
 package com.tls.edututor.report.service.impl;
 
+import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.course.course.entity.CourseClassroom;
 import com.tls.edututor.exam.question.entity.Question;
-import com.tls.edututor.exam.question.repository.QuestionRepository;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import com.tls.edututor.exam.useransewer.entity.UserAnswer;
-import com.tls.edututor.exam.useransewer.repositroy.UserAnswerRepository;
 import com.tls.edututor.exam.usertest.entity.UserTest;
 import com.tls.edututor.report.dto.response.TestPaperDetailResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
 import com.tls.edututor.report.dto.response.UserTestResponse2;
 import com.tls.edututor.report.repository.*;
 import com.tls.edututor.report.service.ReportService;
-import com.tls.edututor.user.entity.User;
+import com.tls.edututor.user.dto.response.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -32,9 +31,13 @@ public class ReportServiceImpl implements ReportService {
   private final UserAnswerRepository2 userAnswerRepository2;
   private final QuestionRepository2 questionRepository2;
 
-  public List<TestPaperResponse2> getTestPapers(Long classroomId) {
+  public List<TestPaperResponse2> getTestPapers(Authentication authentication) {
     List<Long> courseIds = new ArrayList<>();
-    for (CourseClassroom cc : courseClassroomRepository2.findByClassroomId(classroomId)) {
+    Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
+
+    log.info("@@@@@@@@@@@@@@@@@@@@@@@classroom : {} ", classroom.getId());
+
+    for (CourseClassroom cc : courseClassroomRepository2.findByClassroomId(classroom.getId())) {
       courseIds.add(cc.getCourse().getId());
     }
 
@@ -55,13 +58,9 @@ public class ReportServiceImpl implements ReportService {
 
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
     TestPaper testPaper = testPaperRepository2.findByUnitId(testPaperId);
-    if (testPaper == null) {
-      log.error("TestPaper not found for ID: {}", testPaperId);
-    }
-
     List<UserTest> userTests = userTestRepository2.findByTestPaperId(testPaperId);
-
     List<UserTestResponse2> userTestResponses = new ArrayList<>();
+
     for (UserTest userTest : userTests) {
       List<String> userAnswers = new ArrayList<>();
       List<Boolean> isCorrect = new ArrayList<>();
@@ -73,6 +72,7 @@ public class ReportServiceImpl implements ReportService {
 
       List<String> correctAnswers = new ArrayList<>();
       List<Question> correctAnswersList = questionRepository2.findByTestPaperId(testPaperId);
+
       for (Question question : correctAnswersList) {
         correctAnswers.add(question.getAnswerText());
       }
