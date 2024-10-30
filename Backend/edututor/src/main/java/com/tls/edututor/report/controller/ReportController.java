@@ -4,7 +4,6 @@ import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.report.dto.response.TestPaperDetailResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
 import com.tls.edututor.report.service.ReportService;
-import com.tls.edututor.user.dto.response.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

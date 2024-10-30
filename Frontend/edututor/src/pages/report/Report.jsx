@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ReportList from '../../components/report/ReportList.jsx';
-import { getReportByTestPaperId } from '../../api/report/report.js';
+import { getReport } from '../../api/report/report.js';
 import '../../assets/css/ReportPage.css';
 
 const Report = () => {
   const [reportData, setReportData] = useState([]);
-  const [selectedReportId, setSelectedReportId] = useState(null);
+  const navigate = useNavigate();
 
   const fetchReportData = async () => {
-    const response = await getReportByTestPaperId();
+    const response = await getReport();
     if (response.data) {
       setReportData(response.data);
     } else {
@@ -16,8 +17,8 @@ const Report = () => {
     }
   };
 
-  const handleViewDetail = (reportId) => {
-    setSelectedReportId(reportId);
+  const handleViewDetail = (testPaperId) => {
+    navigate(`/report/${testPaperId}`);
   };
 
   useEffect(() => {
@@ -28,7 +29,6 @@ const Report = () => {
     <div className="report-container">
       <ReportList
         reports={reportData}
-        selectedReportId={selectedReportId}
         onViewDetail={handleViewDetail}
       />
     </div>
