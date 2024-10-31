@@ -183,6 +183,7 @@ const CourseSection = () => {
       </CourseContainer>
     );
   }
+
   if (courses.length === 0 && userRole === 'TE') return (
     <RegisterCourseContainer>
       <RegisterCourseWrapper>
@@ -197,30 +198,63 @@ const CourseSection = () => {
   );
 
 
+  if (courses.length === 0 && userRole === 'SU') return (
+    <RegisterCourseContainer>
+      <RegisterCourseWrapper>
+        <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
+        <RegisterCourseButton>
+          선생님에게 얘기하러 가기(채팅 ?)
+        </RegisterCourseButton>
+      </RegisterCourseWrapper>
+    </RegisterCourseContainer>
+  );
+
+  if (userRole === 'SU') return (
+    <CourseContainer>
+      <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
+      <CourseList>
+        {loading ? (
+          <Loading />
+        ) : (
+          courses.map(course => (
+            <CourseItem key={course.courseId}
+                        onClick={() => handleStudentCourseClick(course.courseId)}>
+              <ImageWrapper>
+                <img src={수학} alt={course.courseName} />
+                <div className="magnify">
+                  🔍
+                </div>
+              </ImageWrapper>
+              <CourseTitle>{course.courseName}</CourseTitle>
+            </CourseItem>
+          ))
+        )}
+      </CourseList>
+    </CourseContainer>
+  );
+
   return (
-    <>
-      <CourseContainer>
-        <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
-        <CourseList>
-          {loading ? (
-            <Loading />
-          ) : (
-            courses.map(course => (
-              <CourseItem key={course.courseId}
-                          onClick={() => handleTeacherCourseClick(course.courseId)}>
-                <ImageWrapper>
-                  <img src={수학} alt={course.courseName} />
-                  <div className="magnify">
-                    🔍
-                  </div>
-                </ImageWrapper>
-                <CourseTitle>{course.courseName}</CourseTitle>
-              </CourseItem>
-            ))
-          )}
-        </CourseList>
-      </CourseContainer>
-    </>
+    <CourseContainer>
+      <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
+      <CourseList>
+        {loading ? (
+          <Loading />
+        ) : (
+          courses.map(course => (
+            <CourseItem key={course.courseId}
+                        onClick={() => handleTeacherCourseClick(course.courseId)}>
+              <ImageWrapper>
+                <img src={수학} alt={course.courseName} />
+                <div className="magnify">
+                  🔍
+                </div>
+              </ImageWrapper>
+              <CourseTitle>{course.courseName}</CourseTitle>
+            </CourseItem>
+          ))
+        )}
+      </CourseList>
+    </CourseContainer>
   );
 };
 

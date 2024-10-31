@@ -179,7 +179,8 @@ function AppRoutes() {
 
           <Route path="/course/:courseId" index element={ // TE만
             <Suspense fallback={<LoadingSpinner />}>
-              <ProtectedRoute requiredRole="TE">
+              {/*<ProtectedRoute requiredRole="TE">*/}
+              <ProtectedRoute requiredRole="SU">
                 <CoursePage />
               </ProtectedRoute>
             </Suspense>
