@@ -77,17 +77,6 @@ const NavList = styled.ul`
     }
 `;
 
-const UserInfo = styled.div`
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #333;
-
-    @media (max-width: 765px) {
-        display: none;
-    }
-`;
-
 const AuthButtons = styled.div`
     display: flex;
     gap: 12px;
@@ -128,6 +117,10 @@ const AuthButtons = styled.div`
 const SubNav = styled.nav`
     height: 40px;
     border-top: 1px solid #eaeaea;
+
+    @media (max-width: 765px) {
+        display: none;
+    }
 
     ul {
         display: flex;
@@ -265,23 +258,31 @@ const Overlay = styled.div`
 const Header = () => {
   const { userInfo } = useAuth();
   const [hamburger, setHamburger] = useState(false);
-  const [activeMenu, setActiveMenu] = useState('');
+  const [activeHeaderMenu, setActiveHeaderMenu] = useState('');
+  const [activeHamburgerMenu, setActiveHamburgerMenu] = useState('');
   const [activeSubMenu, setActiveSubMenu] = useState(false);
 
   const toggleHamburger = () => {
     setHamburger(!hamburger);
     if (hamburger) {
-      setActiveSubMenu('');
+      setActiveHamburgerMenu('');
       setActiveSubMenu('');
     }
   };
 
-  const handleMenuClick = (menuName) => {
-    setActiveMenu(activeMenu === menuName ? '' : menuName);
+  const handleHeaderMenuClick = (menuName) => {
+    setActiveHeaderMenu(activeHeaderMenu === menuName ? '' : menuName);
+    setActiveSubMenu('');
+  };
+
+  const handleHamburgerMenuClick = (e, menuName) => {
+    e.stopPropagation();
+    setActiveHamburgerMenu(activeHamburgerMenu === menuName ? '' : menuName);
     setActiveSubMenu(''); // 메인 메뉴 클릭시 서브메뉴 선택 초기화
   };
 
-  const handleSubMenuClick = (subMenuName) => {
+  const handleSubMenuClick = (e, subMenuName) => {
+    e.stopPropagation();
     setActiveSubMenu(subMenuName === activeSubMenu ? '' : subMenuName);
   };
 
@@ -294,11 +295,17 @@ const Header = () => {
             <span className="edu">edu</span>
           </Logo>
           <NavList>
-            <li onClick={() => handleMenuClick('학습')} className={activeMenu === '학습' ? 'active' : ''}>학습</li>
-            <li onClick={() => handleMenuClick('리포트')} className={activeMenu === '리포트' ? 'active' : ''}>리포트</li>
-            <li onClick={() => handleMenuClick('에듀튜터')} className={activeMenu === '에듀튜터' ? 'active' : ''}>에듀튜터 소개
+            <li onClick={() => handleHeaderMenuClick('학습')} className={activeHeaderMenu === '학습' ? 'active' : ''}>학습
             </li>
-            <li onClick={() => handleMenuClick('고객센터')} className={activeMenu === '고객센터' ? 'active' : ''}>고객센터</li>
+            <li onClick={() => handleHeaderMenuClick('리포트')}
+                className={activeHeaderMenu === '리포트' ? 'active' : ''}>리포트
+            </li>
+            <li onClick={() => handleHeaderMenuClick('에듀튜터')}
+                className={activeHeaderMenu === '에듀튜터' ? 'active' : ''}>에듀튜터 소개
+            </li>
+            <li onClick={() => handleHeaderMenuClick('고객센터')}
+                className={activeHeaderMenu === '고객센터' ? 'active' : ''}>고객센터
+            </li>
           </NavList>
 
           {userInfo ? (
@@ -321,13 +328,15 @@ const Header = () => {
         </MainNav>
       </HeaderContent>
 
-      {activeMenu === '에듀튜터' && (
+      {activeHeaderMenu === '에듀튜터' && (
         <HeaderContent>
           <SubNav>
             <ul>
-              <li onClick={() => handleSubMenuClick('활용사례')} className={activeMenu === '활용사례' ? 'active' : ''}>활용 사례
+              <li onClick={() => handleSubMenuClick('활용사례')} className={activeHeaderMenu === '활용사례' ? 'active' : ''}>활용
+                사례
               </li>
-              <li onClick={() => handleSubMenuClick('서비스소개')} className={activeMenu === '서비스소개' ? 'active' : ''}>서비스
+              <li onClick={() => handleSubMenuClick('서비스소개')}
+                  className={activeHeaderMenu === '서비스소개' ? 'active' : ''}>서비스
                 소개
               </li>
             </ul>
@@ -339,37 +348,42 @@ const Header = () => {
         <HamburgerMenu isOpen={hamburger}>
           <HamburgerMenuHeader>
             <div>메뉴</div>
-            <button onClick={toggleHamburger} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+            <button onClick={(e) => {
+              e.stopPropagation();
+              toggleHamburger();
+            }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
               <IoClose size={24} />
             </button>
           </HamburgerMenuHeader>
 
-          <HamburgerMenuItem className={activeMenu === '학습' ? 'active' : ''}
-                             onClick={() => handleMenuClick('학습')}>
+          <HamburgerMenuItem className={activeHamburgerMenu === '학습' ? 'active' : ''}
+                             onClick={(e) => handleHamburgerMenuClick(e, '학습')}>
             <img src={study} alt="학습 이미지" /> 학습
           </HamburgerMenuItem>
-          <HamburgerMenuItem className={activeMenu === '리포트' ? 'active' : ''}
-                             onClick={() => handleMenuClick('리포트')}>
+          <HamburgerMenuItem className={activeHamburgerMenu === '리포트' ? 'active' : ''}
+                             onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>
             <img src={report} alt="리포트 이미지" />리포트
           </HamburgerMenuItem>
-          <HamburgerMenuItem className={activeMenu === '에듀튜터' ? 'active' : ''}
-                             onClick={() => handleMenuClick('에듀튜터')}>
+          <HamburgerMenuItem className={activeHamburgerMenu === '에듀튜터' ? 'active' : ''}
+                             onClick={(e) => handleHamburgerMenuClick(e, '에듀튜터')}>
             <img src={tutor} alt="에듀튜터 이미지" />에듀튜터
           </HamburgerMenuItem>
-          {activeMenu === '에듀튜터' && (
+          {activeHamburgerMenu === '에듀튜터' && (
             <>
-              <HamburgerMenuItem onClick={() => handleSubMenuClick('활용사례')}
-                                 clasName={activeMenu === '활용사례' ? 'active' : ''} style={{ paddingLeft: '32px' }}
+              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '활용사례')}
+                                 clasName={activeHamburgerMenu === '활용사례' ? 'active' : ''}
+                                 style={{ paddingLeft: '32px' }}
               >활용
                 사례</HamburgerMenuItem>
-              <HamburgerMenuItem onClick={() => handleSubMenuClick('서비스소개')}
-                                 clasName={activeMenu === '서비스소개' ? 'active' : ''} style={{ paddingLeft: '32px' }}
+              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '서비스소개')}
+                                 clasName={activeHamburgerMenu === '서비스소개' ? 'active' : ''}
+                                 style={{ paddingLeft: '32px' }}
               >서비스
                 소개</HamburgerMenuItem>
             </>
           )}
-          <HamburgerMenuItem className={activeMenu === '고객센터' ? 'active' : ''}
-                             onClick={() => handleMenuClick('고객센터')}>
+          <HamburgerMenuItem className={activeHamburgerMenu === '고객센터' ? 'active' : ''}
+                             onClick={(e) => handleHamburgerMenuClick(e, '고객센터')}>
             <img src={cs} alt="고객센터 이미지" />고객센터
           </HamburgerMenuItem>
 
