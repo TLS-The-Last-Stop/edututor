@@ -207,10 +207,10 @@ const HamburgerMenu = styled.div`
     display: none;
 
     @media (max-width: 765px) {
-        display: ${props => props.isOpen ? 'block' : 'none'};
+        display: ${props => props.$isOpen ? 'block' : 'none'};
         position: fixed;
         top: 0;
-        right: ${props => props.isOpen ? '0' : '-250px'};
+        right: ${props => props.$isOpen ? '0' : '-250px'};
         width: 250px;
         height: 100vh;
         background: white;
@@ -294,8 +294,8 @@ const Overlay = styled.div`
         width: 100%;
         height: 100vh;
         background: rgba(0, 0, 0, 0.5);
-        opacity: ${props => props.isOpen ? 1 : 0};
-        visibility: ${props => props.isOpen ? 'visible' : 'hidden'};
+        opacity: ${props => props.$isOpen ? 1 : 0};
+        visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
         transition: all 0.3s ease-in-out;
         z-index: 999;
     }
@@ -400,8 +400,8 @@ const Header = () => {
         </HeaderContent>
       )}
 
-      <Overlay isOpen={hamburger} onClick={toggleHamburger}>
-        <HamburgerMenu isOpen={hamburger}>
+      <Overlay $isOpen={hamburger} onClick={toggleHamburger}>
+        <HamburgerMenu $isOpen={hamburger}>
           <HamburgerMenuHeader>
             <div>메뉴</div>
             <button onClick={(e) => {
@@ -452,8 +452,12 @@ const Header = () => {
             </HamburgerMenuItem>
           ) : (
             <HamburgerAuthButtons>
-              <button className="login">로그인</button>
-              <button className="register">회원가입</button>
+              <Link to="/login">
+                <button className="login">로그인</button>
+              </Link>
+              <Link to="join">
+                <button className="register">회원가입</button>
+              </Link>
             </HamburgerAuthButtons>
           )}
 

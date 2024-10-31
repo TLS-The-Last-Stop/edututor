@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseClassroomEnrollPage.css';
+import { PiStudentLight } from 'react-icons/pi';
+import { Link } from 'react-router-dom';
 
 const CourseClassroomEnrollPage = () => {
   const gradeLevels = ['초등학교', '중학교'];
@@ -21,9 +23,9 @@ const CourseClassroomEnrollPage = () => {
       const response = await publicApi.get('/course/filtered', {
         params: {
           gradeLevel: selectedGradeLevel,
-          year: selectedYear,
-          semester: selectedSemester,
-          subject: selectedSubject
+          year      : selectedYear,
+          semester  : selectedSemester,
+          subject   : selectedSubject
         }
       });
       setCourses(response.data.data || []);
@@ -73,86 +75,90 @@ const CourseClassroomEnrollPage = () => {
   };
 
   return (
-      <div className="course-filter-container">
+    <div className="course-filter-container">
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <h2>학습 과정 필터링</h2>
-
-        <table className="filter-table">
-          <thead>
-          <tr>
-            <th>학교급</th>
-            <th>학년</th>
-            <th>학기</th>
-            <th>과목</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>
-              {gradeLevels.map((level, index) => (
-                  <button
-                      key={`gradeLevel-${index}`}
-                      className={selectedGradeLevel === level ? 'selected' : ''}
-                      onClick={() => handleFilterClick('gradeLevel', level)}
-                  >
-                    {level}
-                  </button>
-              ))}
-            </td>
-            <td>
-              {years.map((year, index) => (
-                  <button
-                      key={`year-${index}`}
-                      className={selectedYear === year ? 'selected' : ''}
-                      onClick={() => handleFilterClick('year', year)}
-                  >
-                    {year}
-                  </button>
-              ))}
-            </td>
-            <td>
-              {semesters.map((semester, index) => (
-                  <button
-                      key={`semester-${index}`}
-                      className={selectedSemester === semester ? 'selected' : ''}
-                      onClick={() => handleFilterClick('semester', semester)}
-                  >
-                    {semester}
-                  </button>
-              ))}
-            </td>
-            <td>
-              {subjects.map((subject, index) => (
-                  <button
-                      key={`subject-${index}`}
-                      className={selectedSubject === subject ? 'selected' : ''}
-                      onClick={() => handleFilterClick('subject', subject)}
-                  >
-                    {subject}
-                  </button>
-              ))}
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-        <div className="course-list">
-          {loading ? (
-              <p>Loading...</p>
-          ) : courses.length > 0 ? (
-              courses.map(course => (
-                  <div
-                      key={course.courseId}
-                      className="course-card"
-                      onClick={() => handleEnrollCourse(course.courseId)}
-                  >
-                    <h3>{course.courseName}</h3>
-                  </div>
-              ))
-          ) : (
-              <p>해당 조건에 맞는 학습 과정이 없습니다.</p>
-          )}
-        </div>
+        <Link to="/classroom">
+          <PiStudentLight size={24} style={{ marginLeft: '10px', cursor: 'pointer' }} />
+        </Link>
       </div>
+      <table className="filter-table">
+        <thead>
+        <tr>
+          <th>학교급</th>
+          <th>학년</th>
+          <th>학기</th>
+          <th>과목</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            {gradeLevels.map((level, index) => (
+              <button
+                key={`gradeLevel-${index}`}
+                className={selectedGradeLevel === level ? 'selected' : ''}
+                onClick={() => handleFilterClick('gradeLevel', level)}
+              >
+                {level}
+              </button>
+            ))}
+          </td>
+          <td>
+            {years.map((year, index) => (
+              <button
+                key={`year-${index}`}
+                className={selectedYear === year ? 'selected' : ''}
+                onClick={() => handleFilterClick('year', year)}
+              >
+                {year}
+              </button>
+            ))}
+          </td>
+          <td>
+            {semesters.map((semester, index) => (
+              <button
+                key={`semester-${index}`}
+                className={selectedSemester === semester ? 'selected' : ''}
+                onClick={() => handleFilterClick('semester', semester)}
+              >
+                {semester}
+              </button>
+            ))}
+          </td>
+          <td>
+            {subjects.map((subject, index) => (
+              <button
+                key={`subject-${index}`}
+                className={selectedSubject === subject ? 'selected' : ''}
+                onClick={() => handleFilterClick('subject', subject)}
+              >
+                {subject}
+              </button>
+            ))}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div className="course-list">
+        {loading ? (
+          <p>Loading...</p>
+        ) : courses.length > 0 ? (
+          courses.map(course => (
+            <div
+              key={course.courseId}
+              className="course-card"
+              onClick={() => handleEnrollCourse(course.courseId)}
+            >
+              <h3>{course.courseName}</h3>
+            </div>
+          ))
+        ) : (
+          <p>해당 조건에 맞는 학습 과정이 없습니다.</p>
+        )}
+      </div>
+    </div>
   );
 };
 

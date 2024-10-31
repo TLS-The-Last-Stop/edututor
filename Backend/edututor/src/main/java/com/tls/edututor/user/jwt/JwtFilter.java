@@ -50,9 +50,6 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
 
-    // Writer를 한 번만 생성
-    //PrintWriter out = response.getWriter();
-
     try {
       for (Cookie cookie : cookies) {
         if (cookie.getName().startsWith("access"))
@@ -61,14 +58,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
       if (accessToken.isBlank()) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        //out.write("no access token");
         filterChain.doFilter(request, response);
         return;
       }
 
       jwtUtil.isExpired(accessToken);
     } catch (ExpiredJwtException eje) {
-      //out.write("access token expired");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
@@ -76,7 +71,6 @@ public class JwtFilter extends OncePerRequestFilter {
     // access 토큰인지 확인
     String type = jwtUtil.getType(accessToken);
     if (!type.startsWith("access")) {
-      //out.write("invaild access token");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }

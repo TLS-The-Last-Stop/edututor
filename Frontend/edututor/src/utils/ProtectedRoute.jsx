@@ -4,12 +4,12 @@ import Loading from '../components/common/Loading.jsx';
 import { verifyAuth } from './auth.js';
 import { useAuth } from './AuthContext.jsx';
 
-const ProtectedRoute = ({ children, requiredRole = 'ST' }) => {
+const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
   const [isAuthorized, setIsAuthoriozed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasAlerted, setHasAlerted] = useState(false);
 
-  const { userInfo, setUserRole } = useAuth();
+  const { userInfo, userRole } = useAuth();
   const navigate = useNavigate();
 
   const checkAuth = async () => {
@@ -24,11 +24,17 @@ const ProtectedRoute = ({ children, requiredRole = 'ST' }) => {
 
       const result = await verifyAuth();
       const role = result.data;
-      setUserRole(role);
 
-      if (role !== requiredRole && !hasAlerted) {
+      // 권한 계층 체크
+      const hasRequiredRole = (required, actual) => {
+        if (actual === 'AD') return true;
+        if (actual === 'TE' && required === 'SU') return true;
+        return actual === required;
+      };
+
+      if (!hasRequiredRole(requiredRole, role) && !hasAlerted) {
         setHasAlerted(true);
-        alert('권한이 없습니다.');
+        alert('떽끼!');
         navigate('/');
         return;
       }

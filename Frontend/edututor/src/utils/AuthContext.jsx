@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { getUserInfo } from '../api/user/user.js';
 import privateApi from '../api/axios.js';
 import { useNavigate } from 'react-router-dom';
+import { verifyAuth } from './auth.js';
 
 const AuthContext = createContext();
 
@@ -14,14 +15,15 @@ export const AuthProvider = ({ children }) => {
     try {
       if (!userInfo) return;
 
-      const response = await privateApi.get('/auth/verify');
-      if (response.data.status === 401 && response.data.message.startsWith('로그인')) {
+      const result = await verifyAuth();
+
+      if (result.status === 401 && result.message.startsWith('로그인')) {
         clearLocalStorage();
         navigator('/');
         return;
       }
 
-      setUserRole(response.data.data);
+      setUserRole(result.data);
     } catch (error) {
       console.error('Failed to verify role:', error);
       clearLocalStorage();
@@ -43,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     verifyUserRole();
-  }, []);
+  }, [userInfo]);
 
   useEffect(() => {
     const handleStorageChange = () => {

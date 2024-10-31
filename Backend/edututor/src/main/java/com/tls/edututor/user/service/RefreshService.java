@@ -6,7 +6,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface RefreshService {
 
+  Refresh getRefreshToken(String refreshToken);
+
   void saveRefreshToken(Refresh refresh);
 
   UpdateTokenResponse createNewAccessToken(HttpServletRequest request);
+
+  void deleteRefreshToken(String refreshToken);
 }

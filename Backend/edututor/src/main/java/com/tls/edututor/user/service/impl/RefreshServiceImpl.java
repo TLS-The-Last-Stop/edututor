@@ -24,6 +24,14 @@ public class RefreshServiceImpl implements RefreshService {
   private final RefreshRepository refreshRepository;
 
   @Override
+  public Refresh getRefreshToken(String refreshToken) {
+    Refresh refresh = refreshRepository.findByRefreshTokenAndUsed(refreshToken, false).orElseThrow(() -> new JwtException("refresh token not found"));
+    refresh.markAsUsed();
+
+    return refresh;
+  }
+
+  @Override
   @Transactional
   public void saveRefreshToken(Refresh refresh) {
     refreshRepository.save(refresh);
@@ -77,11 +85,9 @@ public class RefreshServiceImpl implements RefreshService {
     return new UpdateTokenResponse(newAccessToken, newRefreshToken);
   }
 
-  public Refresh getRefreshToken(String refreshToken) {
-    Refresh refresh = refreshRepository.findByRefreshTokenAndUsed(refreshToken, false).orElseThrow(() -> new JwtException("refresh token not found"));
-    refresh.markAsUsed();
-
-    return refresh;
+  @Override
+  @Transactional
+  public void deleteRefreshToken(String refreshToken) {
+    refreshRepository.deleteByRefreshTokenAndUsed(refreshToken, false);
   }
-
 }

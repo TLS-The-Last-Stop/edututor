@@ -58,22 +58,11 @@ function App() {
 }
 
 function AppRoutes() {
-  const { userRole } = useAuth();
-
-  const checkRoleAccess = (allowedRole, element) => {
-    if (!allowedRole) {
-
-      return element;
-    }
-
-    return userRole === allowedRole ? element : <Navigate to="/" />;
-  };
-
   return (
     <>
       <GlobalStyle />
       <Routes>
-        <Route path="/admin" element={
+        <Route path="/admin" element={ // AD(admin)권한만
           <Suspense fallback={<LoadingSpinner />}>
             <AdminLayout>
               <Outlet />
@@ -124,7 +113,7 @@ function AppRoutes() {
           } />
         </Route>
 
-        <Route path="/" element={
+        <Route path="/" element={ // 기본적으로 아무나
           <Suspense fallback={<LoadingSpinner />}>
             <MainLayout>
               <Outlet />
@@ -132,32 +121,31 @@ function AppRoutes() {
           </Suspense>
         }>
 
-          <Route index element={checkRoleAccess('TE',
+          <Route index element={ // 아무나인데 로그인, 권한에 따라 다르게 분리 (Home 컴포넌트 > 메인섹션 컴포넌트 안에서)
             <Suspense fallback={<LoadingSpinner />}><Home /></Suspense>
-          )
           } />
 
-          <Route path="cmmn" element={
+          <Route path="cmmn" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
             <Suspense fallback={<LoadingSpinner />}><Board /></Suspense>
           } />
 
-          <Route path="report" element={
-            <Suspense fallback={<LoadingSpinner />}><Report /></Suspense>
-          } />
-
-          <Route path="report/:testPaperId" element={
-            <Suspense fallback={<LoadingSpinner />}><ReportDetail /></Suspense>
-          } />
-
-          <Route path="classroom" element={
+          <Route path="report" element={ // SU(학생), TE(선생)만
             <Suspense fallback={<LoadingSpinner />}>
-              <ProtectedRoute>
-                <Classroom />
+              <ProtectedRoute requiredRole="SU">
+                <Report />
               </ProtectedRoute>
             </Suspense>
-          }>
-          </Route>
-          <Route path="classroom" element={
+          } />
+
+          <Route path="report/:testPaperId" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="SU">
+                <ReportDetail />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="classroom" element={ // TE(선생)만
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="TE">
                 <Classroom />
@@ -165,47 +153,67 @@ function AppRoutes() {
             </Suspense>
           } />
 
-          <Route path="exam-share" element={
+          <Route path="exam-share" element={ // TE(선생)만
             <Suspense fallback={<LoadingSpinner />}>
-              {/*<ProtectedRoute requiredRole="TE">*/}
-              <ExamShare />
-              {/*</ProtectedRoute>*/}
+              <ProtectedRoute requiredRole="TE">
+                <ExamShare />
+              </ProtectedRoute>
             </Suspense>
           } />
 
-          <Route path="/student/test/:testPaperId" element={
-            <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
+          <Route path="/student/test/:testPaperId" element={ // TE, SU만
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="SU">
+                <ExamPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
-          <Route path="/student/material/:materialId" element={
-            <Suspense fallback={<LoadingSpinner />}><MaterialDetailStudentPage /></Suspense>
+          <Route path="/student/material/:materialId" element={// TE, SU만
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="SU">
+                <MaterialDetailStudentPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
-          <Route path="/course/:courseId" index element={
-            <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
+          <Route path="/course/:courseId" index element={ // TE만
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="TE">
+                <CoursePage />
+              </ProtectedRoute>
+            </Suspense>
           } />
-          <Route path="/course0/:courseId" index element={
-            <Suspense fallback={<LoadingSpinner />}><CourseStudentPage /></Suspense>
+          <Route path="/course0/:courseId" index element={ // TE, SU만
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="SU">
+                <CourseStudentPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
-          <Route path="/course/enroll" index element={
-            <Suspense fallback={<LoadingSpinner />}><CourseClassroomEnrollPage /></Suspense>
+          <Route path="/course/enroll" index element={ // TE만
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="TE">
+                <CourseClassroomEnrollPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
         </Route>
 
-        <Route path="/login" element={
+        <Route path="/login" element={ // 모두 가능
           <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
         } />
 
-        <Route path="/join" element={
+        <Route path="/join" element={ // 모두 가능
           <Suspense fallback={<LoadingSpinner />}><UserJoin /></Suspense>
         } />
 
-        <Route path="/teacher-login" element={
+        <Route path="/teacher-login" element={ // 접근은 모두 가능
           <Suspense fallback={<LoadingSpinner />}><TeacherLogin /></Suspense>
         } />
 
-        <Route path="/student-login" element={
+        <Route path="/student-login" element={ // 접근 모두 가능
           <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
         } />
 
