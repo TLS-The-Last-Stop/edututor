@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import StudentQuestionStatus from '../../components/report/StudentQuestionStatus.jsx';
 import SummarySection from '../../components/report/SummarySection.jsx';
 import { useParams } from 'react-router-dom';

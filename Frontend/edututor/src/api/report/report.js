@@ -1,7 +1,7 @@
 import { publicApi } from '../axios.js';
 
-export const getReport = async () => {
-  const response = await publicApi.get('/report');
+export const getReport = async (page) => {
+  const response = await publicApi.get(`/report?page=${page}`);
   return {
     success: true,
     data: response.data.data
