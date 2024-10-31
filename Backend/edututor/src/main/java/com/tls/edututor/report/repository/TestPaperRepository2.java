@@ -16,8 +16,9 @@ public interface TestPaperRepository2 extends JpaRepository<TestPaper, Long> {
           "JOIN FETCH u.section s " +
           "JOIN FETCH s.course c " +
           "WHERE u.section.course.id IN :courseIds " +
+          "AND (:courseId IS NULL OR c.id = :courseId) " +
           "AND tp.isDeleted = false")
-  Page<TestPaper> findByUnitCourseIdInAndIsDeletedFalse(Collection<Long> courseIds, Pageable pageable);
+  Page<TestPaper> findByUnitCourseIdInAndIsDeletedFalse(Collection<Long> courseIds, Long courseId, Pageable pageable);
 
   @Query("SELECT tp FROM TestPaper tp " +
           "JOIN FETCH tp.unit u " +

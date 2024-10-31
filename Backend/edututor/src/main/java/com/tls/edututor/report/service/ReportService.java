@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 
 public interface ReportService {
-  Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable);
+  Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable, Long CourseId);
 
   TestPaperDetailResponse getTestPaperDetail(Long testPaperId);
 }

@@ -33,7 +33,7 @@ public class ReportServiceImpl implements ReportService {
   private final UserAnswerRepository2 userAnswerRepository2;
   private final QuestionRepository2 questionRepository2;
 
-  public Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable) {
+  public Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable, Long courseId) {
 
     List<Long> courseIds = new ArrayList<>();
     Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
@@ -42,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
       courseIds.add(cc.getCourse().getId());
     }
 
-    Page<TestPaper> testPaperPage = testPaperRepository2.findByUnitCourseIdInAndIsDeletedFalse(courseIds, pageable);
+    Page<TestPaper> testPaperPage = testPaperRepository2.findByUnitCourseIdInAndIsDeletedFalse(courseIds, courseId, pageable);
 
     return testPaperPage.map(testPaper -> TestPaperResponse2.builder()
             .id(testPaper.getId())
@@ -52,21 +52,6 @@ public class ReportServiceImpl implements ReportService {
             .createAt(LocalDate.from(testPaper.getCreatedAt()))
             .build()
     );
-
-//    List<TestPaperResponse2> testPapers = new ArrayList<>();
-//    Page<TestPaperRepository2> testPapterPage = testPaperRepository2.findByUnitCourseIdInAndIsDeletedFalse(courseIds, pageable)
-//    for (TestPaper testPaper : testPapterPage) {
-//      TestPaperResponse2 response = TestPaperResponse2.builder()
-//              .id(testPaper.getId())
-//              .title(testPaper.getTitle())
-//              .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
-//              .unitName(testPaper.getUnit().getContent())
-//              .createAt(LocalDate.from(testPaper.getCreatedAt()))
-//              .build();
-//      testPapers.add(response);
-//    }
-//
-//    return testPapers;
   }
 
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
