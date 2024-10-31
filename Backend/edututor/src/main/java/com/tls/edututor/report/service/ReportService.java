@@ -2,12 +2,12 @@ package com.tls.edututor.report.service;
 
 import com.tls.edututor.report.dto.response.TestPaperDetailResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
-
 public interface ReportService {
-  List<TestPaperResponse2> getTestPapers(Authentication authentication);
+  Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable, Long CourseId);
 
   TestPaperDetailResponse getTestPaperDetail(Long testPaperId);
 }
