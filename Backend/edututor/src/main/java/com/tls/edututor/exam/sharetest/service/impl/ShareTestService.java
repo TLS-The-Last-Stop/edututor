@@ -35,6 +35,7 @@ public class ShareTestService implements ShareTestServiceImpl {
       ShareTest shareTest = ShareTest.builder()
               .user(student)
               .testPaper(testPaper)
+              .deadline(shareTestRequest.getDeadline())
               .build();
 
       //shareTest.setWriter(teacher.getId());

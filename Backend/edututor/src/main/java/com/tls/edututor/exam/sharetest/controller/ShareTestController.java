@@ -17,7 +17,6 @@ public class ShareTestController {
 
   @PostMapping("/tests/papers/{testPaper}")
   public CommonApiResponse<?> createShareTest(@RequestBody ShareTestRequest shareTestRequest, Authentication authentication) {
-    System.out.println("shareTestRequest >> " + shareTestRequest);
     shareTestService.saveShareTest(shareTestRequest, authentication);
     return null;
   }

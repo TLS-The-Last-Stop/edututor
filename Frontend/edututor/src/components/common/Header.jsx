@@ -7,6 +7,7 @@ import cs from '../../assets/icon/custom-service.png';
 import tutor from '../../assets/icon/tutor.png';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
+import { Link } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
     width: 100%;
@@ -16,7 +17,7 @@ const HeaderContainer = styled.header`
 `;
 
 const HeaderContent = styled.div`
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 0 20px;
 `;
@@ -306,8 +307,12 @@ const Header = () => {
             </HamburgerMenuItem>
           ) : (
             <AuthButtons>
-              <button className="login">로그인</button>
-              <button className="register">회원가입</button>
+              <Link to="/login">
+                <button className="login">로그인</button>
+              </Link>
+              <Link to="join">
+                <button className="register">회원가입</button>
+              </Link>
             </AuthButtons>
           )}
           <HamburgerButton onClick={toggleHamburger}>

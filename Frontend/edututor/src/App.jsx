@@ -1,6 +1,6 @@
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
@@ -15,10 +15,10 @@ import CourseEditPage from './pages/admin/CourseEditPage.jsx';
 import CoursePage from './pages/course/CoursePage.jsx';
 import ExamPage from './pages/exam/ExamPage.jsx';
 import CourseClassroomEnrollPage from './pages/course/CourseClassroomEnrollPage.jsx';
-import ProtectedRout from './utils/ProtectedRout.jsx';
+import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import Report from './pages/report/Report.jsx';
 import ReportDetail from './pages/report/ReportDetail.jsx';
-import { AuthProvider } from './utils/AuthContext.jsx';
+import { AuthProvider, useAuth } from './utils/AuthContext.jsx';
 import CourseStudentPage from './pages/course/CourseStudentPage.jsx';
 import MaterialDetailStudentPage from './pages/material/MaterialDetailStudentPage.jsx';
 
@@ -49,148 +49,168 @@ const LoadingSpinner = () => <Loading />;
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <GlobalStyle />
-        <Routes>
-          <Route path="/admin" element={
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
+
+function AppRoutes() {
+  const { userRole } = useAuth();
+
+  const checkRoleAccess = (allowedRole, element) => {
+    if (!allowedRole) {
+
+      return element;
+    }
+
+    return userRole === allowedRole ? element : <Navigate to="/" />;
+  };
+
+  return (
+    <>
+      <GlobalStyle />
+      <Routes>
+        <Route path="/admin" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <AdminLayout>
+              <Outlet />
+            </AdminLayout>
+          </Suspense>
+        }>
+
+          <Route index element={<AdminHome />} />
+
+          <Route path="login" element={
+            <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>
+          } />
+
+          <Route path="course" element={
+            <Suspense fallback={<LoadingSpinner />}><CourseListPage /></Suspense>
+          } />
+
+          <Route path="course-detail/:courseId" element={
+            <Suspense fallback={<LoadingSpinner />}><CourseDetailPage /></Suspense>
+          } />
+
+          <Route path="test-paper-detail/:testPaperId" element={
+            <Suspense fallback={<LoadingSpinner />}><TestPaperDetailPage /></Suspense>
+          } />
+
+          <Route path="create-course" element={
+            <Suspense fallback={<LoadingSpinner />}><CourseCreationPage /></Suspense>
+          } />
+
+          <Route path="course/edit/:courseId" element={
+            <Suspense fallback={<LoadingSpinner />}><CourseEditPage /></Suspense>
+          } />
+
+          <Route path="create-material" element={
+            <Suspense fallback={<LoadingSpinner />}><MaterialCreationPage /></Suspense>
+          } />
+
+          <Route path="create-test-paper" element={
+            <Suspense fallback={<LoadingSpinner />}><TestPaperCreationPage /></Suspense>
+          } />
+
+          <Route path="materials/:materialId" element={
+            <Suspense fallback={<LoadingSpinner />}><MaterialDetailPage /></Suspense>
+          } />
+
+          <Route path="edit-material/:materialId" element={
+            <Suspense fallback={<LoadingSpinner />}><MaterialEditPage /></Suspense>
+          } />
+        </Route>
+
+        <Route path="/" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <MainLayout>
+              <Outlet />
+            </MainLayout>
+          </Suspense>
+        }>
+
+          <Route index element={checkRoleAccess('TE',
+            <Suspense fallback={<LoadingSpinner />}><Home /></Suspense>
+          )
+          } />
+
+          <Route path="cmmn" element={
+            <Suspense fallback={<LoadingSpinner />}><Board /></Suspense>
+          } />
+
+          <Route path="report" element={
+            <Suspense fallback={<LoadingSpinner />}><Report /></Suspense>
+          } />
+
+          <Route path="report/:testPaperId" element={
+            <Suspense fallback={<LoadingSpinner />}><ReportDetail /></Suspense>
+          } />
+
+          <Route path="classroom" element={
             <Suspense fallback={<LoadingSpinner />}>
-              <AdminLayout>
-                <Outlet />
-              </AdminLayout>
+              <ProtectedRoute>
+                <Classroom />
+              </ProtectedRoute>
             </Suspense>
           }>
-
-            <Route index element={<AdminHome />} />
-
-            <Route path="login" element={
-              <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>
-            } />
-
-            <Route path="course" element={
-              <Suspense fallback={<LoadingSpinner />}><CourseListPage /></Suspense>
-            } />
-
-            <Route path="course-detail/:courseId" element={
-              <Suspense fallback={<LoadingSpinner />}><CourseDetailPage /></Suspense>
-            } />
-
-            <Route path="test-paper-detail/:testPaperId" element={
-              <Suspense fallback={<LoadingSpinner />}><TestPaperDetailPage /></Suspense>
-            } />
-
-            <Route path="create-course" element={
-              <Suspense fallback={<LoadingSpinner />}><CourseCreationPage /></Suspense>
-            } />
-
-            <Route path="course/edit/:courseId" element={
-              <Suspense fallback={<LoadingSpinner />}><CourseEditPage /></Suspense>
-            } />
-
-            <Route path="create-material" element={
-              <Suspense fallback={<LoadingSpinner />}><MaterialCreationPage /></Suspense>
-            } />
-
-            <Route path="create-test-paper" element={
-              <Suspense fallback={<LoadingSpinner />}><TestPaperCreationPage /></Suspense>
-            } />
-
-            <Route path="materials/:materialId" element={
-              <Suspense fallback={<LoadingSpinner />}><MaterialDetailPage /></Suspense>
-            } />
-
-            <Route path="edit-material/:materialId" element={
-              <Suspense fallback={<LoadingSpinner />}><MaterialEditPage /></Suspense>
-            } />
           </Route>
-
-          <Route path="/" element={
+          <Route path="classroom" element={
             <Suspense fallback={<LoadingSpinner />}>
-              <MainLayout>
-                <Outlet />
-              </MainLayout>
+              <ProtectedRoute requiredRole="TE">
+                <Classroom />
+              </ProtectedRoute>
             </Suspense>
-          }>
-
-            <Route index element={
-              <Suspense fallback={<LoadingSpinner />}><Home /></Suspense>
-            } />
-
-            <Route path="cmmn" element={
-              <Suspense fallback={<LoadingSpinner />}><Board /></Suspense>
-            } />
-
-            <Route path="report" element={
-              <Suspense fallback={<LoadingSpinner />}><Report /></Suspense>
-            } />
-
-            <Route path="report/:testPaperId" element={
-              <Suspense fallback={<LoadingSpinner />}><ReportDetail /></Suspense>
-            } />
-
-            <Route path="classroom" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                <ProtectedRout>
-                  <Classroom />
-                </ProtectedRout>
-              </Suspense>
-            }>
-            </Route>
-            <Route path="classroom" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                <ProtectedRout requiredRole="TE">
-                  <Classroom />
-                </ProtectedRout>
-              </Suspense>
-            } />
-
-            <Route path="exam-share" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                {/*<ProtectedRout requiredRole="TE">*/}
-                <ExamShare />
-                {/*</ProtectedRout>*/}
-              </Suspense>
-            } />
-
-            <Route path="/student/test/:testPaperId" element={
-              <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
-            } />
-
-            <Route path="/student/material/:materialId" element={
-              <Suspense fallback={<LoadingSpinner />}><MaterialDetailStudentPage /></Suspense>
-            } />
-
-            <Route path="/course/:courseId" index element={
-              <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
-            } />
-            <Route path="/course0/:courseId" index element={
-              <Suspense fallback={<LoadingSpinner />}><CourseStudentPage /></Suspense>
-            } />
-
-            <Route path="/course/enroll" index element={
-              <Suspense fallback={<LoadingSpinner />}><CourseClassroomEnrollPage /></Suspense>
-            } />
-          </Route>
-
-          <Route path="/login" element={
-            <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
           } />
 
-          <Route path="/join" element={
-            <Suspense fallback={<LoadingSpinner />}><UserJoin /></Suspense>
+          <Route path="exam-share" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              {/*<ProtectedRoute requiredRole="TE">*/}
+              <ExamShare />
+              {/*</ProtectedRoute>*/}
+            </Suspense>
           } />
 
-          <Route path="/teacher-login" element={
-            <Suspense fallback={<LoadingSpinner />}><TeacherLogin /></Suspense>
+          <Route path="/student/test/:testPaperId" element={
+            <Suspense fallback={<LoadingSpinner />}><ExamPage /></Suspense>
           } />
 
-          <Route path="/student-login" element={
-            <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
+          <Route path="/student/material/:materialId" element={
+            <Suspense fallback={<LoadingSpinner />}><MaterialDetailStudentPage /></Suspense>
           } />
 
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+          <Route path="/course/:courseId" index element={
+            <Suspense fallback={<LoadingSpinner />}><CoursePage /></Suspense>
+          } />
+          <Route path="/course0/:courseId" index element={
+            <Suspense fallback={<LoadingSpinner />}><CourseStudentPage /></Suspense>
+          } />
+
+          <Route path="/course/enroll" index element={
+            <Suspense fallback={<LoadingSpinner />}><CourseClassroomEnrollPage /></Suspense>
+          } />
+        </Route>
+
+        <Route path="/login" element={
+          <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
+        } />
+
+        <Route path="/join" element={
+          <Suspense fallback={<LoadingSpinner />}><UserJoin /></Suspense>
+        } />
+
+        <Route path="/teacher-login" element={
+          <Suspense fallback={<LoadingSpinner />}><TeacherLogin /></Suspense>
+        } />
+
+        <Route path="/student-login" element={
+          <Suspense fallback={<LoadingSpinner />}><StudentLogin /></Suspense>
+        } />
+
+      </Routes>
+    </>
   );
 }
 

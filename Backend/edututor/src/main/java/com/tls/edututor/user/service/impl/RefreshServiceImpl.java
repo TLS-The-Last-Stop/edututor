@@ -5,6 +5,7 @@ import com.tls.edututor.user.entity.Refresh;
 import com.tls.edututor.user.jwt.JwtUtil;
 import com.tls.edututor.user.repository.RefreshRepository;
 import com.tls.edututor.user.service.RefreshService;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +45,12 @@ public class RefreshServiceImpl implements RefreshService {
     }
 
     if (refreshToken.isBlank()) throw new JwtException("refresh token is blank");
+
+    try {
+      jwtUtil.isExpired(refreshToken);
+    } catch (ExpiredJwtException e) {
+      throw new JwtException("refresh token not found");
+    }
 
     Refresh refresh = getRefreshToken(refreshToken);
 

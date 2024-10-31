@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { publicApi } from "../../api/axios.js";
+import { publicApi } from '../../api/axios.js';
 
 const FirstSection = styled.section`
     margin: 0 auto;
@@ -38,15 +38,7 @@ const CourseItem = styled.div`
     }
 `;
 
-const gradeData = {
-  elementary: { label: '초등', grades: ['전체', '초1', '초2', '초3', '초4', '초5', '초6'] },
-  middle: { label: '중등', grades: ['전체', '중1', '중2', '중3'] },
-  high: { label: '고등', grades: ['전체', '고1', '고2', '고3'] },
-};
-
 const MainSection = () => {
-  const [activeTab, setActiveTab] = useState('elementary');
-  const [activeGrade, setActiveGrade] = useState('전체');
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -57,7 +49,7 @@ const MainSection = () => {
       const response = await publicApi.get('/course/class-courses');
       setCourses(response.data.data);
     } catch (error) {
-      console.error("과정을 불러오는데 실패했습니다 : ", error);
+      console.error('과정을 불러오는데 실패했습니다 : ', error);
     } finally {
       setLoading(false);
     }
@@ -65,31 +57,31 @@ const MainSection = () => {
 
   useEffect(() => {
     fetchFilteredCourses();
-  }, [activeTab, activeGrade]);
+  }, []);
 
   const handleCourseClick = (courseId) => {
     navigate(`/course/${courseId}`);
   };
 
   return (
-      <>
-        <FirstSection>
-          <FirstSectionInner>
-            <TitleWrapper>지니아튜터 학습 과정</TitleWrapper>
-            <CourseList>
-              {loading ? (
-                  <p>Loading...</p>
-              ) : (
-                  courses.map(course => (
-                      <CourseItem key={course.courseId} onClick={() => handleCourseClick(course.courseId)}>
-                        {course.courseName}
-                      </CourseItem>
-                  ))
-              )}
-            </CourseList>
-          </FirstSectionInner>
-        </FirstSection>
-      </>
+    <>
+      <FirstSection>
+        <FirstSectionInner>
+          <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
+          <CourseList>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              courses.map(course => (
+                <CourseItem key={course.courseId} onClick={() => handleCourseClick(course.courseId)}>
+                  {course.courseName}
+                </CourseItem>
+              ))
+            )}
+          </CourseList>
+        </FirstSectionInner>
+      </FirstSection>
+    </>
   );
 };
 

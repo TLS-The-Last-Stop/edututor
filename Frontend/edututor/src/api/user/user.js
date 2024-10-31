@@ -24,3 +24,16 @@ export const login = async (data) => {
   const response = await publicApi.post('login', data);
   return response.data;
 };
+
+export const getUserInfo = (required = false) => {
+  try {
+    const info = JSON.parse(localStorage.getItem('info'));
+
+    if (required && !info) throw new Error('로그인이 필요합니다.');
+
+    return info;
+  } catch (error) {
+    if (required) throw error;
+  }
+  return null;
+};

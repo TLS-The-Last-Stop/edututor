@@ -30,6 +30,12 @@ public class RefreshController {
 
       return CommonApiResponse.createNoContent("쿠키 재설정");
     } catch (JwtException e) {
+      Cookie deleteAccessToken = deleteCookie("access");
+      Cookie deleteRefreshToken = deleteCookie("refresh");
+
+      response.addCookie(deleteAccessToken);
+      response.addCookie(deleteRefreshToken);
+
       return CommonApiResponse.createError(e.getMessage());
     }
 
@@ -40,6 +46,15 @@ public class RefreshController {
     if (key.startsWith("refresh")) cookie.setMaxAge(24 * 60 * 60); // 토큰을 만들때와 동일하게
     else if (key.startsWith("access")) cookie.setMaxAge(60 * 60);
 
+    cookie.setPath("/");
+    cookie.setHttpOnly(true);
+
+    return cookie;
+  }
+
+  private Cookie deleteCookie(String key) {
+    Cookie cookie = new Cookie(key, null);
+    cookie.setMaxAge(0);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
 

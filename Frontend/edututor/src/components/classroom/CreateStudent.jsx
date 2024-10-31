@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import CreateStudentModal from './CreateStudentModal.jsx';
 import { useEffect, useRef, useState } from 'react';
-import { checkDuplicateId, createStudent } from '../../api/user/user.js';
+import { checkDuplicateId, createStudent, getUserInfo } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
-import { getUserInfo } from '../../utils/auth.js';
 
 const CreateButton = styled.button`
     padding: 0.5rem 1rem;
