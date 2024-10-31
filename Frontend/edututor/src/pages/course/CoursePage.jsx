@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import '../../assets/css/CoursePage.css';
 import { publicApi } from '../../api/axios.js';
 import ExamShareModal from '../../components/exam/ExamShareModal';
@@ -92,7 +92,9 @@ const CoursePage = () => {
             <div className="course-header">
               <h2>{courseData.courseName}</h2>
               <div className="students-icon">
-                <span>학생 관리</span>
+                <Link to="/classroom">
+                  <span>학생 관리</span>
+                </Link>
               </div>
             </div>
 
