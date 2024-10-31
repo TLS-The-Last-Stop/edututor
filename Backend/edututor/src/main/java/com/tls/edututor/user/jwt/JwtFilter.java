@@ -58,35 +58,33 @@ public class JwtFilter extends OncePerRequestFilter {
 
       if (accessToken.isBlank()) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("no access token");
         filterChain.doFilter(request, response);
         return;
       }
 
       jwtUtil.isExpired(accessToken);
     } catch (ExpiredJwtException eje) {
-      response.getWriter().print("access token expired");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
       return;
     }
 
     // access 토큰인지 확인
     String type = jwtUtil.getType(accessToken);
     if (!type.startsWith("access")) {
-      response.getWriter().print("invaild access token");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
       return;
     }
 
     CustomUser user = (CustomUser) userDetailsService.loadUserByUsername(jwtUtil.getUsername(accessToken));
-
-    String role = user.getAuthorities().stream().findFirst().map(GrantedAuthority::getAuthority).orElse("");
+    String role = user.getAuthorities().stream()
+            .findFirst()
+            .map(GrantedAuthority::getAuthority)
+            .orElse("");
 
     AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), user.getClassroom(), role);
 
-    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser, null, List.of(new SimpleGrantedAuthority("ROLE_" + role)));
+    UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(authUser, null, List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 

@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface RefreshRepository extends JpaRepository<Refresh, Long> {
   Optional<Refresh> findByRefreshTokenAndUsed(String refreshToken, boolean used);
+
+  void deleteByRefreshTokenAndUsed(String refreshToken, boolean used);
 }

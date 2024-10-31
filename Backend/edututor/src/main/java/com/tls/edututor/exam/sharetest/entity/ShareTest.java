@@ -9,6 +9,7 @@ import com.tls.edututor.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -35,7 +36,11 @@ public class ShareTest extends BaseEntity {
   @OneToMany(mappedBy = "shareTest", cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<UserTest> userTests;
-/*
+
+  @Column(name = "DEADLINE")
+  private LocalDateTime deadline;
+
+  /*
   @Override
   public void setWriter(Long writer) {
     super.setWriter(writer);

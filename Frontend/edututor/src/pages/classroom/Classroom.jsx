@@ -3,10 +3,10 @@ import CreateStudent from '../../components/classroom/CreateStudent.jsx';
 import StudentList from '../../components/classroom/StudentList.jsx';
 import styled from 'styled-components';
 import { getAllStudent } from '../../api/classroom/classroom.js';
-import { getUserInfo } from '../../utils/auth.js';
 import Loading from '../../components/common/Loading.jsx';
 import { ErrorText } from '../../components/common/UserStyledComponents.js';
 import EmptyState from '../../components/classroom/EmptyState.jsx';
+import { getUserInfo } from '../../api/user/user.js';
 
 const initStudent = {
   id      : '',

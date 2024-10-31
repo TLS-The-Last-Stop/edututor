@@ -5,6 +5,7 @@ import com.tls.edututor.user.entity.Refresh;
 import com.tls.edututor.user.jwt.JwtUtil;
 import com.tls.edututor.user.repository.RefreshRepository;
 import com.tls.edututor.user.service.RefreshService;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,14 @@ public class RefreshServiceImpl implements RefreshService {
 
   private final JwtUtil jwtUtil;
   private final RefreshRepository refreshRepository;
+
+  @Override
+  public Refresh getRefreshToken(String refreshToken) {
+    Refresh refresh = refreshRepository.findByRefreshTokenAndUsed(refreshToken, false).orElseThrow(() -> new JwtException("refresh token not found"));
+    refresh.markAsUsed();
+
+    return refresh;
+  }
 
   @Override
   @Transactional
@@ -44,6 +53,12 @@ public class RefreshServiceImpl implements RefreshService {
     }
 
     if (refreshToken.isBlank()) throw new JwtException("refresh token is blank");
+
+    try {
+      jwtUtil.isExpired(refreshToken);
+    } catch (ExpiredJwtException e) {
+      throw new JwtException("refresh token not found");
+    }
 
     Refresh refresh = getRefreshToken(refreshToken);
 
@@ -70,11 +85,9 @@ public class RefreshServiceImpl implements RefreshService {
     return new UpdateTokenResponse(newAccessToken, newRefreshToken);
   }
 
-  public Refresh getRefreshToken(String refreshToken) {
-    Refresh refresh = refreshRepository.findByRefreshTokenAndUsed(refreshToken, false).orElseThrow(() -> new JwtException("refresh token not found"));
-    refresh.markAsUsed();
-
-    return refresh;
+  @Override
+  @Transactional
+  public void deleteRefreshToken(String refreshToken) {
+    refreshRepository.deleteByRefreshTokenAndUsed(refreshToken, false);
   }
-
 }

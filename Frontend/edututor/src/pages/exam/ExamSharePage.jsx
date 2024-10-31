@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ExamList from '../../components/exam/ExamList.jsx';
-import CourseList from '../../components/exam/CourseList.jsx';
+import CourseListPage from '../admin/CourseListPage.jsx';
 
 const Container = styled.div`
     width: 1400px;
@@ -29,7 +29,7 @@ const ExamSharePage = () => {
   return (
     <Container>
       <Aside>
-        <CourseList />
+        <CourseListPage />
       </Aside>
       <Main>
         <ExamList />

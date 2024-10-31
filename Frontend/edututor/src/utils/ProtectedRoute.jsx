@@ -2,20 +2,39 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/common/Loading.jsx';
 import { verifyAuth } from './auth.js';
+import { useAuth } from './AuthContext.jsx';
 
-const ProtectedRout = ({ children, requiredRole = 'ST' }) => {
+const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
   const [isAuthorized, setIsAuthoriozed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasAlerted, setHasAlerted] = useState(false);
+
+  const { userInfo, userRole } = useAuth();
   const navigate = useNavigate();
 
   const checkAuth = async () => {
     try {
+      if (!userInfo) {
+        navigate('/login', {
+          replace: true,
+          state  : { from: location.pathname }
+        });
+        return;
+      }
+
       const result = await verifyAuth();
       const role = result.data;
-      if (role !== requiredRole && !hasAlerted) {
+
+      // 권한 계층 체크
+      const hasRequiredRole = (required, actual) => {
+        if (actual === 'AD') return true;
+        if (actual === 'TE' && required === 'SU') return true;
+        return actual === required;
+      };
+
+      if (!hasRequiredRole(requiredRole, role) && !hasAlerted) {
         setHasAlerted(true);
-        alert('권한이 없습니다.');
+        alert('떽끼!');
         navigate('/');
         return;
       }
@@ -34,11 +53,11 @@ const ProtectedRout = ({ children, requiredRole = 'ST' }) => {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [userInfo]);
 
   if (isLoading) return <Loading />;
 
   return isAuthorized ? children : null;
 };
 
-export default ProtectedRout;
+export default ProtectedRoute;
