@@ -1,12 +1,18 @@
 /* report.css */
 .report-container {
+    max-width: 1350px;
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    padding: 0 20px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin: 20px 0;
+    text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .report-table {
@@ -15,8 +21,9 @@
     padding: 30px;
     border-collapse: collapse;
     background-color: #ffffff;
-    margin-top: 50px;
-    margin-bottom: 300px;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
 }
 
 .report-table thead {
@@ -26,7 +33,7 @@
 .report-table th {
     padding: 12px 16px;
     border: 1px solid #e9ecef;
-    text-align: left;
+    text-align: center;
     font-weight: 600;
     color: #495057;
 }
@@ -41,10 +48,14 @@
     background-color: #f8f9fa;
 }
 
-.report-table .empty-message {
-    text-align: center;
-    padding: 24px;
-    color: #6c757d;
+.report-table {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    padding: 30px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    margin-bottom: 30px;
 }
 
 .detail-button {
@@ -84,4 +95,122 @@
 .achievement-text {
     min-width: 45px;
     text-align: right;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 30px;
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination button.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination button:hover:not(:disabled):not(.active) {
+    background-color: #f1f1f1;
+}
+
+.dropdown-container {
+    position: relative;
+    width: 300px;
+    margin-bottom: 24px;
+    z-index: 100;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%; /* 버튼 바로 아래에 위치 */
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 100; /* 컨테이너와 같거나 더 높은 값 */
+}
+
+.dropdown-button {
+    width: 100%;
+    padding: 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.dropdown-button:hover {
+    background-color: #f9fafb;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: none;
+}
+
+.dropdown-content.open {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    background-color: #f9fafb;
+}
+
+.dropdown-item:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.dropdown-item:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.arrow {
+    border: solid #666;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-button[aria-expanded="true"] .arrow {
+    transform: rotate(45deg); /* 드롭다운 클릭 시 회전 */
 }

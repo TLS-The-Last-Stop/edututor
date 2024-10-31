@@ -1,0 +1,10 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'dev', credentialsId: 'edututorc', url: 'https://github.com/TLS-The-Last-Stop/edututor'
+            }
+        }
+    }
+}

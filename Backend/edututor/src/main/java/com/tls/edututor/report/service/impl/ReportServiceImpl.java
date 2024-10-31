@@ -14,6 +14,8 @@ import com.tls.edututor.report.service.ReportService;
 import com.tls.edututor.user.dto.response.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,8 @@ public class ReportServiceImpl implements ReportService {
   private final UserAnswerRepository2 userAnswerRepository2;
   private final QuestionRepository2 questionRepository2;
 
-  public List<TestPaperResponse2> getTestPapers(Authentication authentication) {
+  public Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable, Long courseId) {
+
     List<Long> courseIds = new ArrayList<>();
     Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
 
@@ -39,19 +42,16 @@ public class ReportServiceImpl implements ReportService {
       courseIds.add(cc.getCourse().getId());
     }
 
-    List<TestPaperResponse2> testPapers = new ArrayList<>();
-    for (TestPaper testPaper : testPaperRepository2.findByUnitCourseIdInAndIsDeletedFalse(courseIds)) {
-      TestPaperResponse2 response = TestPaperResponse2.builder()
-              .id(testPaper.getId())
-              .title(testPaper.getTitle())
-              .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
-              .unitName(testPaper.getUnit().getContent())
-              .createAt(LocalDate.from(testPaper.getCreatedAt()))
-              .build();
-      testPapers.add(response);
-    }
+    Page<TestPaper> testPaperPage = testPaperRepository2.findByUnitCourseIdInAndIsDeletedFalse(courseIds, courseId, pageable);
 
-    return testPapers;
+    return testPaperPage.map(testPaper -> TestPaperResponse2.builder()
+            .id(testPaper.getId())
+            .title(testPaper.getTitle())
+            .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
+            .unitName(testPaper.getUnit().getContent())
+            .createAt(LocalDate.from(testPaper.getCreatedAt()))
+            .build()
+    );
   }
 
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
