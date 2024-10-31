@@ -21,8 +21,14 @@ public class ReportController {
 
   @GetMapping
   public CommonApiResponse<Page<TestPaperResponse2>> getTestPapers(Authentication authentication,
-                                                                   @PageableDefault Pageable pageable) {
-    return CommonApiResponse.createSuccess("리포트 리스트 조회!", reportService.getTestPapers(authentication, pageable));
+                                                                   @PageableDefault Pageable pageable,
+                                                                   @RequestParam(required = false) Long courseId) {
+    try {
+      Page<TestPaperResponse2> result = reportService.getTestPapers(authentication, pageable, courseId);
+      return CommonApiResponse.createSuccess("리포트 리스트 조회!", result);
+    } catch (Exception e) {
+      return CommonApiResponse.createError("리포트 리스트 조회 실패: " + e.getMessage());
+    }
   }
 
   @GetMapping("/{testPaperId}")
