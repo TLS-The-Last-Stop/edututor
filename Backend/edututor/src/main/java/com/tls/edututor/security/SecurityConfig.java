@@ -1,13 +1,16 @@
 package com.tls.edututor.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tls.edututor.user.jwt.CustomLogoutFilter;
 import com.tls.edututor.user.jwt.JwtFilter;
 import com.tls.edututor.user.jwt.JwtUtil;
-import com.tls.edututor.user.jwt.LoginFilter;
+import com.tls.edututor.user.jwt.CustomLoginFilter;
 import com.tls.edututor.user.service.RefreshService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -46,18 +50,24 @@ public class SecurityConfig {
     http.formLogin(formLogin -> formLogin.disable());
     http.httpBasic(basic -> basic.disable());
 
-    http.authorizeHttpRequests(auth -> auth
+   /* http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/classroom", "/users/students").hasRole("TE")
-            .anyRequest().permitAll());
+            .anyRequest().permitAll());*/
 
-    /*http.authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/login", "/join", "/refresh").permitAll()
-            .requestMatchers("/admin").hasRole("ADMIN")
-            .anyRequest().authenticated());*/
+    http.authorizeHttpRequests(auth -> auth
+            //.requestMatchers("/admin/**").hasRole("AD")  // 최상위 관리자 권한
+            .requestMatchers("/classroom", "/users/students", "/course/enroll",
+                    "/exam-share").hasRole("TE")  // 선생님 권한
+            .requestMatchers("/student/**", "/course/{courseId}", "/course0/**",
+                    "/course/class-courses", "/report/**").hasAnyRole("SU")  // 선생님, 학생 권한
+            .requestMatchers("/", "/login", "/join", "/auth/**", "/cmmn").permitAll()  // 모든 사용자 접근 가능
+            .anyRequest().authenticated());
 
-    http.addFilterAt(new LoginFilter(refreshService, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterAt(new CustomLoginFilter(refreshService, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
 
-    http.addFilterBefore(new JwtFilter(jwtUtil, userDetailsService), LoginFilter.class);
+    http.addFilterBefore(new CustomLogoutFilter(refreshService, jwtUtil), LogoutFilter.class);
+
+    http.addFilterBefore(new JwtFilter(jwtUtil, userDetailsService), CustomLoginFilter.class);
 
     http.sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -86,4 +96,13 @@ public class SecurityConfig {
     return configuration.getAuthenticationManager();
   }
 
+  @Bean
+  public RoleHierarchy roleHierarchy() {
+    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+    roleHierarchy.setHierarchy(
+            "ROLE_AD > ROLE_TE\n" +
+                    "ROLE_TE > ROLE_SU"
+    );
+    return roleHierarchy;
+  }
 }

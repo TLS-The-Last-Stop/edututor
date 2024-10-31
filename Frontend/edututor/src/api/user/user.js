@@ -25,6 +25,11 @@ export const login = async (data) => {
   return response.data;
 };
 
+export const logout = async () => {
+  const response = await privateApi.post('/logout');
+  return response.data;
+};
+
 export const getUserInfo = (required = false) => {
   try {
     const info = JSON.parse(localStorage.getItem('info'));
