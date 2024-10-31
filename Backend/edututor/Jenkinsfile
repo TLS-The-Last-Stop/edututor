@@ -6,13 +6,5 @@ pipeline {
                 git branch: 'dev', credentialsId: 'edututorc', url: 'https://github.com/TLS-The-Last-Stop/edututor'
             }
         }
-        stage('Build') {
-            steps {
-                script {
-                    def jenkinsfilePath = 'Backend/edututor/Jenkinsfile'
-                    load jenkinsfilePath
-                }
-            }
-        }
     }
 }
