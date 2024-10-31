@@ -8,6 +8,7 @@ import tutor from '../../assets/icon/tutor.png';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
 import { Link } from 'react-router-dom';
+import { logout } from '../../api/user/user.js';
 
 const HeaderContainer = styled.header`
     width: 100%;
@@ -77,6 +78,47 @@ const NavList = styled.ul`
     }
 `;
 
+const UserInfoContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto; // 오른쪽 정렬
+
+    @media (max-width: 765px) {
+        display: none;
+    }
+`;
+
+const UserInfo = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 4px;
+
+    span {
+        font-size: 14px;
+        color: #333;
+    }
+`;
+
+const LogoutButton = styled.button`
+    height: 36px; // 버튼 높이 고정
+    padding: 0 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    background: white;
+    color: #666;
+    border: 1px solid #ddd;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center; // 버튼 내부 텍스트 세로 중앙 정렬
+
+    &:hover {
+        background: #f8f9fa;
+    }
+`;
 const AuthButtons = styled.div`
     display: flex;
     gap: 12px;
@@ -209,6 +251,11 @@ const HamburgerMenuItem = styled.div`
     }
 `;
 
+const HamburgerLogoutButton = styled(LogoutButton)`
+    margin-left: auto; // 오른쪽 정렬
+    padding: 8px 16px; // 햄버거 메뉴용 크기 조정
+`;
+
 const HamburgerAuthButtons = styled.div`
     margin-top: 20px;
     display: flex;
@@ -256,11 +303,17 @@ const Overlay = styled.div`
 
 
 const Header = () => {
-  const { userInfo } = useAuth();
+  const { userInfo, updateUserInfo } = useAuth();
   const [hamburger, setHamburger] = useState(false);
   const [activeHeaderMenu, setActiveHeaderMenu] = useState('');
   const [activeHamburgerMenu, setActiveHamburgerMenu] = useState('');
   const [activeSubMenu, setActiveSubMenu] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('info');
+    updateUserInfo();
+    logout();
+  };
 
   const toggleHamburger = () => {
     setHamburger(!hamburger);
@@ -309,9 +362,12 @@ const Header = () => {
           </NavList>
 
           {userInfo ? (
-            <HamburgerMenuItem style={{ marginTop: '20px' }}>
-              {userInfo.fullName}님
-            </HamburgerMenuItem>
+            <UserInfoContainer>
+              <UserInfo>
+                <span>{userInfo.fullName}님</span>
+                <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+              </UserInfo>
+            </UserInfoContainer>
           ) : (
             <AuthButtons>
               <Link to="/login">
@@ -388,8 +444,11 @@ const Header = () => {
           </HamburgerMenuItem>
 
           {userInfo ? (
-            <HamburgerMenuItem style={{ marginTop: '20px' }}>
-              {userInfo.fullName}님
+            <HamburgerMenuItem>
+              <UserInfo>
+                {userInfo.fullName}님
+                <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+              </UserInfo>
             </HamburgerMenuItem>
           ) : (
             <HamburgerAuthButtons>
