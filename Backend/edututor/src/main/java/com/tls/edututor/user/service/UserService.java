@@ -2,6 +2,7 @@ package com.tls.edututor.user.service;
 
 import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
+import org.springframework.security.core.Authentication;
 
 public interface UserService {
 
@@ -9,6 +10,9 @@ public interface UserService {
 
   Long saveTeacher(UserTERequest request);
 
-  Long saveStudent(UserSURequest request);
+  Long saveStudent(UserSURequest request, Authentication authentication);
 
+  Long updateStudent(UserSURequest request, Long id);
+
+  Long deleteStudent(Long id);
 }

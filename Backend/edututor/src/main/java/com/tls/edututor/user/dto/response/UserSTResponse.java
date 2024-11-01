@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserSTResponse {
   private Long id;
-  private String studentFullName;
-  private String studentLoginId;
+  private String fullName;
+  private String loginId;
   //private String studentProfileImage;
 }

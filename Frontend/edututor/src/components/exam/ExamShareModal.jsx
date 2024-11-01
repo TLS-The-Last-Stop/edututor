@@ -253,8 +253,8 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
                       onChange={() => handleStudentSelect(student.id)}
                     />
                     <div>
-                      <div>{student.studentFullName}<span
-                        style={{ fontSize: '0.8em', color: '#666' }}>({student.studentLoginId})</span></div>
+                      <div>{student.fullName}<span
+                        style={{ fontSize: '0.8em', color: '#666' }}>({student.loginId})</span></div>
                     </div>
                   </StudentItem>
                 ))

@@ -19,12 +19,10 @@ const CreateButton = styled.button`
 `;
 
 const initForm = {
-  teacherId    : '',
-  fullName     : '',
-  loginId      : '',
-  password     : '',
-  passwordCheck: '',
-  classNumber  : ''
+  fullName       : '',
+  loginId        : '',
+  password       : '',
+  confirmPassword: ''
 };
 
 const CreateStudent = ({ fetchAllStudent }) => {
@@ -98,20 +96,12 @@ const CreateStudent = ({ fetchAllStudent }) => {
         }
         break;
 
-      case 'passwordCheck':
+      case 'confirmPassword':
         setErrors(prev => ({
           ...prev,
           passwordMatch: form.password !== value ? '비밀번호가 일치하지 않습니다.' : ''
         }));
         break;
-
-      case 'classNumber':
-        setErrors(prev => ({
-          ...prev,
-          classNumber: !value ? '반을 입력해주세요' : ''
-        }));
-        break;
-
     }
   };
 
@@ -152,15 +142,12 @@ const CreateStudent = ({ fetchAllStudent }) => {
     e.preventDefault();
 
     const submitData = {
-      teacherId  : userInfo.classroom.writer,
-      fullName   : form.fullName,
-      loginId    : form.loginId,
-      password   : form.password,
-      classNumber: form.classNumber,
-      classroom  : userInfo.classroom,
-      school     : userInfo.classroom.school,
-      type       : 'SU'
-
+      fullName : form.fullName,
+      loginId  : form.loginId,
+      password : form.password,
+      classroom: userInfo.classroom,
+      school   : userInfo.classroom.school,
+      type     : 'SU'
     };
 
     if (!isIdChecked) {
@@ -168,7 +155,7 @@ const CreateStudent = ({ fetchAllStudent }) => {
       return;
     }
 
-    if (!form.fullName || !form.loginId || !form.password || !form.passwordCheck || !form.classNumber) {
+    if (!form.fullName || !form.loginId || !form.password || !form.confirmPassword) {
       alert('모든 필수 항목을 입력해주세요.');
       return false;
     }

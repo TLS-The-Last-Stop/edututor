@@ -103,13 +103,13 @@ const UserJoinForm = ({
             </FormGroup>
 
             <FormGroup>
-              <Label htmlFor="passwordCheck">
+              <Label htmlFor="confirmPassword">
                 비밀번호 확인<Required>*</Required>
               </Label>
               <Input
-                id="passwordCheck"
-                name="passwordCheck"
-                value={form.passwordCheck}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={form.confirmPassword}
                 onChange={getInputHandler}
                 placeholder="비밀번호 확인을 위해 다시 한번 입력해주세요"
                 $hasError={errors.passwordMatch}
