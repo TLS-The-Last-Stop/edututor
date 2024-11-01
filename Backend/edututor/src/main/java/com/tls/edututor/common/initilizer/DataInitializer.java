@@ -384,7 +384,10 @@ public class DataInitializer {
             createUserAnswer(6L, false, 6L, "2"),
             createUserAnswer(7L, false, 7L, "2"),
             createUserAnswer(8L, false, 8L, "3"),
-            createUserAnswer(9L, true, 9L, "3")
+            createUserAnswer(9L, true, 9L, "3"),
+            createUserAnswer(10L, true, 10L, "3"),
+            createUserAnswer(11L, true, 11L, "3"),
+            createUserAnswer(12L, true, 12L, "3")
     );
     userAnswerRepository.saveAll(answers);
   }

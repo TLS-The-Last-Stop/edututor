@@ -93,16 +93,19 @@ public class ReportServiceImpl implements ReportService {
 
       List<String> correctAnswers = new ArrayList<>();
       List<Question> correctAnswersList = questionRepository2.findByTestPaperId(testPaperId);
-
       for (Question question : correctAnswersList) {
         correctAnswers.add(question.getAnswerText());
       }
+
+      long questionCount = questionRepository2.countByTestPaperId(testPaperId);
 
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
               .userName(userTest.getShareTest().getUser().getFullName())
               .achievementRate((long) achievementRate(isCorrect))
               .userAnswers(userAnswers)
-              .correctAnswers(correctAnswers)
+//              .correctAnswers(correctAnswers)
+              .questionCount(questionCount)
+              .isCorrect(isCorrect)
               .build();
       userTestResponses.add(userTestResponse);
     }
