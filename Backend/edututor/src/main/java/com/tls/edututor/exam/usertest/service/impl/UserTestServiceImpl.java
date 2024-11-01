@@ -55,7 +55,6 @@ public class UserTestServiceImpl implements UserTestService {
               .orElseThrow(() -> new IllegalArgumentException("ShareTest 엔티티를 찾을 수 없습니다."));
 
     UserTest userTest = new UserTest();
-    userTest.setExamTaken(true);
     userTest.setShareTest(shareTest);
     userTestRepository.save(userTest);
 
