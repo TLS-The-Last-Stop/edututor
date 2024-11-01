@@ -1,39 +1,51 @@
+/* ExamPage.css */
 .exam-page {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
+    line-height: 1.5;
 }
 
 header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
 header h2 {
     margin: 0;
     font-size: 1.8em;
+    color: #333;
 }
 
 header div {
     font-size: 1em;
     color: #555;
+    margin-top: 8px;
 }
 
 .question-nav {
     display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 25px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .question-nav button {
-    padding: 10px;
+    padding: 8px 12px;
     font-size: 1em;
     border: 1px solid #ddd;
     background-color: #f7f7f7;
     cursor: pointer;
     border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.question-nav button:hover {
+    background-color: #e2e6ea;
 }
 
 .question-nav button.answered {
@@ -43,22 +55,53 @@ header div {
 
 .questions .question {
     margin-bottom: 30px;
-    padding: 15px;
+    padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    background-color: #fdfdfd;
+}
+
+.questions .question p {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    color: #333;
 }
 
 .options label {
-    display: block;
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
     font-size: 1em;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fafafa;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s;
+}
+
+.options label:hover {
+    background-color: #f0f4f8;
+}
+
+.options .option-number {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    font-size: 0.9em;
+    color: #333;
+    background-color: #e0e0e0;
+    border-radius: 50%;
 }
 
 .subjective-answer textarea {
     width: 100%;
-    height: 80px;
+    height: 100px;
     font-size: 1em;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     resize: vertical;
@@ -75,6 +118,7 @@ button.submit {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 20px;
+    transition: background-color 0.3s;
 }
 
 button.submit:hover {
