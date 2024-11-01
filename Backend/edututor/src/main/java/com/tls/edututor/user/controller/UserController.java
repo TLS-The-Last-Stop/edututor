@@ -6,6 +6,7 @@ import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,8 +31,8 @@ public class UserController {
   }
 
   @PostMapping("/users/students")
-  public CommonApiResponse<?> createStudent(@RequestBody UserSURequest request) {
-    userService.saveStudent(request);
+  public CommonApiResponse<?> createStudent(@RequestBody UserSURequest request, Authentication authentication) {
+    userService.saveStudent(request, authentication);
     return CommonApiResponse.createNoContent("학생 등록이 완료되었습니다.");
   }
 

@@ -42,6 +42,7 @@ const Classroom = () => {
   const [students, setStudents] = useState([initStudent]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [classroomId, setClassroomId] = useState('');
 
   useEffect(() => {
     fetchAllStudent();
@@ -53,7 +54,15 @@ const Classroom = () => {
       const result = await getAllStudent(userInfo.classroom.id);
 
       if (result.status === 200) {
-        setStudents(result.data);
+        const [classroomId, students] = Object.entries(result.data)[0];
+        setClassroomId(classroomId);
+
+        if (userInfo.classroom.id !== Number(classroomId)) {
+          alert('본인의 반만 접근이 가능합니다.');
+          return;
+        }
+
+        setStudents(students);
       } else {
         setError('학생 목록을 불러오는데 실패했습니다.');
       }
@@ -66,6 +75,7 @@ const Classroom = () => {
   };
 
   const handleDelete = (studentId) => {
+    //TODO: API 호출 => isDeleted true로
     setStudents(students.filter(student => student.loginId !== studentId));
   };
 
@@ -79,10 +89,10 @@ const Classroom = () => {
           <Title>구성원 관리</Title>
           <CreateStudent fetchAllStudent={fetchAllStudent} />
         </Header>
-        {students.length === 0 ? (
+        {students === null || students.length === 0 ? (
           <EmptyState />
         ) : (
-          <StudentList students={students} handleDelete={handleDelete} />
+          <StudentList classroomId={classroomId} students={students} handleDelete={handleDelete} />
         )}
       </ContentWrapper>
     </Container>

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
   Button,
   ErrorText,
@@ -61,17 +60,6 @@ const CreateStudentModal = ({
                               classroomName
                             }) => {
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
-  // 모달이 닫혀있으면 아무것도 렌더링하지 않음
   if (!isOpen) return null;
 
   return (
@@ -142,8 +130,8 @@ const CreateStudentModal = ({
                 </Label>
                 <Input
                   type="password"
-                  name="passwordCheck"
-                  value={form.passwordCheck}
+                  name="confirmPassword"
+                  value={form.confirmPassword}
                   onChange={handleInputChange}
                   placeholder="비밀번호 확인을 위해 다시 한번 입력해주세요"
                   $hasError={!!errors.passwordMatch}
@@ -153,18 +141,18 @@ const CreateStudentModal = ({
 
               <FormGroup>
                 <Label>
-                  <SubTitle $isModal>{classroomName} 반 번호<Required>*</Required></SubTitle>
+                  <SubTitle $isModal>{classroomName}</SubTitle>
                 </Label>
-                <InputGroup>
+                {/*<InputGroup>
                   <Input
                     name="classNumber"
-                    value={form.classNumber}
+                    value={classroomName}
                     onChange={handleInputChange}
-                    placeholder="몇반인지 입력해주세요."
                     $hasError={!!errors.classNumber}
-                  />
+                  /> 반 입력 제거
                 </InputGroup>
                 {errors.classNumber && <ErrorText>{errors.classNumber}</ErrorText>}
+                */}
               </FormGroup>
 
               <FormGroup>

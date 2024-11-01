@@ -2,6 +2,7 @@ package com.tls.edututor.user.service.impl;
 
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
+import com.tls.edututor.user.dto.response.AuthUser;
 import com.tls.edututor.user.exception.DuplicateUserException;
 import com.tls.edututor.school.entity.School;
 import com.tls.edututor.school.repository.SchoolRepository;
@@ -11,6 +12,7 @@ import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import com.tls.edututor.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,10 +65,12 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public Long saveStudent(UserSURequest request) {
+  public Long saveStudent(UserSURequest request, Authentication authentication) {
     if (userRepository.existsByLoginIdAndIsDeleted(request.getLoginId(), false)) {
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
+
+    AuthUser teacher = (AuthUser) authentication.getPrincipal();
     Classroom classroom = classroomRepository.findById(request.getClassroom().getId()).orElseThrow(() -> new IllegalArgumentException("찾는 classroom이 없습니다."));
 
     request.setPassword(passwordEncoder.encode(request.getPassword()));
