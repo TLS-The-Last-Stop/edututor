@@ -26,13 +26,13 @@ public class UserServiceImpl implements UserService {
   private final ClassroomRepository classroomRepository;
 
   public boolean checkJoinAvailable(String loginId) {
-    return userRepository.findByLoginId(loginId).isPresent();
+    return userRepository.findByLoginIdAndIsDeleted(loginId, false).isPresent();
   }
 
   @Transactional
   @Override
   public Long saveTeacher(UserTERequest request) {
-    if (userRepository.existsByLoginId(request.getLoginId())) {
+    if (userRepository.existsByLoginIdAndIsDeleted(request.getLoginId(), false)) {
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
 
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public Long saveStudent(UserSURequest request) {
-    if (userRepository.existsByLoginId(request.getLoginId())) {
+    if (userRepository.existsByLoginIdAndIsDeleted(request.getLoginId(), false)) {
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
     Classroom classroom = classroomRepository.findById(request.getClassroom().getId()).orElseThrow(() -> new IllegalArgumentException("찾는 classroom이 없습니다."));

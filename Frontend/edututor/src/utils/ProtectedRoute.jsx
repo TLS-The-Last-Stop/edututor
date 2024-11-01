@@ -14,6 +14,19 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
   const checkAuth = async () => {
     try {
+      if (requiredRole === 'AD') {
+        const result = await verifyAuth();
+        const isAD = result.data === 'AD';
+        setIsAuthoriozed(isAD);
+
+        if (!isAD && !hasAlerted) {
+          setHasAlerted(true);
+          alert('관리자 권한이 필요합니다.');
+          navigate('/');
+        }
+        return;
+      }
+
       if (!userInfo) {
         navigate('/login', {
           replace: true,
@@ -53,7 +66,7 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
   useEffect(() => {
     checkAuth();
-  }, [userInfo]);
+  }, [userInfo, userRole]);
 
   if (isLoading) return <Loading />;
 

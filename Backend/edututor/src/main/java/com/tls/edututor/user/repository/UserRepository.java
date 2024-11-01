@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
   @EntityGraph(attributePaths = {"classroom", "classroom.school"})
-  Optional<User> findByLoginId(String loginId);
+  Optional<User> findByLoginIdAndIsDeleted(String loginId, boolean isDeleted);
 
-  boolean existsByLoginId(String loginId);
+  boolean existsByLoginIdAndIsDeleted(String loginId, boolean isDeleted);
 
   @EntityGraph(attributePaths = {"classroom"})
   List<User> findByClassroomIdAndRole(Long classroomId, String role);

@@ -1,6 +1,6 @@
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
@@ -18,7 +18,7 @@ import CourseClassroomEnrollPage from './pages/course/CourseClassroomEnrollPage.
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import Report from './pages/report/Report.jsx';
 import ReportDetail from './pages/report/ReportDetail.jsx';
-import { AuthProvider, useAuth } from './utils/AuthContext.jsx';
+import { AuthProvider } from './utils/AuthContext.jsx';
 import CourseStudentPage from './pages/course/CourseStudentPage.jsx';
 import MaterialDetailStudentPage from './pages/material/MaterialDetailStudentPage.jsx';
 
@@ -62,7 +62,7 @@ function AppRoutes() {
     <>
       <GlobalStyle />
       <Routes>
-        <Route path="/admin" element={ // AD(admin)권한만
+        <Route path="/admin" element={
           <Suspense fallback={<LoadingSpinner />}>
             <AdminLayout>
               <Outlet />
@@ -70,46 +70,88 @@ function AppRoutes() {
           </Suspense>
         }>
 
-          <Route index element={<AdminHome />} />
+          <Route index element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <AdminHome />
+              </ProtectedRoute>
+            </Suspense>
+          } />
 
           <Route path="login" element={
             <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>
           } />
 
           <Route path="course" element={
-            <Suspense fallback={<LoadingSpinner />}><CourseListPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <CourseListPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="course-detail/:courseId" element={
-            <Suspense fallback={<LoadingSpinner />}><CourseDetailPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <CourseDetailPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="test-paper-detail/:testPaperId" element={
-            <Suspense fallback={<LoadingSpinner />}><TestPaperDetailPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <TestPaperDetailPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="create-course" element={
-            <Suspense fallback={<LoadingSpinner />}><CourseCreationPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <CourseCreationPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="course/edit/:courseId" element={
-            <Suspense fallback={<LoadingSpinner />}><CourseEditPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <CourseEditPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="create-material" element={
-            <Suspense fallback={<LoadingSpinner />}><MaterialCreationPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <MaterialCreationPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="create-test-paper" element={
-            <Suspense fallback={<LoadingSpinner />}><TestPaperCreationPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <TestPaperCreationPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="materials/:materialId" element={
-            <Suspense fallback={<LoadingSpinner />}><MaterialDetailPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <MaterialDetailPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
 
           <Route path="edit-material/:materialId" element={
-            <Suspense fallback={<LoadingSpinner />}><MaterialEditPage /></Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <MaterialEditPage />
+              </ProtectedRoute>
+            </Suspense>
           } />
         </Route>
 
@@ -179,7 +221,8 @@ function AppRoutes() {
 
           <Route path="/course/:courseId" index element={ // TE만
             <Suspense fallback={<LoadingSpinner />}>
-              <ProtectedRoute requiredRole="TE">
+              {/*<ProtectedRoute requiredRole="TE">*/}
+              <ProtectedRoute requiredRole="SU">
                 <CoursePage />
               </ProtectedRoute>
             </Suspense>

@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getUserInfo } from '../api/user/user.js';
-import privateApi from '../api/axios.js';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { verifyAuth } from './auth.js';
 
 const AuthContext = createContext();
@@ -9,21 +8,29 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(getUserInfo());
   const [userRole, setUserRole] = useState('');
+
   const navigator = useNavigate();
+  const location = useLocation();
 
   const verifyUserRole = async () => {
     try {
-      if (!userInfo) return;
+      if (location.pathname === '/admin/login' ||
+        location.pathname === '/login' ||
+        location.pathname === '/teacher-login' ||
+        location.pathname === '/student-login') {
+        return;
+      }
 
       const result = await verifyAuth();
-
       if (result.status === 401 && result.message.startsWith('로그인')) {
         clearLocalStorage();
         navigator('/');
         return;
       }
 
-      setUserRole(result.data);
+      if (result.data === 'AD') setUserRole('AD');
+      else setUserRole(result.data);
+      
     } catch (error) {
       console.error('Failed to verify role:', error);
       clearLocalStorage();
@@ -45,7 +52,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     verifyUserRole();
-  }, [userInfo]);
+  }, []);
 
   useEffect(() => {
     const handleStorageChange = () => {

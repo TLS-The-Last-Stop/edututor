@@ -1,9 +1,11 @@
 import CourseSection from '../../components/main/CourseSection.jsx';
 import styled from 'styled-components';
+import React from 'react';
+import InfoSection from '../../components/main/InfoSection.jsx';
 
 const HomeContainer = styled.div`
     max-width: 1300px; // 전체 컨테이너 최대 너비 설정
-    margin: 0 auto; // 중앙 정렬
+    margin: 40px auto;
     width: 100%;
 `;
 
@@ -24,7 +26,7 @@ const Home = () => {
         <CourseSection />
       </Section>
       <Section>
-        <h1>정보</h1>
+        <InfoSection />
       </Section>
     </HomeContainer>
   );
