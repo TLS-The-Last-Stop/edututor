@@ -5,7 +5,7 @@ import {
   FormGroup,
   FormHeader,
   Input,
-  InputGroup,
+  InputGroup, JoinButtonGroup,
   Label,
   Required,
   SubTitle,
@@ -139,30 +139,16 @@ const CreateStudentModal = ({
                 {errors.passwordMatch && <ErrorText>{errors.passwordMatch}</ErrorText>}
               </FormGroup>
 
-              <FormGroup>
-                <Label>
-                  <SubTitle $isModal>{classroomName}</SubTitle>
-                </Label>
-                {/*<InputGroup>
-                  <Input
-                    name="classNumber"
-                    value={classroomName}
-                    onChange={handleInputChange}
-                    $hasError={!!errors.classNumber}
-                  /> 반 입력 제거
-                </InputGroup>
-                {errors.classNumber && <ErrorText>{errors.classNumber}</ErrorText>}
-                */}
-              </FormGroup>
+              <SubTitle $isModal>{classroomName}</SubTitle>
 
-              <FormGroup>
+              <JoinButtonGroup>
+                <Button type="button" onClick={onClose} style={{ width: '100%' }}>
+                  취소
+                </Button>
                 <Button type="submit" $primary style={{ width: '100%' }}>
                   생성하기
                 </Button>
-                <Button type="button" onClick={onClose} style={{ width: '100%', marginTop: '0.5rem' }}>
-                  취소
-                </Button>
-              </FormGroup>
+              </JoinButtonGroup>
             </FieldSet>
           </form>
         </ModalContent>

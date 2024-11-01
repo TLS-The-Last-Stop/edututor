@@ -20,6 +20,16 @@ export const createStudent = async (data) => {
   return response.data;
 };
 
+export const updateStudent = async (id, data) => {
+  const response = await privateApi.patch(`/users/students/${id}`, data);
+  return response.data;
+};
+
+export const removeStudent = async (id) => {
+  const response = await privateApi.delete(`users/students/${id}`);
+  return response.data;
+};
+
 export const login = async (data) => {
   const response = await publicApi.post('login', data);
   return response.data;

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import CreateStudent from '../../components/classroom/CreateStudent.jsx';
-import StudentList from '../../components/classroom/StudentList.jsx';
 import styled from 'styled-components';
 import { getAllStudent } from '../../api/classroom/classroom.js';
 import Loading from '../../components/common/Loading.jsx';
 import { ErrorText } from '../../components/common/UserStyledComponents.js';
 import EmptyState from '../../components/classroom/EmptyState.jsx';
-import { getUserInfo } from '../../api/user/user.js';
+import { getUserInfo, removeStudent } from '../../api/user/user.js';
+import StudentList from '../../components/classroom/StudentList.jsx';
 
 const initStudent = {
   id      : '',
@@ -74,9 +74,19 @@ const Classroom = () => {
     }
   };
 
-  const handleDelete = (studentId) => {
-    //TODO: API 호출 => isDeleted true로
-    setStudents(students.filter(student => student.loginId !== studentId));
+  const handleDelete = async (studentId) => {
+    try {
+      const result = await removeStudent(studentId);
+
+      if (result.status === 204) {
+        alert(result.message);
+        fetchAllStudent();
+      } else {
+        console.error('뭔가 삭제 에러');
+      }
+    } catch (error) {
+      console.error('Failed to delete student ..', error);
+    }
   };
 
   if (isLoading) return <Loading />;
@@ -92,7 +102,8 @@ const Classroom = () => {
         {students === null || students.length === 0 ? (
           <EmptyState />
         ) : (
-          <StudentList classroomId={classroomId} students={students} handleDelete={handleDelete} />
+          <StudentList classroomId={classroomId} students={students} fetchAllStudent={fetchAllStudent}
+                       handleDelete={handleDelete} />
         )}
       </ContentWrapper>
     </Container>

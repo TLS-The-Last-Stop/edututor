@@ -18,12 +18,13 @@ const StudentCard = styled.div`
     }
 `;
 
-const StudentList = ({ classroomId, students, handleDelete }) => {
+const StudentList = ({ classroomId, students, fetchAllStudent, handleDelete }) => {
   return (
     <>
       {students.map(student => (
         <StudentCard key={student.id}>
-          <StudentListItem classroomId={classroomId} student={student} handleDelete={handleDelete} />
+          <StudentListItem classroomId={classroomId} student={student} fetchAllStudent={fetchAllStudent}
+                           handleDelete={handleDelete} />
         </StudentCard>
       ))}
     </>

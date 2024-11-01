@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserServiceImpl implements UserService {
 
   private final BCryptPasswordEncoder passwordEncoder;
@@ -27,11 +27,12 @@ public class UserServiceImpl implements UserService {
   private final SchoolRepository schoolRepository;
   private final ClassroomRepository classroomRepository;
 
+  @Transactional(readOnly = true)
   public boolean checkJoinAvailable(String loginId) {
     return userRepository.findByLoginIdAndIsDeleted(loginId, false).isPresent();
   }
 
-  @Transactional
+
   @Override
   public Long saveTeacher(UserTERequest request) {
     if (userRepository.existsByLoginIdAndIsDeleted(request.getLoginId(), false)) {
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
     return user.getId();
   }
 
-  @Transactional
+
   @Override
   public Long saveStudent(UserSURequest request, Authentication authentication) {
     if (userRepository.existsByLoginIdAndIsDeleted(request.getLoginId(), false)) {
@@ -82,5 +83,31 @@ public class UserServiceImpl implements UserService {
     userRepository.save(user);
 
     return user.getId();
+  }
+
+
+  @Override
+  public Long updateStudent(UserSURequest request, Long id) {
+    User student = userRepository.findById(id).orElseThrow();
+    String originalPassword = request.getPassword();
+
+    if (originalPassword != null) request.setPassword(passwordEncoder.encode(originalPassword));
+
+    student.updateStudent(request);
+
+    userRepository.save(student);
+
+    return student.getId();
+  }
+
+
+  @Override
+  public Long deleteStudent(Long id) {
+    User student = userRepository.findById(id).orElseThrow();
+    student.setIsDeleted(true);
+
+    userRepository.save(student);
+
+    return student.getId();
   }
 }

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import StudentDetailModal from './StudentDetailModal.jsx';
 import { useState } from 'react';
 import { getStudentByStudentId } from '../../api/classroom/classroom.js';
+import { updateStudent } from '../../api/user/user.js';
 
 const StudentItem = styled.div`
     display: flex;
@@ -58,7 +59,7 @@ const initErrors = {
   confirmPassword: ''
 };
 
-const StudentListItem = ({ classroomId, student, handleDelete }) => {
+const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [studentDetail, setStudentDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,40 +95,56 @@ const StudentListItem = ({ classroomId, student, handleDelete }) => {
         ...prev,
         fullName: value
       }));
-
-      validateInput('fullName', value);
     } else {
-      setUpdateForm(prev => ({
-        ...prev,
-        [name]: value
-      }));
+      setUpdateForm(prev => {
+        const newForm = {
+          ...prev,
+          [name]: value
+        };
+
+        if (name === 'password') {
+          validateInput('password', value);
+          if (newForm.confirmPassword) {
+            validateInput('confirmPassword', newForm.confirmPassword);
+          }
+        }
+        if (name === 'confirmPassword') {
+          validateInput('confirmPassword', value);
+        }
+
+        return newForm;
+      });
     }
     validateInput(name, value);
   };
 
   const validateInput = (name, value) => {
     switch (name) {
+      case 'fullName':
+        setErrors(prev => ({
+          ...prev,
+          fullName: !value ? '이름을 입력해주세요' : ''
+        }));
+        break;
+
       case 'password':
         if (value) {
           const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,20}$/;
           setErrors(prev => ({
             ...prev,
-            password: !passwordRegex.test(value) ? '영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.' : ''
+            password: !passwordRegex.test(value) ?
+              '영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.' : ''
           }));
+        } else {
+          setErrors(prev => ({ ...prev, password: '' }));
         }
         break;
 
       case 'confirmPassword':
         setErrors(prev => ({
           ...prev,
-          confirmPassword: updateForm.password !== value ? '비밀번호가 일치하지 않습니다.' : ''
-        }));
-        break;
-
-      case 'fullName':
-        setErrors(prev => ({
-          ...prev,
-          fullName: !value ? '이름을 입력해주세요' : ''
+          confirmPassword: updateForm.password !== value ?
+            '비밀번호가 일치하지 않습니다.' : ''
         }));
         break;
     }
@@ -136,52 +153,42 @@ const StudentListItem = ({ classroomId, student, handleDelete }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 비밀번호가 입력된 경우에만 검증
     if (updateForm.password || updateForm.confirmPassword) {
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,20}$/;
-
       if (!passwordRegex.test(updateForm.password)) {
-        setErrors(prev => ({
-          ...prev,
-          password: '영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.'
-        }));
-
+        alert('비밀번호는 영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.');
         return;
       }
 
       if (updateForm.password !== updateForm.confirmPassword) {
-        setErrors(prev => ({
-          ...prev,
-          confirmPassword: '비밀번호가 일치하지 않습니다.'
-        }));
-
+        alert('비밀번호가 일치하지 않습니다.');
         return;
       }
     }
 
     if (!studentDetail.fullName) {
-      setErrors(prev => ({
-        ...prev,
-        fullName: '이름을 입력해주세요'
-      }));
-
+      alert('이름을 입력해주세요.');
       return;
     }
 
     try {
-      const updateDate = {
+      const updateData = {
         fullName: studentDetail.fullName,
         ...(updateForm.password && { password: updateForm.password })
       };
-      //TODO: API 호출
 
-      console.log('updateDate', updateDate);
-      //handleCloseModal()
+      const result = await updateStudent(studentDetail.id, updateData);
+      if (result.status === 204) {
+        alert('수정이 완료되었습니다.');
+        handleCloseModal();
+        fetchAllStudent();
+      } else {
+        alert('업데이트에서 문제 생김');
+      }
     } catch (error) {
       console.error('Failed to update student:', error);
-      setErrors(prev => ({
-        ...prev,
-        submit: '학생 정보 수정에 실패했습니다.'
-      }));
+      alert('학생 정보 수정에 실패했습니다.');
     }
   };
 
@@ -192,15 +199,17 @@ const StudentListItem = ({ classroomId, student, handleDelete }) => {
     setErrors(initErrors);
   };
 
-
   return (
     <>
-      <StudentItem onClick={() => setIsOpen(true)}>
-        <StudentInfo onClick={handleOpenModal}>
+      <StudentItem onClick={handleOpenModal}>
+        <StudentInfo>
           <Avatar />
           <StudentName>{student.fullName} ({student.loginId})</StudentName>
         </StudentInfo>
-        <DeleteButton onClick={() => handleDelete(student.id)}>계정 삭제</DeleteButton>
+        <DeleteButton onClick={(e) => {
+          e.stopPropagation();
+          handleDelete(student.id);
+        }}>계정 삭제</DeleteButton>
       </StudentItem>
 
       <StudentDetailModal

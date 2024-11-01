@@ -12,4 +12,7 @@ public interface UserService {
 
   Long saveStudent(UserSURequest request, Authentication authentication);
 
+  Long updateStudent(UserSURequest request, Long id);
+
+  Long deleteStudent(Long id);
 }

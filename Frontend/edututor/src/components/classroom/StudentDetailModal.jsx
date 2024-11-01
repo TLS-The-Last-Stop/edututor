@@ -1,5 +1,14 @@
 import styled from 'styled-components';
-import { Button, ErrorText, FormGroup, Input, Label, SubTitle } from '../common/UserStyledComponents.js';
+import {
+  Button,
+  ErrorText,
+  FormGroup,
+  FormHeader,
+  Input,
+  JoinButtonGroup,
+  Label,
+  Title
+} from '../common/UserStyledComponents.js';
 
 const Overlay = styled.section`
     position: fixed;
@@ -31,17 +40,6 @@ const ModalContent = styled.main`
     padding: 2rem;
 `;
 
-const ButtonGroup = styled.div`
-    display: flex;
-    gap: 8px;
-    width: 100%;
-    margin-top: 2rem;
-
-    ${Button} {
-        flex: 1;
-    }
-`;
-
 const StudentDetailModal = ({
                               isOpen,
                               onClose,
@@ -53,7 +51,6 @@ const StudentDetailModal = ({
                               errors
                             }) => {
 
-  console.log(student);
   if (!isOpen) return null;
   return (
     <Overlay onClick={onClose}>
@@ -63,7 +60,9 @@ const StudentDetailModal = ({
             <div>로딩 중...</div>
           ) : student ? (
             <>
-              <SubTitle $isModal>학생 정보 수정</SubTitle>
+              <FormHeader>
+                <Title $isModal>학생 정보</Title>
+              </FormHeader>
               <form onSubmit={handleSubmit}>
                 <FormGroup>
                   <Label>이름</Label>
@@ -112,14 +111,14 @@ const StudentDetailModal = ({
                   {errors.confirmPassword && <ErrorText>{errors.confirmPassword}</ErrorText>}
                 </FormGroup>
                 {errors.submit && <ErrorText>{errors.submit}</ErrorText>}
-                <ButtonGroup>
+                <JoinButtonGroup>
                   <Button type="button" onClick={onClose}>
                     취소
                   </Button>
-                  <Button type="submit" $primary>
+                  <Button type="submit" onClick={handleSubmit} $primary>
                     저장
                   </Button>
-                </ButtonGroup>
+                </JoinButtonGroup>
               </form>
             </>
           ) : (
