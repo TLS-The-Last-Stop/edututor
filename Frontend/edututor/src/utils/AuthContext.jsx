@@ -22,15 +22,15 @@ export const AuthProvider = ({ children }) => {
       }
 
       const result = await verifyAuth();
+      if (result.data === 'AD') setUserRole('AD');
+      else setUserRole(result.data);
+
       if (result.status === 401 && result.message.startsWith('로그인')) {
         clearLocalStorage();
         navigator('/');
         return;
       }
 
-      if (result.data === 'AD') setUserRole('AD');
-      else setUserRole(result.data);
-      
     } catch (error) {
       console.error('Failed to verify role:', error);
       clearLocalStorage();

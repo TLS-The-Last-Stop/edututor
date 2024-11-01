@@ -33,7 +33,7 @@ const AdminLogin = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const submitData = {
@@ -42,7 +42,7 @@ const AdminLogin = () => {
     };
 
     try {
-      const result = login(submitData);
+      const result = await login(submitData);
       if (result) navigate('/admin');
     } catch (error) {
       console.error('Login failed:', error);
