@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getUserInfo } from '../api/user/user.js';
-import privateApi from '../api/axios.js';
 import { useNavigate } from 'react-router-dom';
 import { verifyAuth } from './auth.js';
 

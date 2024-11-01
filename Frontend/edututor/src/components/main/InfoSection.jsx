@@ -3,6 +3,7 @@ import ai from '../../assets/icon/ai.png';
 import db from '../../assets/icon/db.png';
 import 시각화 from '../../assets/icon/시각화.png';
 import 평가 from '../../assets/icon/평가.png';
+import 선생님가이드 from '../../assets/file/지니아튜터+상세가이드(교사)_2407.pdf';
 
 const InfoContainer = styled.div`
     padding: 40px;
@@ -192,7 +193,8 @@ const InfoSection = () => {
 
       <NoticeSection>
         <DownloadWrapper>
-          <DownloadButton $teacher>교사용 이용 가이드</DownloadButton>
+          <DownloadButton $teacher>
+            <a href={선생님가이드} download="지니아튜터+상세가이드(교사)_2407" />교사용 이용 가이드</DownloadButton>
           <DownloadButton>학생용 이용 가이드</DownloadButton>
         </DownloadWrapper>
       </NoticeSection>

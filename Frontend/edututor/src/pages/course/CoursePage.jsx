@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../../assets/css/CoursePage.css';
 import { publicApi } from '../../api/axios.js';
 import ExamShareModal from '../../components/exam/ExamShareModal';
+import { StyledRouterLink } from '../../components/common/UserStyledComponents.js';
 
 const CoursePage = () => {
   const { courseId } = useParams();
@@ -92,9 +93,9 @@ const CoursePage = () => {
             <div className="course-header">
               <h2>{courseData.courseName}</h2>
               <div className="students-icon">
-                <Link to="/classroom">
+                <StyledRouterLink to="/classroom">
                   <span>학생 관리</span>
-                </Link>
+                </StyledRouterLink>
               </div>
             </div>
 

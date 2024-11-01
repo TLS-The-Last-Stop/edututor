@@ -9,12 +9,12 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasAlerted, setHasAlerted] = useState(false);
 
-  const { userInfo, userRole } = useAuth();
+  const { userInfo } = useAuth();
   const navigate = useNavigate();
 
   const checkAuth = async () => {
     try {
-      if (!userInfo) {
+      if (!userInfo && requiredRole !== 'AD') {
         navigate('/login', {
           replace: true,
           state  : { from: location.pathname }

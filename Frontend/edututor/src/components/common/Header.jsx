@@ -9,6 +9,7 @@ import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
 import { Link } from 'react-router-dom';
 import { logout } from '../../api/user/user.js';
+import { StyledRouterLink } from './UserStyledComponents.js';
 
 const HeaderContainer = styled.header`
     width: 100%;
@@ -344,14 +345,17 @@ const Header = () => {
       <HeaderContent>
         <MainNav>
           <Logo>
-            <span>E</span>dututor
-            <span className="edu">edu</span>
+            <StyledRouterLink to="/">
+              <span>E</span>dututor
+              <span className="edu">edu</span>
+            </StyledRouterLink>
           </Logo>
           <NavList>
             <li onClick={() => handleHeaderMenuClick('학습')} className={activeHeaderMenu === '학습' ? 'active' : ''}>학습
             </li>
             <li onClick={() => handleHeaderMenuClick('리포트')}
-                className={activeHeaderMenu === '리포트' ? 'active' : ''}>리포트
+                className={activeHeaderMenu === '리포트' ? 'active' : ''}>
+              <StyledRouterLink to="/report">리포트</StyledRouterLink>
             </li>
             <li onClick={() => handleHeaderMenuClick('에듀튜터')}
                 className={activeHeaderMenu === '에듀튜터' ? 'active' : ''}>에듀튜터 소개
@@ -418,7 +422,7 @@ const Header = () => {
           </HamburgerMenuItem>
           <HamburgerMenuItem className={activeHamburgerMenu === '리포트' ? 'active' : ''}
                              onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>
-            <img src={report} alt="리포트 이미지" />리포트
+            <img src={report} alt="리포트 이미지" /> <StyledRouterLink to="/report">리포트</StyledRouterLink>
           </HamburgerMenuItem>
           <HamburgerMenuItem className={activeHamburgerMenu === '에듀튜터' ? 'active' : ''}
                              onClick={(e) => handleHamburgerMenuClick(e, '에듀튜터')}>
