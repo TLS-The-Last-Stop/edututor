@@ -1,5 +1,9 @@
 .course-page {
     display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    padding: 0 10%; /* 양쪽 여백 설정 */
+    max-width: 1200px; /* 전체 페이지의 최대 너비 */
+    margin: 0 auto; /* 수평 가운데 정렬 */
 }
 
 .sidebar {
@@ -24,7 +28,7 @@
 
 .course-item {
     padding: 10px;
-    cursor: pointer; /* 클릭 가능하도록 포인터 추가 */
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 

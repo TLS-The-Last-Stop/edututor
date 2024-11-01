@@ -1,5 +1,9 @@
 .course-filter-container {
     padding: 20px;
+    justify-content: center;
+    padding: 0 10%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .filter-table {

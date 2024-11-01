@@ -60,7 +60,6 @@ const CoursePage = () => {
     }
   };
 
-  // 학습자료 클릭 시 해당 학습자료 상세 페이지로 이동
   const handleMaterialClick = (materialId) => {
     if (materialId) {
       navigate(`/student/material/${materialId}`);
