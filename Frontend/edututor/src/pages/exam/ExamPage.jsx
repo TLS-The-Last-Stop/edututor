@@ -15,12 +15,12 @@ const ExamPage = () => {
   useEffect(() => {
     if (testPaperId) {
       fetchQuestions(testPaperId)
-        .then((response) => {
-          setTestData(response.data);
-        })
-        .catch((error) => {
-          console.error('문제를 가져오는 중 오류 발생:', error);
-        });
+          .then((response) => {
+            setTestData(response.data);
+          })
+          .catch((error) => {
+            console.error('문제를 가져오는 중 오류 발생:', error);
+          });
     }
   }, [testPaperId]);
 
@@ -56,12 +56,12 @@ const ExamPage = () => {
     };
 
     submitAnswer(userTest)
-      .then((response) => {
-        alert('답안 제출 완료!');
-      })
-      .catch((error) => {
-        console.error('답안 제출 중 오류 발생:', error);
-      });
+        .then((response) => {
+          alert('답안 제출 완료!');
+        })
+        .catch((error) => {
+          console.error('답안 제출 중 오류 발생:', error);
+        });
   };
 
   if (!testData) return <div>로딩 중...</div>;
@@ -69,60 +69,63 @@ const ExamPage = () => {
   const { questions, title } = testData.data;
 
   return (
-    <div className="exam-page">
-      <header>
-        <h2>{title || '시험지'}</h2>
-        <div>
-          <span>푼 문제: {solvedQuestions} / 전체 문제: {questions.length}</span>
-        </div>
-      </header>
-
-      <aside className="question-nav">
-        {questions.map((question, index) => (
-          <button
-            key={question.questionId}
-            onClick={() => scrollToQuestion(question.questionId)}
-            className={answeredQuestions.has(question.questionId) ? 'answered' : ''}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </aside>
-
-      <main className="questions">
-        {questions.map((question) => (
-          <div key={question.questionId} id={`question-${question.questionId}`} className="question">
-            <p>{question.content}</p>
-            {question.type === 'OBJECTIVE' ? (
-              <div className="options">
-                {question.options.map((option) => (
-                  <label key={option.optionId}>
-                    <input
-                      type="radio"
-                      name={`question-${question.questionId}`}
-                      value={option.optionId}
-                      checked={answers[question.questionId] === option.optionId}
-                      onChange={() => handleObjectiveAnswer(question.questionId, option.optionId)}
-                    />
-                    {option.content}
-                  </label>
-                ))}
-              </div>
-            ) : (
-              <div className="subjective-answer">
-                <textarea
-                  placeholder="답변을 입력하세요."
-                  value={answers[question.questionId] || ''}
-                  onChange={(e) => handleSubjectiveAnswer(question.questionId, e.target.value)}
-                />
-              </div>
-            )}
+      <div className="exam-page">
+        <header>
+          <h2>{title || '시험지'}</h2>
+          <div>
+            <span>푼 문제: {solvedQuestions} / 전체 문제: {questions.length}</span>
           </div>
-        ))}
-      </main>
+        </header>
 
-      <button className="submit" onClick={handleSubmit}>답안 제출</button>
-    </div>
+        <aside className="question-nav">
+          {questions.map((question, index) => (
+              <button
+                  key={question.questionId}
+                  onClick={() => scrollToQuestion(question.questionId)}
+                  className={answeredQuestions.has(question.questionId) ? 'answered' : ''}
+              >
+                {index + 1}
+              </button>
+          ))}
+        </aside>
+
+        <main className="questions">
+          {questions.map((question, index) => (
+              <div key={question.questionId} id={`question-${question.questionId}`} className="question">
+                <h4>문제 {index + 1}</h4>
+                {question.passage && <p className="passage">{question.passage}</p>}
+                <p>{question.content}</p>
+                {question.type === 'OBJECTIVE' ? (
+                    <div className="options">
+                      {question.options.map((option, index) => (
+                          <label key={option.optionId}>
+                            <span className="option-number">{index + 1}</span>
+                            <input
+                                type="radio"
+                                name={`question-${question.questionId}`}
+                                value={option.optionId}
+                                checked={answers[question.questionId] === option.optionId}
+                                onChange={() => handleObjectiveAnswer(question.questionId, option.optionId)}
+                            />
+                            {option.content}
+                          </label>
+                      ))}
+                    </div>
+                ) : (
+                    <div className="subjective-answer">
+                <textarea
+                    placeholder="답변을 입력하세요."
+                    value={answers[question.questionId] || ''}
+                    onChange={(e) => handleSubjectiveAnswer(question.questionId, e.target.value)}
+                />
+                    </div>
+                )}
+              </div>
+          ))}
+        </main>
+
+        <button className="submit" onClick={handleSubmit}>답안 제출</button>
+      </div>
   );
 };
 

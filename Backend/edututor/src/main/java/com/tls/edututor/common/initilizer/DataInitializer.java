@@ -163,7 +163,7 @@ public class DataInitializer {
                     .build();
             shareTestRepository.save(shareTest);
 
-            for (int i = 1; i <= 5; i++) {
+            for (int i = 1; i <= 4; i++) {
               Question question = Question.builder()
                       .testPaper(testPaper)
                       .content("매우 어려운 문제 철수 영희 로엠잇" + i)
