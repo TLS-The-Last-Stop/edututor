@@ -37,6 +37,7 @@ import com.tls.edututor.exam.usertest.repository.UserTestRepository;
 import com.tls.edututor.school.dto.request.SchoolRequest;
 import com.tls.edututor.school.entity.School;
 import com.tls.edututor.school.repository.SchoolRepository;
+import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
@@ -112,7 +113,8 @@ public class DataInitializer {
 
       initAll();
 
-      List<String> courses = List.of("초등학교 국어 1학년 교과서", "초등학교 수학 1학년 참고서", "영어의 정석 참고서", "이것이 과학이다 교과서");
+      List<String> courses = List.of("초등학교 국어 1학년 교과서", "초등학교 수학 1학년 참고서", "영어의 정석 참고서", "이것이 과학이다 교과서",
+              "미국 대선의 결과에 따른 대한민국 미래 예측", "중동, 이대로 괜찮은가", "대한민국 경제 발전 보고서");
 
       courses.forEach(courseName -> {
         CodeGroup codeGroup = codeGroupRepository.getReferenceById(1L);
@@ -223,6 +225,7 @@ public class DataInitializer {
     }
     if (userRepository.count() == 0) {
       initializeTeachers();
+      initializeAdmin();
     }
 
   }
@@ -274,7 +277,7 @@ public class DataInitializer {
       School school = School.withDto()
               .request(schoolRequest)
               .build();
-      school.setWriter(Long.valueOf(i) + 1);
+      //school.setWriter(Long.valueOf(i) + 1);
       schoolRepository.save(school);
     }
   }
@@ -299,9 +302,20 @@ public class DataInitializer {
               .type(school.getType())
               .build();
 
-      classroom.setWriter(Long.valueOf(i) + 1);
+      //classroom.setWriter(Long.valueOf(i) + 1);
       classroomRepository.save(classroom);
     }
+  }
+
+  private void initializeAdmin() {
+    UserSURequest userSURequest = new UserSURequest();
+    userSURequest.setFullName("관리자");
+    userSURequest.setLoginId("admin");
+    userSURequest.setPassword(passwordEncoder.encode("admin12!@"));
+    userSURequest.setType("AD");
+
+    User student = User.createStudent(userSURequest);
+    userRepository.save(student);
   }
 
   @Transactional
@@ -326,7 +340,7 @@ public class DataInitializer {
       userTERequest.setType("TE");
 
       User teacher = User.createTeacher(userTERequest);
-      teacher.setWriter(Long.valueOf(i) + 1);
+      //teacher.setWriter(Long.valueOf(i) + 1);
       userRepository.save(teacher);
 
       teacher.setClassroom(classroom);
@@ -338,9 +352,9 @@ public class DataInitializer {
 
   @Transactional
   protected void initStudents(Classroom classroom, int idx) {
-    String[] studentBaseNames = {"이수완", "김혁진", "한유리"};
-    String[] loginIdPrefixes = {"suwan", "gurwls", "dbfl"};
-    String[] passwordBase = {"suwan12!@", "gurwls!@", "dbfl!@"};
+    String[] studentBaseNames = {"이수완", "이두완", "카리나"};
+    String[] loginIdPrefixes = {"suwan", "duwan", "karina"};
+    String[] passwordBase = {"suwan12!@", "duwan12!@", "karina12!@"};
 
     for (int studentNum = 1; studentNum <= 3; studentNum++) {
       UserTERequest userTERequest = new UserTERequest();
@@ -351,7 +365,7 @@ public class DataInitializer {
       userTERequest.setType("SU");
 
       User student = User.createTeacher(userTERequest);
-      student.setWriter(classroom.getId());
+      //student.setWriter(classroom.getId());
       userRepository.save(student);
 
       student.setClassroom(classroom);
