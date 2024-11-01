@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ShareTestRepository extends JpaRepository<ShareTest, Integer> {
+public interface ShareTestRepository extends JpaRepository<ShareTest, Long> {
 
   Optional<ShareTest> findByUserIdAndTestPaperId(Long userId, Long testPaperId);
 
