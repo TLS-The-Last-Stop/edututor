@@ -14,7 +14,6 @@ const AdminHeader = () => {
     navigate('/');
   };
 
-
   return (
     <header className="admin-header">
       <div className="header-left">
