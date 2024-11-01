@@ -304,7 +304,7 @@ const Overlay = styled.div`
 
 
 const Header = () => {
-  const { userInfo, updateUserInfo } = useAuth();
+  const { userInfo, updateUserInfo } = useAuth?.() || {};
   const [hamburger, setHamburger] = useState(false);
   const [activeHeaderMenu, setActiveHeaderMenu] = useState('');
   const [activeHamburgerMenu, setActiveHamburgerMenu] = useState('');
@@ -451,7 +451,7 @@ const Header = () => {
             <HamburgerMenuItem>
               <UserInfo>
                 {userInfo.fullName}님
-                <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+                <HamburgerLogoutButton onClick={handleLogout}>로그아웃</HamburgerLogoutButton>
               </UserInfo>
             </HamburgerMenuItem>
           ) : (

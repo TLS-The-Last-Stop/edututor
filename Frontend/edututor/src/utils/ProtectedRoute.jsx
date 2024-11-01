@@ -9,12 +9,25 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasAlerted, setHasAlerted] = useState(false);
 
-  const { userInfo } = useAuth();
+  const { userInfo, userRole } = useAuth();
   const navigate = useNavigate();
 
   const checkAuth = async () => {
     try {
-      if (!userInfo && requiredRole !== 'AD') {
+      if (requiredRole === 'AD') {
+        const result = await verifyAuth();
+        const isAD = result.data === 'AD';
+        setIsAuthoriozed(isAD);
+
+        if (!isAD && !hasAlerted) {
+          setHasAlerted(true);
+          alert('관리자 권한이 필요합니다.');
+          navigate('/');
+        }
+        return;
+      }
+
+      if (!userInfo) {
         navigate('/login', {
           replace: true,
           state  : { from: location.pathname }
@@ -53,7 +66,7 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
   useEffect(() => {
     checkAuth();
-  }, [userInfo]);
+  }, [userInfo, userRole]);
 
   if (isLoading) return <Loading />;
 

@@ -1,6 +1,6 @@
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
@@ -18,7 +18,7 @@ import CourseClassroomEnrollPage from './pages/course/CourseClassroomEnrollPage.
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import Report from './pages/report/Report.jsx';
 import ReportDetail from './pages/report/ReportDetail.jsx';
-import { AuthProvider, useAuth } from './utils/AuthContext.jsx';
+import { AuthProvider } from './utils/AuthContext.jsx';
 import CourseStudentPage from './pages/course/CourseStudentPage.jsx';
 import MaterialDetailStudentPage from './pages/material/MaterialDetailStudentPage.jsx';
 
@@ -70,7 +70,13 @@ function AppRoutes() {
           </Suspense>
         }>
 
-          <Route index element={<AdminHome />} />
+          <Route index element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <AdminHome />
+              </ProtectedRoute>
+            </Suspense>
+          } />
 
           <Route path="login" element={
             <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>

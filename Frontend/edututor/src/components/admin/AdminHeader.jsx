@@ -1,16 +1,19 @@
-import React from 'react';
 import '../../assets/css/AdminHeader.css';
 import { logout } from '../../api/user/user.js';
 import { useAuth } from '../../utils/AuthContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const AdminHeader = () => {
-  const { userInfo, updateUserInfo } = useAuth();
+  const { userRole, updateUserInfo } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem('info');
     updateUserInfo();
-    logout();
+    await logout();
+    navigate('/');
   };
+
 
   return (
     <header className="admin-header">
@@ -18,7 +21,7 @@ const AdminHeader = () => {
         <h2>₍₍ ◝(・ω・)◟ ⁾⁾ 관리자 페이지 !</h2>
       </div>
       <div className="header-right">
-        {userInfo ? (<button onClick={handleLogout}>로그아웃</button>) : ''}
+        {userRole === 'AD' ? (<button onClick={handleLogout}>로그아웃</button>) : ''}
       </div>
     </header>
   );
