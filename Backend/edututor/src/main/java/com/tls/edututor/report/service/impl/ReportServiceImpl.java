@@ -32,9 +32,9 @@ public class ReportServiceImpl implements ReportService {
   private final UserTestRepository2 userTestRepository2;
   private final UserAnswerRepository2 userAnswerRepository2;
   private final QuestionRepository2 questionRepository2;
+  private final ShareTestRepository2 shareTestRepository2;
 
   public Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable, Long courseId) {
-
     List<Long> courseIds = new ArrayList<>();
     Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
 
@@ -44,14 +44,37 @@ public class ReportServiceImpl implements ReportService {
 
     Page<TestPaper> testPaperPage = testPaperRepository2.findByUnitCourseIdInAndIsDeletedFalse(courseIds, courseId, pageable);
 
-    return testPaperPage.map(testPaper -> TestPaperResponse2.builder()
-            .id(testPaper.getId())
-            .title(testPaper.getTitle())
-            .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
-            .unitName(testPaper.getUnit().getContent())
-            .createAt(LocalDate.from(testPaper.getCreatedAt()))
-            .build()
-    );
+    return testPaperPage.map(testPaper -> {
+      long totalCount = shareTestRepository2.countByTestPaperId(testPaper.getId());
+      long participationCount = userTestRepository2.countByShareTestTestPaperId(testPaper.getId());
+      Double avgAchievementRate = 0.0;
+
+      if (participationCount > 0) {
+        List<UserTest> userTests = userTestRepository2.findByTestPaperId(testPaper.getId());
+        double totalRate = 0.0;
+
+        for (UserTest userTest : userTests) {
+          List<UserAnswer> userAnswers = userAnswerRepository2.findByUserTestId(userTest.getId());
+          List<Boolean> isCorrect = new ArrayList<>();
+          for (UserAnswer userAnswer : userAnswers) {
+            isCorrect.add(userAnswer.getIsCorrect());
+          }
+          totalRate += achievementRate(isCorrect);
+        }
+        avgAchievementRate = totalRate / participationCount;
+      }
+
+      return TestPaperResponse2.builder()
+              .id(testPaper.getId())
+              .title(testPaper.getTitle())
+              .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
+              .unitName(testPaper.getUnit().getContent())
+              .createAt(LocalDate.from(testPaper.getCreatedAt()))
+              .participationCount((int) participationCount)
+              .totalCount((int) totalCount)
+              .achievementRate(Double.valueOf(String.format("%.1f", avgAchievementRate)))
+              .build();
+    });
   }
 
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
