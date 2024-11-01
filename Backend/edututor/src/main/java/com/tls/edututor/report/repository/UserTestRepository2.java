@@ -11,4 +11,6 @@ import java.util.List;
 public interface UserTestRepository2 extends JpaRepository<UserTest, Long> {
   @Query("SELECT ut FROM UserTest ut JOIN FETCH ut.shareTest st WHERE st.testPaper.id = :testPaperId")
   List<UserTest> findByTestPaperId(Long testPaperId);
+
+  long countByShareTestTestPaperId(Long testPaperId);
 }
