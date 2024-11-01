@@ -14,5 +14,7 @@ public class UserTestResponse2 {
   private String userName;
   private Long achievementRate;
   private List<String> userAnswers;
-  private List<String> correctAnswers;
+  //  private List<String> correctAnswers;
+  private long questionCount;
+  private List<Boolean> isCorrect;
 }
