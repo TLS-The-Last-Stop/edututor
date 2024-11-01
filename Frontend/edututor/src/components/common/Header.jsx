@@ -404,6 +404,24 @@ const Header = () => {
         </HeaderContent>
       )}
 
+      {activeHeaderMenu === '고객센터' && (
+        <HeaderContent>
+          <SubNav>
+            <ul>
+              <li onClick={() => handleSubMenuClick('공지사항')} className={activeHeaderMenu === '공지사항' ? 'active' : ''}>
+                공지사항
+              </li>
+              <li onClick={() => handleSubMenuClick('FAQ')}
+                  className={activeHeaderMenu === 'FAQ' ? 'active' : ''}>FAQ
+              </li>
+              <li onClick={() => handleSubMenuClick('1:1문의')}
+                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>1:1문의
+              </li>
+            </ul>
+          </SubNav>
+        </HeaderContent>
+      )}
+
       <Overlay $isOpen={hamburger} onClick={toggleHamburger}>
         <HamburgerMenu $isOpen={hamburger}>
           <HamburgerMenuHeader>
@@ -442,10 +460,22 @@ const Header = () => {
                 소개</HamburgerMenuItem>
             </>
           )}
-          <HamburgerMenuItem className={activeHamburgerMenu === '고객센터' ? 'active' : ''}
-                             onClick={(e) => handleHamburgerMenuClick(e, '고객센터')}>
-            <img src={cs} alt="고객센터 이미지" />고객센터
-          </HamburgerMenuItem>
+          {activeHamburgerMenu === '고객센터' && (
+            <>
+              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '공지사항')}
+                                 clasName={activeHamburgerMenu === '공지사항' ? 'active' : ''}
+                                 style={{ paddingLeft: '32px' }}
+              >공지사항</HamburgerMenuItem>
+              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, 'FAQ')}
+                                 clasName={activeHamburgerMenu === 'FAQ' ? 'active' : ''}
+                                 style={{ paddingLeft: '32px' }}
+              >FAQ</HamburgerMenuItem>
+              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '1:1문의')}
+                                 clasName={activeHamburgerMenu === '1:1문의' ? 'active' : ''}
+                                 style={{ paddingLeft: '32px' }}
+              >1:1문의</HamburgerMenuItem>
+            </>
+          )}
 
           {userInfo ? (
             <HamburgerMenuItem>
