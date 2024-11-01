@@ -3,7 +3,7 @@ import insta from '../../assets/icon/인스타.png';
 import blog from '../../assets/icon/블로그.png';
 
 const FooterContainer = styled.footer`
-    background: coral;
+    background: #ffffff;
     height: 270px;
     position: relative;
     transform: translateY(0%);

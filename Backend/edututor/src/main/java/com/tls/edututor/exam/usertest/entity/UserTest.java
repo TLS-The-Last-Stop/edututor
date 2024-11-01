@@ -28,9 +28,6 @@ public class UserTest extends BaseEntity {
   @Column(name = "RESULT")
   private Double result;
 
-  @Column(name = "EXAM_TAKEN")
-  private Boolean examTaken;
-
   @OneToMany(mappedBy = "userTest", cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<UserAnswer> userAnswers;

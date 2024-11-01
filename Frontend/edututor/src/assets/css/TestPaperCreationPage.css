@@ -1,71 +1,111 @@
 .test-paper-creation-container {
-    padding: 20px;
     max-width: 800px;
     margin: 0 auto;
+    padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+h5 {
+    color: #555;
+    margin-top: 10px;
 }
 
 .test-paper-form {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+}
+
+.question-block {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.option-block {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
 }
 
 .form-field {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
-.input-field,
+.form-field label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-field input[type="text"],
+.form-field select,
 .textarea-field {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
+    font-size: 1rem;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
-.textarea-field {
-    height: 100px;
+.form-field input[type="text"]:focus,
+.form-field select:focus {
+    border-color: #333;
 }
 
-.question-block,
-.option-block {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+textarea.textarea-field {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.add-button,
+.submit-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover,
+.submit-button:hover {
+    background-color: #0056b3;
 }
 
 .add-button {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    background-color: #28a745;
+}
+
+.add-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .submit-button {
-    background-color: #2196f3;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    width: 100%;
     margin-top: 20px;
-}
-
-.submit-button:disabled {
-    background-color: #ccc;
-}
-
-.success-message {
-    color: green;
-    margin-top: 10px;
-}
-
-.error-message {
-    color: red;
-    margin-top: 10px;
+    background-color: #007bff;
 }
