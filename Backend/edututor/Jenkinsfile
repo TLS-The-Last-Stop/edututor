@@ -5,6 +5,45 @@ pipeline {
             steps {
                 git branch: 'dev', credentialsId: 'edututorc', url: 'https://github.com/TLS-The-Last-Stop/edututor'
             }
+            post {
+                failure {
+                    echo 'Repository clone failure!'
+                }
+                success {
+                    echo 'Repository clone success!'
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'chmod +x ./Backend/gradlew'
+                sh './Backend/gradlew build'
+            }
+        }
+        stage('Docker Hub Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin'
+                }
+            }
+        }
+        stage('Docker Build and Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB', passwordVariable: 'DOCKER_PROJECT', usernameVariable: 'DOCKER_REPO')]) {
+                    sh 'cd ./Backend && docker build -f Dockerfile -t $DOCKER_REPO/$DOCKER_PROJECT .'
+                    sh 'cd ./Backend && docker push $DOCKER_REPO/$DOCKER_PROJECT'
+                    echo 'Docker push success!'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sshagent(credentials: ['my-ssh-credentials']) {
+                    withCredentials([string(credentialsId: 'EC2_SERVER_IP', variable: 'IP')]) {
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@$IP "sudo sh deploy.sh"'
+                    }
+                }
+            }
         }
     }
 }
