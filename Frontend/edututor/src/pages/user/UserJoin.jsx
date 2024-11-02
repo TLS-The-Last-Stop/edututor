@@ -9,7 +9,7 @@ const initForm = {
   fullName         : '',
   loginId          : '',
   password         : '',
-  passwordCheck    : '',
+  confirmPassword  : '',
   email            : '',
   emailDomain      : '',
   emailDomainSelect: '직접 입력', // 기본값 설정
@@ -73,12 +73,12 @@ const UserJoin = () => {
       setIdCheckMessage('');
     }
 
-    if (['loginId', 'password', 'passwordCheck'].includes(name)) {
+    if (['loginId', 'password', 'confirmPassword'].includes(name)) {
       validateInput(name, value);
     }
 
-    if (name === 'password' || name === 'passwordCheck') {
-      handlePasswordCheck(name, value);
+    if (name === 'password' || name === 'confirmPassword') {
+      handleconfirmPassword(name, value);
     }
 
   };
@@ -190,7 +190,7 @@ const UserJoin = () => {
   };
 
   /* 비밀번호 확인 */
-  const handlePasswordCheck = (name, value) => {
+  const handleconfirmPassword = (name, value) => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{9,20}$/;
 
     if (name === 'password') {
@@ -199,7 +199,7 @@ const UserJoin = () => {
           ...prev,
           password: !passwordRegex.test(value),
           // 비밀번호가 바뀌었을 때는 확인란이 비어있지 않은 경우에만 일치 여부 체크
-          passwordMatch: form.passwordCheck !== '' && value !== form.passwordCheck
+          passwordMatch: form.confirmPassword !== '' && value !== form.confirmPassword
         }));
       } else {
         setErrors(prev => ({
@@ -208,7 +208,7 @@ const UserJoin = () => {
           passwordMatch: false
         }));
       }
-    } else if (name === 'passwordCheck') {
+    } else if (name === 'confirmPassword') {
       if (value) {
         setErrors(prev => ({
           ...prev,
@@ -257,7 +257,7 @@ const UserJoin = () => {
       return false;
     }
 
-    if (!form.fullName || !form.loginId || !form.password || !form.passwordCheck ||
+    if (!form.fullName || !form.loginId || !form.password || !form.confirmPassword ||
       !form.email || !form.phoneMiddle || !form.phoneLast ||
       !form.birthYear || !form.birthMonth || !form.birthDay ||
       !selectedSchool.name || !classroom.year || !classroom.grade || !classroom.classroomName) {

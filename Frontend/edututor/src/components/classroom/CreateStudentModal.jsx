@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
   Button,
   ErrorText,
@@ -6,7 +5,7 @@ import {
   FormGroup,
   FormHeader,
   Input,
-  InputGroup,
+  InputGroup, JoinButtonGroup,
   Label,
   Required,
   SubTitle,
@@ -61,17 +60,6 @@ const CreateStudentModal = ({
                               classroomName
                             }) => {
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
-  // 모달이 닫혀있으면 아무것도 렌더링하지 않음
   if (!isOpen) return null;
 
   return (
@@ -142,8 +130,8 @@ const CreateStudentModal = ({
                 </Label>
                 <Input
                   type="password"
-                  name="passwordCheck"
-                  value={form.passwordCheck}
+                  name="confirmPassword"
+                  value={form.confirmPassword}
                   onChange={handleInputChange}
                   placeholder="비밀번호 확인을 위해 다시 한번 입력해주세요"
                   $hasError={!!errors.passwordMatch}
@@ -151,30 +139,16 @@ const CreateStudentModal = ({
                 {errors.passwordMatch && <ErrorText>{errors.passwordMatch}</ErrorText>}
               </FormGroup>
 
-              <FormGroup>
-                <Label>
-                  <SubTitle $isModal>{classroomName} 반 번호<Required>*</Required></SubTitle>
-                </Label>
-                <InputGroup>
-                  <Input
-                    name="classNumber"
-                    value={form.classNumber}
-                    onChange={handleInputChange}
-                    placeholder="몇반인지 입력해주세요."
-                    $hasError={!!errors.classNumber}
-                  />
-                </InputGroup>
-                {errors.classNumber && <ErrorText>{errors.classNumber}</ErrorText>}
-              </FormGroup>
+              <SubTitle $isModal>{classroomName}</SubTitle>
 
-              <FormGroup>
+              <JoinButtonGroup>
+                <Button type="button" onClick={onClose} style={{ width: '100%' }}>
+                  취소
+                </Button>
                 <Button type="submit" $primary style={{ width: '100%' }}>
                   생성하기
                 </Button>
-                <Button type="button" onClick={onClose} style={{ width: '100%', marginTop: '0.5rem' }}>
-                  취소
-                </Button>
-              </FormGroup>
+              </JoinButtonGroup>
             </FieldSet>
           </form>
         </ModalContent>
