@@ -2,14 +2,19 @@ package com.tls.edututor.report.service.impl;
 
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.course.course.entity.CourseClassroom;
+import com.tls.edututor.course.courseclassroom.repository.CourseClassroomRepository;
 import com.tls.edututor.exam.question.entity.Question;
+import com.tls.edututor.exam.question.repository.QuestionRepository;
+import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
+import com.tls.edututor.exam.testpaper.repository.TestPaperRepository;
 import com.tls.edututor.exam.useransewer.entity.UserAnswer;
+import com.tls.edututor.exam.useransewer.repositroy.UserAnswerRepository;
 import com.tls.edututor.exam.usertest.entity.UserTest;
+import com.tls.edututor.exam.usertest.repository.UserTestRepository;
 import com.tls.edututor.report.dto.response.TestPaperDetailResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
 import com.tls.edututor.report.dto.response.UserTestResponse2;
-import com.tls.edututor.report.repository.*;
 import com.tls.edututor.report.service.ReportService;
 import com.tls.edututor.user.dto.response.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -27,34 +32,34 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
-  private final CourseClassroomRepository2 courseClassroomRepository2;
-  private final TestPaperRepository2 testPaperRepository2;
-  private final UserTestRepository2 userTestRepository2;
-  private final UserAnswerRepository2 userAnswerRepository2;
-  private final QuestionRepository2 questionRepository2;
-  private final ShareTestRepository2 shareTestRepository2;
+  private final CourseClassroomRepository courseClassroomRepository;
+  private final TestPaperRepository testPaperRepository;
+  private final UserTestRepository userTestRepository;
+  private final UserAnswerRepository userAnswerRepository;
+  private final QuestionRepository questionRepository;
+  private final ShareTestRepository shareTestRepository;
 
   public Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable, Long courseId) {
     List<Long> courseIds = new ArrayList<>();
     Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
 
-    for (CourseClassroom cc : courseClassroomRepository2.findByClassroomId(classroom.getId())) {
+    for (CourseClassroom cc : courseClassroomRepository.findByClassroomId(classroom.getId())) {
       courseIds.add(cc.getCourse().getId());
     }
 
-    Page<TestPaper> testPaperPage = testPaperRepository2.findByUnitCourseIdInAndIsDeletedFalse(courseIds, courseId, pageable);
+    Page<TestPaper> testPaperPage = testPaperRepository.findByUnitCourseIdInAndIsDeletedFalse(courseIds, courseId, pageable);
 
     return testPaperPage.map(testPaper -> {
-      long totalCount = shareTestRepository2.countByTestPaperId(testPaper.getId());
-      long participationCount = userTestRepository2.countByShareTestTestPaperId(testPaper.getId());
+      long totalCount = shareTestRepository.countByTestPaperId(testPaper.getId());
+      long participationCount = userTestRepository.countByShareTestTestPaperId(testPaper.getId());
       Double avgAchievementRate = 0.0;
 
       if (participationCount > 0) {
-        List<UserTest> userTests = userTestRepository2.findByTestPaperId(testPaper.getId());
+        List<UserTest> userTests = userTestRepository.findByTestPaperId(testPaper.getId());
         double totalRate = 0.0;
 
         for (UserTest userTest : userTests) {
-          List<UserAnswer> userAnswers = userAnswerRepository2.findByUserTestId(userTest.getId());
+          List<UserAnswer> userAnswers = userAnswerRepository.findByUserTestId(userTest.getId());
           List<Boolean> isCorrect = new ArrayList<>();
           for (UserAnswer userAnswer : userAnswers) {
             isCorrect.add(userAnswer.getIsCorrect());
@@ -78,26 +83,26 @@ public class ReportServiceImpl implements ReportService {
   }
 
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
-    TestPaper testPaper = testPaperRepository2.findByUnitId(testPaperId);
-    List<UserTest> userTests = userTestRepository2.findByTestPaperId(testPaperId);
+    TestPaper testPaper = testPaperRepository.findByUnitId(testPaperId);
+    List<UserTest> userTests = userTestRepository.findByTestPaperId(testPaperId);
     List<UserTestResponse2> userTestResponses = new ArrayList<>();
 
     for (UserTest userTest : userTests) {
       List<String> userAnswers = new ArrayList<>();
       List<Boolean> isCorrect = new ArrayList<>();
-      List<UserAnswer> userAnswersList = userAnswerRepository2.findByUserTestId(userTest.getId());
+      List<UserAnswer> userAnswersList = userAnswerRepository.findByUserTestId(userTest.getId());
       for (UserAnswer userAnswer : userAnswersList) {
         userAnswers.add(userAnswer.getAnswer());
         isCorrect.add(userAnswer.getIsCorrect());
       }
 
       List<String> correctAnswers = new ArrayList<>();
-      List<Question> correctAnswersList = questionRepository2.findByTestPaperId(testPaperId);
+      List<Question> correctAnswersList = questionRepository.findByTestPaperId(testPaperId);
       for (Question question : correctAnswersList) {
         correctAnswers.add(question.getAnswerText());
       }
 
-      long questionCount = questionRepository2.countByTestPaperId(testPaperId);
+      long questionCount = questionRepository.countByTestPaperId(testPaperId);
 
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
               .userName(userTest.getShareTest().getUser().getFullName())
