@@ -23,7 +23,7 @@ public class UserTestController {
 
   @PostMapping("/submit")
   public CommonApiResponse<Void> submitUserTest(@RequestBody UserTestRequest userTestRequest, Authentication authentication) {
-    System.out.println(userTestRequest.toString());
+    System.out.println(userTestRequest.getAnswers().toString()+"@@@@@@@@@@");
     userTestService.submitAndGradeUserTest(userTestRequest, authentication);
     return CommonApiResponse.createNoContent("시험 제출");
   }
