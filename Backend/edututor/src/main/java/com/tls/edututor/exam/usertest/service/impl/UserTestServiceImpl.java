@@ -14,6 +14,7 @@ import com.tls.edututor.exam.testpaper.repository.TestPaperRepository;
 import com.tls.edututor.exam.useransewer.dto.request.UserAnswerRequest;
 import com.tls.edututor.exam.useransewer.entity.UserAnswer;
 import com.tls.edututor.exam.useransewer.repositroy.UserAnswerRepository;
+import com.tls.edututor.exam.usertest.adapter.UserTestAdapter;
 import com.tls.edututor.exam.usertest.dto.request.UserTestRequest;
 import com.tls.edututor.exam.usertest.entity.UserTest;
 import com.tls.edututor.exam.usertest.repository.UserTestRepository;
@@ -37,6 +38,7 @@ public class UserTestServiceImpl implements UserTestService {
   private final UserAnswerRepository userAnswerRepository;
   private final QuestionRepository questionRepository;
   private final ShareTestRepository shareTestRepository;
+  private final UserTestAdapter userTestAdapter;
 
   @Override
   public StudentTestPaperResponse getTestPaper(Long testPaperId) {
@@ -52,7 +54,7 @@ public class UserTestServiceImpl implements UserTestService {
   @Transactional
   public void submitAndGradeUserTest(UserTestRequest userTestRequest, Authentication authentication) {
     ShareTest shareTest = shareTestRepository.findByUserIdAndTestPaperId(((AuthUser) authentication.getPrincipal()).getId(), userTestRequest.getTestPaperId())
-              .orElseThrow(() -> new IllegalArgumentException("ShareTest 엔티티를 찾을 수 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("ShareTest 엔티티를 찾을 수 없습니다."));
 
     UserTest userTest = new UserTest();
     userTest.setShareTest(shareTest);
@@ -68,27 +70,29 @@ public class UserTestServiceImpl implements UserTestService {
       userAnswer.setQuestion(question);
       userAnswer.setAnswer(answerRequest.getAnswer());
       userAnswer.setSubmittedAt(LocalDateTime.now());
-
       if (question.getType().equals(QuestionType.OBJECTIVE)) {
-        Option selectedOption = optionRepository.findById(Long.parseLong(answerRequest.getAnswer()))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid option ID"));
-        boolean isCorrect = Boolean.TRUE.equals(selectedOption.getIsCorrect());
+        List<Option> options = question.getOptions();
+        boolean isCorrect = false;
+        for (int i = 1; i <= options.size(); i++) {
+          Option option = options.get(i-1);
+          if (Boolean.TRUE.equals(option.getIsCorrect()) && String.valueOf(i).equals(userAnswer.getAnswer())) {
+            isCorrect = true;
+            break;
+          }
+        }
         userAnswer.setIsCorrect(isCorrect);
         if (isCorrect) correctCount++;
       } else if (question.getType().equals(QuestionType.SUBJECTIVE)) {
         userAnswer.setIsCorrect(evaluateSubjectiveAnswer(answerRequest.getAnswer(), question));
         if (userAnswer.getIsCorrect()) correctCount++;
       }
-
       userAnswerRepository.save(userAnswer);
+      double score = (correctCount / userTestRequest.getAnswers().size()) * 100;
+      userTest.setResult(score);
+      userTestRepository.save(userTest);
     }
-
-    double score = (correctCount / userTestRequest.getAnswers().size()) * 100;
-    userTest.setResult(score);
-    userTestRepository.save(userTest);
   }
-
   private boolean evaluateSubjectiveAnswer(String answer, Question question) {
-    return true;
+    return userTestAdapter.evaluateSubjectiveAnswer(answer,question);
   }
 }
