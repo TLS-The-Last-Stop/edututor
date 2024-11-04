@@ -49,9 +49,9 @@ const ExamPage = () => {
   const handleSubmit = () => {
     const userTest = {
       testPaperId,
-      answers: Object.keys(answers).map((questionId) => ({
-        questionId: Number(questionId),
-        answer    : answers[questionId]
+      answers: testData.data.questions.map((question) => ({
+        questionId: question.questionId,
+        answer: answers[question.questionId] || "xxx"
       }))
     };
 
@@ -63,6 +63,7 @@ const ExamPage = () => {
           console.error('답안 제출 중 오류 발생:', error);
         });
   };
+
 
   if (!testData) return <div>로딩 중...</div>;
 
@@ -103,9 +104,9 @@ const ExamPage = () => {
                             <input
                                 type="radio"
                                 name={`question-${question.questionId}`}
-                                value={option.optionId}
-                                checked={answers[question.questionId] === option.optionId}
-                                onChange={() => handleObjectiveAnswer(question.questionId, option.optionId)}
+                                value={index + 1}  // 라디오 버튼의 값을 1부터 시작하도록 설정
+                                checked={answers[question.questionId] === index + 1}  // answers에서 선택된 값과 비교
+                                onChange={() => handleObjectiveAnswer(question.questionId, index + 1)}  // index + 1을 answer로 저장
                             />
                             {option.content}
                           </label>
@@ -113,16 +114,17 @@ const ExamPage = () => {
                     </div>
                 ) : (
                     <div className="subjective-answer">
-                <textarea
-                    placeholder="답변을 입력하세요."
-                    value={answers[question.questionId] || ''}
-                    onChange={(e) => handleSubjectiveAnswer(question.questionId, e.target.value)}
-                />
+          <textarea
+              placeholder="답변을 입력하세요."
+              value={answers[question.questionId] || ''}
+              onChange={(e) => handleSubjectiveAnswer(question.questionId, e.target.value)}
+          />
                     </div>
                 )}
               </div>
           ))}
         </main>
+
 
         <button className="submit" onClick={handleSubmit}>답안 제출</button>
       </div>
