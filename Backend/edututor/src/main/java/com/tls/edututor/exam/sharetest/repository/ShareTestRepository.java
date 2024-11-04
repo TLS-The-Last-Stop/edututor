@@ -9,4 +9,5 @@ public interface ShareTestRepository extends JpaRepository<ShareTest, Long> {
 
   Optional<ShareTest> findByUserIdAndTestPaperId(Long userId, Long testPaperId);
 
+  long countByTestPaperId(Long testPaperId);
 }
