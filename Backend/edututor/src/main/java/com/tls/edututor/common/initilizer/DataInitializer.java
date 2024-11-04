@@ -188,6 +188,7 @@ public class DataInitializer {
                         .testPaper(testPaper)
                         .content("매우 어려운 주관식 문제 영어 국어 로엠잇" + i)
                         .type(QuestionType.SUBJECTIVE)
+                        .answerText("해답입니다")
                         .build();
                 questionRepository.save(question2);
               }
