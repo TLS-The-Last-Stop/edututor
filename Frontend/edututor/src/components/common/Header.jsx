@@ -167,6 +167,41 @@ const AuthButtons = styled.div`
     }
 `;
 
+
+const SubNav = styled.nav`
+    height: 40px;
+    border-top: 1px solid #eaeaea;
+
+    @media (max-width: 765px) {
+        display: none;
+    }
+
+    ul {
+        display: flex;
+        gap: 24px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        align-items: center;
+
+        li {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+
+            &:hover {
+                color: #4285f4;
+            }
+
+            &.active {
+                color: #4285f4;
+                font-weight: 500;
+            }
+        }
+    }
+`;
+
 const HamburgerButton = styled.button`
     display: none;
     background: none;
@@ -335,7 +370,7 @@ const Header = () => {
             </li>
             <li onClick={() => handleHeaderMenuClick('고객센터')}
                 className={activeHeaderMenu === '고객센터' ? 'active' : ''}>
-              <StyledRouterLink to="/cmmn">고객센터</StyledRouterLink>
+              <StyledRouterLink to="/cmmn/notice">고객센터</StyledRouterLink>
             </li>
           </NavList>
 
@@ -362,6 +397,30 @@ const Header = () => {
         </MainNav>
       </HeaderContent>
 
+      {activeHeaderMenu === '고객센터' && (
+        <HeaderContent>
+          <SubNav>
+            <ul>
+              <li onClick={() => handleSubMenuClick('공지사항')} className={activeHeaderMenu === '공지사항' ? 'active' : ''}>
+                <StyledRouterLink to="/cmmn/notice">공지사항</StyledRouterLink>
+              </li>
+              <li onClick={() => handleSubMenuClick('FAQ')}
+                  className={activeHeaderMenu === 'FAQ' ? 'active' : ''}>
+                <StyledRouterLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledRouterLink>
+              </li>
+              <li onClick={() => handleSubMenuClick('1:1문의')}
+                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>
+                <StyledRouterLink to="/cmmn/inquiry">1:1문의</StyledRouterLink>
+              </li>
+              <li onClick={() => handleSubMenuClick('오류 문항 신고 현황')}
+                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>
+                <StyledRouterLink to="/">오류 문항 신고 현황</StyledRouterLink>
+              </li>
+            </ul>
+          </SubNav>
+        </HeaderContent>
+      )}
+
       <Overlay $isOpen={hamburger} onClick={toggleHamburger}>
         <HamburgerMenu $isOpen={hamburger}>
           <HamburgerMenuHeader>
@@ -382,20 +441,22 @@ const Header = () => {
                              onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>
             <img src={report} alt="리포트 이미지" /> <StyledRouterLink to="/report">리포트</StyledRouterLink>
           </HamburgerMenuItem>
+
           {activeHamburgerMenu === '고객센터' && (
             <>
               <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '공지사항')}
-                                 clasName={activeHamburgerMenu === '공지사항' ? 'active' : ''}
+                                 className={activeHamburgerMenu === '공지사항' ? 'active' : ''}
                                  style={{ paddingLeft: '32px' }}
-              >공지사항</HamburgerMenuItem>
+              ><StyledRouterLink to="/cmmn/notice">공지사항</StyledRouterLink></HamburgerMenuItem>
               <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, 'FAQ')}
-                                 clasName={activeHamburgerMenu === 'FAQ' ? 'active' : ''}
+                                 className={activeHamburgerMenu === 'FAQ' ? 'active' : ''}
                                  style={{ paddingLeft: '32px' }}
-              >FAQ</HamburgerMenuItem>
+              ><StyledRouterLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledRouterLink></HamburgerMenuItem>
               <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '1:1문의')}
-                                 clasName={activeHamburgerMenu === '1:1문의' ? 'active' : ''}
+                                 class
+                                 Name={activeHamburgerMenu === '1:1문의' ? 'active' : ''}
                                  style={{ paddingLeft: '32px' }}
-              >1:1문의</HamburgerMenuItem>
+              ><StyledRouterLink to="/cmmn/inquiry">1:1문의</StyledRouterLink></HamburgerMenuItem>
             </>
           )}
 

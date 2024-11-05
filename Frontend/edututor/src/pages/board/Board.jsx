@@ -4,7 +4,7 @@ import { getBoardsByCategory } from '../../api/board/board.js';
 import '../../assets/css/BoardPage.css';
 
 const Board = () => {
-  const [selectedMainMenu, setSelectedMainMenu] = useState('자주묻는질문');
+  const [selectedMainMenu, setSelectedMainMenu] = useState('공지사항');
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [openFaqId, setOpenFaqId] = useState(null);
   const [boardData, setBoardData] = useState([]);
@@ -28,7 +28,6 @@ const Board = () => {
 
   // 게시글 데이터 조회
   const fetchBoardData = async (categoryId, includeChildren = false) => {
-    console.log('요청 시작:', categoryId, includeChildren, searchQuery);
     const response = await getBoardsByCategory(categoryId, includeChildren, searchQuery);
 
     if (response && response.data) {
