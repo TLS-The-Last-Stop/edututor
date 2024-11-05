@@ -9,6 +9,7 @@ import com.tls.edututor.user.service.RefreshService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,10 +53,12 @@ public class SecurityConfig {
 
     http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/classroom", "/users/students", "/course/enroll",
-                    "/exam-share").hasRole("TE")  // 선생님 권한
+                    "/exam-share").hasRole("TE")
             .requestMatchers("/student/**", "/course/{courseId}", "/course0/**",
-                    "/course/class-courses", "/report/**").hasAnyRole("SU")  // 선생님, 학생 권한
-            .requestMatchers("/", "/login", "/join", "/auth/**", "/cmmn").permitAll()  // 모든 사용자 접근 가능
+                    "/course/class-courses", "/report/**").hasAnyRole("SU")
+            .requestMatchers(HttpMethod.GET, "/users/{loginId}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/users/teachers").permitAll()
+            .requestMatchers("/", "/login", "/auth/**", "/cmmn").permitAll()
             .requestMatchers("/admin/**").hasRole("AD")  // 최상위 관리자 권한
             //.requestMatchers("/admin/**").permitAll()  // 최상위 관리자 권한
             .anyRequest().authenticated());

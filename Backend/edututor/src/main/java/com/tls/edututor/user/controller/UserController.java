@@ -20,8 +20,8 @@ public class UserController {
   @GetMapping("/{loginId}")
   public CommonApiResponse<?> checkLoginId(@PathVariable("loginId") String loginId) {
     boolean isAvailable = userService.checkJoinAvailable(loginId);
-    if (isAvailable) return CommonApiResponse.createBadRequest("");
-    else return CommonApiResponse.createNoContent("");
+    if (isAvailable) return CommonApiResponse.createBadRequest("중복된 아이디");
+    else return CommonApiResponse.createNoContent("회원가입 가능");
   }
 
 

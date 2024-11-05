@@ -18,7 +18,7 @@ public class ShareTestController {
   @PostMapping("/tests/papers/{testPaper}")
   public CommonApiResponse<?> createShareTest(@RequestBody ShareTestRequest shareTestRequest, Authentication authentication) {
     shareTestService.saveShareTest(shareTestRequest, authentication);
-    return null;
+    return CommonApiResponse.createNoContent("공유가 성공되었습니다.");
   }
 
 }

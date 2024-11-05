@@ -14,7 +14,8 @@ export const AuthProvider = ({ children }) => {
 
   const verifyUserRole = async () => {
     try {
-      if (location.pathname === '/admin/login' ||
+      if (location.pathname === '/join' ||
+        location.pathname === '/admin/login' ||
         location.pathname === '/login' ||
         location.pathname === '/teacher-login' ||
         location.pathname === '/student-login') {
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
       if (result.data === 'AD') setUserRole('AD');
       else setUserRole(result.data);
-      
+
     } catch (error) {
       console.error('Failed to verify role:', error);
       clearLocalStorage();

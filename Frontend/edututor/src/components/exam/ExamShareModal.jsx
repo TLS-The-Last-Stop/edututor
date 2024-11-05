@@ -80,10 +80,6 @@ const StudentList = styled.div`
     }
 `;
 
-const Checkbox = styled.input`
-    margin: 0;
-`;
-
 const StudentItem = styled.label`
     padding: 10px;
     border-bottom: 1px solid #e0e0e0;
@@ -91,14 +87,24 @@ const StudentItem = styled.label`
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    transition: all 0.2s ease;
 
     &:last-child {
         border-bottom: none;
     }
 
+    // 공유된 상태일 때의 스타일
+
+    ${props => props.$isShared && `
+        background-color: #f5f9ff;
+    `}
     &:hover {
-        background: #f5f5f5;
+        background: ${props => props.$isShared ? '#e8f1ff' : '#f5f5f5'};
     }
+`;
+
+const Checkbox = styled.input`
+    margin: 0;
 `;
 
 const SectionTitle = styled.h3`
@@ -118,36 +124,49 @@ const ButtonContainer = styled.div`
     }
 `;
 
+const SharedBadge = styled.span`
+    font-size: 0.75rem;
+    color: #2196f3;
+    margin-left: 8px;
+    padding: 2px 6px;
+    background: #e3f2fd;
+    border-radius: 4px;
+`;
+
+
 const initDate = {
   year : '',
   month: '',
   day  : ''
 };
 
-const initShareData = {
-  unitId   : '',
-  studentId: '',
-  deadline : ''
-};
 
-const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
+const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
   const [studentInfo, setStudentInfo] = useState([]);
   const [date, setDate] = useState(initDate);
   const [daysInMonth, setDaysInMonth] = useState('');
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [testType, setTestType] = useState('');
 
+  const isShared = (studentIsShared, unitId) => {
+    return studentIsShared[unitId] || false;
+  };
+
   const handleStudentSelect = (studentId) => {
-    setSelectedStudents(prev => prev.includes(studentId)
-      ? prev.filter(id => id !== studentId) : [...prev, studentId]);
+    const isCurrentlyShared = studentInfo.find(student => student.id === studentId)?.isShared[selectedTest];
+    if (isCurrentlyShared && !selectedStudents.includes(studentId)) {
+      if (confirm('이미 공유된 학생입니다. 다시 공유하시겠습니까? ')) setSelectedStudents([...selectedStudents, studentId]);
+    } else {
+      if (selectedStudents.includes(studentId)) setSelectedStudents(selectedStudents.filter(id => id !== studentId));
+      else setSelectedStudents([...selectedStudents, studentId]);
+    }
   };
 
   const fetchAllStudent = async () => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('info'));
       const result = await getAllStudent(userInfo.classroom.id);
-
-      setStudentInfo(result.data || []);
+      setStudentInfo(result.data['1'] || []);
     } catch (error) {
       console.error('Failed to fetch students', error);
     }
@@ -176,14 +195,34 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
     const koreanDate = new Date(deadLineDate.getTime() - (deadLineDate.getTimezoneOffset() * 60000));
 
     const dataToSend = {
-      unitId   : setSelectedTest,
+      unitId   : selectedTest,
       studentId: selectedStudents,
       deadline : koreanDate.toISOString()
     };
 
-    console.log(dataToSend);
-    await createShareTest(dataToSend);
+    try {
+      const result = await createShareTest(dataToSend);
+      if (result.status === 204) {
+        alert('시험 공유가 완료되었습니다.');
+        onClose();
+        setSelectedStudents([]);
+        fetchAllStudent();
+      }
+    } catch (error) {
+      console.error('Failed to share test...', error);
+    }
+
   };
+
+  useEffect(() => {
+    if (isOpen && selectedTest) {
+      const sharedStudents = studentInfo
+        .filter(student => student.isShared[selectedTest])
+        .map(student => student.id);
+
+      setSelectedStudents(sharedStudents);
+    }
+  }, [isOpen, selectedTest, studentInfo]);
 
   useEffect(() => {
     const today = new Date();
@@ -201,8 +240,12 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
   }, []);
 
   if (!isOpen) return null;
+
   return (
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay onClick={() => {
+      onClose();
+      setSelectedStudents([]);
+    }}>
       <ModalContainer onClick={e => e.stopPropagation()}>
         <ModalHeader>
           <Title>공유하기</Title>
@@ -244,20 +287,35 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
             <SectionTitle>과제 공유 대상 선택</SectionTitle>
             <StudentList>
               {studentInfo.length > 0 ? (
-                studentInfo.map(student => (
-                  <StudentItem key={student.id}>
-                    <Checkbox
-                      type="checkbox"
-                      id={`student-${student.id}`}
-                      checked={selectedStudents.includes(student.id)}
-                      onChange={() => handleStudentSelect(student.id)}
-                    />
-                    <div>
-                      <div>{student.fullName}<span
-                        style={{ fontSize: '0.8em', color: '#666' }}>({student.loginId})</span></div>
-                    </div>
-                  </StudentItem>
-                ))
+                studentInfo.map(student => {
+                  const isAlreadyShared = isShared(student.isShared, selectedTest);
+                  return (
+                    <StudentItem
+                      key={student.id}
+                      $isShared={isAlreadyShared}
+                    >
+                      <Checkbox
+                        type="checkbox"
+                        id={`student-${student.id}`}
+                        checked={selectedStudents.includes(student.id)}
+                        onChange={() => handleStudentSelect(student.id)}
+                      />
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          {student.fullName}
+                          <span style={{ fontSize: '0.8em', color: '#666', marginLeft: '4px' }}>
+                ({student.loginId})
+              </span>
+                          {isAlreadyShared && (
+                            <SharedBadge>
+                              공유됨
+                            </SharedBadge>
+                          )}
+                        </div>
+                      </div>
+                    </StudentItem>
+                  );
+                })
               ) : (
                 <p>학생 목록이 없습니다.</p>
               )}
@@ -265,7 +323,7 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
             <ButtonContainer>
               <Button
                 onClick={handleShare}
-                disabled={!setSelectedTest || selectedStudents.length === 0}
+                disabled={!selectedTest || selectedStudents.length === 0}
                 $primary
               >
                 공유하기
