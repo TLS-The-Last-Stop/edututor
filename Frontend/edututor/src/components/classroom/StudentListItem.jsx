@@ -104,13 +104,10 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
 
         if (name === 'password') {
           validateInput('password', value);
-          if (newForm.confirmPassword) {
-            validateInput('confirmPassword', newForm.confirmPassword);
-          }
+          if (prev.confirmPassword) validateInput('confirmPassword', prev.confirmPassword, value);
         }
-        if (name === 'confirmPassword') {
-          validateInput('confirmPassword', value);
-        }
+
+        if (name === 'confirmPassword') validateInput('confirmPassword', value, prev.password);
 
         return newForm;
       });
@@ -118,7 +115,7 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
     validateInput(name, value);
   };
 
-  const validateInput = (name, value) => {
+  const validateInput = (name, value, passwordToCompare) => {
     switch (name) {
       case 'username':
         setErrors(prev => ({
@@ -128,23 +125,28 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
         break;
 
       case 'password':
+        let passwordError = '';
         if (value) {
           const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,20}$/;
-          setErrors(prev => ({
-            ...prev,
-            password: !passwordRegex.test(value) ?
-              '영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.' : ''
-          }));
-        } else {
-          setErrors(prev => ({ ...prev, password: '' }));
+          passwordError = !passwordRegex.test(value)
+            ? '영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.'
+            : '';
         }
+        setErrors(prev => ({
+          ...prev,
+          password: passwordError,
+          // 비밀번호가 변경되면 confirmPassword 에러도 업데이트
+          confirmPassword: updateForm.confirmPassword
+            ? (value !== updateForm.confirmPassword ? '비밀번호가 일치하지 않습니다.' : '')
+            : ''
+        }));
         break;
 
       case 'confirmPassword':
+        const currentPassword = passwordToCompare || updateForm.password;
         setErrors(prev => ({
           ...prev,
-          confirmPassword: updateForm.password !== value ?
-            '비밀번호가 일치하지 않습니다.' : ''
+          confirmPassword: value !== currentPassword ? '비밀번호가 일치하지 않습니다.' : ''
         }));
         break;
     }
