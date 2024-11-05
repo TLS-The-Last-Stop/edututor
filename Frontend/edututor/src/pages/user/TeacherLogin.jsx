@@ -99,6 +99,18 @@ const TeacherLogin = () => {
     }
   };
 
+  /* oauth 제발 */
+  const handleSocialLogin = (provider) => {
+    switch (provider) {
+      case 'naver':
+        location.href = 'http://localhost:8080/oauth2/authorization/naver';
+        break;
+      case 'google':
+        location.href = 'http://localhost:8080/oauth2/authorization/google';
+        break;
+    }
+  };
+
   return (
     <>
       <Container>
@@ -149,15 +161,15 @@ const TeacherLogin = () => {
               <SNSLoginSection>
                 <SNSTitle>SNS 로그인</SNSTitle>
                 <SNSButtonGroup>
-                  <SNSButton $provider="naver">
+                  <SNSButton $provider="naver" onClick={() => handleSocialLogin('naver')}>
                     <img src={naver} alt="naver logo" />
                     <LogoText>네이버</LogoText>
                   </SNSButton>
-                  <SNSButton $provider="kakao">
+                  <SNSButton $provider="kakao" onClick={() => alert('카카오는 준비중')}>
                     <img src={kakao} alt="naver logo" />
                     카카오
                   </SNSButton>
-                  <SNSButton $provider="google">
+                  <SNSButton $provider="google" onClick={() => handleSocialLogin('google')}>
                     <img src={google} alt="naver logo" />
                     구글
                   </SNSButton>

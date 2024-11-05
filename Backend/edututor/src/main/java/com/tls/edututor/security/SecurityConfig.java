@@ -6,6 +6,8 @@ import com.tls.edututor.user.jwt.JwtFilter;
 import com.tls.edututor.user.jwt.JwtUtil;
 import com.tls.edututor.user.jwt.CustomLoginFilter;
 import com.tls.edututor.user.service.RefreshService;
+import com.tls.edututor.user.service.impl.CustomOAuth2UserServiceImpl;
+import com.tls.edututor.user.service.impl.CustomOAuthSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,8 @@ public class SecurityConfig {
   private final ObjectMapper objectMapper;
   private final RefreshService refreshService;
   private final UserDetailsService userDetailsService;
+  private final CustomOAuth2UserServiceImpl customOAuth2UserService;
+  private final CustomOAuthSuccessHandler customOAuthSuccessHandler;
 
   @Bean
   public BCryptPasswordEncoder passwordEncoder() {
@@ -50,6 +54,12 @@ public class SecurityConfig {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http.formLogin(formLogin -> formLogin.disable());
     http.httpBasic(basic -> basic.disable());
+
+    http.oauth2Login(oauth -> oauth
+            .loginPage("/login")
+            .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                    .userService(customOAuth2UserService))
+            .successHandler(customOAuthSuccessHandler));
 
     http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/classroom", "/users/students", "/course/enroll",
