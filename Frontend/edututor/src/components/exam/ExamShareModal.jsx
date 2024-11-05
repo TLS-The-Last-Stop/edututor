@@ -166,7 +166,9 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('info'));
       const result = await getAllStudent(userInfo.classroom.id);
-      setStudentInfo(result.data['1'] || []);
+      const key = Object.keys(result.data)[0];
+      
+      setStudentInfo(result.data[key] || []);
     } catch (error) {
       console.error('Failed to fetch students', error);
     }
