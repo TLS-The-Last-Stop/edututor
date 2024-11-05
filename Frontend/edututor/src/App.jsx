@@ -47,6 +47,7 @@ const StudentLogin = lazy(() => import('./pages/user/StudentLogin.jsx'));
 const Classroom = lazy(() => import('./pages/classroom/Classroom.jsx'));
 const ExamShare = lazy(() => import('./pages/exam/ExamSharePage.jsx'));
 const AdditionalInfo = lazy(() => import('./pages/user/AdditionalInfo.jsx'));
+const OAuthSuccess = lazy(() => import('./pages/user/OAuthSuccess.jsx'));
 
 const LoadingSpinner = () => <Loading />;
 
@@ -265,6 +266,10 @@ function AppRoutes() {
 
         <Route path="/additional-info" element={
           <Suspense fallback={<LoadingSpinner />}><AdditionalInfo /></Suspense>
+        } />
+
+        <Route path="/oauth/success" element={
+          <Suspense fallback={<LoadingSpinner />}><OAuthSuccess /></Suspense>
         } />
 
         <Route path="/teacher-login" element={

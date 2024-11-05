@@ -1,8 +1,11 @@
 package com.tls.edututor.user.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tls.edututor.user.entity.Refresh;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.jwt.JwtUtil;
 import com.tls.edututor.user.repository.UserRepository;
+import com.tls.edututor.user.service.RefreshService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,8 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
   private static final String BASE_URL = "http://localhost:5173";
   private final JwtUtil jwtUtil;
   private final UserRepository userRepository;
+  private final ObjectMapper objectMapper;
+  private final RefreshService refreshService;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -60,6 +66,8 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L);
       String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L);
 
+      addRefreshEntity(loginId, refreshToken, 1000 * 60 * 60 * 24L);
+
       response.addCookie(createCookie("access", accessToken));
       response.addCookie(createCookie("refresh", refreshToken));
 
@@ -68,8 +76,30 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       removeTempCookie.setMaxAge(0);
       response.addCookie(removeTempCookie);
 
-      response.sendRedirect(BASE_URL);
+      Map<String, Object> userData = new HashMap<>();
+      userData.put("classroom", user.getClassroom());
+      userData.put("role", roles.get(0));
+      userData.put("username", user.getUsername());
+
+      response.setContentType("application/json; charset=utf-8");
+      String encodedData = Base64.getEncoder().encodeToString(
+              objectMapper.writeValueAsString(userData).getBytes(StandardCharsets.UTF_8)
+      );
+
+      response.sendRedirect(BASE_URL + "/oauth/success?data=" + encodedData);
     }
+  }
+
+  private void addRefreshEntity(String loginId, String refreshToken, long expiredMs) {
+    Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+    Refresh refresh = Refresh.builder()
+            .loginId(loginId)
+            .refreshToken(refreshToken)
+            .expiration(date.toString())
+            .build();
+
+    refreshService.saveRefreshToken(refresh);
   }
 
   private Cookie createCookie(String key, String value) {
