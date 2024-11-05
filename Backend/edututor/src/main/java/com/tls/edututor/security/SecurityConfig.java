@@ -68,6 +68,8 @@ public class SecurityConfig {
                     "/course/class-courses", "/report/**").hasAnyRole("SU")
             .requestMatchers(HttpMethod.GET, "/users/{loginId}").permitAll()
             .requestMatchers(HttpMethod.POST, "/users/teachers").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/users/teachers").permitAll()
+            .requestMatchers(HttpMethod.PUT, "/users/teachers").permitAll()
             .requestMatchers("/", "/login", "/auth/**", "/cmmn").permitAll()
             .requestMatchers("/admin/**").hasRole("AD")  // 최상위 관리자 권한
             //.requestMatchers("/admin/**").permitAll()  // 최상위 관리자 권한

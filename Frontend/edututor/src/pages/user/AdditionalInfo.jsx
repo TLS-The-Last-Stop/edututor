@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SchoolSearchModal from '../../components/user/SchoolSearchModal.jsx';
 import OAuthUserJoinForm from '../../components/user/OAuthUserJoinForm.jsx';
 import { useNavigate } from 'react-router-dom';
-import { checkDuplicateId, teacherJoin } from '../../api/user/user.js';
+import { additionalInfo, checkDuplicateId, teacherJoin } from '../../api/user/user.js';
 
 
 const initForm = {
@@ -157,9 +157,9 @@ const AdditionalInfo = () => {
     };
 
     try {
-      const result = await teacherJoin(submitData);
+      const result = await additionalInfo(submitData);
 
-      if (result.status === 204) navigate('/login');
+      if (result.status === 204) navigate('/teacher-login');
       if (result.status === 400) alert(result.message);
     } catch (error) {
       const errorMessage = error.response?.data?.message || '회원가입 처리 중 오류가 발생했습니다.';

@@ -68,16 +68,14 @@ public class User extends BaseEntity {
     return this.oAuthUser != null;
   }
 
-  public void completeOAuthRegistration(Classroom classroom, String role) {
+  public void completeOAuthRegistration(Classroom classroom, String phoneNum, LocalDate birthDay, String role) {
     if (!isOAuthUser()) throw new IllegalStateException("OAuth 사용자만 이 메서드를 호출할 수 있습니다.");
 
     this.classroom = classroom;
+    this.phoneNum = phoneNum;
+    this.birthDay = birthDay;
     this.role = role;
     this.registrationStatus = RegistrationStatus.COMPLETE;
-  }
-
-  public boolean isRegistrationCompleted() {
-    return registrationStatus == RegistrationStatus.COMPLETE;
   }
 
   public static User createTeacher(UserTERequest dto) {

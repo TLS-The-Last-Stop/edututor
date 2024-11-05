@@ -99,7 +99,6 @@ const TeacherLogin = () => {
     }
   };
 
-  /* oauth 제발 */
   const handleSocialLogin = (provider) => {
     switch (provider) {
       case 'naver':
@@ -110,10 +109,6 @@ const TeacherLogin = () => {
         break;
     }
   };
-
-  useEffect(() => {
-    //location.
-  }, []);
 
   return (
     <>

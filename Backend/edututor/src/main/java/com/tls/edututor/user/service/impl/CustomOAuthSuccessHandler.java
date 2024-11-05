@@ -1,7 +1,7 @@
 package com.tls.edututor.user.service.impl;
 
+import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.jwt.JwtUtil;
-import com.tls.edututor.user.repository.OAuthUserRepository;
 import com.tls.edututor.user.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -26,7 +26,6 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
   private static final String BASE_URL = "http://localhost:5173";
   private final JwtUtil jwtUtil;
-  private final OAuthUserRepository oAuthUserRepository;
   private final UserRepository userRepository;
 
   @Override
@@ -48,6 +47,7 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       response.getWriter().write(redirectUrl);
       response.sendRedirect(redirectUrl);
     } else {
+      User user = userRepository.findByLoginIdAndIsDeleted(loginId, false).orElseThrow();
       claims.put("id", id);
       claims.put("loginId", loginId);
       claims.put("username", name);
@@ -63,8 +63,12 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       response.addCookie(createCookie("access", accessToken));
       response.addCookie(createCookie("refresh", refreshToken));
 
-      String redirectUrl = BASE_URL + "?status=c";
-      response.sendRedirect(redirectUrl);
+      Cookie removeTempCookie = new Cookie("temp", null);
+      removeTempCookie.setPath("/");
+      removeTempCookie.setMaxAge(0);
+      response.addCookie(removeTempCookie);
+
+      response.sendRedirect(BASE_URL);
     }
   }
 
