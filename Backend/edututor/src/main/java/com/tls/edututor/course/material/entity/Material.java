@@ -26,4 +26,7 @@ public class Material extends BaseEntity {
 
   @Column(name = "CONTENT", nullable = false)
   private String content;
+
+  @Column(name = "URL")
+  private String url;
 }

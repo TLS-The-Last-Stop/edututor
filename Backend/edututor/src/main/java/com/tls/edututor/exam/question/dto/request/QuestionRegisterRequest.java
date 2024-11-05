@@ -15,5 +15,6 @@ public class QuestionRegisterRequest {
   private String commentary;
   private QuestionType type;
   private String answerText;
+  private Integer level;
   private List<OptionRegisterRequest> options;
 }
