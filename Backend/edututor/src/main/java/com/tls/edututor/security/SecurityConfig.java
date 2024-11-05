@@ -55,7 +55,7 @@ public class SecurityConfig {
                     "/exam-share").hasRole("TE")  // 선생님 권한
             .requestMatchers("/student/**", "/course/{courseId}", "/course0/**",
                     "/course/class-courses", "/report/**").hasAnyRole("SU")  // 선생님, 학생 권한
-            .requestMatchers("/", "/login", "/join", "/auth/**", "/cmmn").permitAll()  // 모든 사용자 접근 가능
+            .requestMatchers("/", "/login", "/join", "/auth/**", "/cmmn","/server-check").permitAll()  // 모든 사용자 접근 가능
             .requestMatchers("/admin/**").hasRole("AD")  // 최상위 관리자 권한
             //.requestMatchers("/admin/**").permitAll()  // 최상위 관리자 권한
             .anyRequest().authenticated());
