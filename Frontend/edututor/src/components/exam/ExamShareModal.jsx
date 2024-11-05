@@ -148,16 +148,24 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [testType, setTestType] = useState('');
 
+  const isShared = (studentIsShared, unitId) => {
+    return studentIsShared[unitId] || false;
+  };
+
   const handleStudentSelect = (studentId) => {
-    setSelectedStudents(prev => prev.includes(studentId)
-      ? prev.filter(id => id !== studentId) : [...prev, studentId]);
+    const isCurrentlyShared = studentInfo.find(student => student.id === studentId)?.isShared[selectedTest];
+    if (isCurrentlyShared && !selectedStudents.includes(studentId)) {
+      if (confirm('이미 공유된 학생입니다. 다시 공유하시겠습니까? ')) setSelectedStudents([...selectedStudents, studentId]);
+    } else {
+      if (selectedStudents.includes(studentId)) setSelectedStudents(selectedStudents.filter(id => id !== studentId));
+      else setSelectedStudents([...selectedStudents, studentId]);
+    }
   };
 
   const fetchAllStudent = async () => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('info'));
       const result = await getAllStudent(userInfo.classroom.id);
-      console.log('result', result);
       setStudentInfo(result.data['1'] || []);
     } catch (error) {
       console.error('Failed to fetch students', error);
@@ -206,9 +214,15 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
 
   };
 
-  const isShared = (studentIsShared, unitId) => {
-    return studentIsShared[unitId] || false;
-  };
+  useEffect(() => {
+    if (isOpen && selectedTest) {
+      const sharedStudents = studentInfo
+        .filter(student => student.isShared[selectedTest])
+        .map(student => student.id);
+
+      setSelectedStudents(sharedStudents);
+    }
+  }, [isOpen, selectedTest, studentInfo]);
 
   useEffect(() => {
     const today = new Date();
@@ -283,7 +297,7 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
                       <Checkbox
                         type="checkbox"
                         id={`student-${student.id}`}
-                        checked={isAlreadyShared || selectedStudents.includes(student.id)}
+                        checked={selectedStudents.includes(student.id)}
                         onChange={() => handleStudentSelect(student.id)}
                       />
                       <div>
