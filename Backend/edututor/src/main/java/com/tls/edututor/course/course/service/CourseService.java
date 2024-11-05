@@ -14,7 +14,7 @@ public interface CourseService {
 
   List<CourseNameListResponse> selectAllCourseList();
 
-  CourseResponse selectCourseDetails(Long courseId);
+  CourseResponse selectCourseDetails(Long courseId, Authentication authentication);
 
   void updateCourse(Long courseId, CourseRegisterRequest request);
 

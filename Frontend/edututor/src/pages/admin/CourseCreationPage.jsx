@@ -122,7 +122,6 @@ const CourseCreationPage = () => {
             />
           </div>
 
-          {/* 급수 드롭다운 */}
           <div className="form-field">
             <label>급수:</label>
             <select
@@ -145,7 +144,7 @@ const CourseCreationPage = () => {
                 value={formData.year}
                 onChange={(e) => handleInputChange(e)}
                 className="input-field"
-                disabled={!formData.gradeLevel} // 급수 선택에 따라 학년 활성화
+                disabled={!formData.gradeLevel}
             >
               <option value="">선택</option>
               {formData.gradeLevel && Object.keys(years[formData.gradeLevel]).map((year) => (
@@ -210,17 +209,10 @@ const CourseCreationPage = () => {
                 {section.units.map((unit, unitIndex) => (
                     <div key={unitIndex} className="unit-block">
                       <div className="unit-header">
-                        <h4>차수 {unitIndex + 1}</h4>
-                        <button
-                            type="button"
-                            onClick={() => removeUnit(sectionIndex, unitIndex)}
-                            className="remove-button"
-                        >
-                          차수 삭제
-                        </button>
+
                       </div>
                       <div className="form-field">
-                        <label>차수 이름:</label>
+                        <label>차수{unitIndex + 1}</label>
                         <input
                             type="text"
                             name="content"
@@ -228,6 +220,13 @@ const CourseCreationPage = () => {
                             onChange={(e) => handleInputChange(e, sectionIndex, unitIndex)}
                             className="input-field"
                         />
+                        <button
+                            type="button"
+                            onClick={() => removeUnit(sectionIndex, unitIndex)}
+                            className="remove-button"
+                        >
+                          삭제
+                        </button>
                       </div>
                     </div>
                 ))}

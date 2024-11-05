@@ -23,7 +23,10 @@ import com.tls.edututor.course.unit.dto.request.UnitRegisterRequest;
 import com.tls.edututor.course.unit.dto.response.UnitResponse;
 import com.tls.edututor.course.unit.entity.Unit;
 import com.tls.edututor.course.unit.repository.UnitRepository;
+import com.tls.edututor.exam.sharetest.entity.ShareTest;
+import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
 import com.tls.edututor.exam.testpaper.dto.response.TestPaperResponse;
+import com.tls.edututor.exam.usertest.repository.UserTestRepository;
 import com.tls.edututor.user.dto.response.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -43,6 +47,8 @@ public class CourseServiceImpl implements CourseService {
   private final UnitRepository unitRepository;
   private final CodeGroupRepository codeGroupRepository;
   private final CodeDetailRepository codeDetailRepository;
+  private final ShareTestRepository shareTestRepository;
+  private final UserTestRepository userTestRepository;
 
   @Override
   @Transactional
@@ -105,32 +111,52 @@ public class CourseServiceImpl implements CourseService {
             .toList();
   }
 
-  public CourseResponse selectCourseDetails(Long courseId) {
+  @Override
+  @Transactional
+  public CourseResponse selectCourseDetails(Long courseId, Authentication authentication) {
     Course course = courseRepository.findById(courseId)
             .orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
+    Long userId = ((AuthUser) authentication.getPrincipal()).getId();
 
     List<SectionResponse> sections = course.getSections().stream()
             .map(section -> SectionResponse.builder()
                     .sectionId(section.getId())
                     .content(section.getContent())
                     .units(section.getUnits().stream()
-                            .map(unit -> UnitResponse.builder()
-                                    .unitId(unit.getId())
-                                    .content(unit.getContent())
-                                    .materials(unit.getMaterials().stream()
-                                            .map(material -> MaterialResponse.builder()
-                                                    .materialId(material.getId())
-                                                    .title(material.getTitle())
-                                                    .content(material.getContent())
-                                                    .build())
-                                            .collect(Collectors.toList()))
-                                    .testPaper(unit.getTestPaper() != null
-                                            ? TestPaperResponse.builder()
-                                            .testPaperId(unit.getTestPaper().getId())
-                                            .title(unit.getTestPaper().getTitle())
-                                            .build()
-                                            : null)
-                                    .build())
+                            .map(unit -> {
+                              int testPaperStatus = 0;  // 기본값 0
+                              Long testPaperId = unit.getTestPaper() != null ? unit.getTestPaper().getId() : null;
+
+                              if (testPaperId != null) {
+                                Optional<ShareTest> shareTestOptional = shareTestRepository.findByUserIdAndTestPaperId(userId, testPaperId);
+                                if (shareTestOptional.isPresent()) {
+                                  testPaperStatus = 1;
+                                  Long shareTestId = shareTestOptional.get().getId();
+                                  if (userTestRepository.existsByShareTestId(shareTestId)) {
+                                    testPaperStatus = 2;
+                                  }
+                                }
+                              }
+
+                              return UnitResponse.builder()
+                                      .unitId(unit.getId())
+                                      .content(unit.getContent())
+                                      .materials(unit.getMaterials().stream()
+                                              .map(material -> MaterialResponse.builder()
+                                                      .materialId(material.getId())
+                                                      .title(material.getTitle())
+                                                      .content(material.getContent())
+                                                      .build())
+                                              .collect(Collectors.toList()))
+                                      .testPaper(unit.getTestPaper() != null
+                                              ? TestPaperResponse.builder()
+                                              .testPaperId(unit.getTestPaper().getId())
+                                              .title(unit.getTestPaper().getTitle())
+                                              .testPaperStatus(testPaperStatus)
+                                              .build()
+                                              : null)
+                                      .build();
+                            })
                             .collect(Collectors.toList()))
                     .build())
             .collect(Collectors.toList());
@@ -141,6 +167,7 @@ public class CourseServiceImpl implements CourseService {
             .sections(sections)
             .build();
   }
+
 
 	@Override
 	@Transactional
