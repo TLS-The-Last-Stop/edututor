@@ -47,13 +47,13 @@ const UserJoinForm = ({
         <FormContainer>
           <FieldSet>
             <FormGroup>
-              <Label htmlFor="fullName">
+              <Label htmlFor="username">
                 이름<Required>*</Required>
               </Label>
               <Input
-                id="fullName"
-                name="fullName"
-                value={form.fullName}
+                id="username"
+                name="username"
+                value={form.username}
                 onChange={getInputHandler}
                 placeholder="이름을 입력해주세요."
               />

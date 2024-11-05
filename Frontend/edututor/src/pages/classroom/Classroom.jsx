@@ -11,7 +11,7 @@ import StudentList from '../../components/classroom/StudentList.jsx';
 const initStudent = {
   id      : '',
   loginId : '',
-  fullName: ''
+  username: ''
 };
 
 const Container = styled.main`

@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class AuthUser {
   private Long id;
-  private String fullName;
+  private String username;
   private String email;
   private Classroom classroom;
   private String role;

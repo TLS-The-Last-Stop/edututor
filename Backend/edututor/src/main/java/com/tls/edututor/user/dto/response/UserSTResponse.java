@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class UserSTResponse {
   private Long id;
-  private String fullName;
+  private String username;
   private String loginId;
   private Map<Long, Boolean> isShared;
   //private String studentProfileImage;

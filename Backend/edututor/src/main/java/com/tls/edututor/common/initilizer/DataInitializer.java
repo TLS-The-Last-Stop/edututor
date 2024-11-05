@@ -310,7 +310,7 @@ public class DataInitializer {
 
   private void initializeAdmin() {
     UserSURequest userSURequest = new UserSURequest();
-    userSURequest.setFullName("관리자");
+    userSURequest.setUsername("관리자");
     userSURequest.setLoginId("admin");
     userSURequest.setPassword(passwordEncoder.encode("admin12!@"));
     userSURequest.setType("AD");
@@ -332,7 +332,7 @@ public class DataInitializer {
       Classroom classroom = classroomRepository.findById(Long.valueOf(i + 1)).orElseThrow();
 
       UserTERequest userTERequest = new UserTERequest();
-      userTERequest.setFullName(teacherNames[i]);
+      userTERequest.setUsername(teacherNames[i]);
       userTERequest.setLoginId(teacherLoginId[i]);
       userTERequest.setPassword(passwordEncoder.encode(teacherPassword[i]));
       userTERequest.setEmail(teacherEmail[i]);
@@ -360,7 +360,7 @@ public class DataInitializer {
     for (int studentNum = 1; studentNum <= 3; studentNum++) {
       UserTERequest userTERequest = new UserTERequest();
 
-      userTERequest.setFullName(studentBaseNames[idx] + "학생" + studentNum);
+      userTERequest.setUsername(studentBaseNames[idx] + "학생" + studentNum);
       userTERequest.setLoginId(loginIdPrefixes[idx] + "_" + studentNum);
       userTERequest.setPassword(passwordEncoder.encode(passwordBase[idx]));
       userTERequest.setType("SU");

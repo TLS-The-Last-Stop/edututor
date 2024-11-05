@@ -48,13 +48,13 @@ const DeleteButton = styled.button`
 `;
 
 const initForm = {
-  fullName       : '',
+  username       : '',
   password       : '',
   confirmPassword: ''
 };
 
 const initErrors = {
-  fullName       : '',
+  username       : '',
   password       : '',
   confirmPassword: ''
 };
@@ -90,10 +90,10 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'fullName') {
+    if (name === 'username') {
       setStudentDetail(prev => ({
         ...prev,
-        fullName: value
+        username: value
       }));
     } else {
       setUpdateForm(prev => {
@@ -120,10 +120,10 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
 
   const validateInput = (name, value) => {
     switch (name) {
-      case 'fullName':
+      case 'username':
         setErrors(prev => ({
           ...prev,
-          fullName: !value ? '이름을 입력해주세요' : ''
+          username: !value ? '이름을 입력해주세요' : ''
         }));
         break;
 
@@ -167,14 +167,14 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
       }
     }
 
-    if (!studentDetail.fullName) {
+    if (!studentDetail.username) {
       alert('이름을 입력해주세요.');
       return;
     }
 
     try {
       const updateData = {
-        fullName: studentDetail.fullName,
+        username: studentDetail.username,
         ...(updateForm.password && { password: updateForm.password })
       };
 
@@ -204,7 +204,7 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
       <StudentItem onClick={handleOpenModal}>
         <StudentInfo>
           <Avatar />
-          <StudentName>{student.fullName} ({student.loginId})</StudentName>
+          <StudentName>{student.username} ({student.loginId})</StudentName>
         </StudentInfo>
         <DeleteButton onClick={(e) => {
           e.stopPropagation();

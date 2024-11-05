@@ -105,7 +105,7 @@ public class ReportServiceImpl implements ReportService {
       long questionCount = questionRepository.countByTestPaperId(testPaperId);
 
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
-              .userName(userTest.getShareTest().getUser().getFullName())
+              .userName(userTest.getShareTest().getUser().getUsername())
               .achievementRate((long) achievementRate(isCorrect))
               .userAnswers(userAnswers)
 //              .correctAnswers(correctAnswers)

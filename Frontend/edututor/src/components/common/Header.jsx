@@ -342,7 +342,7 @@ const Header = () => {
           {userInfo ? (
             <UserInfoContainer>
               <UserInfo>
-                <span>{userInfo.fullName}님</span>
+                <span>{userInfo.username}님</span>
                 <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
               </UserInfo>
             </UserInfoContainer>
@@ -402,7 +402,7 @@ const Header = () => {
           {userInfo ? (
             <HamburgerMenuItem>
               <UserInfo>
-                {userInfo.fullName}님
+                {userInfo.username}님
                 <HamburgerLogoutButton onClick={handleLogout}>로그아웃</HamburgerLogoutButton>
               </UserInfo>
             </HamburgerMenuItem>
