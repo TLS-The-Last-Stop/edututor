@@ -1,111 +1,163 @@
+/* 전체 컨테이너 */
 .test-paper-creation-container {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
 }
 
 h2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    font-weight: 700;
 }
 
-h4 {
-    color: #333;
-    margin-bottom: 10px;
-}
-
-h5 {
-    color: #555;
-    margin-top: 10px;
-}
-
-.test-paper-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
+/* 각 질문의 블록 스타일 */
 .question-block {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    background-color: #f7f9fc;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e1e9f1;
+    margin-bottom: 25px;
+    position: relative;
 }
 
-.option-block {
-    background-color: #f5f5f5;
-    padding: 10px;
-    border-radius: 4px;
-    margin-top: 10px;
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e1e9f1;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
 }
 
-.form-field {
-    margin-bottom: 10px;
+.question-header h4 {
+    color: #34495e;
+    font-size: 1.2rem;
 }
 
-.form-field label {
-    display: block;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-.form-field input[type="text"],
-.form-field select,
-.textarea-field {
-    width: 100%;
-    padding: 8px;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-.form-field input[type="text"]:focus,
-.form-field select:focus {
-    border-color: #333;
-}
-
-textarea.textarea-field {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.add-button,
-.submit-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    font-weight: bold;
+.remove-question-button {
+    padding: 5px 12px;
+    font-size: 0.85rem;
     color: #fff;
-    background-color: #007bff;
+    background-color: #e74c3c;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.add-button:hover,
-.submit-button:hover {
-    background-color: #0056b3;
+.remove-question-button:hover {
+    background-color: #c0392b;
+}
+
+/* 옵션 스타일 */
+.option-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e1e9f1;
+    margin-top: 10px;
+    position: relative;
+}
+
+.option-block .form-field {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.option-block .remove-button {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    color: #fff;
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.option-block .remove-button:hover {
+    background-color: #c0392b;
+}
+
+/* form-field 스타일 */
+.form-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.form-field label {
+    font-weight: 600;
+    color: #34495e;
+    width: 25%;
+    margin-right: 10px;
+}
+
+.form-field input[type="text"],
+.form-field select,
+.form-field textarea {
+    width: 70%;
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #d1dce5;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+}
+
+.form-field input[type="text"]:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+/* 버튼 스타일 */
+.add-button,
+.submit-button {
+    padding: 12px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-top: 15px;
 }
 
 .add-button {
-    background-color: #28a745;
+    background-color: #2ecc71;
 }
 
-.add-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+.add-button:hover {
+    background-color: #27ae60;
 }
 
 .submit-button {
     width: 100%;
-    margin-top: 20px;
-    background-color: #007bff;
+    margin-top: 30px;
+    background-color: #3498db;
+}
+
+.submit-button:hover {
+    background-color: #2980b9;
+}
+
+.add-button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
 }

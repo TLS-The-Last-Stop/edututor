@@ -13,6 +13,8 @@ public class MaterialRegisterRequest {
 
   private String content;
 
+  private String url;
+
   private Long writerId;
 
 }

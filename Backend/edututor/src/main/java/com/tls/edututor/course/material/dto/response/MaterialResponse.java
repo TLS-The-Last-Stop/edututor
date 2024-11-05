@@ -11,4 +11,6 @@ public class MaterialResponse {
   private Long materialId;
   private String title;
   private String content;
+  private String url;
+
 }

@@ -1,9 +1,9 @@
 .course-page {
     display: flex;
-    justify-content: center; /* 가운데 정렬 */
-    padding: 0 10%; /* 양쪽 여백 설정 */
-    max-width: 1200px; /* 전체 페이지의 최대 너비 */
-    margin: 0 auto; /* 수평 가운데 정렬 */
+    justify-content: center;
+    padding: 0 10%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .sidebar {
@@ -93,14 +93,41 @@
     background-color: #eafff0;
 }
 
-.material-btn {
-    background-color: #fff0f4;
-}
-
 .material-item,
 .testpaper {
-    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 버튼을 오른쪽으로 배치 */
     padding: 5px 10px;
     background-color: #fafafa;
     border-radius: 5px;
+    margin-top: 5px;
+}
+
+.material-title,
+.testpaper-title {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.material-btn,
+.testpaper-btn {
+    background-color: #fff0f4;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+.material-btn:hover,
+.testpaper-btn:hover {
+    background-color: #ffe6eb;
+}
+
+.testpaper-btn[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
 }

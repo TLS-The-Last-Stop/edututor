@@ -49,10 +49,38 @@ const ModalContent = styled.div`
     font-size: 1em;
     color: #555;
     line-height: 1.5;
+    margin-bottom: 20px;
+`;
+
+const VideoContainer = styled.div`
+    width: 100%;
+    height: 315px;
+    overflow: hidden;
+    border-radius: 8px;
 `;
 
 const MaterialPreviewModal = ({ isOpen, onClose, material }) => {
   if (!isOpen) return null;
+
+  // YouTube URL을 포함하는 iframe을 반환
+  const renderVideo = (url) => {
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    const videoId = videoIdMatch ? videoIdMatch[1] : null;
+
+    return videoId ? (
+        <iframe
+            width="100%"
+            height="100%"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+        ></iframe>
+    ) : (
+        <p>유효한 YouTube URL이 아닙니다.</p>
+    );
+  };
 
   return (
       <ModalOverlay onClick={onClose}>
@@ -62,6 +90,11 @@ const MaterialPreviewModal = ({ isOpen, onClose, material }) => {
             <CloseButton onClick={onClose}>&times;</CloseButton>
           </ModalHeader>
           <ModalContent>{material?.content || '내용이 없습니다.'}</ModalContent>
+          {material?.url && (
+              <VideoContainer>
+                {renderVideo(material.url)}
+              </VideoContainer>
+          )}
         </ModalContainer>
       </ModalOverlay>
   );

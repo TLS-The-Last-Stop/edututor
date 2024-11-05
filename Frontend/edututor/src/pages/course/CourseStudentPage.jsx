@@ -54,8 +54,8 @@ const CoursePage = () => {
     setIsModalOpen(false);
   };
 
-  const handleTestClick = (testPaperId) => {
-    if (testPaperId) {
+  const handleTestClick = (testPaperId, testPaperStatus) => {
+    if (testPaperStatus === 1) {
       navigate(`/student/test/${testPaperId}`);
     }
   };
@@ -100,36 +100,37 @@ const CoursePage = () => {
                           <div key={unit.unitId} className="unit">
                             <div className="unit-header">
                               <h4>{unit.content}</h4>
-                              <div className="actions">
-                                <button
-                                    className="preview-btn"
-                                    onClick={() => handleTestClick(unit.testPaper?.testPaperId)}
-                                    disabled={!unit.testPaper}
-                                >
-                                  형성평가
-                                </button>
-                              </div>
                             </div>
 
                             <div className="materials">
                               {unit.materials.map(material => (
                                   <div key={material.materialId} className="material-item">
-                                    <p
+                                  <span className="material-title">
+                                    학습자료: {material.title}
+                                  </span>
+                                    <button
+                                        className="material-btn"
                                         onClick={() => handleMaterialClick(material.materialId)}
-                                        className="material-link"
                                     >
-                                      학습자료: {material.title}
-                                    </p>
+                                      보기
+                                    </button>
                                   </div>
                               ))}
                             </div>
 
-                            {unit.testPaper ? (
+                            {unit.testPaper && (
                                 <div className="testpaper">
-                                  <p>시험지: {unit.testPaper.title}</p>
+                                  <span className="testpaper-title">시험지: {unit.testPaper.title}</span>
+                                  <button
+                                      className="testpaper-btn"
+                                      onClick={() => handleTestClick(unit.testPaper.testPaperId, unit.testPaper.testPaperStatus)}
+                                      disabled={unit.testPaper.testPaperStatus !== 1}
+                                  >
+                                    {unit.testPaper.testPaperStatus === 0 && "형성평가 불가능"}
+                                    {unit.testPaper.testPaperStatus === 1 && "형성평가 가능"}
+                                    {unit.testPaper.testPaperStatus === 2 && "이미 시험 치뤘음"}
+                                  </button>
                                 </div>
-                            ) : (
-                                <p>시험지가 없습니다.</p>
                             )}
                           </div>
                       ))}

@@ -4,6 +4,7 @@ import '../../assets/css/CoursePage.css';
 import { publicApi } from '../../api/axios.js';
 import ExamShareModal from '../../components/exam/ExamShareModal';
 import MaterialPreviewModal from '../../components/material/MaterialPreviewModal.jsx';
+import TestPreviewModal from '../../components/exam/TestPreviewModal';
 import { StyledRouterLink } from '../../components/common/UserStyledComponents.js';
 
 const CoursePage = () => {
@@ -17,6 +18,8 @@ const CoursePage = () => {
   const [selectedTest, setSelectedTest] = useState('');
   const [materialPreview, setMaterialPreview] = useState(null);
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
+  const [testPreview, setTestPreview] = useState(null);
+  const [isTestPreviewModalOpen, setIsTestPreviewModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -44,6 +47,21 @@ const CoursePage = () => {
         });
     }
   }, [courseId]);
+
+  const handleOpenTestPreview = async (testPaperId) => {
+    try {
+      const response = await publicApi.get(`/test-paper/${testPaperId}`);
+      setTestPreview(response.data.data);
+      setIsTestPreviewModalOpen(true);
+    } catch (error) {
+      setError('Failed to fetch test preview data.');
+    }
+  };
+
+  const handleCloseTestPreviewModal = () => {
+    setIsTestPreviewModalOpen(false);
+    setTestPreview(null);
+  };
 
   const handleOpenMaterialModal = async (materialId) => {
     try {
@@ -80,69 +98,77 @@ const CoursePage = () => {
         </ul>
       </div>
 
-      {/* 선택된 코스의 상세 정보 */}
-      <div className="course-details">
-        {courseData ? (
-          <>
-            <div className="course-header">
-              <h2>{courseData.courseName}</h2>
-              <div className="students-icon">
-                <StyledRouterLink to="/classroom">
-                  <span>학생 관리</span>
-                </StyledRouterLink>
-              </div>
-            </div>
+        <div className="course-details">
+          {courseData ? (
+              <>
+                <div className="course-header">
+                  <h2>{courseData.courseName}</h2>
+                  <div className="students-icon">
+                    <StyledRouterLink to="/classroom">
+                      <span>학생 관리</span>
+                    </StyledRouterLink>
+                  </div>
+                </div>
 
             {courseData.sections.map(section => (
               <div key={section.sectionId} className="section">
                 <h3>{section.content}</h3>
 
-                {section.units.map(unit => (
-                  <div key={unit.unitId} className="unit">
-                    <div className="unit-header">
-                      <h4>{unit.content}</h4>
-                      <div className="actions">
-                        <button className="preview-btn">형성평가 미리보기</button>
-                        <button className="share-btn" onClick={() => {
-                          setIsModalOpen(true);
-                          setSelectedTest(unit.unitId);
-                        }}>시험 공유하기
-                        </button>
+                      {section.units.map(unit => (
+                          <div key={unit.unitId} className="unit">
+                            <div className="unit-header">
+                              <h4>{unit.content}</h4>
+                              <div className="actions">
+                                <button
+                                    className="preview-btn"
+                                    onClick={() => handleOpenTestPreview(unit.testPaper.testPaperId)}
+                                >
+                                  형성평가 미리보기
+                                </button>
+                                <button className="share-btn" onClick={() => {
+                                  setIsModalOpen(true);
+                                  setSelectedTest(unit.unitId);
+                                }}>시험 공유하기</button>
 
-                        {/* materials 배열을 순회하여 학습자료 미리보기 버튼 생성 */}
-                        {unit.materials.map(material => (
-                          <div key={material.materialId}>
-                            <button
-                              className="material-btn"
-                              onClick={() => handleOpenMaterialModal(material.materialId)}
-                            >
-                              학습자료 미리보기
-                            </button>
+                                {unit.materials.map(material => (
+                                    <div key={material.materialId}>
+                                      <button
+                                          className="material-btn"
+                                          onClick={() => handleOpenMaterialModal(material.materialId)}
+                                      >
+                                        학습자료 미리보기
+                                      </button>
+                                    </div>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                        ))}
-                      </div>
+                      ))}
                     </div>
-                  </div>
                 ))}
-              </div>
-            ))}
-          </>
-        ) : (
-          <p>코스를 선택하세요.</p>
-        )}
-      </div>
+              </>
+          ) : (
+              <p>코스를 선택하세요.</p>
+          )}
+        </div>
 
       <ExamShareModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)} selectedTest={selectedTest}
       />
 
-      <MaterialPreviewModal
-        isOpen={isMaterialModalOpen}
-        onClose={handleCloseMaterialModal}
-        material={materialPreview}
-      />
-    </div>
+        <MaterialPreviewModal
+            isOpen={isMaterialModalOpen}
+            onClose={handleCloseMaterialModal}
+            material={materialPreview}
+        />
+
+        <TestPreviewModal
+            isOpen={isTestPreviewModalOpen}
+            onClose={handleCloseTestPreviewModal}
+            testData={testPreview}
+        />
+      </div>
   );
 };
 

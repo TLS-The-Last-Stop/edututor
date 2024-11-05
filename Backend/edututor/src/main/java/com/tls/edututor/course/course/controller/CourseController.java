@@ -30,8 +30,8 @@ public class CourseController {
   }
 
   @GetMapping("/{courseId}")
-  public CommonApiResponse<CourseResponse> getCourseDetails(@PathVariable Long courseId) {
-    return CommonApiResponse.createSuccess("조회성공", courseService.selectCourseDetails(courseId));
+  public CommonApiResponse<CourseResponse> getCourseDetails(@PathVariable Long courseId, Authentication authentication) {
+    return CommonApiResponse.createSuccess("조회성공", courseService.selectCourseDetails(courseId, authentication));
   }
 
 
