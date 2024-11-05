@@ -1,6 +1,7 @@
 package com.tls.edututor.user.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tls.edututor.classroom.dto.response.ClassroomResponse;
 import com.tls.edututor.user.entity.Refresh;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.jwt.JwtUtil;
@@ -77,12 +78,12 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       response.addCookie(removeTempCookie);
 
       Map<String, Object> userData = new HashMap<>();
-      userData.put("classroom", user.getClassroom());
+
+      userData.put("classroom", ClassroomResponse.from(user.getClassroom()));
       userData.put("role", roles.get(0));
       userData.put("username", user.getUsername());
 
-      response.setContentType("application/json; charset=utf-8");
-      String encodedData = Base64.getEncoder().encodeToString(
+      String encodedData = Base64.getUrlEncoder().encodeToString(
               objectMapper.writeValueAsString(userData).getBytes(StandardCharsets.UTF_8)
       );
 
