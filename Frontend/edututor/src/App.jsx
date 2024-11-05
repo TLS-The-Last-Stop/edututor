@@ -7,7 +7,6 @@ import AdminLayout from './Layout/AdminLayout.jsx';
 import MaterialCreationPage from './pages/admin/MaterialCreationPage.jsx';
 import TestPaperCreationPage from './pages/admin/TestPaperCreationPage.jsx';
 import CourseDetailPage from './pages/admin/CourseDetailPage.jsx';
-import Board from './pages/board/Board.jsx';
 import TestPaperDetailPage from './pages/admin/TestPaperDetailPage.jsx';
 import MaterialDetailPage from './pages/admin/MaterialDetailPage.jsx';
 import MaterialEditPage from './pages/admin/MaterialEditPage.jsx';
@@ -21,6 +20,9 @@ import ReportDetail from './pages/report/ReportDetail.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 import CourseStudentPage from './pages/course/CourseStudentPage.jsx';
 import MaterialDetailStudentPage from './pages/material/MaterialDetailStudentPage.jsx';
+import Notice from './pages/board/Notice.jsx';
+import Faq from './pages/board/Faq.jsx';
+import Inquiry from './pages/board/Inquiry.jsx';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -167,8 +169,16 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}><Home /></Suspense>
           } />
 
-          <Route path="cmmn" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
-            <Suspense fallback={<LoadingSpinner />}><Board /></Suspense>
+          <Route path="cmmn/notice" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
+            <Suspense fallback={<LoadingSpinner />}><Notice /></Suspense>
+          } />
+
+          <Route path="cmmn/faq" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
+            <Suspense fallback={<LoadingSpinner />}><Faq /></Suspense>
+          } />
+
+          <Route path="cmmn/inquiry" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}><Inquiry /></Suspense>
           } />
 
           <Route path="report" element={ // SU(학생), TE(선생)만
