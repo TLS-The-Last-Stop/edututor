@@ -5,16 +5,17 @@ import { publicApi } from '../../api/axios.js';
 
 const TestPaperCreationPage = () => {
   const [formData, setFormData] = useState({
-    unitId   : '',
-    title    : '',
+    unitId: '',
+    title: '',
     questions: [
       {
-        content   : '',
-        passage   : '',
+        content: '',
+        passage: '',
         commentary: '',
-        type      : 'OBJECTIVE',
+        type: 'OBJECTIVE',
         answerText: '',
-        options   : [
+        LEVEL: '1',
+        options: [
           { content: '', isCorrect: false },
           { content: '', isCorrect: false }
         ]
@@ -53,12 +54,13 @@ const TestPaperCreationPage = () => {
       questions: [
         ...formData.questions,
         {
-          content   : '',
-          passage   : '',
+          content: '',
+          passage: '',
           commentary: '',
-          type      : 'OBJECTIVE',
+          type: 'OBJECTIVE',
           answerText: '',
-          options   : [
+          LEVEL: '1', // 새로운 문제 추가 시 기본 난이도 설정
+          options: [
             { content: '', isCorrect: false },
             { content: '', isCorrect: false }
           ]
@@ -67,17 +69,37 @@ const TestPaperCreationPage = () => {
     });
   };
 
+  const removeQuestion = (questionIndex) => {
+    const updatedQuestions = formData.questions.filter((_, index) => index !== questionIndex);
+    setFormData({ ...formData, questions: updatedQuestions });
+  };
+
   const addOption = (questionIndex) => {
     const updatedQuestions = [...formData.questions];
     updatedQuestions[questionIndex].options.push({ content: '', isCorrect: false });
     setFormData({ ...formData, questions: updatedQuestions });
   };
 
+  const removeOption = (questionIndex, optionIndex) => {
+    const updatedQuestions = [...formData.questions];
+    updatedQuestions[questionIndex].options.splice(optionIndex, 1);
+    setFormData({ ...formData, questions: updatedQuestions });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const modifiedFormData = {
+      ...formData,
+      questions: formData.questions.map(question => ({
+        ...question,
+        level: question.LEVEL,
+      }))
+    };
+
     try {
-      await publicApi.post('/test-paper', formData);
-      alert('시험지가 성공적으로 등록되었습니다!');
+      await publicApi.post('/test-paper', modifiedFormData);
+      alert('시험지가 성공적으로 등록되었습니다.');
       window.history.back();
     } catch (error) {
       alert('시험지 등록 중 오류가 발생했습니다.');
@@ -101,6 +123,17 @@ const TestPaperCreationPage = () => {
 
           {formData.questions.map((question, questionIndex) => (
               <div key={questionIndex} className="question-block">
+                <div className="question-header">
+                  <h4>문제 {questionIndex + 1}</h4>
+                  <button
+                      type="button"
+                      onClick={() => removeQuestion(questionIndex)}
+                      className="remove-question-button"
+                  >
+                    문제 제거
+                  </button>
+                </div>
+
                 <div className="form-field">
                   <label>유형:</label>
                   <select
@@ -113,7 +146,6 @@ const TestPaperCreationPage = () => {
                   </select>
                 </div>
 
-                <h4>문제 {questionIndex + 1}</h4>
                 <div className="form-field">
                   <label>문제 내용:</label>
                   <input
@@ -123,6 +155,18 @@ const TestPaperCreationPage = () => {
                       onChange={(e) => handleInputChange(e, questionIndex)}
                       required
                   />
+                </div>
+                <div className="form-field">
+                  <label>난이도:</label>
+                  <select
+                      name="LEVEL"
+                      value={question.LEVEL}
+                      onChange={(e) => handleInputChange(e, questionIndex)}
+                  >
+                    <option value="1">하</option>
+                    <option value="2">중</option>
+                    <option value="3">상</option>
+                  </select>
                 </div>
                 <div className="form-field">
                   <label>지문:</label>
@@ -146,9 +190,8 @@ const TestPaperCreationPage = () => {
                 {question.type === 'OBJECTIVE' ? (
                     question.options.map((option, optionIndex) => (
                         <div key={optionIndex} className="option-block">
-                          <h5>보기 {optionIndex + 1}</h5>
                           <div className="form-field">
-                            <label>보기 내용:</label>
+                            <label>{optionIndex + 1}번:</label>
                             <input
                                 type="text"
                                 name="content"
@@ -166,6 +209,13 @@ const TestPaperCreationPage = () => {
                                 onChange={(e) => handleInputChange(e, questionIndex, optionIndex)}
                             />
                           </div>
+                          <button
+                              type="button"
+                              onClick={() => removeOption(questionIndex, optionIndex)}
+                              className="remove-button"
+                          >
+                            옵션 제거
+                          </button>
                         </div>
                     ))
                 ) : (

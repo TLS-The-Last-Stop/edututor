@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../../assets/css/ExamPage.css';
 import { publicApi } from '../../api/axios.js';
 
@@ -8,6 +8,7 @@ const submitAnswer = (userTest) => publicApi.post(`/test/submit`, userTest);
 
 const ExamPage = () => {
   const { testPaperId } = useParams();
+  const navigate = useNavigate();
   const [testData, setTestData] = useState(null);
   const [answers, setAnswers] = useState({});
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
@@ -47,6 +48,19 @@ const ExamPage = () => {
   };
 
   const handleSubmit = () => {
+    // 답변이 입력되지 않은 질문이 있는지 확인
+    const unansweredQuestions = testData.data.questions.filter(
+        (question) => !answers[question.questionId]
+    );
+
+    if (unansweredQuestions.length > 0) {
+      // 경고 메시지 표시
+      const confirmSubmit = window.confirm(
+          '아직 입력하지 않은 문제가 있습니다. 그래도 제출하시겠습니까?'
+      );
+      if (!confirmSubmit) return;
+    }
+
     const userTest = {
       testPaperId,
       answers: testData.data.questions.map((question) => ({
@@ -58,12 +72,12 @@ const ExamPage = () => {
     submitAnswer(userTest)
         .then((response) => {
           alert('답안 제출 완료!');
+          navigate(-1);
         })
         .catch((error) => {
           console.error('답안 제출 중 오류 발생:', error);
         });
   };
-
 
   if (!testData) return <div>로딩 중...</div>;
 
@@ -104,9 +118,9 @@ const ExamPage = () => {
                             <input
                                 type="radio"
                                 name={`question-${question.questionId}`}
-                                value={index + 1}  // 라디오 버튼의 값을 1부터 시작하도록 설정
-                                checked={answers[question.questionId] === index + 1}  // answers에서 선택된 값과 비교
-                                onChange={() => handleObjectiveAnswer(question.questionId, index + 1)}  // index + 1을 answer로 저장
+                                value={index + 1}
+                                checked={answers[question.questionId] === index + 1}
+                                onChange={() => handleObjectiveAnswer(question.questionId, index + 1)}
                             />
                             {option.content}
                           </label>
@@ -114,17 +128,16 @@ const ExamPage = () => {
                     </div>
                 ) : (
                     <div className="subjective-answer">
-          <textarea
-              placeholder="답변을 입력하세요."
-              value={answers[question.questionId] || ''}
-              onChange={(e) => handleSubjectiveAnswer(question.questionId, e.target.value)}
-          />
+                <textarea
+                    placeholder="답변을 입력하세요."
+                    value={answers[question.questionId] || ''}
+                    onChange={(e) => handleSubjectiveAnswer(question.questionId, e.target.value)}
+                />
                     </div>
                 )}
               </div>
           ))}
         </main>
-
 
         <button className="submit" onClick={handleSubmit}>답안 제출</button>
       </div>

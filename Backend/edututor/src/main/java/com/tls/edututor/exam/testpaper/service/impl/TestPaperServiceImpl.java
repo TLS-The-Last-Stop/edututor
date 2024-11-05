@@ -5,7 +5,6 @@ import com.tls.edututor.course.unit.repository.UnitRepository;
 import com.tls.edututor.exam.option.dto.request.OptionRegisterRequest;
 import com.tls.edututor.exam.option.dto.response.OptionResponse;
 import com.tls.edututor.exam.option.entity.Option;
-import com.tls.edututor.exam.option.repository.OptionRepository;
 import com.tls.edututor.exam.question.dto.request.QuestionRegisterRequest;
 import com.tls.edututor.exam.question.dto.response.QuestionResponse;
 import com.tls.edututor.exam.question.entity.Question;
@@ -28,7 +27,6 @@ public class TestPaperServiceImpl implements TestPaperService {
 
   private final TestPaperRepository testPaperRepository;
   private final QuestionRepository questionRepository;
-  private final OptionRepository optionRepository;
   private final UnitRepository unitRepository;
 
   @Override
@@ -49,16 +47,16 @@ public class TestPaperServiceImpl implements TestPaperService {
       question.setPassage(questionRegister.getPassage());
       question.setCommentary(questionRegister.getCommentary());
       question.setType(questionRegister.getType());
+      question.setLevel(questionRegister.getLevel());
 
       if (questionRegister.getType() == QuestionType.SUBJECTIVE) {
         question.setAnswerText(questionRegister.getAnswerText());
       } else {
-        // options 리스트에 Option 추가
         for (OptionRegisterRequest optionRegister : questionRegister.getOptions()) {
           Option option = new Option();
           option.setContent(optionRegister.getContent());
           option.setIsCorrect(optionRegister.getIsCorrect());
-          option.setQuestion(question); // 관계 설정
+          option.setQuestion(question);
           question.getOptions().add(option);
         }
       }
@@ -83,7 +81,9 @@ public class TestPaperServiceImpl implements TestPaperService {
       questionResponse.setId(question.getId());
       questionResponse.setContent(question.getContent());
       questionResponse.setCommentary(question.getCommentary());
-
+      questionResponse.setAnswerText(question.getAnswerText());
+      questionResponse.setType(question.getType());
+      questionResponse.setLevel(question.getLevel());
 
       List<OptionResponse> optionResponses = question.getOptions().stream().map(option -> {
         OptionResponse optionResponse = new OptionResponse();

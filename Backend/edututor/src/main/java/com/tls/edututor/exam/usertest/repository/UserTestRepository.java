@@ -11,4 +11,7 @@ public interface UserTestRepository extends JpaRepository<UserTest, Long> {
   List<UserTest> findByTestPaperId(Long testPaperId);
 
   long countByShareTestTestPaperId(Long testPaperId);
+
+  boolean existsByShareTestId(Long shareTestId);
+
 }

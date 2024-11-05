@@ -23,21 +23,46 @@ const MaterialDetailStudentPage = () => {
     fetchMaterial();
   }, [materialId]);
 
+  const renderVideo = (url) => {
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    const videoId = videoIdMatch ? videoIdMatch[1] : null;
+
+    return videoId ? (
+        <iframe
+            width="560"
+            height="315"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+        ></iframe>
+    ) : (
+        <p>유효한 YouTube URL이 아닙니다.</p>
+    );
+  };
+
   if (loading) return <p>로딩 중...</p>;
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="material-detail-page">
-      <h1>학습자료 상세</h1>
-      {materialData ? (
-        <div>
-          <h2>제목: {materialData.title}</h2>
-          <p>내용: {materialData.content}</p>
-        </div>
-      ) : (
-        <p>학습자료가 존재하지 않습니다.</p>
-      )}
-    </div>
+      <div className="material-detail-page">
+        <h1>학습자료 상세</h1>
+        {materialData ? (
+            <div>
+              <h2>제목: {materialData.title}</h2>
+              {materialData.url && (
+                  <div className="video-container">
+                    {renderVideo(materialData.url)}
+                  </div>
+              )}
+              <p>내용: {materialData.content}</p>
+
+            </div>
+        ) : (
+            <p>학습자료가 존재하지 않습니다.</p>
+        )}
+      </div>
   );
 };
 
