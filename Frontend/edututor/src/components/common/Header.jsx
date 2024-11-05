@@ -3,8 +3,6 @@ import { useAuth } from '../../utils/AuthContext.jsx';
 import { useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
-import cs from '../../assets/icon/custom-service.png';
-import tutor from '../../assets/icon/tutor.png';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
 import { Link } from 'react-router-dom';
@@ -55,14 +53,24 @@ const NavList = styled.ul`
     display: flex;
     gap: 32px;
     list-style: none;
-    margin: 0;
+    margin: 8px 0 0;
     padding: 0;
     flex-grow: 1;
+    align-items: center; // 수직 중앙 정렬 추가
 
     li {
         font-size: 16px;
         color: #333;
         cursor: pointer;
+        height: 64px; // MainNav와 동일한 높이
+        display: flex; // Flex 컨테이너로 변경
+        align-items: center; // 수직 중앙 정렬
+
+        a {
+            height: 100%; // 전체 높이 사용
+            display: flex; // Flex 컨테이너로 변경
+            align-items: center; // 수직 중앙 정렬
+        }
 
         &:hover {
             color: #4285f4;
@@ -83,7 +91,8 @@ const UserInfoContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-left: auto; // 오른쪽 정렬
+    margin-left: auto;
+    height: 100%; // MainNav와 동일한 높이
 
     @media (max-width: 765px) {
         display: none;
@@ -123,6 +132,8 @@ const LogoutButton = styled.button`
 const AuthButtons = styled.div`
     display: flex;
     gap: 12px;
+    align-items: center; // 수직 중앙 정렬
+    height: 100%; // MainNav와 동일한 높이
 
     button {
         padding: 8px 16px;
@@ -153,41 +164,6 @@ const AuthButtons = styled.div`
 
     @media (max-width: 765px) {
         display: none;
-    }
-`;
-
-
-const SubNav = styled.nav`
-    height: 40px;
-    border-top: 1px solid #eaeaea;
-
-    @media (max-width: 765px) {
-        display: none;
-    }
-
-    ul {
-        display: flex;
-        gap: 24px;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        align-items: center;
-
-        li {
-            font-size: 14px;
-            color: #666;
-            cursor: pointer;
-
-            &:hover {
-                color: #4285f4;
-            }
-
-            &.active {
-                color: #4285f4;
-                font-weight: 500;
-            }
-        }
     }
 `;
 
@@ -357,11 +333,9 @@ const Header = () => {
                 className={activeHeaderMenu === '리포트' ? 'active' : ''}>
               <StyledRouterLink to="/report">리포트</StyledRouterLink>
             </li>
-            <li onClick={() => handleHeaderMenuClick('에듀튜터')}
-                className={activeHeaderMenu === '에듀튜터' ? 'active' : ''}>에듀튜터 소개
-            </li>
             <li onClick={() => handleHeaderMenuClick('고객센터')}
-                className={activeHeaderMenu === '고객센터' ? 'active' : ''}>고객센터
+                className={activeHeaderMenu === '고객센터' ? 'active' : ''}>
+              <StyledRouterLink to="/cmmn">고객센터</StyledRouterLink>
             </li>
           </NavList>
 
@@ -388,40 +362,6 @@ const Header = () => {
         </MainNav>
       </HeaderContent>
 
-      {activeHeaderMenu === '에듀튜터' && (
-        <HeaderContent>
-          <SubNav>
-            <ul>
-              <li onClick={() => handleSubMenuClick('활용사례')} className={activeHeaderMenu === '활용사례' ? 'active' : ''}>활용
-                사례
-              </li>
-              <li onClick={() => handleSubMenuClick('서비스소개')}
-                  className={activeHeaderMenu === '서비스소개' ? 'active' : ''}>서비스
-                소개
-              </li>
-            </ul>
-          </SubNav>
-        </HeaderContent>
-      )}
-
-      {activeHeaderMenu === '고객센터' && (
-        <HeaderContent>
-          <SubNav>
-            <ul>
-              <li onClick={() => handleSubMenuClick('공지사항')} className={activeHeaderMenu === '공지사항' ? 'active' : ''}>
-                공지사항
-              </li>
-              <li onClick={() => handleSubMenuClick('FAQ')}
-                  className={activeHeaderMenu === 'FAQ' ? 'active' : ''}>FAQ
-              </li>
-              <li onClick={() => handleSubMenuClick('1:1문의')}
-                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>1:1문의
-              </li>
-            </ul>
-          </SubNav>
-        </HeaderContent>
-      )}
-
       <Overlay $isOpen={hamburger} onClick={toggleHamburger}>
         <HamburgerMenu $isOpen={hamburger}>
           <HamburgerMenuHeader>
@@ -442,24 +382,6 @@ const Header = () => {
                              onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>
             <img src={report} alt="리포트 이미지" /> <StyledRouterLink to="/report">리포트</StyledRouterLink>
           </HamburgerMenuItem>
-          <HamburgerMenuItem className={activeHamburgerMenu === '에듀튜터' ? 'active' : ''}
-                             onClick={(e) => handleHamburgerMenuClick(e, '에듀튜터')}>
-            <img src={tutor} alt="에듀튜터 이미지" />에듀튜터
-          </HamburgerMenuItem>
-          {activeHamburgerMenu === '에듀튜터' && (
-            <>
-              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '활용사례')}
-                                 clasName={activeHamburgerMenu === '활용사례' ? 'active' : ''}
-                                 style={{ paddingLeft: '32px' }}
-              >활용
-                사례</HamburgerMenuItem>
-              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '서비스소개')}
-                                 clasName={activeHamburgerMenu === '서비스소개' ? 'active' : ''}
-                                 style={{ paddingLeft: '32px' }}
-              >서비스
-                소개</HamburgerMenuItem>
-            </>
-          )}
           {activeHamburgerMenu === '고객센터' && (
             <>
               <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '공지사항')}
