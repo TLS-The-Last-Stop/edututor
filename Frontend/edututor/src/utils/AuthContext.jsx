@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const verifyUserRole = async () => {
     try {
       if (location.pathname === '/join' ||
+        location.pathname === '/additional-info' ||
         location.pathname === '/admin/login' ||
         location.pathname === '/login' ||
         location.pathname === '/teacher-login' ||

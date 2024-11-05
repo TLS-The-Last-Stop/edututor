@@ -11,7 +11,7 @@ import {
 import naver from '../../assets/icon/naver.png';
 import kakao from '../../assets/icon/kakao.png';
 import google from '../../assets/icon/google.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext.jsx';
@@ -103,13 +103,17 @@ const TeacherLogin = () => {
   const handleSocialLogin = (provider) => {
     switch (provider) {
       case 'naver':
-        location.href = 'http://localhost:8080/oauth2/authorization/naver';
+        location.href = `${import.meta.env.VITE_OAUTH_BASE_URL}/oauth2/authorization/naver`;
         break;
       case 'google':
-        location.href = 'http://localhost:8080/oauth2/authorization/google';
+        location.href = `${import.meta.env.VITE_OAUTH_BASE_URL}/oauth2/authorization/google`;
         break;
     }
   };
+
+  useEffect(() => {
+    //location.
+  }, []);
 
   return (
     <>

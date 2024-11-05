@@ -44,7 +44,7 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       Cookie temp = createCookie("temp", String.valueOf(id));
       response.addCookie(temp);
 
-      String redirectUrl = BASE_URL + "/status=r";
+      String redirectUrl = BASE_URL + "/additional-info";
       response.getWriter().write(redirectUrl);
       response.sendRedirect(redirectUrl);
     } else {
