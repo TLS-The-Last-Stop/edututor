@@ -8,13 +8,14 @@ const OAuthSuccess = () => {
   useEffect(() => {
     const encodedData = searchParams.get('data');
     if (encodedData) {
-      const decoder = new TextDecoder('utf-8');
-      const bytes = new Uint8Array(atob(encodedData).split('').map(c => c.charCodeAt(0)));
-
-      const decodedData = decoder.decode(bytes);  // Base64 디코딩
-
-      localStorage.setItem('info', decodedData);
-      window.dispatchEvent(new Event('auth-update'));
+      try {
+        const base64 = encodedData.replace(/-/g, '+').replace(/_/g, '/');
+        const decodedString = new TextDecoder('utf-8').decode(Uint8Array.from(atob(base64), c => c.charCodeAt(0)));
+        localStorage.setItem('info', decodedString);
+        dispatchEvent(new Event('auth-update'));
+      } catch (error) {
+        console.error('Decoding failed:', error);
+      }
     }
     navigate('/');
   }, []);
