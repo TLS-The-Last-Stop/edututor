@@ -56,7 +56,7 @@ public class SecurityConfig {
     http.httpBasic(basic -> basic.disable());
 
     http.oauth2Login(oauth -> oauth
-            .loginPage("/login")
+            .loginPage("http://localhost:5173")
             .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                     .userService(customOAuth2UserService))
             .successHandler(customOAuthSuccessHandler));
