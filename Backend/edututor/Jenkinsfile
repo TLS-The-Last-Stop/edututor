@@ -1,9 +1,12 @@
 pipeline {
     agent any
+    tools {
+        jdk 'jdk17'
+    }
     stages {
         stage('Clone') {
             steps {
-                git branch: 'dev', credentialsId: 'edututorc', url: 'https://github.com/TLS-The-Last-Stop/edututor'
+                git branch: 'release/1.0', credentialsId: 'edututorc', url: 'https://github.com/TLS-The-Last-Stop/edututor'
             }
             post {
                 failure {
@@ -16,10 +19,15 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'chmod +x ./Backend/gradlew'
-                sh './Backend/gradlew build'
+                dir('Backend/edututor') {
+                    sh 'chmod +x gradlew'
+                    withCredentials([string(credentialsId: 'JASYPT_KEY', variable: 'JASYPT_ENCRYPTOR_PASSWORD')]) {
+                        sh './gradlew clean build -PJASYPT_ENCRYPTOR_PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD'
+                    }
+                }
             }
         }
+
         stage('Docker Hub Login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -27,15 +35,17 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build and Push') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB', passwordVariable: 'DOCKER_PROJECT', usernameVariable: 'DOCKER_REPO')]) {
-                    sh 'cd ./Backend && docker build -f Dockerfile -t $DOCKER_REPO/$DOCKER_PROJECT .'
-                    sh 'cd ./Backend && docker push $DOCKER_REPO/$DOCKER_PROJECT'
-                    echo 'Docker push success!'
-                }
-            }
-        }
+				stage('Docker Build and Push') {
+        			steps {
+        				withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB', passwordVariable: 'DOCKER_PROJECT', usernameVariable: 'DOCKER_REPO')]) {
+                            sh 'cd ./Backend/edututor && docker build -f Dockerfile -t $DOCKER_REPO/$DOCKER_PROJECT .'
+        				    sh 'cd ./Backend/edututor && docker push $DOCKER_REPO/$DOCKER_PROJECT'
+        				    echo 'docker push Success!!'
+                        }
+        				echo 'docker push Success!!'
+        			}
+        		}
+
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['my-ssh-credentials']) {
