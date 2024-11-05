@@ -447,30 +447,71 @@ public class DataInitializer {
     category2.setIsDeleted(false);
     category2.setId(2L);
     category2.setCreatedAt(LocalDateTime.now());
-    category2.setName("1:1문의");
+    category2.setName("자주 묻는 질문(FAQ)");
 
     Category category3 = new Category();
     category3.setDepth(1);
     category3.setIsDeleted(false);
     category3.setId(3L);
     category3.setCreatedAt(LocalDateTime.now());
-    category3.setName("자주묻는질문");
+    category3.setName("1:1 문의");
 
     Category category4 = new Category();
     category4.setDepth(1);
     category4.setIsDeleted(false);
     category4.setId(4L);
     category4.setCreatedAt(LocalDateTime.now());
-    category4.setName("클래스운영");
+    category4.setName("오류 문항 신고 현황");
 
     Category category5 = new Category();
-    category5.setDepth(1);
+    category5.setDepth(2);
     category5.setIsDeleted(false);
     category5.setId(5L);
     category5.setCreatedAt(LocalDateTime.now());
-    category5.setName("서비스이용");
+    category5.setParent(category2);
+    category5.setName("클래스 운영");
 
-    categoryRepository.saveAll(List.of(category1, category2, category3, category4, category5));
+    Category category6 = new Category();
+    category5.setDepth(2);
+    category5.setIsDeleted(false);
+    category5.setId(5L);
+    category5.setCreatedAt(LocalDateTime.now());
+    category5.setParent(category2);
+    category5.setName("코스웨어/문항");
+
+    Category category7 = new Category();
+    category5.setDepth(2);
+    category5.setIsDeleted(false);
+    category5.setId(5L);
+    category5.setCreatedAt(LocalDateTime.now());
+    category5.setParent(category2);
+    category5.setName("서비스 이용");
+
+    Category category8 = new Category();
+    category5.setDepth(2);
+    category5.setIsDeleted(false);
+    category5.setId(5L);
+    category5.setCreatedAt(LocalDateTime.now());
+    category5.setParent(category2);
+    category5.setName("시험지 배포");
+
+    Category category9 = new Category();
+    category5.setDepth(2);
+    category5.setIsDeleted(false);
+    category5.setId(5L);
+    category5.setCreatedAt(LocalDateTime.now());
+    category5.setParent(category2);
+    category5.setName("리포트");
+
+    Category category10 = new Category();
+    category5.setDepth(2);
+    category5.setIsDeleted(false);
+    category5.setId(5L);
+    category5.setCreatedAt(LocalDateTime.now());
+    category5.setParent(category2);
+    category5.setName("카테고리 테스트");
+
+    categoryRepository.saveAll(List.of(category1, category2, category3, category4, category5, category6, category7, category8, category9, category10));
   }
 
   @Transactional
@@ -479,36 +520,49 @@ public class DataInitializer {
     board1.setIsDeleted(false);
     board1.setCategory(categoryRepository.getReferenceById(1L));
     board1.setCreatedAt(LocalDateTime.now());
-    board1.setTitle("공지사항 제목");
-    board1.setContent("공지사항 내용");
+    board1.setTitle("지니아튜터 시범서비스 오픈");
+    board1.setContent("지니아튜터가 8월31일에 시범서비스 오픈을 합니다.\n" +
+            "\n" +
+            "학교 현장에서 손쉽게 활용할 수 있도록 교과서 목차에 맞춰서 형성평가 문제를 제공합니다. 또한, 자동채점과 리포트를 제공하며 누적관리되어 선생님들의 수고를 덜어드릴 것입니다. 시범 서비스 기간 동안에 이용해 보시고 의견 보내주시면 서비스에 반영하도록 하겠습니다.\n" +
+            "\n" +
+            "선생님들이 필요한 서비스를 편리하게 이용하실 수 있도록 최선을 다하겠습니다.");
 
     Board board2 = new Board();
     board2.setIsDeleted(false);
     board2.setCategory(categoryRepository.getReferenceById(1L));
     board2.setCreatedAt(LocalDateTime.now());
-    board2.setTitle("공지사항 제목임");
-    board2.setContent("공지사항 내용입니다");
+    board2.setTitle("지니아튜터 베타테스터 모집");
+    board2.setContent("지니아튜터가 시범서비스를 오픈하면서 베타테스터를 모집합니다.\n" +
+            "\n" +
+            "공교육에 활용하는 'AI 평가분석 서비스'가 필요하신 선생님께서는 신청하시고 무료로 이용해 주시면 감사하겠습니다.");
 
     Board board3 = new Board();
     board3.setIsDeleted(false);
     board3.setCategory(categoryRepository.getReferenceById(1L));
     board3.setCreatedAt(LocalDateTime.now());
-    board3.setTitle("오늘 점심 메뉴");
-    board3.setContent("모름");
+    board3.setTitle("[이벤트]날 따라 해봐요 이렇게!");
+    board3.setContent("우리반T셀파 X 지니아튜터 이벤트\n" +
+            "\n" +
+            "선생님이 더욱 편하고 효과적으로 이용하실 수 있도록 학생관리 기능과 온라인 평가 기능이 결합되었어요 그대~로 따라만 하면 이벤트 응모 완료!");
 
     Board board4 = new Board();
     board4.setIsDeleted(false);
-    board4.setCategory(categoryRepository.getReferenceById(4L));
+    board4.setCategory(categoryRepository.getReferenceById(5L));
     board4.setCreatedAt(LocalDateTime.now());
-    board4.setTitle("클래스운영 제목");
-    board4.setContent("클래스운영 내용");
+    board4.setTitle("클래스 생성 및 관리는 어떻게 하나요?");
+    board4.setContent("지니아튜터의 클래스는 우리반T셀파(class.tsherpa.co.kr)의 클래스와 연동됩니다.\n" +
+            "\n" +
+            "따라서 클래스 생성과 관리는 우리반T셀파에서 하실 수 있습니다.");
 
     Board board5 = new Board();
     board5.setIsDeleted(false);
-    board5.setCategory(categoryRepository.getReferenceById(5L));
+    board5.setCategory(categoryRepository.getReferenceById(6L));
     board5.setCreatedAt(LocalDateTime.now());
-    board5.setTitle("서비스이용 제목");
-    board5.setContent("서비스이용 내용");
+    board5.setTitle("코스웨어는 어떤 기준으로 설정되어 있나요?");
+    board5.setContent("지니아튜터의 코스웨어는 크게 2가지 기준으로 나뉩니다.\n" +
+            "하나는 천재교과서에서 발행하는 교과서의 목차에 맞춰서 설정하였고\n" +
+            "\n" +
+            "천재교과서를 이용하지 않는 학교를 위해 성취기준에 맞춘 과정도 준비하였습니다.");
 
     boardRepository.saveAll(List.of(board1, board2, board3, board4, board5));
   }
