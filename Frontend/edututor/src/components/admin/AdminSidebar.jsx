@@ -8,16 +8,10 @@ const AdminSidebar = () => {
         <nav>
           <ul>
             <li>
-              <NavLink to="/admin/course" activeClassName="active">과정 관리</NavLink>
-            </li>
-            <li>
               <NavLink to="/admin/create-course" activeClassName="active">과정 생성</NavLink>
             </li>
             <li>
-              <NavLink to="/admin/create-material" activeClassName="active">자료 생성</NavLink>
-            </li>
-            <li>
-              <NavLink to="/admin/create-test-paper" activeClassName="active">시험지 생성</NavLink>
+              <NavLink to="/admin/course" activeClassName="active">과정 관리</NavLink>
             </li>
             <li>
               <NavLink to="/admin/users" activeClassName="active">사용자 관리</NavLink>
