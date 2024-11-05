@@ -132,7 +132,10 @@ const CoursePage = () => {
         )}
       </div>
 
-      <ExamShareModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedTest={selectedTest} />
+      <ExamShareModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)} selectedTest={selectedTest}
+      />
 
       <MaterialPreviewModal
         isOpen={isMaterialModalOpen}

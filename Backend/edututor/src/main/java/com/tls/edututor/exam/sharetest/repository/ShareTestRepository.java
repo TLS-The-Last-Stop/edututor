@@ -1,11 +1,15 @@
 package com.tls.edututor.exam.sharetest.repository;
 
 import com.tls.edututor.exam.sharetest.entity.ShareTest;
+import com.tls.edututor.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ShareTestRepository extends JpaRepository<ShareTest, Long> {
+
+  List<ShareTest> findAllByUserAndIsDeleted(User user, Boolean isDeleted);
 
   Optional<ShareTest> findByUserIdAndTestPaperId(Long userId, Long testPaperId);
 
