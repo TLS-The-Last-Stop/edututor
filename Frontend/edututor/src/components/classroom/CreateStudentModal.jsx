@@ -77,8 +77,8 @@ const CreateStudentModal = ({
                   이름<Required>*</Required>
                 </Label>
                 <Input
-                  name="fullName"
-                  value={form.fullName}
+                  name="username"
+                  value={form.username}
                   onChange={handleInputChange}
                   placeholder="이름을 입력해주세요"
                   $hasError={!!errors.name}

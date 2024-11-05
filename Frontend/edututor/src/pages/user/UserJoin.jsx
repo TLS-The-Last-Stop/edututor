@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const initForm = {
-  fullName         : '',
+  username         : '',
   loginId          : '',
   password         : '',
   confirmPassword  : '',
@@ -275,7 +275,7 @@ const UserJoin = () => {
       return false;
     }
 
-    if (!form.fullName || !form.loginId || !form.password || !form.confirmPassword ||
+    if (!form.username || !form.loginId || !form.password || !form.confirmPassword ||
       !form.email || !form.phoneMiddle || !form.phoneLast ||
       !form.birthYear || !form.birthMonth || !form.birthDay ||
       !selectedSchool.name || !classroom.year || !classroom.grade || !classroom.classroomName) {
@@ -321,7 +321,7 @@ const UserJoin = () => {
 
     // 전송
     const submitData = {
-      fullName: form.fullName,
+      username: form.username,
       loginId : form.loginId,
       password: form.password,
       email   : `${form.email}@${form.emailDomain || form.emailDomainSelect}`,

@@ -167,7 +167,7 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
       const userInfo = JSON.parse(localStorage.getItem('info'));
       const result = await getAllStudent(userInfo.classroom.id);
       const key = Object.keys(result.data)[0];
-      
+
       setStudentInfo(result.data[key] || []);
     } catch (error) {
       console.error('Failed to fetch students', error);
@@ -304,7 +304,7 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
                       />
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                          {student.fullName}
+                          {student.username}
                           <span style={{ fontSize: '0.8em', color: '#666', marginLeft: '4px' }}>
                 ({student.loginId})
               </span>

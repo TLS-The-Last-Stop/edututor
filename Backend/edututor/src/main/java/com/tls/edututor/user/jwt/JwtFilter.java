@@ -76,13 +76,14 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
 
-    CustomUser user = (CustomUser) userDetailsService.loadUserByUsername(jwtUtil.getUsername(accessToken));
+    String loginId = jwtUtil.getLoginId(accessToken);
+    CustomUser user = (CustomUser) userDetailsService.loadUserByUsername(loginId);
     String role = user.getAuthorities().stream()
             .findFirst()
             .map(GrantedAuthority::getAuthority)
             .orElse("");
 
-    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), user.getClassroom(), role);
+    AuthUser authUser = new AuthUser(user.getId(), user.getUsername(), user.getEmail(), user.getClassroom(), role);
 
     UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(authUser, null, List.of(new SimpleGrantedAuthority("ROLE_" + role)));

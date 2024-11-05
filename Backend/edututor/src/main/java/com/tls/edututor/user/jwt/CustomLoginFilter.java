@@ -58,7 +58,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
     Map<String, String> details = (Map<String, String>) authResult.getDetails();
 
     String id = String.valueOf(customUser.getId());
-    String loginId = customUser.getUsername();
+    String loginId = customUser.getLoginId();
     String loginType = details.get("loginType");
 
     Map<String, Object> claims = new HashMap<>();
@@ -86,7 +86,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
     Map<String, Object> data = new HashMap<>();
     data.put("classroom", customUser.getClassroom());
     data.put("role", roles.get(0));
-    data.put("fullName", customUser.getFullName());
+    data.put("username", customUser.getUsername());
     response.getWriter().write(objectMapper.writeValueAsString(data));
   }
 

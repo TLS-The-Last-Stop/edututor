@@ -1,4 +1,4 @@
-package com.tls.edututor.user.service;
+package com.tls.edututor.user.service.impl;
 
 import com.tls.edututor.user.dto.response.AuthUser;
 import com.tls.edututor.user.dto.response.CustomUser;
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
     User user = userRepository.findByLoginIdAndIsDeleted(loginId, false).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
-    AuthUser authUser = new AuthUser(user.getId(), user.getFullName(), user.getEmail(), user.getClassroom(), user.getRole());
+    AuthUser authUser = new AuthUser(user.getId(), user.getUsername(), user.getEmail(), user.getClassroom(), user.getRole());
 
     return new CustomUser(authUser, user.getLoginId(), user.getPassword());
   }

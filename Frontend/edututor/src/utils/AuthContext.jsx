@@ -14,11 +14,19 @@ export const AuthProvider = ({ children }) => {
 
   const verifyUserRole = async () => {
     try {
-      if (location.pathname === '/join' ||
-        location.pathname === '/admin/login' ||
-        location.pathname === '/login' ||
-        location.pathname === '/teacher-login' ||
-        location.pathname === '/student-login') {
+      const publicPathPatterns = [
+        /^\/join$/,
+        /^\/additional-info$/,
+        /login/,
+        /cmmn/
+      ];
+
+      // 현재 경로가 public 패턴과 일치하는지 확인
+      const isPublicPath = publicPathPatterns.some(pattern =>
+        pattern.test(location.pathname)
+      );
+
+      if (isPublicPath) {
         return;
       }
 

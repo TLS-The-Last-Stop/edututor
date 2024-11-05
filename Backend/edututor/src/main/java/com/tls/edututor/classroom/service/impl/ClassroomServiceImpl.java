@@ -41,7 +41,7 @@ public class ClassroomServiceImpl implements ClassroomService {
             .map(student -> UserSTResponse.builder()
                     .id(student.getId())
                     .loginId(student.getLoginId())
-                    .fullName(student.getFullName())
+                    .username(student.getUsername())
                     .build())
             .collect(Collectors.toList());*/
 
@@ -55,7 +55,7 @@ public class ClassroomServiceImpl implements ClassroomService {
               return UserSTResponse.builder()
                       .id(student.getId())
                       .loginId(student.getLoginId())
-                      .fullName(student.getFullName())
+                      .username(student.getUsername())
                       .isShared(studentSharedTests)
                       .build();
             })
@@ -70,7 +70,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     UserSTResponse student = UserSTResponse.builder()
             .id(user.getId())
             .loginId(user.getLoginId())
-            .fullName(user.getFullName())
+            .username(user.getUsername())
             .build();
 
     return student;
