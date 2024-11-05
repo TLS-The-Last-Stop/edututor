@@ -34,14 +34,14 @@ const CoursePage = () => {
     if (courseId) {
       setLoading(true);
       publicApi.get(`/course/${courseId}`)
-          .then(response => {
-            setCourseData(response.data.data);
-            setLoading(false);
-          })
-          .catch(error => {
-            setError('Failed to fetch course data.');
-            setLoading(false);
-          });
+        .then(response => {
+          setCourseData(response.data.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError('Failed to fetch course data.');
+          setLoading(false);
+        });
     }
   }, [courseId]);
 
@@ -64,21 +64,21 @@ const CoursePage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-      <div className="course-page">
-        <div className="sidebar">
-          <button className="new-course-btn" onClick={() => navigate('/course/enroll')}>새 과정 등록하기</button>
-          <ul>
-            {courses.map(course => (
-                <li
-                    key={course.courseId}
-                    className="course-item"
-                    onClick={() => navigate(`/course/${course.courseId}`)}
-                >
-                  {course.courseName}
-                </li>
-            ))}
-          </ul>
-        </div>
+    <div className="course-page">
+      <div className="sidebar">
+        <button className="new-course-btn" onClick={() => navigate('/course/enroll')}>새 과정 등록하기</button>
+        <ul>
+          {courses.map(course => (
+            <li
+              key={course.courseId}
+              className="course-item"
+              onClick={() => navigate(`/course/${course.courseId}`)}
+            >
+              {course.courseName}
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* 선택된 코스의 상세 정보 */}
       <div className="course-details">
@@ -93,49 +93,53 @@ const CoursePage = () => {
               </div>
             </div>
 
-                {courseData.sections.map(section => (
-                    <div key={section.sectionId} className="section">
-                      <h3>{section.content}</h3>
+            {courseData.sections.map(section => (
+              <div key={section.sectionId} className="section">
+                <h3>{section.content}</h3>
 
-                      {section.units.map(unit => (
-                          <div key={unit.unitId} className="unit">
-                            <div className="unit-header">
-                              <h4>{unit.content}</h4>
-                              <div className="actions">
-                                <button className="preview-btn">형성평가 미리보기</button>
-                                <button className="share-btn" onClick={() => setIsModalOpen(true)}>시험 공유하기</button>
+                {section.units.map(unit => (
+                  <div key={unit.unitId} className="unit">
+                    <div className="unit-header">
+                      <h4>{unit.content}</h4>
+                      <div className="actions">
+                        <button className="preview-btn">형성평가 미리보기</button>
+                        <button className="share-btn" onClick={() => {
+                          setIsModalOpen(true);
+                          setSelectedTest(unit.unitId);
+                        }}>시험 공유하기
+                        </button>
 
-                                {/* materials 배열을 순회하여 학습자료 미리보기 버튼 생성 */}
-                                {unit.materials.map(material => (
-                                    <div key={material.materialId}>
-                                      <button
-                                          className="material-btn"
-                                          onClick={() => handleOpenMaterialModal(material.materialId)}
-                                      >
-                                        학습자료 미리보기
-                                      </button>
-                                    </div>
-                                ))}
-                              </div>
-                            </div>
+                        {/* materials 배열을 순회하여 학습자료 미리보기 버튼 생성 */}
+                        {unit.materials.map(material => (
+                          <div key={material.materialId}>
+                            <button
+                              className="material-btn"
+                              onClick={() => handleOpenMaterialModal(material.materialId)}
+                            >
+                              학습자료 미리보기
+                            </button>
                           </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
+                  </div>
                 ))}
-              </>
-          ) : (
-              <p>코스를 선택하세요.</p>
-          )}
-        </div>
-
-        <ExamShareModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedTest={selectedTest} />
-
-        <MaterialPreviewModal
-            isOpen={isMaterialModalOpen}
-            onClose={handleCloseMaterialModal}
-            material={materialPreview}
-        />
+              </div>
+            ))}
+          </>
+        ) : (
+          <p>코스를 선택하세요.</p>
+        )}
       </div>
+
+      <ExamShareModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedTest={selectedTest} />
+
+      <MaterialPreviewModal
+        isOpen={isMaterialModalOpen}
+        onClose={handleCloseMaterialModal}
+        material={materialPreview}
+      />
+    </div>
   );
 };
 

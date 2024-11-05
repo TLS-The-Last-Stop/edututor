@@ -130,7 +130,7 @@ const initShareData = {
   deadline : ''
 };
 
-const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
+const ExamShareModal = ({ isOpen, onClose, selectedTest }) => {
   const [studentInfo, setStudentInfo] = useState([]);
   const [date, setDate] = useState(initDate);
   const [daysInMonth, setDaysInMonth] = useState('');
@@ -146,8 +146,7 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('info'));
       const result = await getAllStudent(userInfo.classroom.id);
-
-      setStudentInfo(result.data || []);
+      setStudentInfo(result.data['1'] || []);
     } catch (error) {
       console.error('Failed to fetch students', error);
     }
@@ -176,7 +175,7 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
     const koreanDate = new Date(deadLineDate.getTime() - (deadLineDate.getTimezoneOffset() * 60000));
 
     const dataToSend = {
-      unitId   : setSelectedTest,
+      unitId   : selectedTest,
       studentId: selectedStudents,
       deadline : koreanDate.toISOString()
     };
@@ -201,6 +200,7 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
   }, []);
 
   if (!isOpen) return null;
+
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContainer onClick={e => e.stopPropagation()}>
@@ -265,7 +265,7 @@ const ExamShareModal = ({ isOpen, onClose, setSelectedTest }) => {
             <ButtonContainer>
               <Button
                 onClick={handleShare}
-                disabled={!setSelectedTest || selectedStudents.length === 0}
+                disabled={!selectedTest || selectedStudents.length === 0}
                 $primary
               >
                 공유하기
