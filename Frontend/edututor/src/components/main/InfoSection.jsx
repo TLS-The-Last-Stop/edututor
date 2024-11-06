@@ -4,6 +4,10 @@ import db from '../../assets/icon/db.png';
 import 시각화 from '../../assets/icon/시각화.png';
 import 평가 from '../../assets/icon/평가.png';
 import 선생님가이드 from '../../assets/file/지니아튜터+상세가이드(교사)_2407.pdf';
+import 학생가이드 from '../../assets/file/지니아튜터+상세가이드(학생)_2407.pdf';
+import { BsChatDots, BsDownload, BsQuestionCircle } from 'react-icons/bs';
+import { StyledRouterLink } from '../common/UserStyledComponents.js';
+import { useNavigate } from 'react-router-dom';
 
 const InfoContainer = styled.div`
     padding: 40px;
@@ -60,7 +64,7 @@ const FeatureCard = styled.div`
     box-sizing: border-box;
     padding: 24px;
     border-radius: 12px;
-    background: ${props => props.$primary ? '#4285f4' : 'white'};
+    background: ${props => props.$primary ? 'linear-gradient(-135deg, rgb(22, 140, 255) 0%, rgb(132, 85, 255) 100%)' : 'white'};
     border: 1px solid #eaeaea;
     transition: all 0.2s ease-in-out;
     display: flex;
@@ -93,6 +97,7 @@ const FeatureIcon = styled.img`
 const FeatureContent = styled.div`
     flex: 1;
     width: 100%;
+    color: ${props => props.$primary ? '#fff' : '#171616FF'};
 
     h3 {
         font-size: 18px;
@@ -117,15 +122,112 @@ const FeatureContent = styled.div`
 
 const NoticeSection = styled.div`
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     // 여기에 오른쪽 섹션 스타일 추가
+`;
+
+const NoticeContainer = styled.div`
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    padding: 24px;
+`;
+
+const NoticeHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+`;
+
+const NoticeTitle = styled.h3`
+    font-size: 18px;
+    font-weight: 600;
+`;
+
+const NoticeList = styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+`;
+
+const NoticeItem = styled.li`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+
+    a {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        color: #171616;
+        text-decoration: none;
+        font-size: 14px;
+
+        &:hover {
+            color: #108eff;
+        }
+
+    }
+
+    span {
+        color: #7e7e7e;
+        font-size: 14px;
+    }
+
+`;
+
+const ButtonContainer = styled.div`
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+`;
+
+const ActionButton = styled.button`
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #171616;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background: #f8f8f8;
+        transform: translateY(-2px);
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+        color: #7e7e7e;
+    }
+
 `;
 
 const DownloadWrapper = styled.div`
     display: flex;
     justify-content: center;
+    gap: 12px;
 `;
 
-const DownloadButton = styled.button`
+const DownloadATag = styled.a`
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 50%;
     height: 56px;
     border-radius: 25px;
@@ -135,9 +237,21 @@ const DownloadButton = styled.button`
     border: ${props => props.$teacher ? '' : '1px solid #108eff'};
     background: ${props => props.$teacher ? '#108eff' : '#fff'};
     color: ${props => props.$teacher ? '#fff' : '#171616FF'};
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(16, 142, 255, 0.2);
+    }
+
+    svg {
+        width: 18px;
+        height: 18px;
+        margin-left: 4px;
+    }
 `;
 
 const InfoSection = () => {
+  const navigate = useNavigate();
   const features = [
     {
       id     : 1,
@@ -169,6 +283,18 @@ const InfoSection = () => {
     }
   ];
 
+  const notices = [
+    { id: 1, title: '[업데이트]평가기능 개선 안내', date: '2024.10.30' },
+    { id: 2, title: '[업데이트]공유 클래스룸의 \'자시 공유\' 버튼삭제 안내', date: '2024.10.28' },
+    { id: 3, title: '접속 장애 공지', date: '2024.10.24' },
+    { id: 4, title: '유료회원 적용이 안되는 경우, 해결 방안', date: '2024.10.11' },
+    { id: 5, title: '10월 14일, 17일 시스템 점검 안내', date: '2024.10.11' }
+  ];
+
+  const handleMove = (to) => {
+    navigate(`/cmmn/${to}`);
+  };
+
   return (
     <InfoContainer>
       <FeaturesSection>
@@ -193,10 +319,54 @@ const InfoSection = () => {
 
       <NoticeSection>
         <DownloadWrapper>
-          <DownloadButton $teacher>
-            <a href={선생님가이드} download="지니아튜터+상세가이드(교사)_2407" />교사용 이용 가이드</DownloadButton>
-          <DownloadButton>학생용 이용 가이드</DownloadButton>
+          <DownloadATag
+            $teacher
+            href={선생님가이드}
+            download="지니아튜터+상세가이드(교사)_2407"
+          >
+            교사용 이용 가이드
+            <BsDownload />
+          </DownloadATag>
+          <DownloadATag
+            href={학생가이드}
+            download="지니아튜터+상세가이드(학생)_2407"
+          >
+            학생용 이용 가이드
+            <BsDownload />
+          </DownloadATag>
         </DownloadWrapper>
+
+        <NoticeContainer>
+          <NoticeHeader>
+            <NoticeTitle>공지사항</NoticeTitle>
+            <StyledRouterLink to="/cmmn/notice">더보기</StyledRouterLink>
+          </NoticeHeader>
+
+          <NoticeList>
+            {notices.map(notice => (
+              <NoticeItem key={notice.id}>
+                <StyledRouterLink to="#">{notice.title}</StyledRouterLink>
+                <span>{notice.date}</span>
+              </NoticeItem>
+            ))}
+          </NoticeList>
+        </NoticeContainer>
+
+        <ButtonContainer>
+          <ActionButton onClick={() => handleMove('faq')}>
+            <BsQuestionCircle />
+            <StyledRouterLink to="#" style={{ color: 'black' }}>
+              자주 묻는 질문
+            </StyledRouterLink>
+          </ActionButton>
+          <ActionButton onClick={() => handleMove('inquiry')}>
+            <BsChatDots />
+            <StyledRouterLink to="#" style={{ color: 'black' }}>
+              1:1 문의하기
+            </StyledRouterLink>
+          </ActionButton>
+        </ButtonContainer>
+
       </NoticeSection>
     </InfoContainer>
   );

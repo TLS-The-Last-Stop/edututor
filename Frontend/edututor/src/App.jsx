@@ -29,6 +29,7 @@ const GlobalStyle = createGlobalStyle`
     ${reset}
     html, body {
         height: 100%;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 `;
 /* 관리자 라우팅 */
@@ -231,15 +232,15 @@ function AppRoutes() {
             </Suspense>
           } />
 
-          <Route path="/course/:courseId" index element={
+          <Route path="/course/:courseId" element={
             <Suspense fallback={<LoadingSpinner />}>
-              {/*<ProtectedRoute requiredRole="TE">*/}
               <ProtectedRoute requiredRole="SU">
                 <CoursePage />
               </ProtectedRoute>
             </Suspense>
           } />
-          <Route path="/course0/:courseId" index element={
+
+          <Route path="/course0/:courseId" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="SU">
                 <CourseStudentPage />
@@ -247,7 +248,7 @@ function AppRoutes() {
             </Suspense>
           } />
 
-          <Route path="/course/enroll" index element={
+          <Route path="/course/enroll" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="TE">
                 <CourseClassroomEnrollPage />

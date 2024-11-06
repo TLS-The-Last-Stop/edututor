@@ -73,7 +73,6 @@ public class SecurityConfig {
             .requestMatchers("/", "/login", "/auth/**", "/cmmn").permitAll()
             .requestMatchers("/", "/login", "/join", "/auth/**", "/cmmn","/server-check").permitAll()  // 모든 사용자 접근 가능
             .requestMatchers("/admin/**").hasRole("AD")  // 최상위 관리자 권한
-            //.requestMatchers("/admin/**").permitAll()  // 최상위 관리자 권한
             .anyRequest().authenticated());
 
     http.addFilterAt(new CustomLoginFilter(refreshService, authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
