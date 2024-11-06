@@ -388,13 +388,13 @@ const Header = () => {
   };
 
   const handleHamburgerMenuClick = (e, menuName) => {
-    e.stopPropagation();
+    e.stopPropagation;
     setActiveHamburgerMenu(activeHamburgerMenu === menuName ? '' : menuName);
     setActiveSubMenu('');
   };
 
   const handleSubMenuClick = (e, subMenuName) => {
-    e.stopPropagation();
+    e.stopPropagation;
     setActiveSubMenu(subMenuName === activeSubMenu ? '' : subMenuName);
   };
 
