@@ -289,7 +289,7 @@ const CourseSection = () => {
     if (courses.length === 0) {
       return (
         <RegisterCourseWrapper>
-          <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
+          <RegisterCourseText>등록된 학습 과정이 없습니다..</RegisterCourseText>
           <RegisterCourseButton>
             {userRole === 'TE' ? (
               <Link to="/course/enroll">새 과정 등록하기</Link>
