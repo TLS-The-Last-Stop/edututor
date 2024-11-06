@@ -124,3 +124,13 @@
     font-size: 0.9rem;
     color: #666;
 }
+.difficulty-label.level-1 {
+    color: #4caf50;
+}
+.difficulty-label.level-2 {
+    color: #ff9800;
+}
+.difficulty-label.level-3 {
+    color: #f44336;
+}
+

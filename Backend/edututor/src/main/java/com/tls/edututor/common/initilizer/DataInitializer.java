@@ -171,6 +171,7 @@ public class DataInitializer {
                       .testPaper(testPaper)
                       .content("매우 어려운 문제 철수 영희 로엠잇" + i)
                       .type(QuestionType.OBJECTIVE)
+                      .level(1)
                       .build();
               questionRepository.save(question);
 
@@ -189,6 +190,7 @@ public class DataInitializer {
                         .testPaper(testPaper)
                         .content("매우 어려운 주관식 문제 영어 국어 로엠잇" + i)
                         .type(QuestionType.SUBJECTIVE)
+                        .level(2)
                         .answerText("해답입니다")
                         .build();
                 questionRepository.save(question2);
