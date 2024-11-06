@@ -15,6 +15,11 @@ export const teacherJoin = async (data) => {
   return response.data;
 };
 
+export const additionalInfo = async (data) => {
+  const response = await publicApi.patch(`users/teachers`, data);
+  return response.data;
+};
+
 export const createStudent = async (data) => {
   const response = await privateApi.post(`/users/students`, data);
   return response.data;

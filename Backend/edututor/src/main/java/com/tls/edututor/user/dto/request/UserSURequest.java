@@ -11,7 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserSURequest {
-  private String fullName;
+  private String username;
   private String loginId;
   private String password;
   private School school;

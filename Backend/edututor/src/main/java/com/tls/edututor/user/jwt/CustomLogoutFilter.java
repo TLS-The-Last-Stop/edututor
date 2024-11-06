@@ -79,7 +79,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
       return;
     }
 
-    // 로그아웃 진행
     refreshService.deleteRefreshToken(refreshToken);
 
     Cookie refreshCookie = new Cookie("refresh", null);

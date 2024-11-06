@@ -17,13 +17,14 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class RefreshServiceImpl implements RefreshService {
 
   private final JwtUtil jwtUtil;
   private final RefreshRepository refreshRepository;
 
   @Override
+  @Transactional(readOnly = true)
   public Refresh getRefreshToken(String refreshToken) {
     Refresh refresh = refreshRepository.findByRefreshTokenAndUsed(refreshToken, false).orElseThrow(() -> new JwtException("refresh token not found"));
     refresh.markAsUsed();
@@ -32,13 +33,11 @@ public class RefreshServiceImpl implements RefreshService {
   }
 
   @Override
-  @Transactional
   public void saveRefreshToken(Refresh refresh) {
     refreshRepository.save(refresh);
   }
 
   @Override
-  @Transactional
   public UpdateTokenResponse createNewAccessToken(HttpServletRequest request) {
     Cookie[] cookies = request.getCookies();
     String refreshToken = "";
@@ -86,7 +85,6 @@ public class RefreshServiceImpl implements RefreshService {
   }
 
   @Override
-  @Transactional
   public void deleteRefreshToken(String refreshToken) {
     refreshRepository.deleteByRefreshTokenAndUsed(refreshToken, false);
   }

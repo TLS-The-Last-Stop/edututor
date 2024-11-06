@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class UserTERequest {
-  private String fullName;
+  private String username;
   private String loginId;
   private String password;
   private String email;

@@ -44,4 +44,7 @@ public class Question extends BaseEntity {
 
   @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Option> options = new ArrayList<>();
+
+  @Column(name = "LEVEL")
+  private Integer level;
 }

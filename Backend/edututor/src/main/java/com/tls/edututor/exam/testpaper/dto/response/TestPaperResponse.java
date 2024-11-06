@@ -11,11 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 public class TestPaperResponse {
   private Long testPaperId;
+  private int testPaperStatus;
   private String title;
   private List<QuestionResponse> questions;
 
-  public TestPaperResponse(Long testPaperId, String title, List<QuestionResponse> questions) {
+  public TestPaperResponse(Long testPaperId, int testPaperStatus, String title, List<QuestionResponse> questions) {
     this.testPaperId = testPaperId;
+    this.testPaperStatus = testPaperStatus;
     this.title = title;
     this.questions = questions;
   }

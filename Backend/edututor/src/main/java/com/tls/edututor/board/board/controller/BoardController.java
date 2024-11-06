@@ -20,11 +20,12 @@ public class BoardController {
   @GetMapping("/{categoryId}")
   public CommonApiResponse<List<BoardResponse>> getBoardsByCategory(
           @PathVariable Long categoryId,
-          @RequestParam(required = false, defaultValue = "false") boolean includeChildren) {
-    log.info("카테고리ID: {}, 하위카테고리포함: {}", categoryId, includeChildren);
+          @RequestParam(required = false, defaultValue = "false") boolean includeChildren,
+          @RequestParam(required = false) String searchQuery) {
+    log.info("카테고리ID: {}, 하위카테고리포함: {}, 검색: {}", categoryId, includeChildren, searchQuery);
     List<BoardResponse> boards = includeChildren ?
-            boardService.getBoardsByCategoryWithChildren(categoryId) :
-            boardService.getBoardsByCategory(categoryId);
+            boardService.getBoardsByCategoryWithChildren(categoryId, searchQuery) :
+            boardService.getBoardsByCategory(categoryId, searchQuery);
     return CommonApiResponse.createSuccess("board", boards);
   }
 

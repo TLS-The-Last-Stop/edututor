@@ -4,6 +4,7 @@ import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -20,14 +21,20 @@ public class UserController {
   @GetMapping("/{loginId}")
   public CommonApiResponse<?> checkLoginId(@PathVariable("loginId") String loginId) {
     boolean isAvailable = userService.checkJoinAvailable(loginId);
-    if (isAvailable) return CommonApiResponse.createBadRequest("");
-    else return CommonApiResponse.createNoContent("");
+    if (isAvailable) return CommonApiResponse.createBadRequest("중복된 아이디");
+    else return CommonApiResponse.createNoContent("회원가입 가능");
   }
 
 
   @PostMapping("/teachers")
   public CommonApiResponse<?> createTeacher(@RequestBody UserTERequest request) {
     userService.saveTeacher(request);
+    return CommonApiResponse.createNoContent("회원가입이 완료되었습니다.");
+  }
+
+  @RequestMapping(path = "/teachers", method = {RequestMethod.PUT, RequestMethod.PATCH})
+  public CommonApiResponse<?> addInfo(@RequestBody UserTERequest request, HttpServletRequest req) {
+    userService.updateInfo(request, req);
     return CommonApiResponse.createNoContent("회원가입이 완료되었습니다.");
   }
 

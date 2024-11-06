@@ -61,6 +61,7 @@ public class MaterialServiceImpl implements MaterialService {
   private void updateMaterialFields(Material material, MaterialRegisterRequest request) {
     material.setTitle(request.getTitle());
     material.setContent(request.getContent());
+    material.setUrl(request.getUrl());
   }
 
   private Material buildMaterial(Unit unit, MaterialRegisterRequest request) {
@@ -68,6 +69,7 @@ public class MaterialServiceImpl implements MaterialService {
             .unit(unit)
             .title(request.getTitle())
             .content(request.getContent())
+            .url(request.getUrl())
             .build();
   }
 
@@ -76,6 +78,7 @@ public class MaterialServiceImpl implements MaterialService {
             .materialId(material.getId())
             .title(material.getTitle())
             .content(material.getContent())
+            .url(material.getUrl())
             .build();
   }
 }

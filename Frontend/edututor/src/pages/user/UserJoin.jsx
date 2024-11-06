@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const initForm = {
-  fullName         : '',
+  username         : '',
   loginId          : '',
   password         : '',
   confirmPassword  : '',
@@ -135,20 +135,38 @@ const UserJoin = () => {
       return;
     }
 
+    /**
+     *     try {
+     *       const result = await checkDuplicateId(form.loginId);
+     *       if (result.status === 204) {
+     *         setIsIdChecked(true);
+     *         setIdCheckMessage('사용 가능한 아이디 입니다.');
+     *       } else {
+     *         setIsIdChecked(false);
+     *         setIdCheckMessage('이미 사용중이 아이디입니다.');
+     *       }
+     *
+     *     } catch (error) {
+     *       console.error('아이디 중복체크 실패: ', error);
+     *       setIsIdChecked(false);
+     *       setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
+     *     }
+     */
+
     try {
-      const result = await checkDuplicateId(form.loginId);
+      await checkDuplicateId(form.loginId);
+    } catch (error) {
+      const result = error.response.data;
       if (result.status === 204) {
         setIsIdChecked(true);
         setIdCheckMessage('사용 가능한 아이디 입니다.');
-      } else {
+      } else if (result.status === 400) {
         setIsIdChecked(false);
         setIdCheckMessage('이미 사용중이 아이디입니다.');
+      } else {
+        setIsIdChecked(false);
+        setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
       }
-
-    } catch (error) {
-      console.error('아이디 중복체크 실패: ', error);
-      setIsIdChecked(false);
-      setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
     }
   };
 
@@ -257,7 +275,7 @@ const UserJoin = () => {
       return false;
     }
 
-    if (!form.fullName || !form.loginId || !form.password || !form.confirmPassword ||
+    if (!form.username || !form.loginId || !form.password || !form.confirmPassword ||
       !form.email || !form.phoneMiddle || !form.phoneLast ||
       !form.birthYear || !form.birthMonth || !form.birthDay ||
       !selectedSchool.name || !classroom.year || !classroom.grade || !classroom.classroomName) {
@@ -303,7 +321,7 @@ const UserJoin = () => {
 
     // 전송
     const submitData = {
-      fullName: form.fullName,
+      username: form.username,
       loginId : form.loginId,
       password: form.password,
       email   : `${form.email}@${form.emailDomain || form.emailDomainSelect}`,

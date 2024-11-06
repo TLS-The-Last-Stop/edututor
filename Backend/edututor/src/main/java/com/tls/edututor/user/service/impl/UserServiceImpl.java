@@ -11,6 +11,8 @@ import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import com.tls.edututor.user.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -109,5 +111,33 @@ public class UserServiceImpl implements UserService {
     userRepository.save(student);
 
     return student.getId();
+  }
+
+  @Override
+  public Long updateInfo(UserTERequest request, HttpServletRequest req) {
+    Cookie[] cookies = req.getCookies();
+    String oauthUserId = "";
+    for (Cookie cookie : cookies) {
+      if (cookie.getName().startsWith("temp")) oauthUserId = cookie.getValue();
+    }
+
+    if (oauthUserId.isBlank()) throw new IllegalArgumentException("잘못된 접근입니다.");
+
+    User user = userRepository.findById(Long.parseLong(oauthUserId)).orElseThrow();
+    School school = School.withDto()
+            .request(request.getSchool())
+            .build();
+    schoolRepository.save(school);
+
+    Classroom classroom = Classroom.withDto()
+            .request(request.getClassroom())
+            .school(school)
+            .type(school.getType())
+            .build();
+    classroomRepository.save(classroom);
+
+    user.completeOAuthRegistration(classroom, request.getPhoneNum(), request.getBirthDay(), "TE");
+
+    return 0L;
   }
 }

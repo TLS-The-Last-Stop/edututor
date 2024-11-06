@@ -28,7 +28,7 @@ const ReportList = ({
       ) : (
         <tr>
           <td colSpan="6" className="empty-message">
-            리포트가 없잖슴~~🌈❄️🦐🐻🦄
+            리포트가 존재하지 않습니다.
           </td>
         </tr>
       )}

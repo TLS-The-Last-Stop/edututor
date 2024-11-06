@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ReportList from '../../components/report/ReportList.jsx';
 import { getClassroomCourses, getReport } from '../../api/report/report.js';
 import '../../assets/css/ReportPage.css';
+import Pagination from '../../components/common/Pagination.jsx';
 
 const Report = () => {
   const [reportData, setReportData] = useState([]);
@@ -122,33 +123,11 @@ const Report = () => {
         onViewDetail={(id) => navigate(`/report/${id}`)}
       />
 
-      <div className="pagination">
-        <button onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}>
-          «
-        </button>
-        <button onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}>
-          ‹
-        </button>
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index)}
-            className={`pagination-button ${index === currentPage ? 'active' : ''}`}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}>
-          ›
-        </button>
-        <button onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}>
-          »
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+      />
     </div>
   );
 };

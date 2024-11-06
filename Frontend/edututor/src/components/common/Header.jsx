@@ -3,8 +3,6 @@ import { useAuth } from '../../utils/AuthContext.jsx';
 import { useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
-import cs from '../../assets/icon/custom-service.png';
-import tutor from '../../assets/icon/tutor.png';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
 import { Link } from 'react-router-dom';
@@ -55,14 +53,24 @@ const NavList = styled.ul`
     display: flex;
     gap: 32px;
     list-style: none;
-    margin: 0;
+    margin: 8px 0 0;
     padding: 0;
     flex-grow: 1;
+    align-items: center; // 수직 중앙 정렬 추가
 
     li {
         font-size: 16px;
         color: #333;
         cursor: pointer;
+        height: 64px; // MainNav와 동일한 높이
+        display: flex; // Flex 컨테이너로 변경
+        align-items: center; // 수직 중앙 정렬
+
+        a {
+            height: 100%; // 전체 높이 사용
+            display: flex; // Flex 컨테이너로 변경
+            align-items: center; // 수직 중앙 정렬
+        }
 
         &:hover {
             color: #4285f4;
@@ -83,7 +91,8 @@ const UserInfoContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-left: auto; // 오른쪽 정렬
+    margin-left: auto;
+    height: 100%; // MainNav와 동일한 높이
 
     @media (max-width: 765px) {
         display: none;
@@ -123,6 +132,8 @@ const LogoutButton = styled.button`
 const AuthButtons = styled.div`
     display: flex;
     gap: 12px;
+    align-items: center; // 수직 중앙 정렬
+    height: 100%; // MainNav와 동일한 높이
 
     button {
         padding: 8px 16px;
@@ -357,18 +368,16 @@ const Header = () => {
                 className={activeHeaderMenu === '리포트' ? 'active' : ''}>
               <StyledRouterLink to="/report">리포트</StyledRouterLink>
             </li>
-            <li onClick={() => handleHeaderMenuClick('에듀튜터')}
-                className={activeHeaderMenu === '에듀튜터' ? 'active' : ''}>에듀튜터 소개
-            </li>
             <li onClick={() => handleHeaderMenuClick('고객센터')}
-                className={activeHeaderMenu === '고객센터' ? 'active' : ''}>고객센터
+                className={activeHeaderMenu === '고객센터' ? 'active' : ''}>
+              <StyledRouterLink to="/cmmn/notice">고객센터</StyledRouterLink>
             </li>
           </NavList>
 
           {userInfo ? (
             <UserInfoContainer>
               <UserInfo>
-                <span>{userInfo.fullName}님</span>
+                <span>{userInfo.username}님</span>
                 <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
               </UserInfo>
             </UserInfoContainer>
@@ -388,34 +397,24 @@ const Header = () => {
         </MainNav>
       </HeaderContent>
 
-      {activeHeaderMenu === '에듀튜터' && (
-        <HeaderContent>
-          <SubNav>
-            <ul>
-              <li onClick={() => handleSubMenuClick('활용사례')} className={activeHeaderMenu === '활용사례' ? 'active' : ''}>활용
-                사례
-              </li>
-              <li onClick={() => handleSubMenuClick('서비스소개')}
-                  className={activeHeaderMenu === '서비스소개' ? 'active' : ''}>서비스
-                소개
-              </li>
-            </ul>
-          </SubNav>
-        </HeaderContent>
-      )}
-
       {activeHeaderMenu === '고객센터' && (
         <HeaderContent>
           <SubNav>
             <ul>
               <li onClick={() => handleSubMenuClick('공지사항')} className={activeHeaderMenu === '공지사항' ? 'active' : ''}>
-                공지사항
+                <StyledRouterLink to="/cmmn/notice">공지사항</StyledRouterLink>
               </li>
               <li onClick={() => handleSubMenuClick('FAQ')}
-                  className={activeHeaderMenu === 'FAQ' ? 'active' : ''}>FAQ
+                  className={activeHeaderMenu === 'FAQ' ? 'active' : ''}>
+                <StyledRouterLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledRouterLink>
               </li>
               <li onClick={() => handleSubMenuClick('1:1문의')}
-                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>1:1문의
+                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>
+                <StyledRouterLink to="/cmmn/inquiry">1:1문의</StyledRouterLink>
+              </li>
+              <li onClick={() => handleSubMenuClick('오류 문항 신고 현황')}
+                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>
+                <StyledRouterLink to="/">오류 문항 신고 현황</StyledRouterLink>
               </li>
             </ul>
           </SubNav>
@@ -442,45 +441,29 @@ const Header = () => {
                              onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>
             <img src={report} alt="리포트 이미지" /> <StyledRouterLink to="/report">리포트</StyledRouterLink>
           </HamburgerMenuItem>
-          <HamburgerMenuItem className={activeHamburgerMenu === '에듀튜터' ? 'active' : ''}
-                             onClick={(e) => handleHamburgerMenuClick(e, '에듀튜터')}>
-            <img src={tutor} alt="에듀튜터 이미지" />에듀튜터
-          </HamburgerMenuItem>
-          {activeHamburgerMenu === '에듀튜터' && (
-            <>
-              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '활용사례')}
-                                 clasName={activeHamburgerMenu === '활용사례' ? 'active' : ''}
-                                 style={{ paddingLeft: '32px' }}
-              >활용
-                사례</HamburgerMenuItem>
-              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '서비스소개')}
-                                 clasName={activeHamburgerMenu === '서비스소개' ? 'active' : ''}
-                                 style={{ paddingLeft: '32px' }}
-              >서비스
-                소개</HamburgerMenuItem>
-            </>
-          )}
+
           {activeHamburgerMenu === '고객센터' && (
             <>
               <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '공지사항')}
-                                 clasName={activeHamburgerMenu === '공지사항' ? 'active' : ''}
+                                 className={activeHamburgerMenu === '공지사항' ? 'active' : ''}
                                  style={{ paddingLeft: '32px' }}
-              >공지사항</HamburgerMenuItem>
+              ><StyledRouterLink to="/cmmn/notice">공지사항</StyledRouterLink></HamburgerMenuItem>
               <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, 'FAQ')}
-                                 clasName={activeHamburgerMenu === 'FAQ' ? 'active' : ''}
+                                 className={activeHamburgerMenu === 'FAQ' ? 'active' : ''}
                                  style={{ paddingLeft: '32px' }}
-              >FAQ</HamburgerMenuItem>
+              ><StyledRouterLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledRouterLink></HamburgerMenuItem>
               <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '1:1문의')}
-                                 clasName={activeHamburgerMenu === '1:1문의' ? 'active' : ''}
+                                 class
+                                 Name={activeHamburgerMenu === '1:1문의' ? 'active' : ''}
                                  style={{ paddingLeft: '32px' }}
-              >1:1문의</HamburgerMenuItem>
+              ><StyledRouterLink to="/cmmn/inquiry">1:1문의</StyledRouterLink></HamburgerMenuItem>
             </>
           )}
 
           {userInfo ? (
             <HamburgerMenuItem>
               <UserInfo>
-                {userInfo.fullName}님
+                {userInfo.username}님
                 <HamburgerLogoutButton onClick={handleLogout}>로그아웃</HamburgerLogoutButton>
               </UserInfo>
             </HamburgerMenuItem>

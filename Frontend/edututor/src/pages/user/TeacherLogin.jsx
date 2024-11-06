@@ -11,7 +11,7 @@ import {
 import naver from '../../assets/icon/naver.png';
 import kakao from '../../assets/icon/kakao.png';
 import google from '../../assets/icon/google.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext.jsx';
@@ -99,6 +99,17 @@ const TeacherLogin = () => {
     }
   };
 
+  const handleSocialLogin = (provider) => {
+    switch (provider) {
+      case 'naver':
+        location.href = `${import.meta.env.VITE_OAUTH_BASE_URL}/oauth2/authorization/naver`;
+        break;
+      case 'google':
+        location.href = `${import.meta.env.VITE_OAUTH_BASE_URL}/oauth2/authorization/google`;
+        break;
+    }
+  };
+
   return (
     <>
       <Container>
@@ -149,15 +160,15 @@ const TeacherLogin = () => {
               <SNSLoginSection>
                 <SNSTitle>SNS 로그인</SNSTitle>
                 <SNSButtonGroup>
-                  <SNSButton $provider="naver">
+                  <SNSButton $provider="naver" onClick={() => handleSocialLogin('naver')}>
                     <img src={naver} alt="naver logo" />
                     <LogoText>네이버</LogoText>
                   </SNSButton>
-                  <SNSButton $provider="kakao">
+                  <SNSButton $provider="kakao" onClick={() => alert('카카오는 준비중')}>
                     <img src={kakao} alt="naver logo" />
                     카카오
                   </SNSButton>
-                  <SNSButton $provider="google">
+                  <SNSButton $provider="google" onClick={() => handleSocialLogin('google')}>
                     <img src={google} alt="naver logo" />
                     구글
                   </SNSButton>
