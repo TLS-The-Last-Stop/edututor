@@ -20,6 +20,7 @@ const CoursePage = () => {
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
   const [testPreview, setTestPreview] = useState(null);
   const [isTestPreviewModalOpen, setIsTestPreviewModalOpen] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState(null); // 선택된 과정 ID 상태 추가
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -35,18 +36,26 @@ const CoursePage = () => {
 
   useEffect(() => {
     if (courseId) {
+      setSelectedCourseId(courseId);
       setLoading(true);
       publicApi.get(`/course/${courseId}`)
-        .then(response => {
-          setCourseData(response.data.data);
-          setLoading(false);
-        })
-        .catch(error => {
-          setError('Failed to fetch course data.');
-          setLoading(false);
-        });
+          .then(response => {
+            setCourseData(response.data.data);
+            setLoading(false);
+          })
+          .catch(error => {
+            setError('Failed to fetch course data.');
+            setLoading(false);
+          });
     }
   }, [courseId]);
+
+  const handleCourseSelect = (id) => {
+    if (selectedCourseId !== id) {
+      setSelectedCourseId(id);
+      navigate(`/course/${id}`);
+    }
+  };
 
   const handleOpenTestPreview = async (testPaperId) => {
     try {
@@ -82,21 +91,25 @@ const CoursePage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="course-page">
-      <div className="sidebar">
-        <button className="new-course-btn" onClick={() => navigate('/course/enroll')}>새 과정 등록하기</button>
-        <ul>
-          {courses.map(course => (
-            <li
-              key={course.courseId}
-              className="course-item"
-              onClick={() => navigate(`/course/${course.courseId}`)}
-            >
-              {course.courseName}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <div className="course-page">
+        <div className="sidebar">
+          <button className="new-course-btn" onClick={() => navigate('/course/enroll')}>새 과정 등록하기</button>
+          <ul>
+            {courses.length > 0 ? (
+                courses.map(course => (
+                    <li
+                        key={course.courseId}
+                        className={`course-item ${selectedCourseId === course.courseId ? 'selected' : ''}`}
+                        onClick={() => handleCourseSelect(course.courseId)}
+                    >
+                      {course.courseName}
+                    </li>
+                ))
+            ) : (
+                <li className="no-courses">등록된 과정이 없습니다</li>
+            )}
+          </ul>
+        </div>
 
         <div className="course-details">
           {courseData ? (
@@ -110,9 +123,9 @@ const CoursePage = () => {
                   </div>
                 </div>
 
-            {courseData.sections.map(section => (
-              <div key={section.sectionId} className="section">
-                <h3>{section.content}</h3>
+                {courseData.sections.map(section => (
+                    <div key={section.sectionId} className="section">
+                      <h3>{section.content}</h3>
 
                       {section.units.map(unit => (
                           <div key={unit.unitId} className="unit">
@@ -152,10 +165,11 @@ const CoursePage = () => {
           )}
         </div>
 
-      <ExamShareModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)} selectedTest={selectedTest}
-      />
+        <ExamShareModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            selectedTest={selectedTest}
+        />
 
         <MaterialPreviewModal
             isOpen={isMaterialModalOpen}

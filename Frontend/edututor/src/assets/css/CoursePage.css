@@ -131,3 +131,11 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+.course-item.selected {
+    background-color: #d0ebff;
+    font-weight: bold;
+    color: #0056b3;
+    border-left: 4px solid #0056b3;
+}
+
