@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { useAuth } from '../../utils/AuthContext.jsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../api/user/user.js';
 import { StyledRouterLink } from './UserStyledComponents.js';
 
@@ -346,7 +346,25 @@ const Header = () => {
   const [activeHamburgerMenu, setActiveHamburgerMenu] = useState('');
   const [activeSubMenu, setActiveSubMenu] = useState('공지사항');
 
+  const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const pathname = location.pathname;
+
+    if (pathname.includes('/cmmn')) {
+      setActiveHeaderMenu('고객센터');
+
+      if (pathname.includes('/notice')) setActiveSubMenu('공지사항');
+      else if (pathname.includes('/faq')) setActiveSubMenu('FAQ');
+      else if (pathname.includes('/inquiry')) setActiveSubMenu('1:1문의');
+    } else if (pathname.includes('/report')) {
+      setActiveHeaderMenu('리포트');
+    } else if (pathname.includes('/course')) {
+      setActiveHeaderMenu('학습');
+    }
+
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem('info');
@@ -388,11 +406,15 @@ const Header = () => {
     navigate('/course0/1'); // 추후 수정
   };
 
+  const handleClean = () => {
+    setActiveHeaderMenu('');
+  };
+
   return (
     <HeaderContainer>
       <HeaderContent>
         <MainNav>
-          <Logo>
+          <Logo onClick={handleClean}>
             <StyledRouterLink to="/">
               <span>E</span>dututor
               <span className="edu">edu</span>
@@ -484,7 +506,10 @@ const Header = () => {
 
           <HamburgerMenuItem className={activeHamburgerMenu === '학습' ? 'active' : ''}
                              onClick={(e) => handleHamburgerMenuClick(e, '학습')}>
-            <img src={study} alt="학습 이미지" /> 학습
+            <img src={study} alt="학습 이미지" />
+            {userRole === 'TE'
+              ? (<StyledButton onClick={handleTeacherCourseClick}>학습</StyledButton>)
+              : (<StyledButton onClick={handleStudentCourseClick}>학습</StyledButton>)}
           </HamburgerMenuItem>
           <HamburgerMenuItem className={activeHamburgerMenu === '리포트' ? 'active' : ''}
                              onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>

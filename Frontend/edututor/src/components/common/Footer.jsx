@@ -10,7 +10,6 @@ const FooterContainer = styled.footer`
     width: 100%;
     position: relative;
     transform: translateY(0%);
-    font-family: 'Noto Sans KR', sans-serif;
 `;
 
 // 좌측 네비게이션
