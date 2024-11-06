@@ -37,8 +37,8 @@ const Notice = () => {
     });
   };
 
-  const handleNoticeClick = (id) => {
-    navigate(`/cmmn/notice/${id}`);
+  const handleNoticeClick = (boardId) => {
+    navigate(`/cmmn/notice/${boardId}`);
   };
 
   const handlePageChange = (page) => {
