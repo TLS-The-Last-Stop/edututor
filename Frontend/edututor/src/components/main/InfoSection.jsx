@@ -4,6 +4,8 @@ import db from '../../assets/icon/db.png';
 import 시각화 from '../../assets/icon/시각화.png';
 import 평가 from '../../assets/icon/평가.png';
 import 선생님가이드 from '../../assets/file/지니아튜터+상세가이드(교사)_2407.pdf';
+import 학생가이드 from '../../assets/file/지니아튜터+상세가이드(학생)_2407.pdf';
+import { BsDownload } from 'react-icons/bs';
 
 const InfoContainer = styled.div`
     padding: 40px;
@@ -60,7 +62,7 @@ const FeatureCard = styled.div`
     box-sizing: border-box;
     padding: 24px;
     border-radius: 12px;
-    background: ${props => props.$primary ? '#4285f4' : 'white'};
+    background: ${props => props.$primary ? 'linear-gradient(-135deg, rgb(22, 140, 255) 0%, rgb(132, 85, 255) 100%)' : 'white'};
     border: 1px solid #eaeaea;
     transition: all 0.2s ease-in-out;
     display: flex;
@@ -93,6 +95,7 @@ const FeatureIcon = styled.img`
 const FeatureContent = styled.div`
     flex: 1;
     width: 100%;
+    color: ${props => props.$primary ? '#fff' : '#171616FF'};
 
     h3 {
         font-size: 18px;
@@ -123,9 +126,14 @@ const NoticeSection = styled.div`
 const DownloadWrapper = styled.div`
     display: flex;
     justify-content: center;
+    gap: 12px;
 `;
 
-const DownloadButton = styled.button`
+const DownloadATag = styled.a`
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 50%;
     height: 56px;
     border-radius: 25px;
@@ -135,6 +143,17 @@ const DownloadButton = styled.button`
     border: ${props => props.$teacher ? '' : '1px solid #108eff'};
     background: ${props => props.$teacher ? '#108eff' : '#fff'};
     color: ${props => props.$teacher ? '#fff' : '#171616FF'};
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(16, 142, 255, 0.2);
+    }
+
+    svg {
+        width: 18px;
+        height: 18px;
+        margin-left: 4px;
+    }
 `;
 
 const InfoSection = () => {
@@ -193,9 +212,21 @@ const InfoSection = () => {
 
       <NoticeSection>
         <DownloadWrapper>
-          <DownloadButton $teacher>
-            <a href={선생님가이드} download="지니아튜터+상세가이드(교사)_2407" />교사용 이용 가이드</DownloadButton>
-          <DownloadButton>학생용 이용 가이드</DownloadButton>
+          <DownloadATag
+            $teacher
+            href={선생님가이드}
+            download="지니아튜터+상세가이드(교사)_2407"
+          >
+            교사용 이용 가이드
+            <BsDownload />
+          </DownloadATag>
+          <DownloadATag
+            href={학생가이드}
+            download="지니아튜터+상세가이드(학생)_2407"
+          >
+            학생용 이용 가이드
+            <BsDownload />
+          </DownloadATag>
         </DownloadWrapper>
       </NoticeSection>
     </InfoContainer>

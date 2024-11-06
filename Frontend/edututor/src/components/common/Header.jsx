@@ -13,7 +13,6 @@ const HeaderContainer = styled.header`
     width: 100%;
     border-bottom: 1px solid #eaeaea;
     background: white;
-    font-family: 'Noto Sans KR', sans-serif;
 `;
 
 const HeaderContent = styled.div`
