@@ -296,7 +296,7 @@ const CourseSection = () => {
             {userRole === 'TE' ? (
               <Link to="/course/enroll">새 과정 등록하기</Link>
             ) : (
-              '선생님에게 얘기하러 가기(채팅 ?)'
+              ''
             )}
           </RegisterCourseButton>
         </RegisterCourseWrapper>
