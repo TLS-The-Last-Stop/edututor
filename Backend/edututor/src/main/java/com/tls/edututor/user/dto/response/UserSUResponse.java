@@ -8,13 +8,13 @@ import lombok.Setter;
 import java.util.Map;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
-public class UserSTResponse {
+public class UserSUResponse {
   private Long id;
   private String username;
   private String loginId;
+  private Long classroomId;
   private Map<Long, Boolean> isShared;
   //private String studentProfileImage;
 }

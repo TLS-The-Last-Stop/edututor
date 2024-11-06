@@ -47,7 +47,7 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
       if (!hasRequiredRole(requiredRole, role) && !hasAlerted) {
         setHasAlerted(true);
-        alert('떽끼!');
+        alert('죄송합니다.');
         navigate('/');
         return;
       }
