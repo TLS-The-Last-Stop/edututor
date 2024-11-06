@@ -36,11 +36,11 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     try {
-      Map map = objectMapper.readValue(request.getInputStream(), Map.class);
+      Map<String, String> map = objectMapper.readValue(request.getInputStream(), Map.class);
 
-      String loginId = map.get("loginId").toString();
-      String password = map.get("password").toString();
-      String type = map.get("type").toString();
+      String loginId = map.get("loginId");
+      String password = map.get("password");
+      String type = map.get("type");
       UsernamePasswordAuthenticationToken token =
               new UsernamePasswordAuthenticationToken(loginId, password, null);
 
@@ -73,14 +73,19 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     if (!roles.get(0).equals(loginType)) throw new InternalAuthenticationServiceException("AUTH004");
 
-    String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L); // 1시간 => 더 줄이기
-    String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L); // 24시간 => 더 줄이기
+    String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L); // 1시간
+    String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L); // 24시간
 
     addRefreshEntity(loginId, refreshToken, 1000 * 60 * 60 * 24L);
 
     response.setStatus(HttpServletResponse.SC_OK);
-    response.addCookie(createCookie("access", accessToken));
-    response.addCookie(createCookie("refresh", refreshToken));
+    Cookie accessCookie = createCookie("access", accessToken);
+    Cookie refreshCookie = createCookie("refresh", refreshToken);
+
+    // SameSite 속성 추가를 위해 직접 Set-Cookie 헤더 설정
+    response.addHeader("Set-Cookie", String.format("%s; SameSite=None; Secure", accessCookie.toString()));
+    response.addHeader("Set-Cookie", String.format("%s; SameSite=None; Secure", refreshCookie.toString()));
+
     response.setContentType("application/json; charset=utf-8");
 
     Map<String, Object> data = new HashMap<>();
@@ -104,12 +109,12 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
   private Cookie createCookie(String key, String value) {
     Cookie cookie = new Cookie(key, value);
-    if (key.startsWith("refresh")) cookie.setMaxAge(24 * 60 * 60); // 토큰을 만들때와 동일하게
-    else if (key.startsWith("access")) cookie.setMaxAge(60 * 60);
+    if (key.startsWith("refresh")) cookie.setMaxAge(24 * 60 * 60); // 24시간
+    else if (key.startsWith("access")) cookie.setMaxAge(60 * 60); // 1시간
 
     cookie.setPath("/");
     cookie.setHttpOnly(true);
-
+    cookie.setSecure(true); // HTTPS에서만 전송될 수 있도록 설정
     return cookie;
   }
 
