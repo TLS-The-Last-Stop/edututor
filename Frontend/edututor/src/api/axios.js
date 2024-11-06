@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API_URL 환경 변수 또는 기본 URL 설정
-const apiUrl = process.env.API_URL || 'http://localhost:8080';
+const apiUrl = process.env.API_URL;
 
 // 공용 API 인스턴스
 export const publicApi = axios.create({
