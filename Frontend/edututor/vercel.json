@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://www.edututor.online/api/$1" }
+    {"source": "/(.*)","destination": "/"}
   ]
 }
