@@ -9,8 +9,6 @@ import 수학 from '../../assets/icon/수학.jpg';
 const CourseContainer = styled.div`
     margin: 60px auto 0; // auto로 중앙 정렬
     padding: 40px 80px; // 좌우 패딩 증가로 화면 끝과 간격 확보
-    border: 1px solid #9b9b9b;
-    border-radius: 15px;
     max-width: 1300px; // 최대 너비 설정
     width: 100%;
     box-sizing: border-box;
