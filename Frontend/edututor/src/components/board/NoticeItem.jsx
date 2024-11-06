@@ -1,15 +1,9 @@
 const NoticeItem = ({
                       notice,
-                      onNoticeClick
+                      onNoticeClick,
+                      formatDate
                     }) => {
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('ko-KR', {
-      year: '2-digit',
-      month: '2-digit',
-      day: '2-digit'
-    });
-  };
 
   return (
     <tr>

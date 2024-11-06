@@ -54,7 +54,7 @@ const NoticeDetail = () => {
         <div className="notice-header">
           <h1 className="notice-title">{notice.title}</h1>
           <div className="notice-info">
-            <span className="notice-date">등록일: {formatDate(notice.createdAt)}</span>
+            <span className="notice-date">등록일: {formatDate(notice.createAt)}</span>
           </div>
         </div>
 
