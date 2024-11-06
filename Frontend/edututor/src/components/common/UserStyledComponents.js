@@ -436,8 +436,6 @@ export const StyledRouterLink = styled(Link)`
         color: #40a9ff;
     }
 
-    /* 구분선을 가상 요소로 추가 */
-
     &:not(:last-child) {
         padding-right: 1rem;
 
