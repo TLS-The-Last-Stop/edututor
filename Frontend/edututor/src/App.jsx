@@ -21,6 +21,7 @@ import { AuthProvider } from './utils/AuthContext.jsx';
 import CourseStudentPage from './pages/course/CourseStudentPage.jsx';
 import MaterialDetailStudentPage from './pages/material/MaterialDetailStudentPage.jsx';
 import Notice from './pages/board/Notice.jsx';
+import NoticeDetail from './pages/board/NoticeDetail.jsx';
 import Faq from './pages/board/Faq.jsx';
 import Inquiry from './pages/board/Inquiry.jsx';
 
@@ -29,6 +30,7 @@ const GlobalStyle = createGlobalStyle`
     ${reset}
     html, body {
         height: 100%;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 `;
 /* 관리자 라우팅 */
@@ -175,6 +177,10 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}><Notice /></Suspense>
           } />
 
+          <Route path="cmmn/notice/:boardId" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
+            <Suspense fallback={<LoadingSpinner />}><NoticeDetail /></Suspense>
+          } />
+
           <Route path="cmmn/faq" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
             <Suspense fallback={<LoadingSpinner />}><Faq /></Suspense>
           } />
@@ -231,15 +237,15 @@ function AppRoutes() {
             </Suspense>
           } />
 
-          <Route path="/course/:courseId" index element={
+          <Route path="/course/:courseId" element={
             <Suspense fallback={<LoadingSpinner />}>
-              {/*<ProtectedRoute requiredRole="TE">*/}
               <ProtectedRoute requiredRole="SU">
                 <CoursePage />
               </ProtectedRoute>
             </Suspense>
           } />
-          <Route path="/course0/:courseId" index element={
+
+          <Route path="/course0/:courseId" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="SU">
                 <CourseStudentPage />
@@ -247,7 +253,7 @@ function AppRoutes() {
             </Suspense>
           } />
 
-          <Route path="/course/enroll" index element={
+          <Route path="/course/enroll" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="TE">
                 <CourseClassroomEnrollPage />

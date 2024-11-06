@@ -4,13 +4,11 @@ import com.tls.edututor.board.board.entity.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
-  @Query("select b from Board b where b.category.id =:categoryId")
-  List<Board> findByCategoryId(Long categoryId);
+  List<Board> findByCategoryIdOrderByIdDesc(Long categoryId);
 
   @Query("SELECT b \n" +
           "FROM Board b\n" +

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { useAuth } from '../../utils/AuthContext.jsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../api/user/user.js';
 import { StyledRouterLink } from './UserStyledComponents.js';
 
@@ -13,7 +13,6 @@ const HeaderContainer = styled.header`
     width: 100%;
     border-bottom: 1px solid #eaeaea;
     background: white;
-    font-family: 'Noto Sans KR', sans-serif;
 `;
 
 const HeaderContent = styled.div`
@@ -67,9 +66,13 @@ const NavList = styled.ul`
         align-items: center; // 수직 중앙 정렬
 
         a {
-            height: 100%; // 전체 높이 사용
-            display: flex; // Flex 컨테이너로 변경
-            align-items: center; // 수직 중앙 정렬
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            color: inherit;
+            text-decoration: none;
         }
 
         &:hover {
@@ -190,8 +193,14 @@ const SubNav = styled.nav`
             color: #666;
             cursor: pointer;
 
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
             &:hover {
                 color: #4285f4;
+                background: #f8f9fa;
             }
 
             &.active {
@@ -313,13 +322,49 @@ const Overlay = styled.div`
     }
 `;
 
+const StyledButton = styled.button`
+    background: none;
+    border: none;
+    font-size: inherit;
+    color: #666;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    margin-right: 0;
+
+    &:hover {
+        color: #40a9ff;
+    }
+
+`;
+
 
 const Header = () => {
-  const { userInfo, updateUserInfo } = useAuth?.() || {};
+  const { userInfo, updateUserInfo, userRole } = useAuth?.() || {};
   const [hamburger, setHamburger] = useState(false);
   const [activeHeaderMenu, setActiveHeaderMenu] = useState('');
   const [activeHamburgerMenu, setActiveHamburgerMenu] = useState('');
-  const [activeSubMenu, setActiveSubMenu] = useState(false);
+  const [activeSubMenu, setActiveSubMenu] = useState('공지사항');
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const pathname = location.pathname;
+
+    if (pathname.includes('/cmmn')) {
+      setActiveHeaderMenu('고객센터');
+
+      if (pathname.includes('/notice')) setActiveSubMenu('공지사항');
+      else if (pathname.includes('/faq')) setActiveSubMenu('FAQ');
+      else if (pathname.includes('/inquiry')) setActiveSubMenu('1:1문의');
+    } else if (pathname.includes('/report')) {
+      setActiveHeaderMenu('리포트');
+    } else if (pathname.includes('/course')) {
+      setActiveHeaderMenu('학습');
+    }
+
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem('info');
@@ -336,33 +381,50 @@ const Header = () => {
   };
 
   const handleHeaderMenuClick = (menuName) => {
-    setActiveHeaderMenu(activeHeaderMenu === menuName ? '' : menuName);
-    setActiveSubMenu('');
+    setActiveHeaderMenu(menuName);
+
+    if (menuName === '고객센터') setActiveSubMenu('공지사항');
+    else setActiveSubMenu('');
   };
 
   const handleHamburgerMenuClick = (e, menuName) => {
-    e.stopPropagation();
+    e.stopPropagation;
     setActiveHamburgerMenu(activeHamburgerMenu === menuName ? '' : menuName);
-    setActiveSubMenu(''); // 메인 메뉴 클릭시 서브메뉴 선택 초기화
+    setActiveSubMenu('');
   };
 
   const handleSubMenuClick = (e, subMenuName) => {
-    e.stopPropagation();
+    e.stopPropagation;
     setActiveSubMenu(subMenuName === activeSubMenu ? '' : subMenuName);
+  };
+
+  const handleTeacherCourseClick = () => {
+    navigate('/course/1'); // 추후 수정
+  };
+
+  const handleStudentCourseClick = () => {
+    navigate('/course0/1'); // 추후 수정
+  };
+
+  const handleClean = () => {
+    setActiveHeaderMenu('');
   };
 
   return (
     <HeaderContainer>
       <HeaderContent>
         <MainNav>
-          <Logo>
+          <Logo onClick={handleClean}>
             <StyledRouterLink to="/">
               <span>E</span>dututor
               <span className="edu">edu</span>
             </StyledRouterLink>
           </Logo>
           <NavList>
-            <li onClick={() => handleHeaderMenuClick('학습')} className={activeHeaderMenu === '학습' ? 'active' : ''}>학습
+            <li onClick={() => handleHeaderMenuClick('학습')} className={activeHeaderMenu === '학습' ? 'active' : ''}>
+              {userRole === 'TE'
+                ? (<StyledButton onClick={handleTeacherCourseClick}>학습</StyledButton>)
+                : (<StyledButton onClick={handleStudentCourseClick}>학습</StyledButton>)}
             </li>
             <li onClick={() => handleHeaderMenuClick('리포트')}
                 className={activeHeaderMenu === '리포트' ? 'active' : ''}>
@@ -401,19 +463,28 @@ const Header = () => {
         <HeaderContent>
           <SubNav>
             <ul>
-              <li onClick={() => handleSubMenuClick('공지사항')} className={activeHeaderMenu === '공지사항' ? 'active' : ''}>
+              <li
+                onClick={(e) => handleSubMenuClick(e, '공지사항')}
+                className={activeSubMenu === '공지사항' ? 'active' : ''}
+              >
                 <StyledRouterLink to="/cmmn/notice">공지사항</StyledRouterLink>
               </li>
-              <li onClick={() => handleSubMenuClick('FAQ')}
-                  className={activeHeaderMenu === 'FAQ' ? 'active' : ''}>
+              <li
+                onClick={(e) => handleSubMenuClick(e, 'FAQ')}
+                className={activeSubMenu === 'FAQ' ? 'active' : ''}
+              >
                 <StyledRouterLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledRouterLink>
               </li>
-              <li onClick={() => handleSubMenuClick('1:1문의')}
-                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>
+              <li
+                onClick={(e) => handleSubMenuClick(e, '1:1문의')}
+                className={activeSubMenu === '1:1문의' ? 'active' : ''}
+              >
                 <StyledRouterLink to="/cmmn/inquiry">1:1문의</StyledRouterLink>
               </li>
-              <li onClick={() => handleSubMenuClick('오류 문항 신고 현황')}
-                  className={activeHeaderMenu === '1:1문의' ? 'active' : ''}>
+              <li
+                onClick={(e) => handleSubMenuClick(e, '오류 문항 신고 현황')}
+                className={activeSubMenu === '오류 문항 신고 현황' ? 'active' : ''}
+              >
                 <StyledRouterLink to="/">오류 문항 신고 현황</StyledRouterLink>
               </li>
             </ul>
@@ -435,7 +506,10 @@ const Header = () => {
 
           <HamburgerMenuItem className={activeHamburgerMenu === '학습' ? 'active' : ''}
                              onClick={(e) => handleHamburgerMenuClick(e, '학습')}>
-            <img src={study} alt="학습 이미지" /> 학습
+            <img src={study} alt="학습 이미지" />
+            {userRole === 'TE'
+              ? (<StyledButton onClick={handleTeacherCourseClick}>학습</StyledButton>)
+              : (<StyledButton onClick={handleStudentCourseClick}>학습</StyledButton>)}
           </HamburgerMenuItem>
           <HamburgerMenuItem className={activeHamburgerMenu === '리포트' ? 'active' : ''}
                              onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>

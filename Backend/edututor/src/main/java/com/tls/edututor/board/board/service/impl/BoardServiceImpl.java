@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class BoardServiceImpl implements BoardService {
     if (StringUtils.hasText(searchQuery)) {
       boards = boardRepository.findByCategoryIdAndSearch(categoryId, searchQuery);
     } else {
-      boards = boardRepository.findByCategoryId(categoryId);
+      boards = boardRepository.findByCategoryIdOrderByIdDesc(categoryId);
     }
 
     List<BoardResponse> boardResponses = new ArrayList<>();

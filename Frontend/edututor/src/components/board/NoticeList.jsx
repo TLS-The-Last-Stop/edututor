@@ -19,7 +19,7 @@ const NoticeList = ({
         {notices.length > 0 ? (
           notices.map((notice) => (
             <NoticeItem
-              key={notice.id}
+              key={notice.boardId}
               notice={notice}
               onNoticeClick={onNoticeClick}
               formatDate={formatDate}
