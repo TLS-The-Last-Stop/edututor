@@ -4,6 +4,7 @@ import '../../assets/css/CoursePage.css';
 import { publicApi } from '../../api/axios.js';
 import ExamShareModal from '../../components/exam/ExamShareModal';
 import MaterialPreviewModal from '../../components/material/MaterialPreviewModal.jsx';
+import TestPreviewModal from '../../components/exam/TestPreviewModal';
 import { StyledRouterLink } from '../../components/common/UserStyledComponents.js';
 
 const CoursePage = () => {
@@ -17,6 +18,9 @@ const CoursePage = () => {
   const [selectedTest, setSelectedTest] = useState('');
   const [materialPreview, setMaterialPreview] = useState(null);
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
+  const [testPreview, setTestPreview] = useState(null);
+  const [isTestPreviewModalOpen, setIsTestPreviewModalOpen] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState(null); // 선택된 과정 ID 상태 추가
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -32,6 +36,7 @@ const CoursePage = () => {
 
   useEffect(() => {
     if (courseId) {
+      setSelectedCourseId(courseId);
       setLoading(true);
       publicApi.get(`/course/${courseId}`)
           .then(response => {
@@ -44,6 +49,28 @@ const CoursePage = () => {
           });
     }
   }, [courseId]);
+
+  const handleCourseSelect = (id) => {
+    if (selectedCourseId !== id) {
+      setSelectedCourseId(id);
+      navigate(`/course/${id}`);
+    }
+  };
+
+  const handleOpenTestPreview = async (testPaperId) => {
+    try {
+      const response = await publicApi.get(`/test-paper/${testPaperId}`);
+      setTestPreview(response.data.data);
+      setIsTestPreviewModalOpen(true);
+    } catch (error) {
+      setError('Failed to fetch test preview data.');
+    }
+  };
+
+  const handleCloseTestPreviewModal = () => {
+    setIsTestPreviewModalOpen(false);
+    setTestPreview(null);
+  };
 
   const handleOpenMaterialModal = async (materialId) => {
     try {
@@ -68,30 +95,33 @@ const CoursePage = () => {
         <div className="sidebar">
           <button className="new-course-btn" onClick={() => navigate('/course/enroll')}>새 과정 등록하기</button>
           <ul>
-            {courses.map(course => (
-                <li
-                    key={course.courseId}
-                    className="course-item"
-                    onClick={() => navigate(`/course/${course.courseId}`)}
-                >
-                  {course.courseName}
-                </li>
-            ))}
+            {courses.length > 0 ? (
+                courses.map(course => (
+                    <li
+                        key={course.courseId}
+                        className={`course-item ${selectedCourseId === course.courseId ? 'selected' : ''}`}
+                        onClick={() => handleCourseSelect(course.courseId)}
+                    >
+                      {course.courseName}
+                    </li>
+                ))
+            ) : (
+                <li className="no-courses">등록된 과정이 없습니다</li>
+            )}
           </ul>
         </div>
 
-      {/* 선택된 코스의 상세 정보 */}
-      <div className="course-details">
-        {courseData ? (
-          <>
-            <div className="course-header">
-              <h2>{courseData.courseName}</h2>
-              <div className="students-icon">
-                <StyledRouterLink to="/classroom">
-                  <span>학생 관리</span>
-                </StyledRouterLink>
-              </div>
-            </div>
+        <div className="course-details">
+          {courseData ? (
+              <>
+                <div className="course-header">
+                  <h2>{courseData.courseName}</h2>
+                  <div className="students-icon">
+                    <StyledRouterLink to="/classroom">
+                      <span>학생 관리</span>
+                    </StyledRouterLink>
+                  </div>
+                </div>
 
                 {courseData.sections.map(section => (
                     <div key={section.sectionId} className="section">
@@ -102,10 +132,17 @@ const CoursePage = () => {
                             <div className="unit-header">
                               <h4>{unit.content}</h4>
                               <div className="actions">
-                                <button className="preview-btn">형성평가 미리보기</button>
-                                <button className="share-btn" onClick={() => setIsModalOpen(true)}>시험 공유하기</button>
+                                <button
+                                    className="preview-btn"
+                                    onClick={() => handleOpenTestPreview(unit.testPaper.testPaperId)}
+                                >
+                                  형성평가 미리보기
+                                </button>
+                                <button className="share-btn" onClick={() => {
+                                  setIsModalOpen(true);
+                                  setSelectedTest(unit.unitId);
+                                }}>시험 공유하기</button>
 
-                                {/* materials 배열을 순회하여 학습자료 미리보기 버튼 생성 */}
                                 {unit.materials.map(material => (
                                     <div key={material.materialId}>
                                       <button
@@ -128,12 +165,22 @@ const CoursePage = () => {
           )}
         </div>
 
-        <ExamShareModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedTest={selectedTest} />
+        <ExamShareModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            selectedTest={selectedTest}
+        />
 
         <MaterialPreviewModal
             isOpen={isMaterialModalOpen}
             onClose={handleCloseMaterialModal}
             material={materialPreview}
+        />
+
+        <TestPreviewModal
+            isOpen={isTestPreviewModalOpen}
+            onClose={handleCloseTestPreviewModal}
+            testData={testPreview}
         />
       </div>
   );

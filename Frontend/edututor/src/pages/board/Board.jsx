@@ -4,10 +4,11 @@ import { getBoardsByCategory } from '../../api/board/board.js';
 import '../../assets/css/BoardPage.css';
 
 const Board = () => {
-  const [selectedMainMenu, setSelectedMainMenu] = useState('자주묻는질문');
+  const [selectedMainMenu, setSelectedMainMenu] = useState('공지사항');
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [openFaqId, setOpenFaqId] = useState(null);
-  const [boardData, setBoardData] = useState(false);
+  const [boardData, setBoardData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const menuCategoryMap = {
     '공지사항': 1,
@@ -27,8 +28,7 @@ const Board = () => {
 
   // 게시글 데이터 조회
   const fetchBoardData = async (categoryId, includeChildren = false) => {
-    console.log('요청 시작:', categoryId, includeChildren);
-    const response = await getBoardsByCategory(categoryId, includeChildren);
+    const response = await getBoardsByCategory(categoryId, includeChildren, searchQuery);
 
     if (response && response.data) {
       setBoardData(response.data);
@@ -42,10 +42,9 @@ const Board = () => {
     setSelectedMainMenu(menu);
     setSelectedCategory('전체');
     setOpenFaqId(null);
+    setSearchQuery('');
 
     const categoryId = menuCategoryMap[menu];
-    console.log('선택된 메뉴:', menu, '카테고리ID:', categoryId);
-
     const includeChildren = menu === '자주묻는질문';
     await fetchBoardData(categoryId, includeChildren);
   };
@@ -54,6 +53,7 @@ const Board = () => {
   const handleCategoryClick = async (category) => {
     setSelectedCategory(category);
     setOpenFaqId(null);
+    setSearchQuery('');
 
     const categoryId = faqCategoryMap[category];
     if (category === '전체') {
@@ -65,6 +65,13 @@ const Board = () => {
 
   const handleFaqClick = (faqId) => {
     setOpenFaqId(openFaqId === faqId ? null : faqId);
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const categoryId = menuCategoryMap[selectedMainMenu];
+    const includeChildred = selectedMainMenu === '자주묻는질문';
+    await fetchBoardData(categoryId, includeChildred);
   };
 
   useEffect(() => {
@@ -115,6 +122,38 @@ const Board = () => {
           ))}
         </div>
       )}
+
+      {/* 검색 */}
+      <div className="search-container" style={{ margin: '20px 0', display: 'flex', justifyContent: 'flex-end' }}>
+        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px' }}>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="검색어를 입력하세요"
+            style={{
+              padding: '8px 12px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              width: '250px'
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              padding: '8px 16px',
+              background: '#4285f4',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            검색
+          </button>
+        </form>
+      </div>
+
       {/* TODO 관리자일 경우에만 보이도록
       <div className="menu-category-container">
         <button className="post-button">등록</button>

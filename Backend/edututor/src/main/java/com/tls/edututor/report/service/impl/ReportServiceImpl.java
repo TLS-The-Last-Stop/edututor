@@ -92,8 +92,8 @@ public class ReportServiceImpl implements ReportService {
       List<Boolean> isCorrect = new ArrayList<>();
       List<UserAnswer> userAnswersList = userAnswerRepository.findByUserTestId(userTest.getId());
       for (UserAnswer userAnswer : userAnswersList) {
-        userAnswers.add(userAnswer.getAnswer());
-        isCorrect.add(userAnswer.getIsCorrect());
+        userAnswers.add(userAnswer != null ? userAnswer.getAnswer() : "");
+        isCorrect.add(userAnswer != null ? userAnswer.getIsCorrect() : false);
       }
 
       List<String> correctAnswers = new ArrayList<>();
@@ -105,7 +105,7 @@ public class ReportServiceImpl implements ReportService {
       long questionCount = questionRepository.countByTestPaperId(testPaperId);
 
       UserTestResponse2 userTestResponse = UserTestResponse2.builder()
-              .userName(userTest.getShareTest().getUser().getFullName())
+              .userName(userTest.getShareTest().getUser().getUsername())
               .achievementRate((long) achievementRate(isCorrect))
               .userAnswers(userAnswers)
 //              .correctAnswers(correctAnswers)
@@ -126,13 +126,17 @@ public class ReportServiceImpl implements ReportService {
     return testPaperDetailResponse;
   }
 
-  private double achievementRate(List<Boolean> icCorrect) {
+  private double achievementRate(List<Boolean> isCorrect) {
+    if (isCorrect.isEmpty()) {
+      return 0.0;
+    }
+
     int correctAnswersCnt = 0;
-    for (Boolean correct : icCorrect) {
+    for (Boolean correct : isCorrect) {
       if (correct) {
         correctAnswersCnt++;
       }
     }
-    return (double) correctAnswersCnt / icCorrect.size() * 100;
+    return (double) correctAnswersCnt / isCorrect.size() * 100;
   }
 }

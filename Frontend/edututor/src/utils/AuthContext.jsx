@@ -14,10 +14,19 @@ export const AuthProvider = ({ children }) => {
 
   const verifyUserRole = async () => {
     try {
-      if (location.pathname === '/admin/login' ||
-        location.pathname === '/login' ||
-        location.pathname === '/teacher-login' ||
-        location.pathname === '/student-login') {
+      const publicPathPatterns = [
+        /^\/join$/,
+        /^\/additional-info$/,
+        /login/,
+        /cmmn/
+      ];
+
+      // 현재 경로가 public 패턴과 일치하는지 확인
+      const isPublicPath = publicPathPatterns.some(pattern =>
+        pattern.test(location.pathname)
+      );
+
+      if (isPublicPath) {
         return;
       }
 
@@ -30,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
       if (result.data === 'AD') setUserRole('AD');
       else setUserRole(result.data);
-      
+
     } catch (error) {
       console.error('Failed to verify role:', error);
       clearLocalStorage();

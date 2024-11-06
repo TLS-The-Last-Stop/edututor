@@ -4,6 +4,8 @@ import com.tls.edututor.classroom.dto.request.ClassroomRequest;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.classroom.service.ClassroomService;
+import com.tls.edututor.exam.sharetest.entity.ShareTest;
+import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
 import com.tls.edututor.user.dto.response.UserSTResponse;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
@@ -24,6 +26,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
   private final ClassroomRepository classroomRepository;
   private final UserRepository userRepository;
+  private final ShareTestRepository shareTestRepository;
 
   @Override
   public List<UserSTResponse> getAllStudent(Long classroomId, boolean isDeleted) {
@@ -34,12 +37,28 @@ public class ClassroomServiceImpl implements ClassroomService {
       return Collections.emptyList();
     }
 
-    return students.stream()
+    /*return students.stream()
             .map(student -> UserSTResponse.builder()
                     .id(student.getId())
                     .loginId(student.getLoginId())
-                    .fullName(student.getFullName())
+                    .username(student.getUsername())
                     .build())
+            .collect(Collectors.toList());*/
+
+    return students.stream()
+            .map(student -> {
+              Map<Long, Boolean> studentSharedTests = new HashMap<>();
+              List<ShareTest> sharedTests = shareTestRepository.findAllByUserAndIsDeleted(student, false);
+
+              for (ShareTest shareTest : sharedTests) studentSharedTests.put(shareTest.getTestPaper().getId(), true);
+
+              return UserSTResponse.builder()
+                      .id(student.getId())
+                      .loginId(student.getLoginId())
+                      .username(student.getUsername())
+                      .isShared(studentSharedTests)
+                      .build();
+            })
             .collect(Collectors.toList());
   }
 
@@ -51,7 +70,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     UserSTResponse student = UserSTResponse.builder()
             .id(user.getId())
             .loginId(user.getLoginId())
-            .fullName(user.getFullName())
+            .username(user.getUsername())
             .build();
 
     return student;

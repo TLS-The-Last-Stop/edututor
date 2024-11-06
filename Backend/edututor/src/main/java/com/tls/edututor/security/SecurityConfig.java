@@ -6,9 +6,12 @@ import com.tls.edututor.user.jwt.JwtFilter;
 import com.tls.edututor.user.jwt.JwtUtil;
 import com.tls.edututor.user.jwt.CustomLoginFilter;
 import com.tls.edututor.user.service.RefreshService;
+import com.tls.edututor.user.service.impl.CustomOAuth2UserServiceImpl;
+import com.tls.edututor.user.service.impl.CustomOAuthSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +40,8 @@ public class SecurityConfig {
   private final ObjectMapper objectMapper;
   private final RefreshService refreshService;
   private final UserDetailsService userDetailsService;
+  private final CustomOAuth2UserServiceImpl customOAuth2UserService;
+  private final CustomOAuthSuccessHandler customOAuthSuccessHandler;
 
   @Bean
   public BCryptPasswordEncoder passwordEncoder() {
@@ -50,11 +55,22 @@ public class SecurityConfig {
     http.formLogin(formLogin -> formLogin.disable());
     http.httpBasic(basic -> basic.disable());
 
+    http.oauth2Login(oauth -> oauth
+            .loginPage("http://localhost:5173/login")
+            .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                    .userService(customOAuth2UserService))
+            .successHandler(customOAuthSuccessHandler));
+
     http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/classroom", "/users/students", "/course/enroll",
-                    "/exam-share").hasRole("TE")  // 선생님 권한
+                    "/exam-share").hasRole("TE")
             .requestMatchers("/student/**", "/course/{courseId}", "/course0/**",
-                    "/course/class-courses", "/report/**").hasAnyRole("SU")  // 선생님, 학생 권한
+                    "/course/class-courses", "/report/**").hasAnyRole("SU")
+            .requestMatchers(HttpMethod.GET, "/users/{loginId}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/users/teachers").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/users/teachers").permitAll()
+            .requestMatchers(HttpMethod.PUT, "/users/teachers").permitAll()
+            .requestMatchers("/", "/login", "/auth/**", "/cmmn").permitAll()
             .requestMatchers("/", "/login", "/join", "/auth/**", "/cmmn","/server-check").permitAll()  // 모든 사용자 접근 가능
             .requestMatchers("/admin/**").hasRole("AD")  // 최상위 관리자 권한
             //.requestMatchers("/admin/**").permitAll()  // 최상위 관리자 권한

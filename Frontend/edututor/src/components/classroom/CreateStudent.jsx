@@ -19,7 +19,7 @@ const CreateButton = styled.button`
 `;
 
 const initForm = {
-  fullName       : '',
+  username       : '',
   loginId        : '',
   password       : '',
   confirmPassword: ''
@@ -68,10 +68,10 @@ const CreateStudent = ({ fetchAllStudent }) => {
 
   const validateInput = (name, value) => {
     switch (name) {
-      case 'fullName':
+      case 'username':
         setErrors(prev => ({
           ...prev,
-          fullName: !value ? '이름을 입력해주세요' : ''  // 에러 메시지를 문자열로 설정
+          username: !value ? '이름을 입력해주세요' : ''  // 에러 메시지를 문자열로 설정
         }));
         break;
 
@@ -142,7 +142,7 @@ const CreateStudent = ({ fetchAllStudent }) => {
     e.preventDefault();
 
     const submitData = {
-      fullName : form.fullName,
+      username : form.username,
       loginId  : form.loginId,
       password : form.password,
       classroom: userInfo.classroom,
@@ -155,7 +155,7 @@ const CreateStudent = ({ fetchAllStudent }) => {
       return;
     }
 
-    if (!form.fullName || !form.loginId || !form.password || !form.confirmPassword) {
+    if (!form.username || !form.loginId || !form.password || !form.confirmPassword) {
       alert('모든 필수 항목을 입력해주세요.');
       return false;
     }

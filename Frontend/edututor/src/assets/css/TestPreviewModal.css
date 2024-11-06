@@ -1,0 +1,136 @@
+/* 기본 모달 스타일 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.test-preview-modal {
+    padding: 30px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.test-info {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.question-preview {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.question-number {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.question-difficulty {
+    font-size: 0.9rem;
+}
+
+.difficulty-label {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.difficulty-label.상 {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.difficulty-label.중 {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.difficulty-label.하 {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.question-content {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.option-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.option-item {
+    padding: 5px 0;
+    font-size: 1rem;
+}
+
+.question-footer {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.explanation {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #666;
+}
+.difficulty-label.level-1 {
+    color: #4caf50;
+}
+.difficulty-label.level-2 {
+    color: #ff9800;
+}
+.difficulty-label.level-3 {
+    color: #f44336;
+}
+

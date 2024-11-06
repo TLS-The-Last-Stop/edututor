@@ -68,13 +68,13 @@ const StudentDetailModal = ({
                   <Label>이름</Label>
                   <Input
                     type="text"
-                    name="fullName"
-                    value={student.fullName}
+                    name="username"
+                    value={student.username}
                     onChange={handleChange}
                     placeholder="이름을 입력하세요"
-                    $hasError={!!errors.fullName}
+                    $hasError={!!errors.username}
                   />
-                  {errors.fullName && <ErrorText>{errors.fullName}</ErrorText>}
+                  {errors.username && <ErrorText>{errors.username}</ErrorText>}
                 </FormGroup>
                 <FormGroup>
                   <Label>아이디</Label>
