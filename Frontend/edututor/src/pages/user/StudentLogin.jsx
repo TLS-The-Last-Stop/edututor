@@ -124,6 +124,7 @@ const StudentLogin = () => {
                   <Input
                     id="password"
                     name="password"
+                    type="password"
                     onChange={handleInputChange}
                     $hasError={!!errors.password}
                   />
