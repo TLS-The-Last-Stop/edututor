@@ -71,6 +71,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.PATCH, "/users/teachers").permitAll()
             .requestMatchers(HttpMethod.PUT, "/users/teachers").permitAll()
             .requestMatchers("/", "/login", "/auth/**", "/cmmn").permitAll()
+            .requestMatchers("/", "/login", "/join", "/auth/**", "/cmmn","/server-check").permitAll()  // 모든 사용자 접근 가능
             .requestMatchers("/admin/**").hasRole("AD")  // 최상위 관리자 권한
             //.requestMatchers("/admin/**").permitAll()  // 최상위 관리자 권한
             .anyRequest().authenticated());
