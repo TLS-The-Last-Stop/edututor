@@ -4,6 +4,19 @@ import '../../assets/css/TestPreviewModal.css';
 const TestPreviewModal = ({ isOpen, onClose, testData }) => {
   if (!isOpen || !testData) return null;
 
+  const difficultyLabel = (level) => {
+    switch (level) {
+      case 1:
+        return "하";
+      case 2:
+        return "중";
+      case 3:
+        return "상";
+      default:
+        return "중";
+    }
+  };
+
   return (
       <div className="modal-overlay">
         <div className="modal-content test-preview-modal">
@@ -18,8 +31,10 @@ const TestPreviewModal = ({ isOpen, onClose, testData }) => {
                 <div className="question-header">
                   <span className="question-number">{index + 1}</span>
                   <span className="question-difficulty">
-                난이도: <span className={`difficulty-label ${question.difficulty}`}>{question.difficulty || "중"}</span>
-              </span>
+                    난이도: <span className={`difficulty-label level-${question.level}`}>
+                      {difficultyLabel(question.level)}
+                    </span>
+                  </span>
                 </div>
                 <div className="question-content">
                   <p>{question.content}</p>
@@ -38,7 +53,7 @@ const TestPreviewModal = ({ isOpen, onClose, testData }) => {
                 </div>
                 <div className="question-footer">
                   <div className="explanation">
-                    <strong>해설:</strong> {question.commentary}
+                    <strong>해설:</strong> {question.commentary || "해설이 없습니다"}
                   </div>
                 </div>
               </div>

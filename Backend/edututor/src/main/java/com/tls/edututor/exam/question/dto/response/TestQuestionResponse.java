@@ -16,6 +16,7 @@ public class TestQuestionResponse {
   private String passage;
   private String commentary;
   private String type;
+  private Integer level;
   private List<TestOptionResponse> options;
 
   public TestQuestionResponse(Question question) {
@@ -24,6 +25,7 @@ public class TestQuestionResponse {
     this.passage = question.getPassage();
     this.commentary = question.getCommentary();
     this.type = question.getType().name();
+    this.level = question.getLevel();
     this.options = question.getOptions().stream()
             .map(TestOptionResponse::new)
             .toList();

@@ -14,7 +14,7 @@ const TestPaperCreationPage = () => {
         commentary: '',
         type: 'OBJECTIVE',
         answerText: '',
-        LEVEL: '1',
+        level: '1',
         options: [
           { content: '', isCorrect: false },
           { content: '', isCorrect: false }
@@ -59,7 +59,7 @@ const TestPaperCreationPage = () => {
           commentary: '',
           type: 'OBJECTIVE',
           answerText: '',
-          LEVEL: '1', // 새로운 문제 추가 시 기본 난이도 설정
+          level: '1',
           options: [
             { content: '', isCorrect: false },
             { content: '', isCorrect: false }
@@ -93,7 +93,7 @@ const TestPaperCreationPage = () => {
       ...formData,
       questions: formData.questions.map(question => ({
         ...question,
-        level: question.LEVEL,
+        level: question.level,
       }))
     };
 
@@ -159,8 +159,8 @@ const TestPaperCreationPage = () => {
                 <div className="form-field">
                   <label>난이도:</label>
                   <select
-                      name="LEVEL"
-                      value={question.LEVEL}
+                      name="level"
+                      value={question.level}
                       onChange={(e) => handleInputChange(e, questionIndex)}
                   >
                     <option value="1">하</option>
