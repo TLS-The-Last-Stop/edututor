@@ -48,13 +48,11 @@ const ExamPage = () => {
   };
 
   const handleSubmit = () => {
-    // 답변이 입력되지 않은 질문이 있는지 확인
     const unansweredQuestions = testData.data.questions.filter(
         (question) => !answers[question.questionId]
     );
 
     if (unansweredQuestions.length > 0) {
-      // 경고 메시지 표시
       const confirmSubmit = window.confirm(
           '아직 입력하지 않은 문제가 있습니다. 그래도 제출하시겠습니까?'
       );
@@ -83,6 +81,19 @@ const ExamPage = () => {
 
   const { questions, title } = testData.data;
 
+  const difficultyLabel = (level) => {
+    switch (level) {
+      case 1:
+        return "하";
+      case 2:
+        return "중";
+      case 3:
+        return "상";
+      default:
+        return "중";
+    }
+  };
+
   return (
       <div className="exam-page">
         <header>
@@ -107,20 +118,27 @@ const ExamPage = () => {
         <main className="questions">
           {questions.map((question, index) => (
               <div key={question.questionId} id={`question-${question.questionId}`} className="question">
-                <h4>문제 {index + 1}</h4>
+                <div className="question-header">
+                  <span className="question-number">문제 {index + 1}</span>
+                  <span className="question-difficulty">
+                    난이도: <span className={`difficulty-label level-${question.level}`}>
+                      {difficultyLabel(question.level)}
+                    </span>
+                  </span>
+                </div>
                 {question.passage && <p className="passage">{question.passage}</p>}
                 <p>{question.content}</p>
                 {question.type === 'OBJECTIVE' ? (
                     <div className="options">
-                      {question.options.map((option, index) => (
+                      {question.options.map((option, idx) => (
                           <label key={option.optionId}>
-                            <span className="option-number">{index + 1}</span>
+                            <span className="option-number">{idx + 1}</span>
                             <input
                                 type="radio"
                                 name={`question-${question.questionId}`}
-                                value={index + 1}
-                                checked={answers[question.questionId] === index + 1}
-                                onChange={() => handleObjectiveAnswer(question.questionId, index + 1)}
+                                value={idx + 1}
+                                checked={answers[question.questionId] === idx + 1}
+                                onChange={() => handleObjectiveAnswer(question.questionId, idx + 1)}
                             />
                             {option.content}
                           </label>

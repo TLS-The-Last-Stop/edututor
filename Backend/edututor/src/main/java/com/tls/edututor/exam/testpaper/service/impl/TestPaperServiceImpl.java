@@ -48,7 +48,6 @@ public class TestPaperServiceImpl implements TestPaperService {
       question.setCommentary(questionRegister.getCommentary());
       question.setType(questionRegister.getType());
       question.setLevel(questionRegister.getLevel());
-
       if (questionRegister.getType() == QuestionType.SUBJECTIVE) {
         question.setAnswerText(questionRegister.getAnswerText());
       } else {

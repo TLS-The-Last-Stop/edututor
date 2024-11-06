@@ -126,9 +126,9 @@ const CoursePage = () => {
                                       onClick={() => handleTestClick(unit.testPaper.testPaperId, unit.testPaper.testPaperStatus)}
                                       disabled={unit.testPaper.testPaperStatus !== 1}
                                   >
-                                    {unit.testPaper.testPaperStatus === 0 && "형성평가 불가능"}
-                                    {unit.testPaper.testPaperStatus === 1 && "형성평가 가능"}
-                                    {unit.testPaper.testPaperStatus === 2 && "이미 시험 치뤘음"}
+                                    {unit.testPaper.testPaperStatus === 0 && "평가 전"}
+                                    {unit.testPaper.testPaperStatus === 1 && "응시하기"}
+                                    {unit.testPaper.testPaperStatus === 2 && "응시완료"}
                                   </button>
                                 </div>
                             )}
