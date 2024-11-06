@@ -73,21 +73,28 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     if (!roles.get(0).equals(loginType)) throw new InternalAuthenticationServiceException("AUTH004");
 
-    String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L); // 1시간 => 더 줄이기
-    String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L); // 24시간 => 더 줄이기
+    String accessToken = jwtUtil.createToken("access", claims, 1000 * 60 * 60L); // 1시간
+    String refreshToken = jwtUtil.createToken("refresh", claims, 1000 * 60 * 60 * 24L); // 24시간
 
     addRefreshEntity(loginId, refreshToken, 1000 * 60 * 60 * 24L);
 
     response.setStatus(HttpServletResponse.SC_OK);
-    response.addCookie(createCookie("access", accessToken));
-    response.addCookie(createCookie("refresh", refreshToken));
     response.setContentType("application/json; charset=utf-8");
+
+    // 수동으로 Set-Cookie 헤더에 SameSite=None; Secure 설정 추가
+    addCookieWithSameSite(response, "access", accessToken, 60 * 60); // accessToken 1시간 유지
+    addCookieWithSameSite(response, "refresh", refreshToken, 24 * 60 * 60); // refreshToken 24시간 유지
 
     Map<String, Object> data = new HashMap<>();
     data.put("classroom", customUser.getClassroom());
     data.put("role", roles.get(0));
     data.put("username", customUser.getUsername());
     response.getWriter().write(objectMapper.writeValueAsString(data));
+  }
+
+  private void addCookieWithSameSite(HttpServletResponse response, String name, String value, int maxAge) {
+    String cookieValue = String.format("%s=%s; Max-Age=%d; Path=/; HttpOnly; SameSite=None; Secure", name, value, maxAge);
+    response.addHeader("Set-Cookie", cookieValue);
   }
 
   private void addRefreshEntity(String loginId, String refreshToken, long expiredMs) {
