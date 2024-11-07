@@ -355,7 +355,7 @@ const InfoSection = () => {
           <NoticeList>
             {fiveNotice.map(notice => (
               <NoticeItem key={notice.boardId}>
-                <StyledRouterLink to="#">{notice.title}</StyledRouterLink>
+                <StyledRouterLink to={`/cmmn/notice/${notice.boardId}`}>{notice.title}</StyledRouterLink>
                 <span>{formatData(notice.createdAt)}</span>
               </NoticeItem>
             ))}
