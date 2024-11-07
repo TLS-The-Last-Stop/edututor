@@ -11,5 +11,6 @@ public class CourseNameListResponse {
 
   Long courseId;
   String courseName;
+  String subject;
 
 }

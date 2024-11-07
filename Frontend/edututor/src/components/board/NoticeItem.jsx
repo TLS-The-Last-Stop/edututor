@@ -9,19 +9,19 @@ const NoticeItem = ({
         {notice.fixed ? (
           <span className="fixed-notice">★</span>
         ) : (
-          notice.number
+          notice.boardId
         )}
       </td>
       <td className="title-cell">
         <button
-          onClick={() => onNoticeClick(notice.id)}
+          onClick={() => onNoticeClick(notice.boardId)}
           className="title-button"
         >
           {notice.title}
         </button>
       </td>
       <td className="date-cell">
-        {formatDate(notice.createdAt)}
+        {formatDate(notice.createAt)}
       </td>
     </tr>
   );

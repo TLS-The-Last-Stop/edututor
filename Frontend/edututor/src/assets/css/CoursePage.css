@@ -48,6 +48,11 @@
     margin-bottom: 20px;
 }
 
+.course-header h2 {
+    font-size: 34px;
+    color: #333;
+}
+
 .students-icon {
     display: flex;
     align-items: center;
@@ -60,6 +65,12 @@
 .section {
     margin-bottom: 20px;
     border-bottom: 1px solid #ddd;
+}
+
+.section h3 {
+    font-size: 30px;
+    color: #333;
+    margin-bottom: 16px;
 }
 
 .unit {
@@ -139,3 +150,6 @@
     border-left: 4px solid #0056b3;
 }
 
+.actions {
+    margin-top: 10px;
+}

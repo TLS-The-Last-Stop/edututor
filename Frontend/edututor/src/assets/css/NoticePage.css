@@ -112,3 +112,9 @@
     padding: 50px 0;
     color: #666;
 }
+
+.inquiry-submit {
+    background-color: #4285f4;
+    color: white;
+    margin-left: 20px;
+}

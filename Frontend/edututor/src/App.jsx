@@ -21,8 +21,11 @@ import { AuthProvider } from './utils/AuthContext.jsx';
 import CourseStudentPage from './pages/course/CourseStudentPage.jsx';
 import MaterialDetailStudentPage from './pages/material/MaterialDetailStudentPage.jsx';
 import Notice from './pages/board/Notice.jsx';
+import NoticeDetail from './pages/board/NoticeDetail.jsx';
 import Faq from './pages/board/Faq.jsx';
 import Inquiry from './pages/board/Inquiry.jsx';
+import InquiryForm from './components/board/InquiryForm.jsx';
+import InquiryDetail from './pages/board/InquiryDetail.jsx';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -187,12 +190,24 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}><Notice /></Suspense>
           } />
 
+          <Route path="cmmn/notice/:boardId" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
+            <Suspense fallback={<LoadingSpinner />}><NoticeDetail /></Suspense>
+          } />
+
           <Route path="cmmn/faq" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
             <Suspense fallback={<LoadingSpinner />}><Faq /></Suspense>
           } />
 
           <Route path="cmmn/inquiry" element={ // SU(학생), TE(선생)만
             <Suspense fallback={<LoadingSpinner />}><Inquiry /></Suspense>
+          } />
+
+          <Route path="cmmn/inquiry/:boardId" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}><InquiryDetail /></Suspense>
+          } />
+
+          <Route path="cmmn/inquiry/inquiry-form" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}><InquiryForm /></Suspense>
           } />
 
           <Route path="report" element={

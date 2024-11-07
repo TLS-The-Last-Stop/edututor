@@ -37,8 +37,8 @@ const Notice = () => {
     });
   };
 
-  const handleNoticeClick = (id) => {
-    navigate(`/cmmn/notice/${id}`);
+  const handleNoticeClick = (boardId) => {
+    navigate(`/cmmn/notice/${boardId}`);
   };
 
   const handlePageChange = (page) => {
@@ -66,7 +66,7 @@ const Notice = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="검색어를 입력하세요"
+            placeholder="검색어를 입력해주세요"
           />
           <button type="submit">검색</button>
         </form>

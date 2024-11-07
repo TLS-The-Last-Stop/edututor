@@ -107,6 +107,7 @@ public class CourseServiceImpl implements CourseService {
             .map(course -> CourseNameListResponse.builder()
                     .courseId(course.getId())
                     .courseName(course.getCourseName())
+                    .subject(course.getGroupCode().getCodeDetails().get(0).getCommonCodeName())
                     .build())
             .toList();
   }
@@ -209,7 +210,8 @@ public class CourseServiceImpl implements CourseService {
     return courses.stream()
             .map(course -> new CourseNameListResponse(
                     course.getId(),
-                    course.getCourseName()
+                    course.getCourseName(),
+                    course.getGroupCode().getCodeDetails().get(0).getCommonCodeName()
             ))
             .collect(Collectors.toList());
   }
@@ -220,7 +222,8 @@ public class CourseServiceImpl implements CourseService {
     ((AuthUser) authentication.getPrincipal()).getClassroom();
     return courses.stream().map(course -> new CourseNameListResponse(
             course.getId(),
-            course.getCourseName()
+            course.getCourseName(),
+            course.getGroupCode().getCodeDetails().get(0).getCommonCodeName()
     )).collect(Collectors.toList());
   }
 

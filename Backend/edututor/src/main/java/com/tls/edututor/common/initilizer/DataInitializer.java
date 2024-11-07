@@ -50,7 +50,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Configuration
 public class DataInitializer {
@@ -104,117 +106,6 @@ public class DataInitializer {
     this.boardRepository = boardRepository;
   }
 
-  @Bean
-  public ApplicationRunner initializer() {
-    return args -> {
-      if (codeGroupRepository.count() > 0 || courseRepository.count() > 0) {
-        return;
-      }
-
-      initAll();
-
-      List<String> courses = List.of("초등학교 국어 1학년 교과서", "초등학교 수학 1학년 참고서", "영어의 정석 참고서", "이것이 과학이다 교과서",
-              "미국 대선의 결과에 따른 대한민국 미래 예측", "중동, 이대로 괜찮은가", "대한민국 경제 발전 보고서");
-
-      courses.forEach(courseName -> {
-        CodeGroup codeGroup = codeGroupRepository.getReferenceById(1L);
-
-        Course course = Course.builder()
-                .courseName(courseName)
-                .groupCode(codeGroup)
-                .build();
-        courseRepository.save(course);
-
-        CourseClassroom courseClassroom = new CourseClassroom();
-        courseClassroom.setCourse(course);
-        courseClassroom.setClassroom(classroomRepository.findById(1L).orElseThrow());
-        courseClassroomRepository.save(courseClassroom);
-
-        List<String> sectionTitles = List.of("기본 개념", "응용", "심화 학습");
-        sectionTitles.forEach(sectionTitle -> {
-          Section section = Section.builder()
-                  .course(course)
-                  .content(sectionTitle)
-                  .build();
-          sectionRepository.save(section);
-
-          List<String> unitTitles = List.of("개념 이해", "문제 풀이", "심화 학습");
-          unitTitles.forEach(unitTitle -> {
-            Unit unit = Unit.builder()
-                    .section(section)
-                    .content(sectionTitle + " - " + unitTitle)
-                    .build();
-            unitRepository.save(unit);
-
-            Material material = Material.builder()
-                    .unit(unit)
-                    .title(unitTitle + " 자료")
-                    .content(unitTitle + "에 대한 학습 자료입니다.")
-                    .url("https://www.youtube.com/watch?v=6Ox3OM_sw9E")
-                    .build();
-            materialRepository.save(material);
-
-            TestPaper testPaper = TestPaper.builder()
-                    .unit(unit)
-                    .title(unitTitle + " 시험지")
-                    .build();
-            testPaperRepository.save(testPaper);
-
-            ShareTest shareTest = ShareTest.builder()
-                    .user(userRepository.findById(2L).orElseThrow())
-                    .testPaper(testPaper)
-                    .build();
-            shareTestRepository.save(shareTest);
-
-            for (int i = 1; i <= 4; i++) {
-              Question question = Question.builder()
-                      .testPaper(testPaper)
-                      .content("매우 어려운 문제 철수 영희 로엠잇" + i)
-                      .type(QuestionType.OBJECTIVE)
-                      .level(1)
-                      .build();
-              questionRepository.save(question);
-
-
-              for (int j = 1; j <= 5; j++) {
-                Option option = Option.builder()
-                        .question(question)
-                        .content("선택지 " + j)
-                        .isCorrect(j == 1)
-                        .build();
-                optionRepository.save(option);
-              }
-
-              for (int k = 1; k <= 2; k++) {
-                Question question2 = Question.builder()
-                        .testPaper(testPaper)
-                        .content("매우 어려운 주관식 문제 영어 국어 로엠잇" + i)
-                        .type(QuestionType.SUBJECTIVE)
-                        .level(2)
-                        .answerText("해답입니다")
-                        .build();
-                questionRepository.save(question2);
-              }
-            }
-          });
-        });
-      });
-
-      if (categoryRepository.count() == 0) {
-        initializeCategories();
-      }
-      if (userTestRepository.count() == 0) {
-        initializeUserTests();
-      }
-      if (userAnswerRepository.count() == 0) {
-        initializeUserAnswers();
-      }
-      if (boardRepository.count() == 0) {
-        initializeBoards();
-      }
-    };
-  }
-
 
   @Transactional
   protected void initAll() {
@@ -231,7 +122,12 @@ public class DataInitializer {
       initializeTeachers();
       initializeAdmin();
     }
-
+    if (categoryRepository.count() == 0) {
+      initializeCategories();
+    }
+    if (boardRepository.count() == 0) {
+      initializeBoards();
+    }
   }
 
   @Transactional
@@ -266,7 +162,7 @@ public class DataInitializer {
 
   @Transactional
   protected void initializeSchools() {
-    String[] classname = {"수완초등학교", "혁진중학교", "유리고등학교"};
+    String[] classname = {"에듀초등학교", "에듀중학교", "에듀고등학교"};
     String[] schoolType = {"초등학교", "중학교", "고등학교"};
     String[] officeCode = {"1", "2", "3"};
     String[] address = {"충남 보령시", "서울 강남", "서울 을지로"};
@@ -281,7 +177,6 @@ public class DataInitializer {
       School school = School.withDto()
               .request(schoolRequest)
               .build();
-      //school.setWriter(Long.valueOf(i) + 1);
       schoolRepository.save(school);
     }
   }
@@ -305,8 +200,6 @@ public class DataInitializer {
               .school(school)
               .type(school.getType())
               .build();
-
-      //classroom.setWriter(Long.valueOf(i) + 1);
       classroomRepository.save(classroom);
     }
   }
@@ -315,7 +208,7 @@ public class DataInitializer {
     UserSURequest userSURequest = new UserSURequest();
     userSURequest.setUsername("관리자");
     userSURequest.setLoginId("admin");
-    userSURequest.setPassword(passwordEncoder.encode("admin12!@"));
+    userSURequest.setPassword(passwordEncoder.encode("qwer1234!!"));
     userSURequest.setType("AD");
 
     User student = User.createStudent(userSURequest);
@@ -324,9 +217,9 @@ public class DataInitializer {
 
   @Transactional
   protected void initializeTeachers() {
-    String[] teacherNames = {"이수완선생님", "이두완선생님", "카리나선생님"};
-    String[] teacherLoginId = {"suwan1", "duwan1", "karina1"};
-    String[] teacherPassword = {"suwan12!@", "duwan12!@", "karina12!@"};
+    String[] teacherNames = {"이수완선생님", "김혁진선생님", "한유리선생님"};
+    String[] teacherLoginId = {"teacher1", "teacher2", "teacher3"};
+    String[] teacherPassword = {"qwer1234!!", "qwer1234!!", "qwer1234!!"};
     String[] teacherEmail = {"suwan@naver.com", "duwan@naver.com", "karina@naver.com"};
     String[] teacherPhoneNum = {"010-7196-2013", "010-7196-2013", "010-7196-2013"};
     LocalDate birthDay = LocalDate.of(1994, 2, 4);
@@ -344,32 +237,26 @@ public class DataInitializer {
       userTERequest.setType("TE");
 
       User teacher = User.createTeacher(userTERequest);
-      //teacher.setWriter(Long.valueOf(i) + 1);
       userRepository.save(teacher);
 
       teacher.setClassroom(classroom);
       userRepository.save(teacher);
 
-      initStudents(classroom, i);
+      initStudents(classroom, i+1);
     }
   }
 
   @Transactional
   protected void initStudents(Classroom classroom, int idx) {
-    String[] studentBaseNames = {"이수완", "이두완", "카리나"};
-    String[] loginIdPrefixes = {"suwan", "duwan", "karina"};
-    String[] passwordBase = {"suwan12!@", "duwan12!@", "karina12!@"};
-
     for (int studentNum = 1; studentNum <= 3; studentNum++) {
       UserTERequest userTERequest = new UserTERequest();
 
-      userTERequest.setUsername(studentBaseNames[idx] + "학생" + studentNum);
-      userTERequest.setLoginId(loginIdPrefixes[idx] + "_" + studentNum);
-      userTERequest.setPassword(passwordEncoder.encode(passwordBase[idx]));
+      userTERequest.setUsername("학생" + studentNum);
+      userTERequest.setLoginId("student" + idx + "_" + studentNum);
+      userTERequest.setPassword(passwordEncoder.encode("qwer1234!!"));
       userTERequest.setType("SU");
 
       User student = User.createTeacher(userTERequest);
-      //student.setWriter(classroom.getId());
       userRepository.save(student);
 
       student.setClassroom(classroom);
@@ -377,64 +264,221 @@ public class DataInitializer {
     }
   }
 
-  @Transactional
-  protected void initializeUserAnswers() {
-    List<UserAnswer> answers = List.of(
-            createUserAnswer(1L, true, 1L, "1"),
-            createUserAnswer(2L, true, 2L, "2"),
-            createUserAnswer(3L, false, 3L, "2"),
-            createUserAnswer(4L, true, 4L, "1"),
-            createUserAnswer(5L, false, 5L, "3"),
-            createUserAnswer(6L, false, 6L, "2"),
-            createUserAnswer(7L, false, 7L, "2"),
-            createUserAnswer(8L, false, 8L, "3"),
-            createUserAnswer(9L, true, 9L, "3"),
-            createUserAnswer(10L, true, 10L, "3"),
-            createUserAnswer(11L, true, 11L, "3"),
-            createUserAnswer(12L, true, 12L, "3")
-    );
-    userAnswerRepository.saveAll(answers);
+  @Bean
+  public ApplicationRunner initializer() {
+    return args -> {
+      if (codeGroupRepository.count() > 0 || courseRepository.count() > 0) {
+        return;
+      }
+
+      initAll();
+
+      List<String> courses = List.of(
+              "국어 기초 튼튼: 초등 국어 1학년 교과서",
+              "수학 첫걸음: 초등 수학 1학년 참고서",
+              "영어의 기본: 초등 및 중등 필수 참고서",
+              "이것이 과학이다: 초등 과학 교과서"
+      );
+      AtomicLong idCounter = new AtomicLong(1);
+
+      courses.forEach(courseName -> {
+        CodeGroup codeGroup = codeGroupRepository.getReferenceById(idCounter.getAndIncrement());
+        Course course = Course.builder()
+                .courseName(courseName)
+                .groupCode(codeGroup)
+                .build();
+        courseRepository.save(course);
+
+        CourseClassroom courseClassroom = new CourseClassroom();
+        courseClassroom.setCourse(course);
+        courseClassroom.setClassroom(classroomRepository.findById(1L).orElseThrow());
+        courseClassroomRepository.save(courseClassroom);
+
+        List<String> sectionTitles;
+        List<String> unitTitles;
+
+        switch (courseName) {
+          case "국어 기초 튼튼: 초등 국어 1학년 교과서":
+            sectionTitles = List.of("우리말 소리 익히기", "재미있는 단어 놀이", "문장 만들기 놀이", "이야기 듣고 상상하기", "감정을 표현하는 말");
+            unitTitles = List.of(
+                    "한글 자음과 모음 소리를 듣고 따라하며 기본 글자 익히기.",
+                    "친숙한 단어를 그림과 함께 배우며 어휘력 넓히기.",
+                    "짧은 문장을 만들어 보며 문장 구성 원리 이해하기.",
+                    "동화를 듣고 이야기를 상상하며 말로 표현하기.",
+                    "기쁨, 슬픔, 화남 등 감정을 표현하는 다양한 말 배우기."
+            );
+            break;
+
+          case "수학 첫걸음: 초등 수학 1학년 참고서":
+            sectionTitles = List.of("숫자와 친해지기", "수와 수 비교하기", "덧셈과 뺄셈의 시작", "모양과 도형 탐구하기", "생활 속 문제 해결하기");
+            unitTitles = List.of(
+                    "1부터 10까지 숫자를 배우고 쓰는 연습",
+                    "큰 수와 작은 수를 비교하고 정렬하는 법 배우기",
+                    "간단한 덧셈과 뺄셈을 통해 연산의 기초 다지기",
+                    "원, 삼각형, 사각형 등 기본 도형을 인식하고 그리기",
+                    "일상 생활에서 쉽게 접하는 수학적 문제를 풀어보며 적용해 보기"
+            );
+            break;
+
+          case "영어의 기본: 초등 및 중등 필수 참고서":
+            sectionTitles = List.of("기초 인사 표현 익히기", "나를 소개해요", "숫자와 색깔 배우기", "가족과 친구 소개하기", "일상 표현 배우기");
+            unitTitles = List.of(
+                    "Hello, How are you? 등의 기본적인 인사말 배우기",
+                    "자신의 이름과 나이를 영어로 소개하는 법 배우기",
+                    "영어로 숫자 세기와 색깔 이름 익히기",
+                    "가족과 친구에 대해 영어로 표현하는 방법 익히기",
+                    "자주 사용하는 표현들 (Thank you, I’m sorry, Yes, No) 익히기"
+            );
+            break;
+
+          case "이것이 과학이다: 초등 과학 교과서":
+            sectionTitles = List.of("내 주변의 과학", "식물의 성장 과정", "물과 공기의 힘", "자연의 변화와 날씨", "우리 몸의 신비");
+            unitTitles = List.of(
+                    "일상 속에 숨겨진 과학 원리를 찾아보고 이해하기",
+                    "씨앗이 자라나는 과정과 식물의 성장 단계 관찰하기",
+                    "물의 특성과 공기의 성질, 이들의 상호작용 알아보기",
+                    "계절에 따른 날씨 변화와 그 원인 탐구하기",
+                    "신체 각 부위의 역할과 건강하게 유지하는 방법 배우기"
+            );
+            break;
+
+          default:
+            throw new IllegalArgumentException("알 수 없는 과정입니다: " + courseName);
+        }
+
+        sectionTitles.forEach(sectionTitle -> {
+          Section section = Section.builder()
+                  .course(course)
+                  .content(sectionTitle)
+                  .build();
+          sectionRepository.save(section);
+
+          unitTitles.forEach(unitTitle -> {
+            Unit unit = Unit.builder()
+                    .section(section)
+                    .content(unitTitle)
+                    .build();
+            unitRepository.save(unit);
+
+            Material material = Material.builder()
+                    .unit(unit)
+                    .title(unitTitle + " 자료")
+                    .content(unitTitle + "에 대한 학습 자료입니다.")
+                    .url("https://www.youtube.com/watch?v=6Ox3OM_sw9E")
+                    .build();
+            materialRepository.save(material);
+
+            TestPaper testPaper = TestPaper.builder()
+                    .unit(unit)
+                    .title(unitTitle)
+                    .build();
+            testPaperRepository.save(testPaper);
+
+            for (int i = 1; i <= 10; i++) {
+              String questionContent;
+              String answer;
+
+              switch (unitTitle) {
+                case "한글 자음과 모음 소리를 듣고 따라하며 기본 글자 익히기.":
+                  questionContent = "자음 'ㄱ'과 모음 'ㅏ'를 합치면 어떤 글자가 될까요?";
+                  answer = "가";
+                  break;
+                case "1부터 10까지 숫자를 배우고 쓰는 연습":
+                  questionContent = "5 + " + i + "은 얼마인가요?";
+                  answer = String.valueOf(5 + i);
+                  break;
+                default:
+                  questionContent = "임의의 문제입니다 " + i;
+                  answer = "정답입니다";
+                  break;
+              }
+
+              Question question = Question.builder()
+                      .testPaper(testPaper)
+                      .content(questionContent)
+                      .type(i % 2 == 0 ? QuestionType.OBJECTIVE : QuestionType.SUBJECTIVE)
+                      .level(new Random().nextInt(3) + 1)
+                      .answerText(answer)
+                      .build();
+              questionRepository.save(question);
+
+              if (question.getType() == QuestionType.OBJECTIVE) {
+                for (int j = 1; j <= 5; j++) {
+                  Option option = Option.builder()
+                          .question(question)
+                          .content("선택지 " + j)
+                          .isCorrect(j == 1)
+                          .build();
+                  optionRepository.save(option);
+                }
+              }
+            }
+          });
+        });
+      });
+    };
   }
 
-  private UserAnswer createUserAnswer(Long id, boolean isCorrect, Long questionId, String answer) {
-    UserAnswer userAnswer = new UserAnswer();
-    userAnswer.setIsCorrect(isCorrect);
-    userAnswer.setIsDeleted(false);
-    userAnswer.setUserTest(userTestRepository.getReferenceById(1L));
-    userAnswer.setCreatedAt(LocalDateTime.now());
-    userAnswer.setId(id);
-    userAnswer.setQuestion(questionRepository.getReferenceById(questionId));
-    userAnswer.setSubmittedAt(LocalDateTime.now());
-    userAnswer.setAnswer(answer);
-    return userAnswer;
-  }
 
-  @Transactional
-  protected void initializeUserTests() {
-    UserTest test1 = new UserTest();
-    test1.setIsDeleted(false);
-    test1.setResult(0.0);
-    test1.setCreatedAt(LocalDateTime.now());
-    test1.setId(1L);
-    test1.setShareTest(shareTestRepository.getReferenceById(1L));
+//  @Transactional
+//  protected void initializeUserAnswers() {
+//    List<UserAnswer> answers = List.of(
+//            createUserAnswer(1L, true, 1L, "1"),
+//            createUserAnswer(2L, true, 2L, "2"),
+//            createUserAnswer(3L, false, 3L, "2"),
+//            createUserAnswer(4L, true, 4L, "1"),
+//            createUserAnswer(5L, false, 5L, "3"),
+//            createUserAnswer(6L, false, 6L, "2"),
+//            createUserAnswer(7L, false, 7L, "2"),
+//            createUserAnswer(8L, false, 8L, "3"),
+//            createUserAnswer(9L, true, 9L, "3"),
+//            createUserAnswer(10L, true, 10L, "3"),
+//            createUserAnswer(11L, true, 11L, "3"),
+//            createUserAnswer(12L, true, 12L, "3")
+//    );
+//    userAnswerRepository.saveAll(answers);
+//  }
 
-    UserTest test2 = new UserTest();
-    test2.setIsDeleted(false);
-    test2.setResult(50.0);
-    test2.setCreatedAt(LocalDateTime.now());
-    test2.setId(2L);
-    test2.setShareTest(shareTestRepository.getReferenceById(2L));
+//  private UserAnswer createUserAnswer(Long id, boolean isCorrect, Long questionId, String answer) {
+//    UserAnswer userAnswer = new UserAnswer();
+//    userAnswer.setIsCorrect(isCorrect);
+//    userAnswer.setIsDeleted(false);
+//    userAnswer.setUserTest(userTestRepository.getReferenceById(1L));
+//    userAnswer.setCreatedAt(LocalDateTime.now());
+//    userAnswer.setId(id);
+//    userAnswer.setQuestion(questionRepository.getReferenceById(questionId));
+//    userAnswer.setSubmittedAt(LocalDateTime.now());
+//    userAnswer.setAnswer(answer);
+//    return userAnswer;
+//  }
 
-    UserTest test3 = new UserTest();
-    test3.setIsDeleted(false);
-    test3.setResult(0.0);
-    test3.setCreatedAt(LocalDateTime.now());
-    test3.setId(3L);
-    test3.setShareTest(shareTestRepository.getReferenceById(3L));
+//  @Transactional
+//  protected void initializeUserTests() {
+//    UserTest test1 = new UserTest();
+//    test1.setIsDeleted(false);
+//    test1.setResult(0.0);
+//    test1.setCreatedAt(LocalDateTime.now());
+//    test1.setId(1L);
+//    test1.setShareTest(shareTestRepository.getReferenceById(1L));
+//
+//    UserTest test2 = new UserTest();
+//    test2.setIsDeleted(false);
+//    test2.setResult(50.0);
+//    test2.setCreatedAt(LocalDateTime.now());
+//    test2.setId(2L);
+//    test2.setShareTest(shareTestRepository.getReferenceById(2L));
+//
+//    UserTest test3 = new UserTest();
+//    test3.setIsDeleted(false);
+//    test3.setResult(0.0);
+//    test3.setCreatedAt(LocalDateTime.now());
+//    test3.setId(3L);
+//    test3.setShareTest(shareTestRepository.getReferenceById(3L));
+//
+//    userTestRepository.saveAll(List.of(test1, test2, test3));
+//  }
 
-    userTestRepository.saveAll(List.of(test1, test2, test3));
-  }
-
+//게시판 영역
 
   @Transactional
   protected void initializeCategories() {
