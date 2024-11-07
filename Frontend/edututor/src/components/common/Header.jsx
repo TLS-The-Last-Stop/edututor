@@ -1,14 +1,23 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useAuth } from '../../utils/AuthContext.jsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
 import cs from '../../assets/icon/custom-service.png';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { logout } from '../../api/user/user.js';
 import { StyledRouterLink } from './UserStyledComponents.js';
+
+const commonButtonStyles = css`
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    color: inherit;
+`;
 
 const HeaderContainer = styled.header`
     width: 100%;
@@ -221,10 +230,8 @@ const SubNav = styled.nav`
 `;
 
 const HamburgerButton = styled.button`
+    ${commonButtonStyles}
     display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
     padding: 8px;
     margin-left: auto;
 
@@ -289,7 +296,6 @@ const HamburgerMenuItem = styled.div`
 `;
 
 const HamburgerLogoutButton = styled(LogoutButton)`
-    margin-left: auto;
     padding: 8px 16px;
 `;
 
@@ -339,13 +345,8 @@ const Overlay = styled.div`
 `;
 
 const StyledButton = styled.button`
-    background: none;
-    border: none;
+    ${commonButtonStyles}
     font-size: inherit;
-    color: #666;
-    padding: 0;
-    cursor: pointer;
-    font-family: inherit;
     margin-right: 0;
 
     ${HamburgerMenuItem}:hover & {
@@ -385,24 +386,7 @@ const StyledNavLink = styled(NavLink)`
 const Header = () => {
   const { userInfo, updateUserInfo, userRole } = useAuth?.() || {};
   const [hamburger, setHamburger] = useState(false);
-  const [activeHeaderMenu, setActiveHeaderMenu] = useState('');
-
   const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const pathname = location.pathname;
-
-    if (pathname.includes('/cmmn')) {
-      setActiveHeaderMenu('고객센터');
-    } else if (pathname.includes('/report')) {
-      setActiveHeaderMenu('리포트');
-    } else if (pathname.includes('/course')) {
-      setActiveHeaderMenu('학습');
-    } else {
-      setActiveHeaderMenu('');
-    }
-  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem('info');
@@ -414,67 +398,39 @@ const Header = () => {
     setHamburger(!hamburger);
   };
 
-  const handleHeaderMenuClick = (menuName) => {
-    setActiveHeaderMenu(menuName);
-  };
-
-  const handleTeacherCourseClick = () => {
-    setActiveHeaderMenu('학습');
-    navigate('/course/1');
-    toggleHamburger();
-  };
-
-  const handleStudentCourseClick = () => {
-    setActiveHeaderMenu('학습');
-    navigate('/course0/1');
-    toggleHamburger();
-  };
-
-  const handleClean = () => {
-    setActiveHeaderMenu('');
-  };
-
-  /* const isReportActive = location.pathname.includes('/report');
-   const isCustomerActive = location.pathname.includes('/cmmn');*/
-
   return (
     <HeaderContainer>
       <HeaderContent>
         <MainNav>
-          <Logo onClick={handleClean}>
+          <Logo>
             <StyledRouterLink to="/">
               <span>E</span>dututor
               <span className="edu">edu</span>
             </StyledRouterLink>
           </Logo>
           <NavList>
-            <NavItem onClick={() => handleHeaderMenuClick('학습')}
-                     className={activeHeaderMenu === '학습' ? 'active' : ''}>
+            <NavItem>
               {userRole === 'TE'
-                ? (<StyledButton onClick={handleTeacherCourseClick}>학습</StyledButton>)
-                : (<StyledButton onClick={handleStudentCourseClick}>학습</StyledButton>)}
+                ? (<StyledNavLink to="/course/1">학습</StyledNavLink>)
+                : (<StyledNavLink to="/course/1">학습</StyledNavLink>)}
             </NavItem>
+
             <NavItem>
               <StyledNavLink to="/report">리포트</StyledNavLink>
             </NavItem>
+
             <NavItem>
-              <StyledNavLink to="/cmmn">고객센터</StyledNavLink>
+              <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
               <SubNav>
                 <ul>
                   <li key="notice">
-                    <StyledNavLink to="/cmmn/notice">
-                      공지사항
-                    </StyledNavLink>
+                    <StyledNavLink to="/cmmn/notice">공지사항</StyledNavLink>
                   </li>
                   <li key="faq">
-                    <StyledNavLink to="/cmmn/faq">
-                      자주 묻는 질문(FAQ)
-                    </StyledNavLink>
+                    <StyledNavLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledNavLink>
                   </li>
                   <li key="inquiry">
-                    <StyledNavLink to="/cmmn/inquiry">
-                      1:1문의
-                    </StyledNavLink>
+                    <StyledNavLink to="/cmmn/inquiry">1:1문의</StyledNavLink>
                   </li>
                 </ul>
               </SubNav>
@@ -516,9 +472,11 @@ const Header = () => {
 
           <HamburgerMenuItem>
             <img src={study} alt="학습 이미지" />
-            <StyledButton onClick={userRole === 'TE' ? handleTeacherCourseClick : handleStudentCourseClick}>
-              학습
-            </StyledButton>
+            <NavItem>
+              {userRole === 'TE'
+                ? (<StyledNavLink to="/course/1">학습</StyledNavLink>)
+                : (<StyledNavLink to="/course/1">학습</StyledNavLink>)}
+            </NavItem>
           </HamburgerMenuItem>
           <HamburgerMenuItem>
             <img src={report} alt="리포트 이미지" />
@@ -530,13 +488,8 @@ const Header = () => {
           </HamburgerMenuItem>
           <HamburgerMenuItem>
             <img src={cs} alt="고객센터 이미지" />
-            <StyledNavLink to="/cmmn"
-                           onClick={() => setActiveHeaderMenu('고객센터')}
-                           className={({ isActive }) => isActive || isCustomerActive ? 'active' : ''}>
-              고객센터
-            </StyledNavLink>
+            <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
           </HamburgerMenuItem>
-
 
           {location.pathname.includes('/cmmn') && (
             <>
