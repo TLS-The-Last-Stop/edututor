@@ -180,7 +180,7 @@ const CourseSection = () => {
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
 
-  const { userInfo, userRole } = useAuth();
+  const { userInfo, userRole } = useAuth?.() ?? {};
   const navigate = useNavigate();
   const listRef = useRef(null);
 
@@ -303,7 +303,7 @@ const CourseSection = () => {
     }
 
     // 과정이 없는 경우
-    if (courses.length === 0) {
+    if (courses === undefined || courses.length === 0) {
       return (
         <RegisterCourseWrapper>
           <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>

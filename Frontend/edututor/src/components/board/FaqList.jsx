@@ -5,7 +5,7 @@ const FaqList = ({ boards }) => {
     <div className="faq-list">
       <div className="faq-items">
         {boards.map(board => (
-          <FaqItem key={board.id} board={board} />
+          <FaqItem key={board.boardId} board={board} />
         ))}
       </div>
     </div>
