@@ -1,7 +1,7 @@
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
 import MaterialCreationPage from './pages/admin/MaterialCreationPage.jsx';
@@ -24,6 +24,7 @@ import Notice from './pages/board/Notice.jsx';
 import NoticeDetail from './pages/board/NoticeDetail.jsx';
 import Faq from './pages/board/Faq.jsx';
 import Inquiry from './pages/board/Inquiry.jsx';
+import IssueListPage from "./pages/admin/IssueListPage.jsx";
 import InquiryForm from './components/board/InquiryForm.jsx';
 import InquiryDetail from './pages/board/InquiryDetail.jsx';
 
@@ -158,6 +159,14 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="AD">
                 <MaterialEditPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="issue-list" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <IssueListPage />
               </ProtectedRoute>
             </Suspense>
           } />
