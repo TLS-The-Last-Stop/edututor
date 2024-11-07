@@ -1,0 +1,18 @@
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <!-- E 문자 - 파란색 -->
+    <path d="
+    M3 2
+    L13 2
+    L13 4
+    L5 4
+    L5 7
+    L12 7
+    L12 9
+    L5 9
+    L5 12
+    L13 12
+    L13 14
+    L3 14
+    Z"
+          fill="#2196F3"/>
+</svg>

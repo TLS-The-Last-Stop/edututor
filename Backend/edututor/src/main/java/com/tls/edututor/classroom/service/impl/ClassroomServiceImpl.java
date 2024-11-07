@@ -6,7 +6,7 @@ import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.classroom.service.ClassroomService;
 import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
-import com.tls.edututor.user.dto.response.UserSTResponse;
+import com.tls.edututor.user.dto.response.UserSUResponse;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +29,13 @@ public class ClassroomServiceImpl implements ClassroomService {
   private final ShareTestRepository shareTestRepository;
 
   @Override
-  public List<UserSTResponse> getAllStudent(Long classroomId, boolean isDeleted) {
+  public List<UserSUResponse> getAllStudent(Long classroomId, boolean isDeleted) {
     List<User> students = userRepository.findByClassroomIdAndRoleAndIsDeleted(classroomId, "SU", false);
 
     if (students.isEmpty()) {
       log.info("classroom Id {}의 학생이 없습니다.", classroomId);
       return Collections.emptyList();
     }
-
-    /*return students.stream()
-            .map(student -> UserSTResponse.builder()
-                    .id(student.getId())
-                    .loginId(student.getLoginId())
-                    .username(student.getUsername())
-                    .build())
-            .collect(Collectors.toList());*/
 
     return students.stream()
             .map(student -> {
@@ -52,7 +44,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
               for (ShareTest shareTest : sharedTests) studentSharedTests.put(shareTest.getTestPaper().getId(), true);
 
-              return UserSTResponse.builder()
+              return UserSUResponse.builder()
                       .id(student.getId())
                       .loginId(student.getLoginId())
                       .username(student.getUsername())
@@ -63,11 +55,11 @@ public class ClassroomServiceImpl implements ClassroomService {
   }
 
   @Override
-  public UserSTResponse getStudent(Long classroomId, Long studentId) {
+  public UserSUResponse getStudent(Long classroomId, Long studentId) {
     Classroom classroom = classroomRepository.findById(classroomId).orElseThrow();
     User user = userRepository.findByIdAndClassroomAndIsDeleted(studentId, classroom, false).orElseThrow(() -> new UsernameNotFoundException("없는 학생입니다."));
 
-    UserSTResponse student = UserSTResponse.builder()
+    UserSUResponse student = UserSUResponse.builder()
             .id(user.getId())
             .loginId(user.getLoginId())
             .username(user.getUsername())

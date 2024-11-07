@@ -41,6 +41,7 @@ const AdminHome = lazy(() => import('./pages/admin/AdminHome.jsx'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin.jsx'));
 const CourseCreationPage = lazy(() => import('./pages/admin/CourseCreationPage.jsx'));
 const CourseListPage = lazy(() => import('./pages/admin/CourseListPage.jsx'));
+const AdminUser = lazy(() => import('./pages/admin/AdminUser.jsx'));
 
 /* 유저 라우팅 */
 const Home = lazy(() => import('./pages/main/Home.jsx'));
@@ -162,6 +163,16 @@ function AppRoutes() {
               </ProtectedRoute>
             </Suspense>
           } />
+
+          <Route path="users" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <AdminUser />
+              </ProtectedRoute>
+            </Suspense>
+          }
+          />
+
 
           <Route path="issue-list" element={
             <Suspense fallback={<LoadingSpinner />}>

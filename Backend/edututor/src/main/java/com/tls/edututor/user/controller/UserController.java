@@ -3,6 +3,7 @@ package com.tls.edututor.user.controller;
 import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
+import com.tls.edututor.user.dto.response.UserResponse;
 import com.tls.edututor.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,15 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
+
+  @GetMapping
+  public CommonApiResponse<?> getAllUser(
+          Authentication authentication,
+          @RequestParam(required = false, defaultValue = "0", value = "page") int page) {
+    UserResponse allUser = userService.findAllUser(authentication, page);
+
+    return CommonApiResponse.createSuccess("조회 성공", allUser);
+  }
 
   @GetMapping("/{loginId}")
   public CommonApiResponse<?> checkLoginId(@PathVariable("loginId") String loginId) {

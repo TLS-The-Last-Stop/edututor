@@ -21,7 +21,6 @@ export const AuthProvider = ({ children }) => {
         /cmmn/
       ];
 
-      // 현재 경로가 public 패턴과 일치하는지 확인
       const isPublicPath = publicPathPatterns.some(pattern =>
         pattern.test(location.pathname)
       );
@@ -33,7 +32,6 @@ export const AuthProvider = ({ children }) => {
       const result = await verifyAuth();
       if (result.status === 401 && result.message.startsWith('로그인')) {
         clearLocalStorage();
-        navigator('/');
         return;
       }
 

@@ -12,37 +12,58 @@ const Container = styled.div`
     background-color: #f9fafb;
 `;
 
-
 const initForm = {
   loginId : '',
   password: '',
   type    : 'AD'
 };
 
+const initErrors = {
+  loginId : '',
+  password: ''
+};
+
 const AdminLogin = () => {
-  const [form, setForm] = useState(initForm);
+  const [formData, setFormData] = useState(initForm);
+  const [errors, setErrors] = useState(initErrors);
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setForm(prev => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+
+    setErrors(prev => ({
+      ...prev,
+      [name]: ''
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const submitData = {
-      ...form,
-      type: 'AD'
-    };
+    if (!formData.loginId) {
+      setErrors(prev => ({
+        ...prev,
+        loginId: '아이디를 입력해주세요.'
+      }));
+      return;
+    }
+
+    if (!formData.password) {
+      setErrors(prev => ({
+        ...prev,
+        password: '비밀번호를 입력해주세요.'
+      }));
+      return;
+    }
 
     try {
-      const result = await login(submitData);
+      const result = await login(formData);
       if (result) navigate('/admin');
     } catch (error) {
       console.error('Login failed:', error);
@@ -52,9 +73,10 @@ const AdminLogin = () => {
   return (
     <Container>
       <AdminLoginForm
-        form={form}
+        formData={formData}
+        errors={errors}
         handleSubmit={handleSubmit}
-        handleChange={handleChange}
+        handleInputChange={handleInputChange}
       />
     </Container>
   );

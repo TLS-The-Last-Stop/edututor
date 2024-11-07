@@ -1,8 +1,12 @@
 package com.tls.edututor.user.service.impl;
 
+import com.tls.edututor.classroom.dto.response.ClassroomResponse;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.user.dto.response.AuthUser;
+import com.tls.edututor.user.dto.response.UserResponse;
+import com.tls.edututor.user.dto.response.UserSUResponse;
+import com.tls.edututor.user.dto.response.UserTEResponse;
 import com.tls.edututor.user.exception.DuplicateUserException;
 import com.tls.edututor.school.entity.School;
 import com.tls.edututor.school.repository.SchoolRepository;
@@ -14,10 +18,15 @@ import com.tls.edututor.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +38,55 @@ public class UserServiceImpl implements UserService {
   private final SchoolRepository schoolRepository;
   private final ClassroomRepository classroomRepository;
 
+  @Override
+  @Transactional(readOnly = true)
+  public UserResponse findAllUser(Authentication authentication, int page) {
+    AuthUser admin = (AuthUser) authentication.getPrincipal();
+    if (!admin.getRole().equals("AD")) throw new IllegalArgumentException("권한이 없습니다.");
+
+    PageRequest pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id"));
+    Page<User> allUser = userRepository.findAll(pageRequest);
+
+    UserResponse userResponse = new UserResponse();
+    List<UserTEResponse> teachers = userResponse.getTeachers();
+    List<UserSUResponse> students = userResponse.getStudents();
+
+    for (User user : allUser.getContent()) {
+      String role = user.getRole();
+      if (role.equals("TE")) {
+        ClassroomResponse classroomResponse = ClassroomResponse.from(user.getClassroom());
+        UserTEResponse teacher = UserTEResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phoneNum(user.getPhoneNum())
+                .classroom(classroomResponse)
+                .role(user.getRole())
+                .build();
+        teachers.add(teacher);
+      } else if (role.equals("SU")) {
+        ClassroomResponse classroomResponse = ClassroomResponse.from(user.getClassroom());
+        UserSUResponse student = UserSUResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .classroomId(classroomResponse.getId())
+                .loginId(user.getLoginId())
+                .build();
+        students.add(student);
+      }
+    }
+
+    userResponse.setTeachers(teachers);
+    userResponse.setStudents(students);
+
+    return userResponse;
+  }
+
+  @Override
   @Transactional(readOnly = true)
   public boolean checkJoinAvailable(String loginId) {
     return userRepository.findByLoginIdAndIsDeleted(loginId, false).isPresent();
   }
-
 
   @Override
   public Long saveTeacher(UserTERequest request) {
