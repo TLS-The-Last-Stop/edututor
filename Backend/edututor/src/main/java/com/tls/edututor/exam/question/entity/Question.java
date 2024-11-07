@@ -5,6 +5,8 @@ import com.tls.edututor.exam.option.entity.Option;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "QUESTION")
+@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLRestriction("is_deleted = false")
 public class Question extends BaseEntity {
 
   @Id
