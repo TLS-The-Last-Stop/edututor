@@ -4,11 +4,15 @@ import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.unit.entity.Unit;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
 @Entity
 @Builder
+@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "MATERIAL")

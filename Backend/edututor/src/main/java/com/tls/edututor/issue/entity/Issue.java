@@ -4,11 +4,15 @@ import com.tls.edututor.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "ISSUE")
+@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLRestriction("is_deleted = false")
 public class Issue extends BaseEntity {
 
   @Id

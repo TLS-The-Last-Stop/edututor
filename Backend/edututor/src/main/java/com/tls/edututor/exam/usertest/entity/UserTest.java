@@ -8,6 +8,8 @@ import com.tls.edututor.exam.useransewer.entity.UserAnswer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "USER_TEST")
+@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLRestriction("is_deleted = false")
 public class UserTest extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
