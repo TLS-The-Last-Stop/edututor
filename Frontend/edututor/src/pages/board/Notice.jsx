@@ -66,7 +66,7 @@ const Notice = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="검색어를 입력하세요"
+            placeholder="검색어를 입력해주세요"
           />
           <button type="submit">검색</button>
         </form>

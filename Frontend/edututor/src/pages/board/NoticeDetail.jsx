@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getBoardsByCategory } from '../../api/board/board.js';
-
 import '../../assets/css/NoticeDetailPage.css';
 
 const NoticeDetail = () => {
@@ -9,22 +8,23 @@ const NoticeDetail = () => {
   const navigate = useNavigate();
   const [notice, setNotice] = useState(null);
 
-  useEffect(() => {
-    const fetchNoticeDetail = async () => {
-      const response = await getBoardsByCategory(1, false);
-      if (response && response.data) {
-        const selectNotice = response.data.find(
-          (item) => item.boardId === parseInt(boardId)
-        );
-        setNotice(selectNotice);
-      }
-    };
-    fetchNoticeDetail();
-  }, [boardId]);
+  const fetchNoticeDetail = async () => {
+    const response = await getBoardsByCategory(1, false);
+    if (response && response.data) {
+      const selectNotice = response.data.find(
+        (item) => item.boardId === parseInt(boardId)
+      );
+      setNotice(selectNotice);
+    }
+  };
 
   const handleGoBack = () => {
     navigate('/cmmn/notice');
   };
+
+  useEffect(() => {
+    fetchNoticeDetail();
+  }, [boardId]);
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('ko-KR', {
@@ -37,6 +37,7 @@ const NoticeDetail = () => {
   if (!notice) {
     return <div className="loading">로딩중...</div>;
   }
+  ;
 
   return (
     <div className="notice-detail-container">

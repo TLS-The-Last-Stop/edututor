@@ -3,8 +3,6 @@ const NoticeItem = ({
                       onNoticeClick,
                       formatDate
                     }) => {
-
-
   return (
     <tr>
       <td className="number-cell">
