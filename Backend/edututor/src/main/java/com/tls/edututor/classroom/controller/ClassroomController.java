@@ -26,7 +26,7 @@ public class ClassroomController {
 
   @GetMapping("/{classroomId}/students")
   public CommonApiResponse<?> getStudentsWithClassroomId(@PathVariable("classroomId") Long classroomId) {
-    List<UserSUResponse> students = classroomService.getAllStudent(classroomId, false);
+    List<UserSUResponse> students = classroomService.getAllStudent(classroomId);
     Map<Long, List<UserSUResponse>> map = new HashMap<>();
     map.put(classroomId, students);
 

@@ -8,7 +8,7 @@ import java.util.List;
 public interface ClassroomService {
   Long save(ClassroomRequest request);
 
-  List<UserSUResponse> getAllStudent(Long classroomId, boolean isDeleted);
+  List<UserSUResponse> getAllStudent(Long classroomId);
 
   UserSUResponse getStudent(Long classroomId, Long studentId);
 

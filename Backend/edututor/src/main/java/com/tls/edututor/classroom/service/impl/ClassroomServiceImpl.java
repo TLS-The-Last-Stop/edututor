@@ -29,8 +29,8 @@ public class ClassroomServiceImpl implements ClassroomService {
   private final ShareTestRepository shareTestRepository;
 
   @Override
-  public List<UserSUResponse> getAllStudent(Long classroomId, boolean isDeleted) {
-    List<User> students = userRepository.findByClassroomIdAndRoleAndIsDeleted(classroomId, "SU", false);
+  public List<UserSUResponse> getAllStudent(Long classroomId) {
+    List<User> students = userRepository.findByClassroomIdAndRole(classroomId, "SU");
 
     if (students.isEmpty()) {
       log.info("classroom Id {}의 학생이 없습니다.", classroomId);
@@ -40,7 +40,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     return students.stream()
             .map(student -> {
               Map<Long, Boolean> studentSharedTests = new HashMap<>();
-              List<ShareTest> sharedTests = shareTestRepository.findAllByUserAndIsDeleted(student, false);
+              List<ShareTest> sharedTests = shareTestRepository.findAllByUser(student);
 
               for (ShareTest shareTest : sharedTests) studentSharedTests.put(shareTest.getTestPaper().getId(), true);
 
@@ -57,7 +57,7 @@ public class ClassroomServiceImpl implements ClassroomService {
   @Override
   public UserSUResponse getStudent(Long classroomId, Long studentId) {
     Classroom classroom = classroomRepository.findById(classroomId).orElseThrow();
-    User user = userRepository.findByIdAndClassroomAndIsDeleted(studentId, classroom, false).orElseThrow(() -> new UsernameNotFoundException("없는 학생입니다."));
+    User user = userRepository.findByIdAndClassroom(studentId, classroom).orElseThrow(() -> new UsernameNotFoundException("없는 학생입니다."));
 
     UserSUResponse student = UserSUResponse.builder()
             .id(user.getId())

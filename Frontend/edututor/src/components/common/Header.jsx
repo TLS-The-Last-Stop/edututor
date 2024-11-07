@@ -5,9 +5,8 @@ import { FiMenu } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../api/user/user.js';
-import { StyledRouterLink } from './UserStyledComponents.js';
 
 const HeaderContainer = styled.header`
     width: 100%;
@@ -338,6 +337,16 @@ const StyledButton = styled.button`
 
 `;
 
+const StyledNavLink = styled(NavLink)`
+    color: inherit;
+    text-decoration: none;
+
+    &.active {
+        color: #4285f4;
+        font-weight: 500;
+    }
+`;
+
 
 const Header = () => {
   const { userInfo, updateUserInfo, userRole } = useAuth?.() || {};
@@ -415,10 +424,10 @@ const Header = () => {
       <HeaderContent>
         <MainNav>
           <Logo onClick={handleClean}>
-            <StyledRouterLink to="/">
+            <StyledNavLink to="/">
               <span>E</span>dututor
               <span className="edu">edu</span>
-            </StyledRouterLink>
+            </StyledNavLink>
           </Logo>
           <NavList>
             <li onClick={() => handleHeaderMenuClick('학습')} className={activeHeaderMenu === '학습' ? 'active' : ''}>
@@ -428,11 +437,11 @@ const Header = () => {
             </li>
             <li onClick={() => handleHeaderMenuClick('리포트')}
                 className={activeHeaderMenu === '리포트' ? 'active' : ''}>
-              <StyledRouterLink to="/report">리포트</StyledRouterLink>
+              <StyledNavLink to="/report">리포트</StyledNavLink>
             </li>
             <li onClick={() => handleHeaderMenuClick('고객센터')}
                 className={activeHeaderMenu === '고객센터' ? 'active' : ''}>
-              <StyledRouterLink to="/cmmn/notice">고객센터</StyledRouterLink>
+              <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
             </li>
           </NavList>
 
@@ -467,25 +476,25 @@ const Header = () => {
                 onClick={(e) => handleSubMenuClick(e, '공지사항')}
                 className={activeSubMenu === '공지사항' ? 'active' : ''}
               >
-                <StyledRouterLink to="/cmmn/notice">공지사항</StyledRouterLink>
+                <StyledNavLink to="/cmmn/notice">공지사항</StyledNavLink>
               </li>
               <li
                 onClick={(e) => handleSubMenuClick(e, 'FAQ')}
                 className={activeSubMenu === 'FAQ' ? 'active' : ''}
               >
-                <StyledRouterLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledRouterLink>
+                <StyledNavLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledNavLink>
               </li>
               <li
                 onClick={(e) => handleSubMenuClick(e, '1:1문의')}
                 className={activeSubMenu === '1:1문의' ? 'active' : ''}
               >
-                <StyledRouterLink to="/cmmn/inquiry">1:1문의</StyledRouterLink>
+                <StyledNavLink to="/cmmn/inquiry">1:1문의</StyledNavLink>
               </li>
               <li
                 onClick={(e) => handleSubMenuClick(e, '오류 문항 신고 현황')}
                 className={activeSubMenu === '오류 문항 신고 현황' ? 'active' : ''}
               >
-                <StyledRouterLink to="/">오류 문항 신고 현황</StyledRouterLink>
+                <StyledNavLink to="/">오류 문항 신고 현황</StyledNavLink>
               </li>
             </ul>
           </SubNav>
@@ -511,29 +520,37 @@ const Header = () => {
               ? (<StyledButton onClick={handleTeacherCourseClick}>학습</StyledButton>)
               : (<StyledButton onClick={handleStudentCourseClick}>학습</StyledButton>)}
           </HamburgerMenuItem>
+
           <HamburgerMenuItem className={activeHamburgerMenu === '리포트' ? 'active' : ''}
                              onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>
-            <img src={report} alt="리포트 이미지" /> <StyledRouterLink to="/report">리포트</StyledRouterLink>
+            <img src={report} alt="리포트 이미지" /> <StyledNavLink to="/report">리포트</StyledNavLink>
           </HamburgerMenuItem>
 
-          {activeHamburgerMenu === '고객센터' && (
+          <HamburgerMenuItem className={activeHamburgerMenu === '고객센터' ? 'active' : ''}
+                             onClick={(e) => handleHamburgerMenuClick(e, '고객센터')}>
+            <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
+          </HamburgerMenuItem>
+
+          {location.pathname.includes('/cmmn') && (
             <>
-              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '공지사항')}
-                                 className={activeHamburgerMenu === '공지사항' ? 'active' : ''}
-                                 style={{ paddingLeft: '32px' }}
-              ><StyledRouterLink to="/cmmn/notice">공지사항</StyledRouterLink></HamburgerMenuItem>
-              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, 'FAQ')}
-                                 className={activeHamburgerMenu === 'FAQ' ? 'active' : ''}
-                                 style={{ paddingLeft: '32px' }}
-              ><StyledRouterLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledRouterLink></HamburgerMenuItem>
-              <HamburgerMenuItem onClick={(e) => handleSubMenuClick(e, '1:1문의')}
-                                 class
-                                 Name={activeHamburgerMenu === '1:1문의' ? 'active' : ''}
-                                 style={{ paddingLeft: '32px' }}
-              ><StyledRouterLink to="/cmmn/inquiry">1:1문의</StyledRouterLink></HamburgerMenuItem>
+              <HamburgerMenuItem
+                style={{ paddingLeft: '32px' }}
+              >
+                <StyledNavLink to="/cmmn/notice">공지사항</StyledNavLink>
+              </HamburgerMenuItem>
+              <HamburgerMenuItem
+                style={{ paddingLeft: '32px' }}
+              >
+                <StyledNavLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledNavLink>
+              </HamburgerMenuItem>
+              <HamburgerMenuItem
+                style={{ paddingLeft: '32px' }}
+              >
+                <StyledNavLink to="/cmmn/inquiry">1:1문의</StyledNavLink>
+              </HamburgerMenuItem>
             </>
           )}
-
+          
           {userInfo ? (
             <HamburgerMenuItem>
               <UserInfo>

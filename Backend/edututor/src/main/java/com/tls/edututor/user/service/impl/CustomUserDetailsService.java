@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-    User user = userRepository.findByLoginIdAndIsDeleted(loginId, false).orElseThrow(() -> new BadCredentialsException("AUTH001"));
+    User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
     AuthUser authUser = new AuthUser(user.getId(), user.getUsername(), user.getEmail(), user.getClassroom(), user.getRole());
 

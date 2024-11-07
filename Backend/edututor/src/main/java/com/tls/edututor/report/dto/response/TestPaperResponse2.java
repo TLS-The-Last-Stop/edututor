@@ -16,7 +16,7 @@ public class TestPaperResponse2 {
   private String title;
   private String courseName;
   private String unitName;
-  private LocalDate createAt;
+  private LocalDate createdAt;
   private Integer participationCount;
   private Integer totalCount;
   private Double achievementRate;

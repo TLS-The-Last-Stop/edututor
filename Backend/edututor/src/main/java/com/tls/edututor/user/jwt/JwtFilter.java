@@ -30,7 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private final JwtUtil jwtUtil;
   private final UserDetailsService userDetailsService;
 
-  @Override
+  /*@Override
   protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
     String path = request.getRequestURI();
     return path.equals("/api/auth/refresh") ||
@@ -38,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
             path.equals("/api/login") ||
             path.equals("/api/admin/login") ||
             path.equals("/api/logout");
-  }
+  }*/
 
   @Override
   @Transactional(readOnly = true)
@@ -58,7 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
       }
 
       if (accessToken.isBlank()) {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        SecurityContextHolder.getContext().setAuthentication(null);
         filterChain.doFilter(request, response);
         return;
       }

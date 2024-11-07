@@ -51,10 +51,9 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       response.addCookie(temp);
 
       String redirectUrl = BASE_URL + "/additional-info";
-      response.getWriter().write(redirectUrl);
       response.sendRedirect(redirectUrl);
     } else {
-      User user = userRepository.findByLoginIdAndIsDeleted(loginId, false).orElseThrow();
+      User user = userRepository.findByLoginId(loginId).orElseThrow();
       claims.put("id", id);
       claims.put("loginId", loginId);
       claims.put("username", name);

@@ -1,20 +1,32 @@
 import {
   Button,
-  Container, ErrorText, FieldSet,
+  Container,
+  ErrorText,
+  FieldSet,
   FormContainer,
   FormGroup,
   FormHeader,
-  FormSection, Input,
-  Label, LinkGroup, LogoText, SNSButton, SNSButtonGroup, SNSLoginSection, SNSTitle, StyledRouterLink, SubTitle,
+  FormSection,
+  Input,
+  Label,
+  LinkGroup,
+  LogoText,
+  SNSButton,
+  SNSButtonGroup,
+  SNSLoginSection,
+  SNSTitle,
+  StyledRouterLink,
+  SubTitle,
   Title
 } from '../../components/common/UserStyledComponents.js';
 import naver from '../../assets/icon/naver.png';
 import kakao from '../../assets/icon/kakao.png';
 import google from '../../assets/icon/google.png';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext.jsx';
+import FindLoginInfoModal from '../../components/user/FindLoginInfoModal.jsx';
 
 const initForm = {
   loginId : '',
@@ -30,6 +42,8 @@ const initErrors = {
 const TeacherLogin = () => {
   const [formData, setFormData] = useState(initForm);
   const [errors, setErrors] = useState(initErrors);
+  const [isOpen, setIsOpen] = useState(false);
+  const [findType, setFindType] = useState('');
   const { updateUserInfo } = useAuth();
 
   const navigate = useNavigate();
@@ -110,6 +124,16 @@ const TeacherLogin = () => {
     }
   };
 
+  const handleOpenModal = (type) => {
+    setIsOpen(true);
+
+    type === 'loginId' ? setFindType('loginId') : setFindType('password');
+  };
+
+  const onClose = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
       <Container>
@@ -148,8 +172,8 @@ const TeacherLogin = () => {
                 </FormGroup>
 
                 <LinkGroup>
-                  <StyledRouterLink to="/find-id">아이디 찾기</StyledRouterLink>
-                  <StyledRouterLink to="/find-password">비밀번호 찾기</StyledRouterLink>
+                  <StyledRouterLink to="#" onClick={() => handleOpenModal('loginId')}>아이디 찾기</StyledRouterLink>
+                  <StyledRouterLink to="#" onClick={() => handleOpenModal('password')}>비밀번호 찾기</StyledRouterLink>
                   <StyledRouterLink to="/join">회원가입</StyledRouterLink>
                 </LinkGroup>
 
@@ -178,6 +202,13 @@ const TeacherLogin = () => {
             </FieldSet>
           </FormContainer>
         </FormSection>
+
+        <FindLoginInfoModal
+          isOpen={isOpen}
+          onClose={onClose}
+          findType={findType}
+        />
+
       </Container>
     </>
   );

@@ -74,7 +74,7 @@ public class ReportServiceImpl implements ReportService {
               .title(testPaper.getTitle())
               .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
               .unitName(testPaper.getUnit().getContent())
-              .createAt(LocalDate.from(testPaper.getCreatedAt()))
+              .createdAt(LocalDate.from(testPaper.getCreatedAt()))
               .participationCount((int) participationCount)
               .totalCount((int) totalCount)
               .achievementRate(Double.valueOf(String.format("%.0f", avgAchievementRate)))

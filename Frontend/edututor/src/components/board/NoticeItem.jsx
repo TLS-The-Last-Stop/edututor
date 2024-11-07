@@ -21,7 +21,7 @@ const NoticeItem = ({
         </button>
       </td>
       <td className="date-cell">
-        {formatDate(notice.createAt)}
+        {formatDate(notice.createdAt)}
       </td>
     </tr>
   );

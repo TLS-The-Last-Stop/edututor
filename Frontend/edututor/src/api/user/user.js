@@ -6,7 +6,7 @@ import { privateApi, publicApi } from '../axios.js';
  * @returns Response.status (400 === 이미 존재하는 아이디, 204 === 가입 가능한 아이디)
  */
 export const checkDuplicateId = async (loginId) => {
-  const response = await publicApi.get(`/users/${loginId}`);
+  const response = await publicApi.get(`/users/ids/${loginId}`);
   return response.data;
 };
 
@@ -45,8 +45,28 @@ export const logout = async () => {
   return response.data;
 };
 
+export const getUser = async (userId) => {
+  const response = await privateApi.get(`/users/${userId}`);
+  return response.data;
+};
+
 export const getAllUser = async () => {
   const response = await privateApi.get('/users');
+  return response.data;
+};
+
+export const removeUser = async (userId) => {
+  const response = await privateApi.remove(`/users/${userId}`);
+  return response.data;
+};
+
+export const findId = async (email) => {
+  const response = await publicApi.post('/mail/loginid', email);
+  return response.data;
+};
+
+export const findPassword = async (data) => {
+  const response = await publicApi.post('/mail/password', data);
   return response.data;
 };
 

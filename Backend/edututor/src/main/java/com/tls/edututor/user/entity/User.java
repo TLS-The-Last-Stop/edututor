@@ -6,13 +6,17 @@ import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "USER")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLRestriction("is_deleted = false")
 public class User extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,8 +59,8 @@ public class User extends BaseEntity {
     user.email = email;
     user.username = username;
     user.registrationStatus = RegistrationStatus.OAUTH_REGISTERED;
-    user.loginId = email; // OAuth의 경우 email을 loginId로 사용할 수 있다.
-    user.role = "ROLE_PENDING"; // 추가 정보 입력 후 TEACHER로 변경
+    user.loginId = providerId;
+    user.role = "ROLE_PENDING";
 
     // Oauth 사용자 정보 생성 및 연결
     OAuthUser oAuthUser = OAuthUser.createOAuthUser(provider, providerId, user);
@@ -112,5 +116,9 @@ public class User extends BaseEntity {
 
   public void setOAuthUser(OAuthUser oAuthUser) {
     this.oAuthUser = oAuthUser;
+  }
+
+  public void updateUserPassword(String password) {
+    this.password = password;
   }
 }
