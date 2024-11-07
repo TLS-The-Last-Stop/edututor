@@ -9,6 +9,7 @@ import cs from '../../assets/icon/custom-service.png';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { logout } from '../../api/user/user.js';
 import { StyledRouterLink } from './UserStyledComponents.js';
+import TeacherUpdateFormModal from '../user/TeacherUpdateFormModal.jsx';
 
 const commonButtonStyles = css`
     background: none;
@@ -120,6 +121,7 @@ const UserInfo = styled.div`
     gap: 8px;
     padding: 6px 12px;
     border-radius: 4px;
+    cursor: pointer;
 
     span {
         font-size: 14px;
@@ -370,10 +372,11 @@ const StyledNavLink = styled(NavLink)`
     }
 `;
 
-
 const Header = () => {
-  const { userInfo, updateUserInfo, userRole } = useAuth?.() || {};
   const [hamburger, setHamburger] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { userInfo, updateUserInfo, userRole } = useAuth?.() || {};
   const location = useLocation();
 
   const handleLogout = () => {
@@ -384,6 +387,10 @@ const Header = () => {
 
   const toggleHamburger = () => {
     setHamburger(!hamburger);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -428,7 +435,7 @@ const Header = () => {
           {userInfo ? (
             <UserInfoContainer>
               <UserInfo>
-                <span>{userInfo.username}님</span>
+                <span onClick={() => setIsOpen(true)}>{userInfo.username}님</span>
                 <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
               </UserInfo>
             </UserInfoContainer>
@@ -512,6 +519,11 @@ const Header = () => {
           )}
         </HamburgerMenu>
       </Overlay>
+
+      <TeacherUpdateFormModal
+        isOpen={isOpen}
+        onClose={handleCloseModal}
+      />
     </HeaderContainer>
   );
 };

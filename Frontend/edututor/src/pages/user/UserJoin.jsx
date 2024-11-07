@@ -24,14 +24,15 @@ const initForm = {
 
 
 const initErrors = {
-  phoneMiddle  : false,
-  phoneLast    : false,
-  birthYear    : false,
-  birthMonth   : false,
-  birthDay     : false,
-  loginId      : false,
-  password     : false,
-  passwordMatch: false
+  phoneMiddle     : false,
+  phoneLast       : false,
+  birthYear       : false,
+  birthMonth      : false,
+  birthDay        : false,
+  birthDateInvalid: false,
+  loginId         : false,
+  password        : false,
+  passwordMatch   : false
 };
 
 const initSchool = {
@@ -135,23 +136,21 @@ const UserJoin = () => {
       return;
     }
 
-    /**
-     *     try {
-     *       const result = await checkDuplicateId(form.loginId);
-     *       if (result.status === 204) {
-     *         setIsIdChecked(true);
-     *         setIdCheckMessage('사용 가능한 아이디 입니다.');
-     *       } else {
-     *         setIsIdChecked(false);
-     *         setIdCheckMessage('이미 사용중이 아이디입니다.');
-     *       }
-     *
-     *     } catch (error) {
-     *       console.error('아이디 중복체크 실패: ', error);
-     *       setIsIdChecked(false);
-     *       setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
-     *     }
-     */
+    try {
+      const result = await checkDuplicateId(form.loginId);
+      if (result.status === 204) {
+        setIsIdChecked(true);
+        setIdCheckMessage('사용 가능한 아이디 입니다.');
+      } else {
+        setIsIdChecked(false);
+        setIdCheckMessage('이미 사용중이 아이디입니다.');
+      }
+
+    } catch (error) {
+      console.error('아이디 중복체크 실패: ', error);
+      setIsIdChecked(false);
+      setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
+    }
 
     try {
       await checkDuplicateId(form.loginId);
@@ -205,6 +204,44 @@ const UserJoin = () => {
       ...prev,
       [name]: numberOnly
     }));
+
+    if (name.startsWith('birth')) {
+      const formData = {
+        ...form,
+        [name]: numberOnly // 현재 입력값 사용
+      };
+
+      // 하나라도 입력이 되었다면 검증 시작
+      if (formData.birthYear || formData.birthMonth || formData.birthDay) {
+        let year = parseInt(formData.birthYear) || 0;
+        let month = parseInt(formData.birthMonth) || 0;
+        let day = parseInt(formData.birthDay) || 0;
+
+        // 현재 입력중인 필드의 값을 사용
+        if (name === 'birthYear') year = parseInt(numberOnly) || 0;
+        if (name === 'birthMonth') month = parseInt(numberOnly) || 0;
+        if (name === 'birthDay') day = parseInt(numberOnly) || 0;
+
+        const currentYear = new Date().getFullYear();
+        const isValidYear = year >= 1900 && year <= currentYear;
+        const isValidMonth = month >= 1 && month <= 12;
+
+        let isValidDay = true;
+        if (year > 0 && month > 0 && day > 0) {
+          const lastDayOfMonth = new Date(year, month, 0).getDate();
+          isValidDay = day >= 1 && day <= lastDayOfMonth;
+        }
+
+        setErrors(prev => ({
+          ...prev,
+          birthDateInvalid: Boolean(
+            (year && !isValidYear) ||
+            (month && !isValidMonth) ||
+            (day && !isValidDay)
+          )
+        }));
+      }
+    }
   };
 
   /* 비밀번호 확인 */
@@ -272,6 +309,28 @@ const UserJoin = () => {
     // 기타 유효성 검사
     if (errors.loginId || errors.password) {
       alert('입력한 정보를 다시 확인해주세요.');
+      return false;
+    }
+
+    /* 생년월일 검사 */
+    const year = parseInt(form.birthYear);
+    const month = parseInt(form.birthMonth);
+    const day = parseInt(form.birthDay);
+
+    const currentYear = new Date().getFullYear();
+    if (year < 1900 || year > currentYear) {
+      alert('올바른 연도를 입력해주세요.');
+      return false;
+    }
+
+    if (month < 1 || month > 12) {
+      alert('올바른 월을 입력해주세요 (1-12)');
+      return false;
+    }
+
+    const lastDayOfMonth = new Date(year, month, 0).getDate();
+    if (day < 1 || day > lastDayOfMonth) {
+      alert(`올바른 일을 입력해주세요 (1-${lastDayOfMonth}`);
       return false;
     }
 

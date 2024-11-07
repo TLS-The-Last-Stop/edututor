@@ -3,7 +3,9 @@ package com.tls.edututor.classroom.controller;
 import com.tls.edututor.classroom.service.ClassroomService;
 import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.user.dto.response.UserSUResponse;
+import com.tls.edututor.user.dto.response.UserTEResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +19,6 @@ import java.util.*;
 public class ClassroomController {
 
   private final ClassroomService classroomService;
-
-  /*@GetMapping("/classrooms/{classroomId}/students")
-  public CommonApiResponse<?> getStudents(@PathVariable Long classroomId) {
-    List<UserSTResponse> students = classroomService.getAllStudent(classroomId);
-    return CommonApiResponse.createSuccess("학생 목록 조회", students);
-  }*/
 
   @GetMapping("/{classroomId}/students")
   public CommonApiResponse<?> getStudentsWithClassroomId(@PathVariable("classroomId") Long classroomId) {
@@ -38,6 +34,13 @@ public class ClassroomController {
     UserSUResponse student = classroomService.getStudent(classroomId, studentId);
 
     return CommonApiResponse.createSuccess("조회된 학생", student);
+  }
+
+  @GetMapping("/{classroomId}")
+  public CommonApiResponse<?> getTeacher(@PathVariable("classroomId") Long classroomId, Authentication authentication) {
+    UserTEResponse teacher = classroomService.getTeacher(classroomId, authentication);
+
+    return CommonApiResponse.createSuccess("조회된 선생", teacher);
   }
 
 }

@@ -288,6 +288,12 @@ const CourseSection = () => {
   const handleSlide = (direction) => {
     if (!listRef.current) return;
 
+    setDragState(prev => ({
+      ...prev,
+      isMouseDown: false,
+      isDragging : false
+    }));
+
     const scrollAmount = listRef.current.clientWidth;
 
     listRef.current.scrollTo({
@@ -368,7 +374,11 @@ const CourseSection = () => {
       <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
       <CourseListContainer>
         {showLeftButton && (
-          <SlideButton className="prev" onClick={() => handleSlide('prev')}>
+          <SlideButton
+            className="prev"
+            onClick={() => handleSlide('prev')}
+            onMouseDown={e => e.stopPropagation()}
+          >
             ←
           </SlideButton>
         )}
@@ -397,7 +407,11 @@ const CourseSection = () => {
           )}
         </CourseList>
         {showRightButton && (
-          <SlideButton className="next" onClick={() => handleSlide('next')}>
+          <SlideButton
+            className="next"
+            onClick={() => handleSlide('next')}
+            onMouseDown={e => e.stopPropagation()}
+          >
             →
           </SlideButton>
         )}

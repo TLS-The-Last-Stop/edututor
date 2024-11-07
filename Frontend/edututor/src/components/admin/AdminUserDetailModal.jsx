@@ -21,7 +21,7 @@ const AdminUserDetailModal = ({
                               }) => {
 
   if (!isOpen) return null;
-  console.log(selectedUser);
+
   return (
     <Overlay onClick={onClose}>
       <ModalContainer onClick={e => e.stopPropagation()}>
