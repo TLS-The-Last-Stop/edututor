@@ -91,6 +91,7 @@ const UserJoinForm = ({
               </Label>
               <Input
                 id="password"
+                type="password"
                 name="password"
                 value={form.password}
                 onChange={getInputHandler}
@@ -108,6 +109,7 @@ const UserJoinForm = ({
               </Label>
               <Input
                 id="confirmPassword"
+                type="password"
                 name="confirmPassword"
                 value={form.confirmPassword}
                 onChange={getInputHandler}
@@ -202,7 +204,7 @@ const UserJoinForm = ({
                   placeholder="YYYY"
                   value={form.birthYear}
                   onChange={getInputHandler}
-                  $hasError={errors.birthYear}
+                  $hasError={errors.birthYear || errors.birthDateInvalid}
                   $isFilled={form.birthYear.length === 4}
                 />
                 <Divider>년</Divider>
@@ -213,7 +215,7 @@ const UserJoinForm = ({
                   placeholder="MM"
                   value={form.birthMonth}
                   onChange={getInputHandler}
-                  $hasError={errors.birthMonth}
+                  $hasError={errors.birthMonth || errors.birthDateInvalid}
                   $isFilled={form.birthMonth.length === 2}
                 />
                 <Divider>월</Divider>
@@ -224,13 +226,16 @@ const UserJoinForm = ({
                   placeholder="DD"
                   value={form.birthDay}
                   onChange={getInputHandler}
-                  $hasError={errors.birthDay}
+                  $hasError={errors.birthDay || errors.birthDateInvalid}
                   $isFilled={form.birthDay.length === 2}
                 />
                 <Divider>일</Divider>
               </DateGroup>
               {(errors.birthYear || errors.birthMonth || errors.birthDay) && (
                 <ErrorText>숫자만 입력 가능합니다.</ErrorText>
+              )}
+              {errors.birthDateInvalid && (
+                <ErrorText>올바른 날짜를 입력해주세요.</ErrorText>
               )}
             </FormGroup>
 

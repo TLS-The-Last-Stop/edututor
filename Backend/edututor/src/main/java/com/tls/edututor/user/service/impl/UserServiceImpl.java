@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     request.setPassword(passwordEncoder.encode(request.getPassword()));
 
     User user = User.createTeacher(request);
-    userRepository.save(user).getId();
+    userRepository.save(user);
 
     School school = School.withDto()
             .request(request.getSchool())

@@ -1,16 +1,20 @@
 package com.tls.edututor.classroom.service.impl;
 
 import com.tls.edututor.classroom.dto.request.ClassroomRequest;
+import com.tls.edututor.classroom.dto.response.ClassroomResponse;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.classroom.service.ClassroomService;
 import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
+import com.tls.edututor.user.dto.response.AuthUser;
 import com.tls.edututor.user.dto.response.UserSUResponse;
+import com.tls.edututor.user.dto.response.UserTEResponse;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,5 +79,29 @@ public class ClassroomServiceImpl implements ClassroomService {
             .request(request)
             .build();
     return classroomRepository.save(classroom).getId();
+  }
+
+  @Override
+  @Transactional
+  public UserTEResponse getTeacher(Long classroomId, Authentication authentication) {
+    Object principal = authentication.getPrincipal();
+    if (principal == null) throw new IllegalArgumentException("잘못된 접근입니다.");
+    AuthUser teacher = (AuthUser) principal;
+
+    Classroom classroom = classroomRepository.findById(classroomId).orElseThrow(() -> new IllegalArgumentException("없는 반입니다."));
+    if (classroom.getWriter() != teacher.getId()) throw new IllegalArgumentException("잘못된 접근입니다.");
+
+    User user = userRepository.findById(teacher.getId()).orElseThrow(() -> new UsernameNotFoundException("없는 유저일 수 있나?"));
+
+    UserTEResponse userTEResponse = UserTEResponse.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .phoneNum(user.getPhoneNum())
+            .username(user.getUsername())
+            .createdAt(user.getCreatedAt())
+            .classroom(ClassroomResponse.from(classroom))
+            .build();
+
+    return userTEResponse;
   }
 }
