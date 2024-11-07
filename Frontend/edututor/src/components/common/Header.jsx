@@ -5,8 +5,10 @@ import { FiMenu } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import study from '../../assets/icon/study.png';
 import report from '../../assets/icon/report.png';
+import cs from '../../assets/icon/custom-service.png';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../api/user/user.js';
+import { StyledRouterLink } from './UserStyledComponents.js';
 
 const HeaderContainer = styled.header`
     width: 100%;
@@ -24,6 +26,7 @@ const MainNav = styled.nav`
     display: flex;
     align-items: center;
     height: 64px;
+    position: relative;
 `;
 
 const Logo = styled.div`
@@ -54,15 +57,15 @@ const NavList = styled.ul`
     margin: 8px 0 0;
     padding: 0;
     flex-grow: 1;
-    align-items: center; // 수직 중앙 정렬 추가
+    align-items: center;
 
     li {
         font-size: 16px;
         color: #333;
         cursor: pointer;
-        height: 64px; // MainNav와 동일한 높이
-        display: flex; // Flex 컨테이너로 변경
-        align-items: center; // 수직 중앙 정렬
+        height: 64px;
+        display: flex;
+        align-items: center;
 
         a {
             color: inherit;
@@ -89,12 +92,13 @@ const NavList = styled.ul`
     }
 `;
 
+
 const UserInfoContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
     margin-left: auto;
-    height: 100%; // MainNav와 동일한 높이
+    height: 100%;
 
     @media (max-width: 765px) {
         display: none;
@@ -115,7 +119,7 @@ const UserInfo = styled.div`
 `;
 
 const LogoutButton = styled.button`
-    height: 36px; // 버튼 높이 고정
+    height: 36px;
     padding: 0 12px;
     border-radius: 4px;
     font-size: 14px;
@@ -125,17 +129,18 @@ const LogoutButton = styled.button`
     border: 1px solid #ddd;
     transition: all 0.2s;
     display: flex;
-    align-items: center; // 버튼 내부 텍스트 세로 중앙 정렬
+    align-items: center;
 
     &:hover {
         background: #f8f9fa;
     }
 `;
+
 const AuthButtons = styled.div`
     display: flex;
     gap: 12px;
-    align-items: center; // 수직 중앙 정렬
-    height: 100%; // MainNav와 동일한 높이
+    align-items: center;
+    height: 100%;
 
     button {
         padding: 8px 16px;
@@ -169,13 +174,39 @@ const AuthButtons = styled.div`
     }
 `;
 
+const NavItem = styled.li`
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    &:hover {
+        color: #4285f4;
+    }
+
+    &.active {
+        color: #4285f4;
+        font-weight: 500;
+    }
+`;
 
 const SubNav = styled.nav`
-    height: 40px;
-    border-top: 1px solid #eaeaea;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #eaeaea;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+    min-width: 450px;
 
-    @media (max-width: 765px) {
-        display: none;
+    ${NavItem}:hover &, ${NavItem}.active & {
+        display: block;
     }
 
     ul {
@@ -183,30 +214,9 @@ const SubNav = styled.nav`
         gap: 24px;
         list-style: none;
         margin: 0;
-        padding: 0;
+        padding: 8px 16px;
         height: 100%;
         align-items: center;
-
-        li {
-            font-size: 14px;
-            color: #666;
-            cursor: pointer;
-
-            a {
-                color: inherit;
-                text-decoration: none;
-            }
-
-            &:hover {
-                color: #4285f4;
-                background: #f8f9fa;
-            }
-
-            &.active {
-                color: #4285f4;
-                font-weight: 500;
-            }
-        }
     }
 `;
 
@@ -237,7 +247,7 @@ const HamburgerMenu = styled.div`
         box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
         padding: 20px;
         z-index: 1000;
-        transition: right 0.3s ease-in-out;  // 부드러운 전환 효과 추가
+        transition: right 0.3s ease-in-out;
     }
 `;
 
@@ -252,28 +262,35 @@ const HamburgerMenuItem = styled.div`
     display: flex;
     align-items: center;
     text-align: left;
-    padding: 12px 0;
     border-bottom: 1px solid #eaeaea;
-    color: #333;
-    cursor: pointer;
+    height: 40px;
+    margin: 0;
 
     img {
         padding-right: 10px;
     }
 
-    &:hover {
-        color: #4285f4;
+    a {
+        width: 100%;
+        color: inherit;
+        display: flex;
+        align-items: center;
     }
 
-    &.active {
+    &:hover {
         color: #4285f4;
-        font-weight: 500;
+        background-color: #f8f9fa;
+    }
+
+    &.sub-menu {
+        padding-left: 32px;
+        background-color: #fafafa;
     }
 `;
 
 const HamburgerLogoutButton = styled(LogoutButton)`
-    margin-left: auto; // 오른쪽 정렬
-    padding: 8px 16px; // 햄버거 메뉴용 크기 조정
+    margin-left: auto;
+    padding: 8px 16px;
 `;
 
 const HamburgerAuthButtons = styled.div`
@@ -331,19 +348,36 @@ const StyledButton = styled.button`
     font-family: inherit;
     margin-right: 0;
 
-    &:hover {
-        color: #40a9ff;
+    ${HamburgerMenuItem}:hover & {
+        color: #4285f4;
     }
-
 `;
 
 const StyledNavLink = styled(NavLink)`
-    color: inherit;
     text-decoration: none;
+    color: inherit;
 
     &.active {
         color: #4285f4;
         font-weight: 500;
+    }
+
+    /* /cmmn 경로에서는 항상 active 상태 유지 */
+
+    &[href^='/cmmn']:not([end]) {
+        &.active, &[data-active='true'] {
+            color: #4285f4;
+            font-weight: 500;
+        }
+    }
+
+    /* /report 경로에서는 항상 active 상태 유지 */
+
+    &[href^='/report']:not([end]) {
+        &.active, &[data-active='true'] {
+            color: #4285f4;
+            font-weight: 500;
+        }
     }
 `;
 
@@ -352,8 +386,6 @@ const Header = () => {
   const { userInfo, updateUserInfo, userRole } = useAuth?.() || {};
   const [hamburger, setHamburger] = useState(false);
   const [activeHeaderMenu, setActiveHeaderMenu] = useState('');
-  const [activeHamburgerMenu, setActiveHamburgerMenu] = useState('');
-  const [activeSubMenu, setActiveSubMenu] = useState('공지사항');
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -363,16 +395,13 @@ const Header = () => {
 
     if (pathname.includes('/cmmn')) {
       setActiveHeaderMenu('고객센터');
-
-      if (pathname.includes('/notice')) setActiveSubMenu('공지사항');
-      else if (pathname.includes('/faq')) setActiveSubMenu('FAQ');
-      else if (pathname.includes('/inquiry')) setActiveSubMenu('1:1문의');
     } else if (pathname.includes('/report')) {
       setActiveHeaderMenu('리포트');
     } else if (pathname.includes('/course')) {
       setActiveHeaderMenu('학습');
+    } else {
+      setActiveHeaderMenu('');
     }
-
   }, [location]);
 
   const handleLogout = () => {
@@ -383,66 +412,73 @@ const Header = () => {
 
   const toggleHamburger = () => {
     setHamburger(!hamburger);
-    if (hamburger) {
-      setActiveHamburgerMenu('');
-      setActiveSubMenu('');
-    }
   };
 
   const handleHeaderMenuClick = (menuName) => {
     setActiveHeaderMenu(menuName);
-
-    if (menuName === '고객센터') setActiveSubMenu('공지사항');
-    else setActiveSubMenu('');
-  };
-
-  const handleHamburgerMenuClick = (e, menuName) => {
-    e.stopPropagation;
-    setActiveHamburgerMenu(activeHamburgerMenu === menuName ? '' : menuName);
-    setActiveSubMenu('');
-  };
-
-  const handleSubMenuClick = (e, subMenuName) => {
-    e.stopPropagation;
-    setActiveSubMenu(subMenuName === activeSubMenu ? '' : subMenuName);
   };
 
   const handleTeacherCourseClick = () => {
-    navigate('/course/1'); // 추후 수정
+    setActiveHeaderMenu('학습');
+    navigate('/course/1');
+    toggleHamburger();
   };
 
   const handleStudentCourseClick = () => {
-    navigate('/course0/1'); // 추후 수정
+    setActiveHeaderMenu('학습');
+    navigate('/course0/1');
+    toggleHamburger();
   };
 
   const handleClean = () => {
     setActiveHeaderMenu('');
   };
 
+  /* const isReportActive = location.pathname.includes('/report');
+   const isCustomerActive = location.pathname.includes('/cmmn');*/
+
   return (
     <HeaderContainer>
       <HeaderContent>
         <MainNav>
           <Logo onClick={handleClean}>
-            <StyledNavLink to="/">
+            <StyledRouterLink to="/">
               <span>E</span>dututor
               <span className="edu">edu</span>
-            </StyledNavLink>
+            </StyledRouterLink>
           </Logo>
           <NavList>
-            <li onClick={() => handleHeaderMenuClick('학습')} className={activeHeaderMenu === '학습' ? 'active' : ''}>
+            <NavItem onClick={() => handleHeaderMenuClick('학습')}
+                     className={activeHeaderMenu === '학습' ? 'active' : ''}>
               {userRole === 'TE'
                 ? (<StyledButton onClick={handleTeacherCourseClick}>학습</StyledButton>)
                 : (<StyledButton onClick={handleStudentCourseClick}>학습</StyledButton>)}
-            </li>
-            <li onClick={() => handleHeaderMenuClick('리포트')}
-                className={activeHeaderMenu === '리포트' ? 'active' : ''}>
+            </NavItem>
+            <NavItem>
               <StyledNavLink to="/report">리포트</StyledNavLink>
-            </li>
-            <li onClick={() => handleHeaderMenuClick('고객센터')}
-                className={activeHeaderMenu === '고객센터' ? 'active' : ''}>
-              <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
-            </li>
+            </NavItem>
+            <NavItem>
+              <StyledNavLink to="/cmmn">고객센터</StyledNavLink>
+              <SubNav>
+                <ul>
+                  <li key="notice">
+                    <StyledNavLink to="/cmmn/notice">
+                      공지사항
+                    </StyledNavLink>
+                  </li>
+                  <li key="faq">
+                    <StyledNavLink to="/cmmn/faq">
+                      자주 묻는 질문(FAQ)
+                    </StyledNavLink>
+                  </li>
+                  <li key="inquiry">
+                    <StyledNavLink to="/cmmn/inquiry">
+                      1:1문의
+                    </StyledNavLink>
+                  </li>
+                </ul>
+              </SubNav>
+            </NavItem>
           </NavList>
 
           {userInfo ? (
@@ -468,89 +504,54 @@ const Header = () => {
         </MainNav>
       </HeaderContent>
 
-      {activeHeaderMenu === '고객센터' && (
-        <HeaderContent>
-          <SubNav>
-            <ul>
-              <li
-                onClick={(e) => handleSubMenuClick(e, '공지사항')}
-                className={activeSubMenu === '공지사항' ? 'active' : ''}
-              >
-                <StyledNavLink to="/cmmn/notice">공지사항</StyledNavLink>
-              </li>
-              <li
-                onClick={(e) => handleSubMenuClick(e, 'FAQ')}
-                className={activeSubMenu === 'FAQ' ? 'active' : ''}
-              >
-                <StyledNavLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledNavLink>
-              </li>
-              <li
-                onClick={(e) => handleSubMenuClick(e, '1:1문의')}
-                className={activeSubMenu === '1:1문의' ? 'active' : ''}
-              >
-                <StyledNavLink to="/cmmn/inquiry">1:1문의</StyledNavLink>
-              </li>
-              <li
-                onClick={(e) => handleSubMenuClick(e, '오류 문항 신고 현황')}
-                className={activeSubMenu === '오류 문항 신고 현황' ? 'active' : ''}
-              >
-                <StyledNavLink to="/">오류 문항 신고 현황</StyledNavLink>
-              </li>
-            </ul>
-          </SubNav>
-        </HeaderContent>
-      )}
-
       <Overlay $isOpen={hamburger} onClick={toggleHamburger}>
-        <HamburgerMenu $isOpen={hamburger}>
+        <HamburgerMenu $isOpen={hamburger} onClick={e => e.stopPropagation()}>
           <HamburgerMenuHeader>
             <div>메뉴</div>
-            <button onClick={(e) => {
-              e.stopPropagation();
-              toggleHamburger();
-            }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+            <button onClick={toggleHamburger}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
               <IoClose size={24} />
             </button>
           </HamburgerMenuHeader>
 
-          <HamburgerMenuItem className={activeHamburgerMenu === '학습' ? 'active' : ''}
-                             onClick={(e) => handleHamburgerMenuClick(e, '학습')}>
+          <HamburgerMenuItem>
             <img src={study} alt="학습 이미지" />
-            {userRole === 'TE'
-              ? (<StyledButton onClick={handleTeacherCourseClick}>학습</StyledButton>)
-              : (<StyledButton onClick={handleStudentCourseClick}>학습</StyledButton>)}
+            <StyledButton onClick={userRole === 'TE' ? handleTeacherCourseClick : handleStudentCourseClick}>
+              학습
+            </StyledButton>
+          </HamburgerMenuItem>
+          <HamburgerMenuItem>
+            <img src={report} alt="리포트 이미지" />
+            <StyledNavLink
+              to="/report"
+              className={({ isActive }) => isActive || isReportActive ? 'active' : ''}>
+              리포트
+            </StyledNavLink>
+          </HamburgerMenuItem>
+          <HamburgerMenuItem>
+            <img src={cs} alt="고객센터 이미지" />
+            <StyledNavLink to="/cmmn"
+                           onClick={() => setActiveHeaderMenu('고객센터')}
+                           className={({ isActive }) => isActive || isCustomerActive ? 'active' : ''}>
+              고객센터
+            </StyledNavLink>
           </HamburgerMenuItem>
 
-          <HamburgerMenuItem className={activeHamburgerMenu === '리포트' ? 'active' : ''}
-                             onClick={(e) => handleHamburgerMenuClick(e, '리포트')}>
-            <img src={report} alt="리포트 이미지" /> <StyledNavLink to="/report">리포트</StyledNavLink>
-          </HamburgerMenuItem>
-
-          <HamburgerMenuItem className={activeHamburgerMenu === '고객센터' ? 'active' : ''}
-                             onClick={(e) => handleHamburgerMenuClick(e, '고객센터')}>
-            <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
-          </HamburgerMenuItem>
 
           {location.pathname.includes('/cmmn') && (
             <>
-              <HamburgerMenuItem
-                style={{ paddingLeft: '32px' }}
-              >
+              <HamburgerMenuItem className="sub-menu" key="notice">
                 <StyledNavLink to="/cmmn/notice">공지사항</StyledNavLink>
               </HamburgerMenuItem>
-              <HamburgerMenuItem
-                style={{ paddingLeft: '32px' }}
-              >
+              <HamburgerMenuItem className="sub-menu" key="faq">
                 <StyledNavLink to="/cmmn/faq">자주 묻는 질문(FAQ)</StyledNavLink>
               </HamburgerMenuItem>
-              <HamburgerMenuItem
-                style={{ paddingLeft: '32px' }}
-              >
+              <HamburgerMenuItem className="sub-menu" key="inquiry">
                 <StyledNavLink to="/cmmn/inquiry">1:1문의</StyledNavLink>
               </HamburgerMenuItem>
             </>
           )}
-          
+
           {userInfo ? (
             <HamburgerMenuItem>
               <UserInfo>
@@ -568,7 +569,6 @@ const Header = () => {
               </Link>
             </HamburgerAuthButtons>
           )}
-
         </HamburgerMenu>
       </Overlay>
     </HeaderContainer>
