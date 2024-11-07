@@ -222,17 +222,19 @@ const LoginButton = styled.button`
     }
 `;
 
+const initDragState = {
+  isDragging : false,
+  isMouseDown: false,
+  startX     : 0,
+  scrollLeft : 0
+};
+
 const CourseSection = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
-
-  /* 드래그 관련 state */
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [isMouseDown, setIsMouseDown] = useState(false); // 마우스 클릭 상태 추가
+  const [dragState, setDragState] = useState(initDragState);
 
 
   const { userInfo, userRole } = useAuth?.() ?? {};
@@ -241,52 +243,40 @@ const CourseSection = () => {
 
   /* 마우스 이벤트 핸들러 */
   const handleMouseDown = (e) => {
-    setIsMouseDown(true);
-    setIsDragging(false);
-    setStartX(e.pageX - listRef.current.offsetLeft);
-    setScrollLeft(listRef.current.scrollLeft);
-
     e.preventDefault();
+
+    if (!listRef.current) return;
+
+    setDragState({
+      isMouseDown: true,
+      isDragging : false,
+      startX     : e.pageX - listRef.current.offsetLeft,
+      scrollLeft : listRef.current.scrollLeft
+    });
+
   };
 
   const handleMouseUp = () => {
-    setIsMouseDown(false);
-    setIsDragging(false);
-  };
-
-  const handleMouseLeave = () => {
-    setIsMouseDown(false);
-    setIsDragging(false);
+    setDragState(prev => ({
+      ...prev,
+      isMouseDown: false,
+      isDragging : false
+    }));
   };
 
   const handleMouseMove = (e) => {
-    if (!isMouseDown) return;
-
-    if (!isDragging) setIsDragging(true);
+    const { isMouseDown, startX, scrollLeft } = dragState;
+    if (!isMouseDown || !listRef.current) return;
 
     e.preventDefault();
+    setDragState(prev => ({ ...prev, isDragging: true }));
 
     const x = e.pageX - listRef.current.offsetLeft;
     const walk = (x - startX) * 2;
     listRef.current.scrollLeft = scrollLeft - walk;
   };
 
-  // 터치 이벤트 핸들러 (모바일 지원)
-  const handleTouchStart = (e) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].pageX - listRef.current.offsetLeft);
-    setScrollLeft(listRef.current.scrollLeft);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-
-    const x = e.touches[0].pageX - listRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    listRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const updateButtonVIsibility = () => {
+  const updateButtonVisibility = () => {
     if (!listRef.current) return;
 
     const { scrollLeft, scrollWidth, clientWidth } = listRef.current;
@@ -299,16 +289,21 @@ const CourseSection = () => {
     if (!listRef.current) return;
 
     const scrollAmount = listRef.current.clientWidth;
-    const curretnScroll = listRef.current.scrollLeft;
 
     listRef.current.scrollTo({
-      left    : direction === 'prev'
-        ? curretnScroll - scrollAmount
-        : curretnScroll + scrollAmount,
+      left    : listRef.current.scrollLeft + (direction === 'prev' ? -scrollAmount : scrollAmount),
       behavior: 'smooth'
-
     });
 
+  };
+
+  const handleCourseClick = (e, courseId) => {
+    if (dragState.isDragging) {
+      e.preventDefault();
+      return;
+    }
+
+    navigate(userRole === 'TE' ? `/course/${courseId}` : `/course0/${courseId}`);
   };
 
   const fetchFilteredCourses = async () => {
@@ -324,27 +319,39 @@ const CourseSection = () => {
   };
 
   useEffect(() => {
-    updateButtonVIsibility();
-
     const list = listRef.current;
-    if (list) list.addEventListener('scroll', updateButtonVIsibility);
+    if (list) {
+      list.addEventListener('scroll', updateButtonVisibility);
+      return () => list.removeEventListener('scroll', updateButtonVisibility);
+    }
 
-    return () => {
-      if (list) list.removeEventListener('scroll', updateButtonVIsibility);
-    };
   }, [courses]);
 
   useEffect(() => {
     if (userInfo && userRole) fetchFilteredCourses();
   }, [userInfo, userRole]);
 
-  const handleTeacherCourseClick = (courseId) => {
-    navigate(`/course/${courseId}`);
-  };
+  if (!userInfo) {
+    return (
+      <LoginMessage>
+        <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
+        <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
+      </LoginMessage>
+    );
+  }
 
-  const handleStudentCourseClick = (courseId) => {
-    navigate(`/course0/${courseId}`);
-  };
+  if (!courses?.length) {
+    return (<RegisterCourseWrapper>
+      <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
+      <RegisterCourseButton>
+        {userRole === 'TE' ? (
+          <Link to="/course/enroll">새 과정 등록하기</Link>
+        ) : (
+          ''
+        )}
+      </RegisterCourseButton>
+    </RegisterCourseWrapper>);
+  }
 
   const subjectImages = {
     '국어': 국어,
@@ -356,8 +363,9 @@ const CourseSection = () => {
     '도덕': 도덕
   };
 
-  const renderCourseList = () => {
-    return (
+  return (
+    <CourseContainer>
+      <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
       <CourseListContainer>
         {showLeftButton && (
           <SlideButton className="prev" onClick={() => handleSlide('prev')}>
@@ -366,13 +374,10 @@ const CourseSection = () => {
         )}
         <CourseList
           ref={listRef}
-          onScroll={updateButtonVIsibility}
+          onScroll={updateButtonVisibility}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
           onMouseMove={handleMouseMove}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
           onTouchEnd={handleMouseUp}
         >
           {loading ? (
@@ -381,15 +386,7 @@ const CourseSection = () => {
             courses.map(course => (
               <CourseItem
                 key={course.courseId}
-                onClick={(e) => {
-                  if (isDragging) {
-                    e.preventDefault();
-                    return;
-                  }
-                  userRole === 'TE'
-                    ? handleTeacherCourseClick(course.courseId)
-                    : handleStudentCourseClick(course.courseId);
-                }}
+                onClick={(e) => handleCourseClick(e, course.courseId)}
               >
                 <ImageWrapper>
                   <img src={subjectImages[course.subject]} alt={course.courseName} />
@@ -405,49 +402,6 @@ const CourseSection = () => {
           </SlideButton>
         )}
       </CourseListContainer>
-    );
-  };
-
-  const renderContent = () => {
-    // 로그인 확인
-    if (!userInfo) {
-      return (
-        <LoginMessage>
-          <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
-          <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
-        </LoginMessage>
-      );
-    }
-
-    // 과정이 없는 경우
-    if (courses === undefined || courses.length === 0) {
-      return (
-        <RegisterCourseWrapper>
-          <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
-          <RegisterCourseButton>
-            {userRole === 'TE' ? (
-              <Link to="/course/enroll">새 과정 등록하기</Link>
-            ) : (
-              ''
-            )}
-          </RegisterCourseButton>
-        </RegisterCourseWrapper>
-      );
-    }
-
-    // 과정 목록 표시
-    return (
-      <>
-        <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
-        {renderCourseList()}
-      </>
-    );
-  };
-
-  // 메인 렌더링
-  return (
-    <CourseContainer>
-      {renderContent()}
     </CourseContainer>
   );
 };
