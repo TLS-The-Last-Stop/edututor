@@ -4,7 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { privateApi } from '../../api/axios.js';
 import { useAuth } from '../../utils/AuthContext.jsx';
 import Loading from '../common/Loading.jsx';
-import 수학 from '../../assets/icon/수학.jpg';
+import 국어 from '../../assets/icon/subject/국어.png';
+import 영어 from '../../assets/icon/subject/영어.png';
+import 수학 from '../../assets/icon/subject/수학.png';
+import 사회 from '../../assets/icon/subject/사회.png';
+import 과학 from '../../assets/icon/subject/과학.png';
+import 역사 from '../../assets/icon/subject/역사.png';
+import 도덕 from '../../assets/icon/subject/도덕.png';
 
 const CourseContainer = styled.div`
     margin: 60px auto 0; // auto로 중앙 정렬
@@ -259,7 +265,7 @@ const CourseSection = () => {
                   : handleStudentCourseClick(course.courseId)}
               >
                 <ImageWrapper>
-                  <img src={수학} alt={course.courseName} />
+                  <img src={국어} alt={course.courseName} />
                   <div className="magnify">🔍</div>
                 </ImageWrapper>
                 <CourseTitle>{course.courseName}</CourseTitle>
