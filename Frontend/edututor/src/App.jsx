@@ -24,6 +24,8 @@ import Notice from './pages/board/Notice.jsx';
 import NoticeDetail from './pages/board/NoticeDetail.jsx';
 import Faq from './pages/board/Faq.jsx';
 import Inquiry from './pages/board/Inquiry.jsx';
+import InquiryForm from './components/board/InquiryForm.jsx';
+import InquiryDetail from './pages/board/InquiryDetail.jsx';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -187,6 +189,14 @@ function AppRoutes() {
 
           <Route path="cmmn/inquiry" element={ // SU(학생), TE(선생)만
             <Suspense fallback={<LoadingSpinner />}><Inquiry /></Suspense>
+          } />
+
+          <Route path="cmmn/inquiry/:boardId" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}><InquiryDetail /></Suspense>
+          } />
+
+          <Route path="cmmn/inquiry/inquiry-form" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}><InquiryForm /></Suspense>
           } />
 
           <Route path="report" element={
