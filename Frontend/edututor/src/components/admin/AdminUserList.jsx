@@ -1,5 +1,9 @@
 // Styled Components
 import styled from 'styled-components';
+import { Fragment, useState } from 'react';
+import AdminUserDetailModal from './AdminUserDetailModal.jsx';
+import { getUser, removeStudent } from '../../api/user/user.js';
+import Swal from 'sweetalert2';
 
 const Container = styled.div`
     padding: 20px;
@@ -31,6 +35,8 @@ const Td = styled.td`
 `;
 
 const Tr = styled.tr`
+    cursor: pointer;
+
     &:hover {
         background-color: #f9fafb;
     }
@@ -78,35 +84,195 @@ const PageInfo = styled.span`
     color: #374151;
 `;
 
+const ExpandButton = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    color: #4b5563;
 
-const AdminUserList = ({ users }) => {
+    width: 28px;
+    height: 28px;
+    line-height: 20px;
+
+    &:hover {
+        background-color: #f3f4f6;
+        border-radius: 4px;
+    }
+`;
+
+const StudentRow = styled(Tr)`
+    background-color: #f9fafb;
+
+    td {
+        //padding-left: 2rem;
+        background: #e1e1e1;
+    }
+`;
+
+
+const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
+  const [expandedTeachers, setExpandedTeachers] = useState(new Set());
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState();
+
+  const toggleTeacher = (teacherId) => {
+    setExpandedTeachers(prev => {
+      const newSet = new Set(prev);
+
+      if (newSet.has(teacherId)) newSet.delete(teacherId);
+      else newSet.add(teacherId);
+
+      return newSet;
+    });
+  };
+
+  // 선생님의 반에 속한 학생들 찾기
+  const createGroupByClassroomId = (teacher) => {
+    return students.filter(student => student.classroom.id === teacher.classroom?.id);
+  };
+
+  const handleOpenModal = async (userId) => {
+    setIsLoading(true);
+
+    try {
+      const result = await getUser(userId);
+
+      if (result.status === 200) {
+        setSelectedUser(result.data);
+        setIsOpen(true);
+      } else {
+        alert('회원을 불러오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Failed to fetch user info: ', error);
+    } finally {
+      setIsLoading(false);
+    }
+
+  };
+
+  const handleSubmit = (e, selectedUser) => {
+    e.preventDefault();
+
+    if (selectedUser.role === 'TE') {
+      Swal.fire({
+        icon             : 'warning',
+        title            : '등록된 학생들도 탈퇴됩니다.',
+        text             : '정말 삭제하시겠습니까?',
+        showCancelButton : true,
+        cancelButtonText : '아니오',
+        confirmButtonText: '예'
+      })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            const result = await removeStudent(selectedUser.id);
+            if (result.status === 204) {
+              handleCloseModal();
+              fetchingAllUser();
+            } else {
+              alert('삭제 중 문제발생');
+            }
+          }
+        });
+    }
+
+    if (selectedUser.role === 'SU') {
+      Swal.fire({
+        icon             : 'warning',
+        title            : '등록된 학생을',
+        text             : '탈퇴시키겠습니까?',
+        showCancelButton : true,
+        cancelButtonText : '아니오',
+        confirmButtonText: '예'
+      })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            const result = await removeStudent(selectedUser.id);
+            if (result.status === 204) {
+              handleCloseModal();
+              fetchingAllUser();
+            } else {
+              alert('삭제 중 문제발생');
+            }
+          }
+        });
+    }
+
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setSelectedUser(null);
+  };
+
   return (
     <Container>
       <TableContainer>
         <Table>
           <thead>
           <tr>
-            <Th>아이디</Th>
+            <Th></Th>
+            <Th>회원번호</Th>
             <Th>이름</Th>
             <Th>이메일</Th>
-            <Th>가입일</Th>
-            <Th>상태</Th>
+            <Th>연락처</Th>
+            <Th>반 정보</Th>
+            <Th>구분</Th>
           </tr>
           </thead>
           <tbody>
-          {users.map(user => (
-            <Tr key={user.id}>
-              <Td>{user.id}</Td>
-              <Td>{user.name}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.createdAt}</Td>
-              <Td>
-                <StatusBadge $isActive={user.status === 'active'}>
-                  {user.status === 'active' ? '활성' : '비활성'}
-                </StatusBadge>
-              </Td>
+          {teachers.length > 0 ? (
+            teachers.map(teacher => (
+              <Fragment key={teacher.id}>
+                <Tr onClick={() => handleOpenModal(teacher.id)}>
+                  <Td>
+                    <ExpandButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleTeacher(teacher.id);
+                      }}
+                    >
+                      {expandedTeachers.has(teacher.id) ? '▼' : '▶'}
+                    </ExpandButton>
+                  </Td>
+                  <Td>{teacher.id}</Td>
+                  <Td>{teacher.username}</Td>
+                  <Td>{teacher.email}</Td>
+                  <Td>{teacher.phoneNum}</Td>
+                  <Td>
+                    {teacher.classroom?.classroomName}
+                    ({teacher.classroom?.grade})
+                  </Td>
+                  <Td>선생님</Td>
+                </Tr>
+                {expandedTeachers.has(teacher.id) && (
+                  createGroupByClassroomId(teacher).length > 0 ? (
+                    createGroupByClassroomId(teacher).map(student => (
+                      <StudentRow key={student.id} onClick={() => handleOpenModal(student.id)}>
+                        <Td></Td>
+                        <Td>{student.id}</Td>
+                        <Td>{student.username}</Td>
+                        <Td>{student.loginId}</Td>
+                        <Td>-</Td>
+                        <Td>{teacher.classroom?.classroomName}</Td>
+                        <Td>학생</Td>
+                      </StudentRow>
+                    ))
+                  ) : (
+                    <StudentRow>
+                      <Td colSpan={7} style={{ textAlign: 'center' }}>등록된 학생이 없습니다.</Td>
+                    </StudentRow>
+                  ))
+                }
+              </Fragment>
+            ))
+          ) : (
+            <Tr>
+              <Td colSpan={7} style={{ textAlign: 'center' }}>등록된 선생님이 없습니다.</Td>
             </Tr>
-          ))}
+          )}
           </tbody>
         </Table>
       </TableContainer>
@@ -116,6 +282,15 @@ const AdminUserList = ({ users }) => {
         <PageInfo>1 / 1</PageInfo>
         <PaginationButton disabled>다음</PaginationButton>
       </PaginationContainer>
+
+      <AdminUserDetailModal
+        isOpen={isOpen}
+        onClose={handleCloseModal}
+        handleSubmit={handleSubmit}
+        selectedUser={selectedUser}
+        isLoading={isLoading}
+      />
+
     </Container>
   );
 };
