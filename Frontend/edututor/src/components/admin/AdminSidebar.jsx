@@ -16,6 +16,9 @@ const AdminSidebar = () => {
             <li>
               <NavLink to="/admin/users" activeClassName="active">사용자 관리</NavLink>
             </li>
+            <li>
+              <NavLink to="/admin/issue-list" activeClassName="active">문제 신고 목록</NavLink>
+            </li>
           </ul>
         </nav>
       </aside>
