@@ -1,4 +1,5 @@
 import BoardItem from './BoardItem';
+import '../../assets/css/BoardPage.css';
 
 const BoardList = ({
                      categories,
@@ -12,26 +13,6 @@ const BoardList = ({
 
   return (
     <div className={`${showCategories ? 'flex gap-6' : ''}`}>
-      {/* FAQ일 때만 카테고리 메뉴 표시 */}
-      {showCategories && (
-        <div className="w-48">
-          {categories?.map((category) => (
-            <div
-              key={category}
-              onClick={() => onCategoryClick(category)}
-              className={`p-3 cursor-pointer rounded-md mb-2 ${
-                selectedCategory === category
-                  ? 'bg-gray-100 font-medium'
-                  : 'hover:bg-gray-50'
-              }`}
-            >
-              {category}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* 컨텐츠 목록 */}
       <div className="flex-1">
         {showCategories
           ? // FAQ일 때는 카테고리 필터링 적용

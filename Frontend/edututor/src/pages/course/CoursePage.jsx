@@ -123,42 +123,44 @@ const CoursePage = () => {
                   </div>
                 </div>
 
-                {courseData.sections.map(section => (
+                {courseData.sections.map((section, sectionIndex) => (
                     <div key={section.sectionId} className="section">
-                      <h3>{section.content}</h3>
+                      <h3>{sectionIndex + 1}. {section.content}</h3> {/* 섹션 번호 추가 */}
 
-                      {section.units.map(unit => (
+                      {section.units.map((unit, unitIndex) => (
                           <div key={unit.unitId} className="unit">
                             <div className="unit-header">
-                              <h4>{unit.content}</h4>
-                              <div className="actions">
-                                <button
-                                    className="preview-btn"
-                                    onClick={() => handleOpenTestPreview(unit.testPaper.testPaperId)}
-                                >
-                                  형성평가 미리보기
-                                </button>
-                                <button className="share-btn" onClick={() => {
-                                  setIsModalOpen(true);
-                                  setSelectedTest(unit.unitId);
-                                }}>시험 공유하기</button>
+                              <h4>{unitIndex + 1}. {unit.content}</h4> {/* 유닛 번호 추가 */}
+                            </div>
 
-                                {unit.materials.map(material => (
-                                    <div key={material.materialId}>
-                                      <button
-                                          className="material-btn"
-                                          onClick={() => handleOpenMaterialModal(material.materialId)}
-                                      >
-                                        학습자료 미리보기
-                                      </button>
-                                    </div>
-                                ))}
-                              </div>
+                            <div className="actions"> {/* 버튼을 unit-header 바깥으로 이동 */}
+                              <button
+                                  className="preview-btn"
+                                  onClick={() => handleOpenTestPreview(unit.testPaper.testPaperId)}
+                              >
+                                형성평가 미리보기
+                              </button>
+                              <button className="share-btn" onClick={() => {
+                                setIsModalOpen(true);
+                                setSelectedTest(unit.unitId);
+                              }}>시험 공유하기</button>
+
+                              {unit.materials.map(material => (
+                                  <div key={material.materialId}>
+                                    <button
+                                        className="material-btn"
+                                        onClick={() => handleOpenMaterialModal(material.materialId)}
+                                    >
+                                      학습자료 미리보기
+                                    </button>
+                                  </div>
+                              ))}
                             </div>
                           </div>
                       ))}
                     </div>
                 ))}
+
               </>
           ) : (
               <p>코스를 선택하세요.</p>
