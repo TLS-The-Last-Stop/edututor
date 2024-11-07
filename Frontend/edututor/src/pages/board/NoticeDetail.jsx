@@ -28,9 +28,9 @@ const NoticeDetail = () => {
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('ko-KR', {
-      year: 'numeric',
+      year : 'numeric',
       month: '2-digit',
-      day: '2-digit'
+      day  : '2-digit'
     });
   };
 
@@ -55,7 +55,7 @@ const NoticeDetail = () => {
         <div className="notice-header">
           <h1 className="notice-title">{notice.title}</h1>
           <div className="notice-info">
-            <span className="notice-date">등록일: {formatDate(notice.createAt)}</span>
+            <span className="notice-date">등록일: {formatDate(notice.createdAt)}</span>
           </div>
         </div>
 

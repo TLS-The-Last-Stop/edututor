@@ -34,10 +34,10 @@ public class MailServiceImpl implements MailService {
 
   private void sendEmail(String to, String subject, String text) {
     SimpleMailMessage message = new SimpleMailMessage();
-    message.setFrom(from);         // 발신자
-    message.setTo(to);                  // 수신자
-    message.setSubject(subject);        // 제목
-    message.setText(text);              // 본문
+    message.setFrom(from);
+    message.setTo(to);
+    message.setSubject(subject);
+    message.setText(text);
     mailSender.send(message);
   }
 

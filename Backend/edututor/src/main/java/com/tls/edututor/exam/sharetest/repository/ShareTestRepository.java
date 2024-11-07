@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ShareTestRepository extends JpaRepository<ShareTest, Long> {
 
-  List<ShareTest> findAllByUserAndIsDeleted(User user, Boolean isDeleted);
+  List<ShareTest> findAllByUser(User user);
 
   Optional<ShareTest> findByUserIdAndTestPaperId(Long userId, Long testPaperId);
 

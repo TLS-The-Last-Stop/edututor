@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
     if (!admin.getRole().equals("AD")) throw new IllegalArgumentException("권한이 없습니다.");
 
     PageRequest pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id"));
-    Page<User> allUser = userRepository.findAll(pageRequest);
+    Page<User> allUser = userRepository.findAllBy(pageRequest);
 
     UserResponse userResponse = new UserResponse();
     List<UserTEResponse> teachers = userResponse.getTeachers();
@@ -54,23 +55,25 @@ public class UserServiceImpl implements UserService {
     for (User user : allUser.getContent()) {
       String role = user.getRole();
       if (role.equals("TE")) {
-        ClassroomResponse classroomResponse = ClassroomResponse.from(user.getClassroom());
+        ClassroomResponse classroom = ClassroomResponse.from(user.getClassroom());
         UserTEResponse teacher = UserTEResponse.builder()
                 .id(user.getId())
+                .loginId(user.getLoginId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .phoneNum(user.getPhoneNum())
-                .classroom(classroomResponse)
-                .role(user.getRole())
+                .classroom(classroom)
+                .isDeleted(user.getIsDeleted())
                 .build();
         teachers.add(teacher);
       } else if (role.equals("SU")) {
-        ClassroomResponse classroomResponse = ClassroomResponse.from(user.getClassroom());
+        ClassroomResponse classroom = ClassroomResponse.from(user.getClassroom());
         UserSUResponse student = UserSUResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .classroomId(classroomResponse.getId())
+                .classroom(classroom)
                 .loginId(user.getLoginId())
+                .isDeleted(user.getIsDeleted())
                 .build();
         students.add(student);
       }
@@ -84,13 +87,51 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(readOnly = true)
+  public <T> T findUser(Long userId) {
+    User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("없는 유저입니다."));
+    String role = user.getRole();
+
+    if (role.equals("TE")) {
+      ClassroomResponse classroom = ClassroomResponse.from(user.getClassroom());
+      return (T) UserTEResponse.builder()
+              .id(user.getId())
+              .loginId(user.getLoginId())
+              .username(user.getUsername())
+              .email(user.getEmail())
+              .phoneNum(user.getPhoneNum())
+              .classroom(classroom)
+              .role(role)
+              .createdAt(user.getCreatedAt())
+              .updatedAt(user.getUpdatedAt())
+              .isDeleted(user.getIsDeleted())
+              .build();
+    }
+
+    if (role.equals("SU")) {
+      ClassroomResponse classroom = ClassroomResponse.from(user.getClassroom());
+      return (T) UserSUResponse.builder()
+              .id(user.getId())
+              .loginId(user.getLoginId())
+              .username(user.getUsername())
+              .classroom(classroom)
+              .role(user.getRole())
+              .createdAt(user.getCreatedAt())
+              .updatedAt(user.getUpdatedAt())
+              .isDeleted(user.getIsDeleted())
+              .build();
+    }
+    throw new IllegalArgumentException("Invalid user role: " + role);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
   public boolean checkJoinAvailable(String loginId) {
-    return userRepository.findByLoginIdAndIsDeleted(loginId, false).isPresent();
+    return userRepository.findByLoginId(loginId).isPresent();
   }
 
   @Override
   public Long saveTeacher(UserTERequest request) {
-    if (userRepository.existsByLoginIdAndIsDeleted(request.getLoginId(), false)) {
+    if (userRepository.existsByLoginId(request.getLoginId())) {
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
 
@@ -122,7 +163,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Long saveStudent(UserSURequest request, Authentication authentication) {
-    if (userRepository.existsByLoginIdAndIsDeleted(request.getLoginId(), false)) {
+    if (userRepository.existsByLoginId(request.getLoginId())) {
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
 

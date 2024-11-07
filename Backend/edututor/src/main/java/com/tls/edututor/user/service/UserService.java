@@ -21,4 +21,7 @@ public interface UserService {
   Long updateInfo(UserTERequest request, HttpServletRequest req);
 
   UserResponse findAllUser(Authentication authentication, int page);
+
+  <T> T findUser(Long userId);
+
 }

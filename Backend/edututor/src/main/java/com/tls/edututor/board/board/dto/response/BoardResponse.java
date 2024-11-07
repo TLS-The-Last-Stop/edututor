@@ -16,7 +16,7 @@ public class BoardResponse {
   private String categoryName;
   private String title;
   private String content;
-  private LocalDateTime createAt;
+  private LocalDateTime createdAt;
 
   public static BoardResponse dto(Board board) {
     return new BoardResponse(

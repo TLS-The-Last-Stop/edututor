@@ -4,6 +4,8 @@ import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.dto.response.UserResponse;
+import com.tls.edututor.user.dto.response.UserSUResponse;
+import com.tls.edututor.user.dto.response.UserTEResponse;
 import com.tls.edututor.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +30,22 @@ public class UserController {
     return CommonApiResponse.createSuccess("조회 성공", allUser);
   }
 
-  @GetMapping("/{loginId}")
+  @GetMapping("/{userId}")
+  public CommonApiResponse<?> getUserById(@PathVariable("userId") Long userId) {
+    Object user = userService.findUser(userId);
+
+    if (user instanceof UserTEResponse teacher) return CommonApiResponse.createSuccess("선생님 반환", teacher);
+    if (user instanceof UserSUResponse student) return CommonApiResponse.createSuccess("학생 반환", student);
+
+    throw new IllegalArgumentException("없는 유저입니다.");
+  }
+
+  @GetMapping("/ids/{loginId}")
   public CommonApiResponse<?> checkLoginId(@PathVariable("loginId") String loginId) {
     boolean isAvailable = userService.checkJoinAvailable(loginId);
     if (isAvailable) return CommonApiResponse.createBadRequest("중복된 아이디");
     else return CommonApiResponse.createNoContent("회원가입 가능");
   }
-
 
   @PostMapping("/teachers")
   public CommonApiResponse<?> createTeacher(@RequestBody UserTERequest request) {

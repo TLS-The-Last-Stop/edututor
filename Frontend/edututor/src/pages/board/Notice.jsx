@@ -14,7 +14,7 @@ const Notice = () => {
 
   const fetchNoticeData = async () => {
     const response = await getBoardsByCategory(1, false, searchQuery);
-
+    
     if (response && response.data) {
       setNoticeData(response.data);
       setCurrentPage(response.data.number);
@@ -31,9 +31,9 @@ const Notice = () => {
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('ko-KR', {
-      year: '2-digit',
+      year : '2-digit',
       month: '2-digit',
-      day: '2-digit'
+      day  : '2-digit'
     });
   };
 

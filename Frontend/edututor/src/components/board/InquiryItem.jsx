@@ -17,7 +17,7 @@ const InquiryItem = ({
         </button>
       </td>
       <td className="date-cell">
-        {formatDate(inquiry.createAt)}
+        {formatDate(inquiry.createdAt)}
       </td>
     </tr>
   );
