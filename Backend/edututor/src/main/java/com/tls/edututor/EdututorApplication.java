@@ -7,11 +7,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class EdututorApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EdututorApplication.class, args);
 	}
-
 }
+
