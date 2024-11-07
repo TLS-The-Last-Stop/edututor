@@ -245,6 +245,16 @@ const CourseSection = () => {
     navigate(`/course0/${courseId}`);
   };
 
+  const subjectImages = {
+    '국어': 국어,
+    '수학': 수학,
+    '영어': 영어,
+    '사회': 사회,
+    '과학': 과학,
+    '역사': 역사,
+    '도덕': 도덕
+  };
+
   const renderCourseList = () => {
     return (
       <CourseListContainer>
@@ -265,8 +275,7 @@ const CourseSection = () => {
                   : handleStudentCourseClick(course.courseId)}
               >
                 <ImageWrapper>
-                  <img src={국어} alt={course.courseName} />
-                  <div className="magnify">🔍</div>
+                  <img src={subjectImages[course.subject]} alt={course.courseName} />
                 </ImageWrapper>
                 <CourseTitle>{course.courseName}</CourseTitle>
               </CourseItem>
