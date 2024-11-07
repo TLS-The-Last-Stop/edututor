@@ -135,23 +135,21 @@ const UserJoin = () => {
       return;
     }
 
-    /**
-     *     try {
-     *       const result = await checkDuplicateId(form.loginId);
-     *       if (result.status === 204) {
-     *         setIsIdChecked(true);
-     *         setIdCheckMessage('사용 가능한 아이디 입니다.');
-     *       } else {
-     *         setIsIdChecked(false);
-     *         setIdCheckMessage('이미 사용중이 아이디입니다.');
-     *       }
-     *
-     *     } catch (error) {
-     *       console.error('아이디 중복체크 실패: ', error);
-     *       setIsIdChecked(false);
-     *       setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
-     *     }
-     */
+    try {
+      const result = await checkDuplicateId(form.loginId);
+      if (result.status === 204) {
+        setIsIdChecked(true);
+        setIdCheckMessage('사용 가능한 아이디 입니다.');
+      } else {
+        setIsIdChecked(false);
+        setIdCheckMessage('이미 사용중이 아이디입니다.');
+      }
+
+    } catch (error) {
+      console.error('아이디 중복체크 실패: ', error);
+      setIsIdChecked(false);
+      setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
+    }
 
     try {
       await checkDuplicateId(form.loginId);

@@ -234,43 +234,6 @@ const UserJoinForm = ({
               )}
             </FormGroup>
 
-            {/* 학교 유형 선택 - RadioGroup 활용 */}
-            {/*<FormGroup>
-              <Label>학교 유형</Label>
-              <RadioGroup>
-                <RadioLabel>
-                  <RadioInput
-                    type="radio"
-                    name="schoolType"
-                    value="초등"
-                    checked={form.schoolType === '초등'}
-                    onChange={getInputHandler}
-                  />
-                  초등
-                </RadioLabel>
-                <RadioLabel>
-                  <RadioInput
-                    type="radio"
-                    name="schoolType"
-                    value="중등"
-                    checked={form.schoolType === '중등'}
-                    onChange={getInputHandler}
-                  />
-                  중등
-                </RadioLabel>
-                <RadioLabel>
-                  <RadioInput
-                    type="radio"
-                    name="schoolType"
-                    value="고등"
-                    checked={form.schoolType === '고등'}
-                    onChange={getInputHandler}
-                  />
-                  고등
-                </RadioLabel>
-              </RadioGroup>
-            </FormGroup>*/}
-
             {/* 학교명 검색 - InputGroup 활용 */}
             <FormGroup>
               <Label htmlFor="schoolName">
