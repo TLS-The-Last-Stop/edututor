@@ -1,62 +1,57 @@
 import { useState, useEffect } from 'react';
-import BoardList from '../../components/board/BoardList';
+import Category from '../../components/board/Category.jsx';
+import FaqList from '../../components/board/FaqList.jsx';
+import { getCategory } from '../../api/board/category.js';
 import { getBoardsByCategory } from '../../api/board/board.js';
 import '../../assets/css/FaqPage.css';
 
 const Faq = () => {
-  const [selectedCategory, setSelectedCategory] = useState('전체');
-  const [openFaqId, setOpenFaqId] = useState(null);
-  const [boardData, setBoardData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [boards, setBoards] = useState([]);
 
-  const faqCategoryMap = {
-    '전체': 2,
-    '클래스 운영': 5,
-    '코스웨어/문항': 6
-  };
-
-  const faqCategories = ['전체', '클래스 운영', '코스웨어/문항'];
-
-  const fetchBoardData = async (categoryId) => {
-    const response = await getBoardsByCategory(categoryId, true, searchQuery);
-    setBoardData(response && response.data ? response.data : []);
-  };
-
-  const handleCategoryClick = async (category) => {
-    setSelectedCategory(category);
-    setOpenFaqId(null);
-    setSearchQuery('');
-    const categoryId = faqCategoryMap[category];
-    await fetchBoardData(categoryId);
-  };
-
-  const handleFaqClick = (faqId) => {
-    setOpenFaqId(openFaqId === faqId ? null : faqId);
-  };
-
+  // 카테고리 목록 조회
   useEffect(() => {
-    fetchBoardData(faqCategoryMap['전체']);
+    const fetchCategories = async () => {
+      const response = await getCategory();
+      if (response.data && response.data) {
+        const faqCategory = response.data.find(category => category.name == '자주 묻는 질문(FAQ)');
+        if (faqCategory) {
+          setCategories(faqCategory.children);
+        }
+      }
+    };
+
+    fetchCategories();
   }, []);
+
+  // 게시글 조회
+  useEffect(() => {
+    const fetchBoards = async () => {
+      let response;
+      if (selectedCategoryId) {
+        response = await getBoardsByCategory(selectedCategoryId, true);
+      } else {
+        response = await getBoardsByCategory(2, true);
+      }
+      if (response.data && response.data) {
+        setBoards(response.data);
+      }
+    };
+
+    fetchBoards();
+  }, [selectedCategoryId]);
 
   return (
     <div className="faq-container">
-      <div className="category-menu">
-        {faqCategories.map((category) => (
-          <div
-            key={category}
-            onClick={() => handleCategoryClick(category)}
-            className={`category-item ${selectedCategory === category ? 'selected' : ''}`}
-          >
-            {category}
-          </div>
-        ))}
-      </div>
-
-      <BoardList
-        faqList={boardData}
-        openFaqId={openFaqId}
-        onFaqClick={handleFaqClick}
-        showCategories />
+      <Category
+        categories={categories}
+        selectedCategoryId={selectedCategoryId}
+        onCategorySelect={setSelectedCategoryId}
+      />
+      <FaqList
+        boards={boards}
+      />
     </div>
   );
 };
