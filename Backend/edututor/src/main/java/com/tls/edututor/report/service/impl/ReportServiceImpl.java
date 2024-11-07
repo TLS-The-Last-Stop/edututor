@@ -77,7 +77,7 @@ public class ReportServiceImpl implements ReportService {
               .createAt(LocalDate.from(testPaper.getCreatedAt()))
               .participationCount((int) participationCount)
               .totalCount((int) totalCount)
-              .achievementRate(Double.valueOf(String.format("%.1f", avgAchievementRate)))
+              .achievementRate(Double.valueOf(String.format("%.0f", avgAchievementRate)))
               .build();
     });
   }
@@ -128,7 +128,7 @@ public class ReportServiceImpl implements ReportService {
 
   private double achievementRate(List<Boolean> isCorrect) {
     if (isCorrect.isEmpty()) {
-      return 0.0;
+      return 0;
     }
 
     int correctAnswersCnt = 0;
