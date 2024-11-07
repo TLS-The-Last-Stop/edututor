@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardResponse extends BaseEntity {
+public class BoardResponse {
   private Long boardId;
   private String categoryName;
   private String title;
