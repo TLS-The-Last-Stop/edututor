@@ -204,7 +204,7 @@ const NavItem = styled.li`
 
 const SubNav = styled.nav`
     position: absolute;
-    top: 100%;
+    top: 93%;
     left: 0;
     background: white;
     border: 1px solid #eaeaea;
@@ -212,7 +212,8 @@ const SubNav = styled.nav`
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: none;
     z-index: 1000;
-    min-width: 450px;
+    width: max-content; // 컨텐츠 너비에 맞춤
+    min-width: 100%; // 최소한 부모 요소 너비만큼
 
     ${NavItem}:hover &, ${NavItem}.active & {
         display: block;
@@ -226,6 +227,7 @@ const SubNav = styled.nav`
         padding: 8px 16px;
         height: 100%;
         align-items: center;
+        white-space: nowrap;
     }
 `;
 
