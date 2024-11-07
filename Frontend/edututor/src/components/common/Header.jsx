@@ -346,16 +346,6 @@ const Overlay = styled.div`
     }
 `;
 
-const StyledButton = styled.button`
-    ${commonButtonStyles}
-    font-size: inherit;
-    margin-right: 0;
-
-    ${HamburgerMenuItem}:hover & {
-        color: #4285f4;
-    }
-`;
-
 const StyledNavLink = styled(NavLink)`
     text-decoration: none;
     color: inherit;
@@ -365,16 +355,12 @@ const StyledNavLink = styled(NavLink)`
         font-weight: 500;
     }
 
-    /* /cmmn 경로에서는 항상 active 상태 유지 */
-
     &[href^='/cmmn']:not([end]) {
         &.active, &[data-active='true'] {
             color: #4285f4;
             font-weight: 500;
         }
     }
-
-    /* /report 경로에서는 항상 active 상태 유지 */
 
     &[href^='/report']:not([end]) {
         &.active, &[data-active='true'] {
@@ -422,7 +408,7 @@ const Header = () => {
             </NavItem>
 
             <NavItem>
-              <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
+              <StyledNavLink to="/cmmn">고객센터</StyledNavLink>
               <SubNav>
                 <ul>
                   <li key="notice">
@@ -484,13 +470,13 @@ const Header = () => {
             <img src={report} alt="리포트 이미지" />
             <StyledNavLink
               to="/report"
-              className={({ isActive }) => isActive || isReportActive ? 'active' : ''}>
+              className={({ isActive }) => isActive ? 'active' : ''}>
               리포트
             </StyledNavLink>
           </HamburgerMenuItem>
           <HamburgerMenuItem>
             <img src={cs} alt="고객센터 이미지" />
-            <StyledNavLink to="/cmmn/notice">고객센터</StyledNavLink>
+            <StyledNavLink to="/cmmn">고객센터</StyledNavLink>
           </HamburgerMenuItem>
 
           {location.pathname.includes('/cmmn') && (

@@ -1,6 +1,6 @@
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import React, { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
@@ -24,7 +24,7 @@ import Notice from './pages/board/Notice.jsx';
 import NoticeDetail from './pages/board/NoticeDetail.jsx';
 import Faq from './pages/board/Faq.jsx';
 import Inquiry from './pages/board/Inquiry.jsx';
-import IssueListPage from "./pages/admin/IssueListPage.jsx";
+import IssueListPage from './pages/admin/IssueListPage.jsx';
 import InquiryForm from './components/board/InquiryForm.jsx';
 import InquiryDetail from './pages/board/InquiryDetail.jsx';
 
@@ -194,6 +194,8 @@ function AppRoutes() {
           <Route index element={
             <Suspense fallback={<LoadingSpinner />}><Home /></Suspense>
           } />
+
+          <Route path="cmmn" element={<Navigate to="/cmmn/notice" replace />} />
 
           <Route path="cmmn/notice" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
             <Suspense fallback={<LoadingSpinner />}><Notice /></Suspense>
