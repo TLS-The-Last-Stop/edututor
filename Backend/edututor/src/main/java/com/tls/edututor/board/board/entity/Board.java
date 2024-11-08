@@ -2,6 +2,7 @@ package com.tls.edututor.board.board.entity;
 
 import com.tls.edututor.board.category.entity.Category;
 import com.tls.edututor.common.entity.BaseEntity;
+import com.tls.edututor.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

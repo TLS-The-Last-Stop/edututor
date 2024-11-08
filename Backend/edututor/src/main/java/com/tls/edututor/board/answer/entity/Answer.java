@@ -3,9 +3,11 @@ package com.tls.edututor.board.answer.entity;
 import com.tls.edututor.board.board.entity.Board;
 import com.tls.edututor.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+@Getter
 @Entity
 @Table(name = "ANSWER")
 @SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
