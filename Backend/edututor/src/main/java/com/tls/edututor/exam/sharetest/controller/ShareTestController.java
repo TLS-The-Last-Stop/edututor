@@ -5,9 +5,7 @@ import com.tls.edututor.exam.sharetest.dto.request.ShareTestRequest;
 import com.tls.edututor.exam.sharetest.service.impl.ShareTestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,4 +19,9 @@ public class ShareTestController {
     return CommonApiResponse.createNoContent("공유가 성공되었습니다.");
   }
 
+  @DeleteMapping("/tests/papers/{testPaper}")
+  public CommonApiResponse<?> deleteShareTest(@RequestBody ShareTestRequest shareTestRequest, Authentication authentication) {
+    shareTestService.deleteShareTest(shareTestRequest, authentication);
+    return CommonApiResponse.createNoContent("공유가 취소되었습니다.");
+  }
 }

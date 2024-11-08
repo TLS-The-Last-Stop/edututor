@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { getAllStudent } from '../../api/classroom/classroom.js';
 import { Button, Label } from '../common/UserStyledComponents.js';
-import { cancelSharedTest, createShareTest } from '../../api/test-share/testShare.js';
+import { cancelShareTest, createShareTest } from '../../api/test-share/testShare.js';
 import Swal from 'sweetalert2';
 import { showALert } from '../../utils/SwalAlert.js';
 
@@ -169,13 +169,28 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest }) => {
   };
 
 
-  const handleStudentSelect = (studentId) => {
+  const handleStudentSelect = async (studentId) => {
     const isCurrentlyShared = studentInfo.find(student => student.id === studentId)?.isShared[selectedTest];
+
     if (isCurrentlyShared && !selectedStudents.includes(studentId)) {
-      if (confirm('이미 공유된 학생입니다. 다시 공유하시겠습니까? ')) setSelectedStudents([...selectedStudents, studentId]);
+      setSelectedStudents(prev => [...prev, studentId]);
+    } else if (isCurrentlyShared && selectedStudents.includes(studentId)) {
+      const message = {
+        icon             : 'warning',
+        title            : '공유를 취소하시겠습니까?',
+        text             : '학생의 과제 데이터는 유지됩니다.',
+        showCancelButton : true,
+        confirmButtonText: '취소하기',
+        cancelButtonText : '닫기'
+      };
+      const result = await showALert(message);
+
+      if (result.isConfirmed) setSelectedStudents(prev => prev.filter(id => id !== studentId));
     } else {
-      if (selectedStudents.includes(studentId)) setSelectedStudents(selectedStudents.filter(id => id !== studentId));
-      else setSelectedStudents([...selectedStudents, studentId]);
+      setSelectedStudents(prev => {
+        if (prev.includes(studentId)) return prev.filter(id => id !== studentId);
+        else return [...prev, studentId];
+      });
     }
   };
 
@@ -192,27 +207,26 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest }) => {
   };
 
   const handleShare = async () => {
-
     const newlySelectedStudents = selectedStudents.filter(id => !previouslySharedStudents.includes(id));
     const studentsToCancel = previouslySharedStudents.filter(id => !selectedStudents.includes(id));
 
     try {
-      if (newlySelectedStudents.length > 0) {
-        await createShareTest({
+      await Promise.all([
+        newlySelectedStudents.length > 0 && createShareTest({
           unitId   : selectedTest,
           studentId: newlySelectedStudents
-        });
-      }
+        }),
 
-      if (studentsToCancel.length > 0) {
-        await cancelSharedTest({
+        studentsToCancel.length > 0 && cancelShareTest({
           unitId   : selectedTest,
-          studentId: newlySelectedStudents
-        });
-      }
+          studentId: studentsToCancel
+        })
+      ].filter(Boolean));
 
-      const message = { icon: 'success', title: '시험 공유 상태가 업데이트되었습니다.' };
-      showALert(message);
+      if (newlySelectedStudents.length > 0 || studentsToCancel.length > 0) {
+        const message = { icon: 'success', title: '시험 공유 상태가 업데이트되었습니다.' };
+        showALert(message);
+      }
 
       onClose();
       setSelectedStudents([]);
@@ -237,6 +251,7 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest }) => {
         .map(student => student.id);
 
       setSelectedStudents(sharedStudents);
+      setPreviouslySharedStudents(sharedStudents);
     }
   }, [isOpen, selectedTest, studentInfo]);
 
@@ -306,7 +321,7 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest }) => {
             <ButtonContainer>
               <Button
                 onClick={handleShare}
-                disabled={!selectedTest || selectedStudents.length === 0}
+                disabled={!selectedTest || selectedStudents.length === 0 && previouslySharedStudents.length === 0}
                 $primary
               >
                 공유하기
