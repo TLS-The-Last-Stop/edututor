@@ -175,7 +175,7 @@ const UserJoinForm = ({
                   maxLength="4"
                   value={form.phoneMiddle}
                   onChange={getInputHandler}
-                  $hasError={errors.phoneMiddle}
+                  $hasError={errors.phoneMiddle || form.phoneMiddle.length > 0 && form.phoneMiddle.length < 4}
                   $isFilled={form.phoneMiddle.length === 4}
                 />
                 <Divider>-</Divider>
@@ -184,12 +184,16 @@ const UserJoinForm = ({
                   maxLength="4"
                   value={form.phoneLast}
                   onChange={getInputHandler}
-                  $hasError={errors.phoneLast}
+                  $hasError={errors.phoneLast || form.phoneLast.length > 0 && form.phoneLast.length < 4}
                   $isFilled={form.phoneLast.length === 4}
                 />
               </SelectGroup>
               {(errors.phoneMiddle || errors.phoneLast) && (
                 <ErrorText>숫자만 입력 가능합니다.</ErrorText>
+              )}
+              {((form.phoneMiddle.length > 0 && form.phoneMiddle.length < 4) ||
+                (form.phoneLast.length > 0 && form.phoneLast.length < 4)) && (
+                <ErrorText>휴대폰 번호는 4자리씩 입력해주세요.</ErrorText>
               )}
             </FormGroup>
 

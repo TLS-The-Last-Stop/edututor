@@ -76,14 +76,8 @@ const UserJoin = () => {
       setIdCheckMessage('');
     }
 
-    if (['loginId', 'password', 'confirmPassword'].includes(name)) {
-      validateInput(name, value);
-    }
-
-    if (name === 'password' || name === 'confirmPassword') {
-      handleconfirmPassword(name, value);
-    }
-
+    if (['loginId', 'password', 'confirmPassword'].includes(name)) validateInput(name, value);
+    if (name === 'password' || name === 'confirmPassword') handleconfirmPassword(name, value);
   };
 
   const validateInput = (name, value) => {
@@ -182,7 +176,7 @@ const UserJoin = () => {
       setForm(prev => ({
         ...prev,
         emailDomainSelect: value,
-        emailDomain      : value
+        emailDomain      : value === '직접 입력' ? '' : value
       }));
     } else {
       setForm(prev => ({
@@ -255,8 +249,7 @@ const UserJoin = () => {
       if (value) {
         setErrors(prev => ({
           ...prev,
-          password: !passwordRegex.test(value),
-          // 비밀번호가 바뀌었을 때는 확인란이 비어있지 않은 경우에만 일치 여부 체크
+          password     : !passwordRegex.test(value),
           passwordMatch: form.confirmPassword !== '' && value !== form.confirmPassword
         }));
       } else {
@@ -304,9 +297,21 @@ const UserJoin = () => {
       return false;
     }
 
+    if (form.emailDomainSelect === '직접 입력' && !form.emailDomain) {
+      const message = { icon: 'warning', title: '이메일 도메인을 입력해주세요.' };
+      showALert(message);
+      return false;
+    }
+
     // 패스워드 일치 확인
     if (errors.passwordMatch) {
       const message = { icon: 'warning', title: '비밀번호가 일치하지 않습니다.' };
+      showALert(message);
+      return false;
+    }
+
+    if (form.phoneMiddle.length !== 4 || form.phoneLast.length !== 4) {
+      const message = { icon: 'warning', title: '휴대폰 번호를 정확히 입력해주세요.' };
       showALert(message);
       return false;
     }

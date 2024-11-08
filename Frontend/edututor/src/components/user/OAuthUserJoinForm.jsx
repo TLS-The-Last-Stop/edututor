@@ -194,7 +194,7 @@ const OAuthUserJoinForm = ({
 
                 {/* 반 이름 입력 */}
                 <Input name="classroomName" value={classroom.classroomName} onChange={handleCreateClassroom}
-                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 갱스터 o)"
+                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 천재반 o)"
                        maxLength={10}
                        style={{ width: '200px' }}
                 />

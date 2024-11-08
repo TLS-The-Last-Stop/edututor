@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { publicApi } from '../../api/axios.js';
 import '../../assets/css/IssueListPage.css';
+import Loading from '../../components/common/Loading.jsx';
 
 const IssueListPage = () => {
   const [issues, setIssues] = useState([]);  // 초기값을 빈 배열로 설정
@@ -27,7 +28,7 @@ const IssueListPage = () => {
     fetchIssues();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loading /></div>;
   if (error) return <div>{error}</div>;
 
   return (

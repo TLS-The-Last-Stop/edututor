@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getBoardsByCategory } from '../../api/board/board.js';
 import '../../assets/css/NoticeDetailPage.css';
+import Loading from '../../components/common/Loading.jsx';
 
 const NoticeDetail = () => {
   const { boardId } = useParams();
@@ -35,7 +36,7 @@ const NoticeDetail = () => {
   };
 
   if (!notice) {
-    return <div className="loading">로딩중...</div>;
+    return <div className="loading"><Loading /></div>;
   }
   ;
 

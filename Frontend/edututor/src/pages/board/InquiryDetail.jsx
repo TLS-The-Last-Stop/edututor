@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { deleteInquiry, getBoardsByCategory } from '../../api/board/board.js';
 import '../../assets/css/InquiryDetailPage.css';
+import Loading from '../../components/common/Loading.jsx';
 
 const InquiryDetail = () => {
   const { boardId } = useParams();
@@ -34,7 +35,7 @@ const InquiryDetail = () => {
   }, [boardId]);
 
   if (!inquiry) {
-    return <div className="loading">로딩중...</div>;
+    return <div className="loading"><Loading /></div>;
   }
 
   return (

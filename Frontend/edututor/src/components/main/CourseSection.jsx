@@ -11,6 +11,7 @@ import 사회 from '../../assets/icon/subject/사회.png';
 import 과학 from '../../assets/icon/subject/과학.png';
 import 역사 from '../../assets/icon/subject/역사.png';
 import 도덕 from '../../assets/icon/subject/도덕.png';
+import { StyledRouterLink } from '../common/UserStyledComponents.js';
 
 const CourseContainer = styled.div`
     margin: 60px auto 0;
@@ -340,7 +341,7 @@ const CourseSection = () => {
       <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
       <RegisterCourseButton>
         {userRole === 'TE' ? (
-          <Link to="/course/enroll">새 과정 등록하기</Link>
+          <StyledRouterLink to="/course/enroll">새 과정 등록하기</StyledRouterLink>
         ) : (
           ''
         )}

@@ -9,6 +9,7 @@ import {
   Title
 } from '../common/UserStyledComponents.js';
 import { ModalContainer, ModalContent, Overlay } from '../common/ModalOverlayComponent.js';
+import Loading from '../common/Loading.jsx';
 
 const StudentDetailModal = ({
                               isOpen,
@@ -27,7 +28,7 @@ const StudentDetailModal = ({
       <ModalContainer onClick={e => e.stopPropagation()}>
         <ModalContent>
           {isLoading ? (
-            <div>로딩 중...</div>
+            <div><Loading /></div>
           ) : student ? (
             <>
               <FormHeader>

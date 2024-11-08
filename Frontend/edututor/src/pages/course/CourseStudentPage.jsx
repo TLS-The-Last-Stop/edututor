@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import '../../assets/css/CoursePage.css';
 import { publicApi } from '../../api/axios.js';
 import ExamShareModal from '../../components/exam/ExamShareModal';
+import Loading from '../../components/common/Loading.jsx';
 
 const CoursePage = () => {
   const { courseId } = useParams();
@@ -74,7 +75,7 @@ const CoursePage = () => {
     }));
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loading /></div>;
   if (error) return <div>{error}</div>;
 
   return (
