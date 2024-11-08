@@ -13,6 +13,8 @@ const CoursePage = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [openSections, setOpenSections] = useState({});
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -66,12 +68,20 @@ const CoursePage = () => {
     }
   };
 
+  const toggleSection = (sectionId) => {
+    setOpenSections((prevState) => ({
+      ...prevState,
+      [sectionId]: !prevState[sectionId],
+    }));
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
       <div className="course-page">
         <div className="sidebar">
+          <h3> 등록된 과정 목록</h3>
           <ul>
             {courses.map(course => (
                 <li
@@ -92,48 +102,63 @@ const CoursePage = () => {
                   <h2>{courseData.courseName}</h2>
                 </div>
 
-                {courseData.sections.map(section => (
+                {courseData.sections.map((section, sectionIndex) => (
                     <div key={section.sectionId} className="section">
-                      <h3>{section.content}</h3>
+                      <h3
+                          className="section-header"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => toggleSection(section.sectionId)}
+                      >
+                        {sectionIndex + 1}. {section.content}
+                      </h3>
 
-                      {section.units.map(unit => (
-                          <div key={unit.unitId} className="unit">
-                            <div className="unit-header">
-                              <h4>{unit.content}</h4>
-                            </div>
+                      <div
+                          className={`section-content ${openSections[section.sectionId] ? 'open' : ''}`}
+                          style={{
+                            maxHeight: openSections[section.sectionId] ? '500px' : '0',
+                            overflow: 'hidden',
+                            transition: 'max-height 0.5s ease-in-out',
+                          }}
+                      >
+                        {section.units.map((unit, unitIndex) => (
+                            <div key={unit.unitId} className="unit">
+                              <div className="unit-header">
+                                <h4>{sectionIndex + 1}.{unitIndex + 1} {unit.content}</h4>
+                              </div>
 
-                            <div className="materials">
-                              {unit.materials.map(material => (
-                                  <div key={material.materialId} className="material-item">
-                                  <span className="material-title">
-                                    학습자료: {material.title}
-                                  </span>
+                              <div className="materials">
+                                {unit.materials.map(material => (
+                                    <div key={material.materialId} className="material-item">
+                            <span className="material-title">
+                              학습자료: {material.title}
+                            </span>
+                                      <button
+                                          className="material-btn"
+                                          onClick={() => handleMaterialClick(material.materialId)}
+                                      >
+                                        보기
+                                      </button>
+                                    </div>
+                                ))}
+                              </div>
+
+                              {unit.testPaper && (
+                                  <div className="testpaper">
+                                    <span className="testpaper-title">시험지: {unit.testPaper.title}</span>
                                     <button
-                                        className="material-btn"
-                                        onClick={() => handleMaterialClick(material.materialId)}
+                                        className="testpaper-btn"
+                                        onClick={() => handleTestClick(unit.testPaper.testPaperId, unit.testPaper.testPaperStatus)}
+                                        disabled={unit.testPaper.testPaperStatus !== 1}
                                     >
-                                      보기
+                                      {unit.testPaper.testPaperStatus === 0 && "평가 전"}
+                                      {unit.testPaper.testPaperStatus === 1 && "응시하기"}
+                                      {unit.testPaper.testPaperStatus === 2 && "응시완료"}
                                     </button>
                                   </div>
-                              ))}
+                              )}
                             </div>
-
-                            {unit.testPaper && (
-                                <div className="testpaper">
-                                  <span className="testpaper-title">시험지: {unit.testPaper.title}</span>
-                                  <button
-                                      className="testpaper-btn"
-                                      onClick={() => handleTestClick(unit.testPaper.testPaperId, unit.testPaper.testPaperStatus)}
-                                      disabled={unit.testPaper.testPaperStatus !== 1}
-                                  >
-                                    {unit.testPaper.testPaperStatus === 0 && "평가 전"}
-                                    {unit.testPaper.testPaperStatus === 1 && "응시하기"}
-                                    {unit.testPaper.testPaperStatus === 2 && "응시완료"}
-                                  </button>
-                                </div>
-                            )}
-                          </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                 ))}
               </>

@@ -13,6 +13,10 @@
     border-right: 1px solid #ddd;
 }
 
+.sidebar h3 {
+    text-align: center;
+}
+
 .new-course-btn {
     display: block;
     width: 100%;
@@ -68,9 +72,9 @@
 }
 
 .section h3 {
-    font-size: 30px;
+    font-size: 20px;
     color: #333;
-    margin-bottom: 16px;
+    margin-bottom: 13px;
 }
 
 .unit {
@@ -108,7 +112,7 @@
 .testpaper {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 버튼을 오른쪽으로 배치 */
+    justify-content: space-between;
     padding: 5px 10px;
     background-color: #fafafa;
     border-radius: 5px;
