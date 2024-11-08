@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseCreationPage.css';
+import { showALert } from '../../utils/SwalAlert.js';
+import Loading from '../../components/common/Loading.jsx';
 
 const CourseEditPage = () => {
   const { courseId } = useParams();
@@ -82,8 +84,8 @@ const CourseEditPage = () => {
     e.preventDefault();
     try {
       const response = await publicApi.put(`/course/${courseId}`, formData);
-      console.log('Response:', response.data);
-      alert('과정이 성공적으로 수정되었습니다.');
+      const message = { icon: 'success', title: '과정이 성공적으로 수정되었습니다.' };
+      showALert(message);
       navigate(`/admin/course-detail/${courseId}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error);
@@ -93,14 +95,15 @@ const CourseEditPage = () => {
   const handleDelete = async () => {
     try {
       await publicApi.delete(`/course/${courseId}`);
-      alert('과정이 성공적으로 삭제되었습니다.');
+      const message = { icon: 'success', title: '과정이 성공적으로 삭제되었습니다.' };
+      showALert(message);
       navigate('/courses');
     } catch (error) {
       console.error('삭제 중 오류 발생:', error);
     }
   };
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading) return <p><Loading /></p>;
   if (error) return <p>{error}</p>;
 
   return (

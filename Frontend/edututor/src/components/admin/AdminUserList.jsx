@@ -1,9 +1,8 @@
-// Styled Components
 import styled from 'styled-components';
 import { Fragment, useState } from 'react';
 import AdminUserDetailModal from './AdminUserDetailModal.jsx';
 import { getUser, removeStudent } from '../../api/user/user.js';
-import Swal from 'sweetalert2';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const Container = styled.div`
     padding: 20px;
@@ -146,10 +145,8 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
         setSelectedUser(result.data);
         setIsOpen(true);
       } else {
-        Swal.fire({
-          icon : 'error',
-          title: '회원을 불러오는데 실패했습니다.'
-        });
+        const message = { icon: 'error', title: '회원을 불러오는데 실패했습니다.' };
+        showALert(message);
 
         return;
       }
@@ -165,14 +162,15 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
     e.preventDefault();
 
     if (selectedUser.role === 'TE') {
-      Swal.fire({
+      const message = {
         icon             : 'warning',
-        title            : '등록된 학생들도 탈퇴됩니다.',
+        title            : '회원을 불러오는데 실패했습니다.',
         text             : '정말 삭제하시겠습니까?',
         showCancelButton : true,
         cancelButtonText : '아니오',
         confirmButtonText: '예'
-      })
+      };
+      showALert(message)
         .then(async (result) => {
           if (result.isConfirmed) {
             const result = await removeStudent(selectedUser.id);
@@ -180,24 +178,23 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
               handleCloseModal();
               fetchingAllUser();
             } else {
-              Swal.fire({
-                icon : 'error',
-                title: '회원을 불러오는데 실패했습니다.'
-              });
+              const message = { icon: 'error', title: '회원을 불러오는데 실패했습니다.' };
+              showALert(message);
             }
           }
         });
     }
 
     if (selectedUser.role === 'SU') {
-      Swal.fire({
+      const message = {
         icon             : 'warning',
         title            : '등록된 학생을',
         text             : '탈퇴시키겠습니까?',
         showCancelButton : true,
         cancelButtonText : '아니오',
         confirmButtonText: '예'
-      })
+      };
+      showALert(message)
         .then(async (result) => {
           if (result.isConfirmed) {
             const result = await removeStudent(selectedUser.id);
@@ -205,10 +202,8 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
               handleCloseModal();
               fetchingAllUser();
             } else {
-              Swal.fire({
-                icon : 'error',
-                title: '회원을 불러오는데 실패했습니다.'
-              });
+              const message = { icon: 'error', title: '회원을 불러오는데 실패했습니다.' };
+              showALert(message);
             }
           }
         });

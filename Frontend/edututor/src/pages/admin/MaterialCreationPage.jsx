@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../assets/css/MaterialCreationPage.css';
 import { publicApi } from '../../api/axios.js';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const MaterialCreationPage = () => {
   const [formData, setFormData] = useState({
-    title: '',
+    title  : '',
     content: '',
-    url: ''
+    url    : ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,7 +52,8 @@ const MaterialCreationPage = () => {
       const response = await publicApi.post('/material', { ...formData, unitId });
       setSuccessMessage('학습자료가 성공적으로 등록되었습니다!');
       setFormData({ title: '', content: '', url: '' });
-      alert('학습자료가 성공적으로 등록되었습니다!');
+      const message = { icon: 'success', title: '학습자료가 성공적으로 등록되었습니다!' };
+      showALert(message);
       window.history.back();
     } catch (error) {
       setErrorMessage('학습자료 등록 중 오류가 발생했습니다.');
@@ -62,50 +64,50 @@ const MaterialCreationPage = () => {
   };
 
   return (
-      <div className="material-creation-container">
-        <h2 className="page-title">학습 자료 등록</h2>
-        <form onSubmit={handleSubmit} className="material-form">
-          <div className="form-field">
-            <label>제목 (Title):</label>
-            <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                className="input-field"
-                required
-            />
-          </div>
-          <div className="form-field">
-            <label>내용 (Content):</label>
-            <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleInputChange}
-                className="textarea-field"
-                required
-            />
-          </div>
-          <div className="form-field">
-            <label>학습자료 URL (선택):</label>
-            <input
-                type="text"  // URL 타입을 text로 변경
-                name="url"
-                value={formData.url}
-                onChange={handleInputChange}
-                className="input-field"
-                placeholder="https://www.youtube.com/watch?v=example"
-            />
-          </div>
+    <div className="material-creation-container">
+      <h2 className="page-title">학습 자료 등록</h2>
+      <form onSubmit={handleSubmit} className="material-form">
+        <div className="form-field">
+          <label>제목 (Title):</label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="form-field">
+          <label>내용 (Content):</label>
+          <textarea
+            name="content"
+            value={formData.content}
+            onChange={handleInputChange}
+            className="textarea-field"
+            required
+          />
+        </div>
+        <div className="form-field">
+          <label>학습자료 URL (선택):</label>
+          <input
+            type="text"  // URL 타입을 text로 변경
+            name="url"
+            value={formData.url}
+            onChange={handleInputChange}
+            className="input-field"
+            placeholder="https://www.youtube.com/watch?v=example"
+          />
+        </div>
 
-          <button type="submit" className="submit-button" disabled={isSubmitting}>
-            {isSubmitting ? '등록 중...' : '등록하기'}
-          </button>
+        <button type="submit" className="submit-button" disabled={isSubmitting}>
+          {isSubmitting ? '등록 중...' : '등록하기'}
+        </button>
 
-          {successMessage && <p className="success-message">{successMessage}</p>}
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-        </form>
-      </div>
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+      </form>
+    </div>
   );
 };
 

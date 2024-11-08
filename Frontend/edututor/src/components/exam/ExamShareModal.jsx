@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { getAllStudent } from '../../api/classroom/classroom.js';
 import { Button, Label } from '../common/UserStyledComponents.js';
 import { cancelShareTest, createShareTest } from '../../api/test-share/testShare.js';
-import Swal from 'sweetalert2';
 import { showALert } from '../../utils/SwalAlert.js';
 
 const ModalOverlay = styled.div`
@@ -147,16 +146,18 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest }) => {
       const allStudentIds = studentInfo.map(student => {
         const isCurrentlyShared = student.isShared[selectedTest];
         if (isCurrentlyShared) {
-          Swal.fire({
+          const message = {
             icon             : 'info',
             title            : '이미 공유된 학생이 포함되어 있습니다.',
             text             : '모두 다시 공유하시겠습니까?',
             confirmButtonText: '예',
             showCancelButton : true,
             cancelButtonText : '취소'
-          }).then(result => {
-            if (result.isConfirmed) return student.id;
-          });
+          };
+          showALert(message)
+            .then(result => {
+              if (result.isConfirmed) return student.id;
+            });
           return null;
         }
         return student.id;

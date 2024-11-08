@@ -3,8 +3,8 @@ import StudentDetailModal from './StudentDetailModal.jsx';
 import { useState } from 'react';
 import { getStudentByStudentId } from '../../api/classroom/classroom.js';
 import { updateStudent } from '../../api/user/user.js';
-import Swal from 'sweetalert2';
 import 듬이 from '../../assets/icon/듬이.png';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const StudentItem = styled.div`
     display: flex;
@@ -87,10 +87,8 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
         setStudentDetail(result.data);
         setIsOpen(true);
       } else {
-        Swal.fire({
-          icon : 'warning',
-          title: '학생 정보를 불러오는데 실패했습니다.'
-        });
+        const message = { icon: 'warning', title: '학생 정보를 불러오는데 실패했습니다.' };
+        showALert(message);
       }
 
     } catch (error) {
@@ -172,28 +170,21 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
     if (updateForm.password || updateForm.confirmPassword) {
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,20}$/;
       if (!passwordRegex.test(updateForm.password)) {
-
-        Swal.fire({
-          icon : 'warning',
-          title: '비밀번호는 영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.'
-        });
+        const message = { icon: 'warning', title: '비밀번호는 영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.' };
+        showALert(message);
         return;
       }
 
       if (updateForm.password !== updateForm.confirmPassword) {
-        Swal.fire({
-          icon : 'warning',
-          title: '비밀번호가 일치하지 않습니다.'
-        });
+        const message = { icon: 'warning', title: '비밀번호가 일치하지 않습니다.' };
+        showALert(message);
         return;
       }
     }
 
     if (!studentDetail.username) {
-      Swal.fire({
-        icon : 'warning',
-        title: '이름을 입력해주세요.'
-      });
+      const message = { icon: 'warning', title: '이름을 입력해주세요.' };
+      showALert(message);
       return;
     }
 
@@ -205,17 +196,14 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
 
       const result = await updateStudent(studentDetail.id, updateData);
       if (result.status === 204) {
-        Swal.fire({
-          icon : 'success',
-          title: '수정이 완료되었습니다.'
-        });
+        const message = { icon: 'success', title: '수정이 완료되었습니다.' };
+        showALert(message);
+
         handleCloseModal();
         fetchAllStudent();
       } else {
-        Swal.fire({
-          icon : 'error',
-          title: '수정을 다시 해주세요.'
-        });
+        const message = { icon: 'error', title: '수정을 다시 해주세요.' };
+        showALert(message);
       }
     } catch (error) {
       console.error('Failed to update student:', error);

@@ -3,6 +3,7 @@ import CreateStudentModal from './CreateStudentModal.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { checkDuplicateId, createStudent, getUserInfo } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const CreateButton = styled.button`
     padding: 0.5rem 1rem;
@@ -44,7 +45,8 @@ const CreateStudent = ({ fetchAllStudent }) => {
       setClassroomName(info.classroom.classroomName);
     } catch (error) {
       if (!hasAlerted.current) {
-        alert('로그인 해주세요.');
+        const message = { icon: 'info', title: '로그인을 진행해주세요.' };
+        showALert(message);
         hasAlerted.current = true;
       }
       navigate('/teacher-login');
@@ -107,17 +109,20 @@ const CreateStudent = ({ fetchAllStudent }) => {
 
   const handleCheckDuplicatedId = async () => {
     if (!form.loginId) {
-      alert('아이디를 입력해주세요.');
+      const message = { icon: 'warning', title: '아이디를 입력해주세요.' };
+      showALert(message);
       return;
     }
 
     if (form.loginId.length < 6) {
-      alert('아이디가 너무 짧습니다.');
+      const message = { icon: 'warning', title: '아이디가 너무 짧습니다.' };
+      showALert(message);
       return;
     }
 
     if (form.loginId.length > 20) {
-      alert('아이디를 줄여주세요.');
+      const message = { icon: 'warning', title: '아이디를 줄여주세요.' };
+      showALert(message);
       return;
     }
 
@@ -151,25 +156,30 @@ const CreateStudent = ({ fetchAllStudent }) => {
     };
 
     if (!isIdChecked) {
-      alert('아이디 중복확인을 해주세요');
+      const message = { icon: 'warning', title: '아이디 중복확인을 해주세요' };
+      showALert(message);
       return;
     }
 
     if (!form.username || !form.loginId || !form.password || !form.confirmPassword) {
-      alert('모든 필수 항목을 입력해주세요.');
+      const message = { icon: 'warning', title: '모든 필수 항목을 입력해주세요.' };
+      showALert(message);
       return false;
     }
 
     try {
       const result = await createStudent(submitData);
       if (result.status === 204) {
-        alert(result?.message || '학생이 등록되었습니다.?');
+        const message = { icon: 'success', title: result?.message || '학생이 등록되었습니다.?' };
+        showALert(message);
+
         handleCloseModal();
         fetchAllStudent();
       }
 
       if (result.status === 400) {
-        alert(`이미 ${form.loginId}로 회원가입 되어 있습니다.`);
+        const message = { icon: 'error', title: `이미 ${form.loginId}로 회원가입 되어 있습니다.` };
+        showALert(message);
       }
     } catch (error) {
       console.error('학생 등록에 실패하였습니다.', error);

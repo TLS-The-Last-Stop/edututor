@@ -1,18 +1,9 @@
 import { ModalContainer, ModalContent, Overlay } from '../common/ModalOverlayComponent.js';
 import Loading from '../common/Loading.jsx';
-import {
-  Button,
-  ErrorText,
-  FormGroup,
-  FormHeader,
-  Input,
-  JoinButtonGroup,
-  Label,
-  Title
-} from '../common/UserStyledComponents.js';
+import { Button, ErrorText, FormGroup, FormHeader, Input, Label, Title } from '../common/UserStyledComponents.js';
 import { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
 import { findId, findPassword } from '../../api/user/user.js';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const initForm = {
   loginId: '',
@@ -39,25 +30,19 @@ const FindLoginInfoModal = ({
 
     if (findType === 'loginId') {
       if (!formData.email) {
-        Swal.fire({
-          icon : 'error',
-          title: '이메일을 입력해주세요.'
-        });
+        const message = { icon: 'error', title: '이메일을 입력해주세요.' };
+        showALert(message);
         return;
       }
     } else {
       if (!formData.loginId) {
-        Swal.fire({
-          icon : 'error',
-          title: '아이디를 입력해주세요.'
-        });
+        const message = { icon: 'error', title: '아이디를 입력해주세요.' };
+        showALert(message);
         return;
       }
       if (!formData.email) {
-        Swal.fire({
-          icon : 'error',
-          title: '이메일을 입력해주세요.'
-        });
+        const message = { icon: 'error', title: '이메일을 입력해주세요.' };
+        showALert(message);
         return;
       }
     }
@@ -66,32 +51,30 @@ const FindLoginInfoModal = ({
       if (findType === 'loginId') {
         const result = await findId({ email: formData.email });
 
-        Swal.fire({
+        const message = {
           icon             : 'success',
           title            : '입력하신 이메일로 아이디가 전송되었습니다.',
           confirmButtonText: '확인'
-        }).then(() => {
-          onClose();
-        });
+        };
+        showALert(message)
+          .then(() => {
+            onClose();
+          });
       } else {
         const result = await findPassword(formData);
 
-        Swal.fire({
+        const message = {
           icon             : 'success',
           title            : '입력하신 이메일로 임시 비밀번호가 전송되었습니다.',
           confirmButtonText: '확인'
-        }).then(() => {
-          onClose(); // 모달 닫기
-        });
+        };
+        showALert(message)
+          .then(() => {
+            onClose(); // 모달 닫기
+          });
       }
     } catch (error) {
       console.error('Failed to process request: ', error);
-      Swal.fire({
-        icon             : 'error',
-        title            : '처리 중 오류가 발생했습니다.',
-        text             : error.response?.data?.message || '잠시 후 다시 시도해주세요.',
-        confirmButtonText: '확인'
-      });
     }
   };
 

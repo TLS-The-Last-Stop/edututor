@@ -21,7 +21,6 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
         if (!isAD && !hasAlerted) {
           setHasAlerted(true);
-          alert('관리자 권한이 필요합니다.');
           navigate('/');
         }
         return;
@@ -47,7 +46,6 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
       if (!hasRequiredRole(requiredRole, role) && !hasAlerted) {
         setHasAlerted(true);
-        alert('죄송합니다.');
         navigate('/');
         return;
       }
