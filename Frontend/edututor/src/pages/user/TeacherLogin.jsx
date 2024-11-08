@@ -10,7 +10,7 @@ import {
   Input,
   Label,
   LinkGroup,
-  LogoText,
+  LogoText, Required,
   SNSButton,
   SNSButtonGroup,
   SNSLoginSection,
@@ -149,7 +149,7 @@ const TeacherLogin = () => {
             <FieldSet>
               <form onSubmit={handleSubmit}>
                 <FormGroup>
-                  <Label htmlFor="loginId">아이디</Label>
+                  <Label htmlFor="loginId">아이디<Required>*</Required></Label>
                   <Input
                     id="loginId"
                     name="loginId"
@@ -160,7 +160,7 @@ const TeacherLogin = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="password">비밀번호</Label>
+                  <Label htmlFor="password">비밀번호<Required>*</Required></Label>
                   <Input
                     id="password"
                     name="password"

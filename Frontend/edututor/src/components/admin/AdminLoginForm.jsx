@@ -7,7 +7,7 @@ import {
   FormHeader,
   FormSection,
   Input,
-  Label,
+  Label, Required,
   Title
 } from '../../components/common/UserStyledComponents.js';
 
@@ -23,7 +23,7 @@ const AdminLoginForm = ({ errors, handleSubmit, handleInputChange }) => {
         <FieldSet>
           <form onSubmit={handleSubmit}>
             <FormGroup>
-              <Label htmlFor="loginId">아이디</Label>
+              <Label htmlFor="loginId">아이디<Required>*</Required></Label>
               <Input
                 id="loginId"
                 name="loginId"
@@ -34,7 +34,7 @@ const AdminLoginForm = ({ errors, handleSubmit, handleInputChange }) => {
             </FormGroup>
 
             <FormGroup>
-              <Label htmlFor="password">비밀번호</Label>
+              <Label htmlFor="password">비밀번호<Required>*</Required></Label>
               <Input
                 id="password"
                 name="password"

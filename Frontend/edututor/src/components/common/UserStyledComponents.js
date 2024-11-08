@@ -35,7 +35,6 @@ const inputStyles = css`
     }
 `;
 
-// 레이아웃 컴포넌트
 export const Container = styled.main`
     position: fixed;
     inset: 0;
@@ -44,6 +43,15 @@ export const Container = styled.main`
     justify-content: center;
     padding: 2rem;
     background-color: #f5f5f5;
+`;
+
+export const ScrolledContainer = styled.main`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #f5f5f5;
+    min-height: 100vh;
 `;
 
 export const FormSection = styled.section`
@@ -107,6 +115,8 @@ export const Label = styled.label`
 export const Required = styled.span`
     color: #ff4d4f;
     margin-left: 4px;
+    display: inline-block;
+    vertical-align: middle;
 `;
 
 // 버튼 컴포넌트
