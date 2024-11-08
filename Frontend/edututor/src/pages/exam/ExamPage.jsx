@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import '../../assets/css/ExamPage.css';
 import { publicApi } from '../../api/axios.js';
 import { showALert } from '../../utils/SwalAlert.js';
+import Loading from '../../components/common/Loading.jsx';
 
 const fetchQuestions = (testPaperId) => publicApi.get(`/test/${testPaperId}`);
 const submitAnswer = (userTest) => publicApi.post(`/test/submit`, userTest);
@@ -79,7 +80,7 @@ const ExamPage = () => {
       });
   };
 
-  if (!testData) return <div>로딩 중...</div>;
+  if (!testData) return <div><Loading /></div>;
 
   const { questions, title } = testData.data;
 

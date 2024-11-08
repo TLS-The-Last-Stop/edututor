@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import { ModalContainer, ModalContent, Overlay } from '../common/ModalOverlayComponent.js';
 import {
   Button,
-  ErrorText,
+  ErrorText, FieldSet,
   FormGroup,
   FormHeader,
   Input,
   JoinButtonGroup,
-  Label,
+  Label, Required,
   Title
 } from '../common/UserStyledComponents.js';
 import { getTeacherByClassroomId } from '../../api/classroom/classroom.js';
+import Loading from '../common/Loading.jsx';
 
 const initForm = {
   username       : '',
@@ -63,7 +64,7 @@ const TeacherUpdateFormModal = ({ isOpen, onClose, selectedUser }) => {
       <ModalContainer onClick={e => e.stopPropagation()}>
         <ModalContent>
           {isLoading ? (
-            <div>로딩 중...</div>
+            <div><Loading /></div>
           ) : (
             <>
               <FormHeader>
@@ -71,61 +72,75 @@ const TeacherUpdateFormModal = ({ isOpen, onClose, selectedUser }) => {
               </FormHeader>
 
               <form onSubmit={handleSubmit}>
-                <FormGroup>
-                  <Label>이름</Label>
-                  <Input
-                    type="text"
-                    name="username"
-                    value={teacher.username}
-                    onChange={handleChange}
-                    placeholder="이름을 입력하세요"
-                    $hasError={!!errors.username}
-                  />
-                  {errors.username && <ErrorText>{errors.username}</ErrorText>}
-                </FormGroup>
-                <FormGroup>
-                  <Label>아이디</Label>
-                  <Input
-                    type="text"
-                    name="loginId"
-                    value={teacher.loginId}
-                    readOnly
-                    disabled
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label>새 비밀번호</Label>
-                  <Input
-                    type="password"
-                    name="password"
-                    value={updateForm.password}
-                    onChange={handleChange}
-                    placeholder="새 비밀번호를 입력하세요"
-                    $hasError={!!errors.password}
-                  />
-                  {errors.password && <ErrorText>{errors.password}</ErrorText>}
-                </FormGroup>
-                <FormGroup>
-                  <Label>비밀번호 확인</Label>
-                  <Input
-                    type="password"
-                    name="confirmPassword"
-                    value={updateForm.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="비밀번호를 다시 입력하세요"
-                    $hasError={!!errors.confirmPassword}
-                  />
-                  {errors.confirmPassword && <ErrorText>{errors.confirmPassword}</ErrorText>}
-                </FormGroup>
-                {errors.submit && <ErrorText>{errors.submit}</ErrorText>}
-                <JoinButtonGroup>
-                  <Button type="button" onClick={onClose}>
-                    취소
-                  </Button>
-                  <Button type="submit" onClick={handleSubmit} $primary>
-                    저장
-                  </Button>
-                </JoinButtonGroup>
+                <FieldSet>
+                  <FormGroup>
+                    <Label>
+                      이름<Required>*</Required>
+                    </Label>
+                    <Input
+                      type="text"
+                      name="username"
+                      value={teacher.username}
+                      onChange={handleChange}
+                      placeholder="이름을 입력하세요"
+                      $hasError={!!errors.username}
+                    />
+                    {errors.username && <ErrorText>{errors.username}</ErrorText>}
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label>
+                      아이디<Required>*</Required>
+                    </Label>
+                    <Input
+                      type="text"
+                      name="loginId"
+                      value={teacher.loginId}
+                      readOnly
+                      disabled
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label>
+                      새 비밀번호<Required>*</Required>
+                    </Label>
+                    <Input
+                      type="password"
+                      name="password"
+                      value={updateForm.password}
+                      onChange={handleChange}
+                      placeholder="새 비밀번호를 입력하세요"
+                      $hasError={!!errors.password}
+                    />
+                    {errors.password && <ErrorText>{errors.password}</ErrorText>}
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label>
+                      비밀번호 확인<Required>*</Required>
+                    </Label>
+                    <Input
+                      type="password"
+                      name="confirmPassword"
+                      value={updateForm.confirmPassword}
+                      onChange={handleChange}
+                      placeholder="비밀번호를 다시 입력하세요"
+                      $hasError={!!errors.confirmPassword}
+                    />
+                    {errors.confirmPassword && <ErrorText>{errors.confirmPassword}</ErrorText>}
+                  </FormGroup>
+                  {errors.submit && <ErrorText>{errors.submit}</ErrorText>}
+
+                  <JoinButtonGroup>
+                    <Button type="button" onClick={onClose}>
+                      취소
+                    </Button>
+                    <Button type="submit" onClick={handleSubmit} $primary>
+                      수정
+                    </Button>
+                  </JoinButtonGroup>
+                </FieldSet>
               </form>
             </>
           )}

@@ -9,6 +9,7 @@ import { StyledRouterLink } from '../../components/common/UserStyledComponents.j
 import { VscOpenPreview } from 'react-icons/vsc';
 import { IoShareOutline } from 'react-icons/io5';
 import { LuBookOpenCheck } from 'react-icons/lu';
+import Loading from '../../components/common/Loading.jsx';
 
 const CoursePage = () => {
   const { courseId } = useParams();
@@ -96,7 +97,7 @@ const CoursePage = () => {
     setMaterialPreview(null);
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loading /></div>;
   if (error) return <div>{error}</div>;
 
   return (

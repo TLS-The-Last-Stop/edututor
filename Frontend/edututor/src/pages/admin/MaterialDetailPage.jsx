@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../assets/css/MaterialDetailPage.css';
 import { publicApi } from '../../api/axios.js';
+import Loading from '../../components/common/Loading.jsx';
 
 const MaterialDetailPage = () => {
   const { materialId } = useParams();
@@ -23,7 +24,7 @@ const MaterialDetailPage = () => {
     fetchMaterial();
   }, [materialId]);
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading) return <p><Loading /></p>;
   if (error) return <p>{error}</p>;
 
   const renderVideo = (url) => {

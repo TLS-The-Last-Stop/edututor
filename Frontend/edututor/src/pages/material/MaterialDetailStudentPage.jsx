@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../assets/css/MaterialDetailPage.css';
 import { publicApi } from '../../api/axios.js';
+import Loading from '../../components/common/Loading.jsx';
 
 const MaterialDetailStudentPage = () => {
   const { materialId } = useParams();
@@ -42,7 +43,7 @@ const MaterialDetailStudentPage = () => {
     );
   };
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading) return <p><Loading /></p>;
   if (error) return <p>{error}</p>;
 
   return (

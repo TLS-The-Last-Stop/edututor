@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { privateApi } from '../../api/axios';
 import '../../assets/css/CourseListPage.css';
+import Loading from '../../components/common/Loading.jsx';
 
 const CourseListPage = () => {
   const [courses, setCourses] = useState([]);
@@ -24,7 +25,7 @@ const CourseListPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading"><Loading /></div>;
   }
 
   if (error) {
