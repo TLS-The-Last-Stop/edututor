@@ -12,7 +12,6 @@ const CoursePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [openSections, setOpenSections] = useState({});
 
   useEffect(() => {
@@ -81,12 +80,12 @@ const CoursePage = () => {
   return (
       <div className="course-page">
         <div className="sidebar">
-          <h3> 등록된 과정 목록</h3>
+          <h3>등록된 과정 목록</h3>
           <ul>
             {courses.map(course => (
                 <li
                     key={course.courseId}
-                    className="course-item"
+                    className={`course-item ${courseData?.courseId === course.courseId ? 'selected' : ''}`}
                     onClick={() => handleCourseClick(course.courseId)}
                 >
                   {course.courseName}

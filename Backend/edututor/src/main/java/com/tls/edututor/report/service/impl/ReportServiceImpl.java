@@ -23,10 +23,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.PageImpl;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -49,37 +53,47 @@ public class ReportServiceImpl implements ReportService {
 
     Page<TestPaper> testPaperPage = testPaperRepository.findByUnitCourseIdInAndIsDeletedFalse(courseIds, courseId, pageable);
 
-    return testPaperPage.map(testPaper -> {
-      long totalCount = shareTestRepository.countByTestPaperId(testPaper.getId());
-      long participationCount = userTestRepository.countByShareTestTestPaperId(testPaper.getId());
-      Double avgAchievementRate = 0.0;
+    List<TestPaperResponse2> filteredTestPapers = testPaperPage.stream()
+            .map(testPaper -> {
+              long totalCount = shareTestRepository.countByTestPaperId(testPaper.getId());
 
-      if (participationCount > 0) {
-        List<UserTest> userTests = userTestRepository.findByTestPaperId(testPaper.getId());
-        double totalRate = 0.0;
+              if (totalCount == 0) {
+                return null;
+              }
 
-        for (UserTest userTest : userTests) {
-          List<UserAnswer> userAnswers = userAnswerRepository.findByUserTestId(userTest.getId());
-          List<Boolean> isCorrect = new ArrayList<>();
-          for (UserAnswer userAnswer : userAnswers) {
-            isCorrect.add(userAnswer.getIsCorrect());
-          }
-          totalRate += achievementRate(isCorrect);
-        }
-        avgAchievementRate = totalRate / participationCount;
-      }
+              long participationCount = userTestRepository.countByShareTestTestPaperId(testPaper.getId());
+              Double avgAchievementRate = 0.0;
 
-      return TestPaperResponse2.builder()
-              .id(testPaper.getId())
-              .title(testPaper.getTitle())
-              .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
-              .unitName(testPaper.getUnit().getContent())
-              .createdAt(LocalDate.from(testPaper.getCreatedAt()))
-              .participationCount((int) participationCount)
-              .totalCount((int) totalCount)
-              .achievementRate(Double.valueOf(String.format("%.0f", avgAchievementRate)))
-              .build();
-    });
+              if (participationCount > 0) {
+                List<UserTest> userTests = userTestRepository.findByTestPaperId(testPaper.getId());
+                double totalRate = 0.0;
+
+                for (UserTest userTest : userTests) {
+                  List<UserAnswer> userAnswers = userAnswerRepository.findByUserTestId(userTest.getId());
+                  List<Boolean> isCorrect = new ArrayList<>();
+                  for (UserAnswer userAnswer : userAnswers) {
+                    isCorrect.add(userAnswer.getIsCorrect());
+                  }
+                  totalRate += achievementRate(isCorrect);
+                }
+                avgAchievementRate = totalRate / participationCount;
+              }
+
+              return TestPaperResponse2.builder()
+                      .id(testPaper.getId())
+                      .title(testPaper.getTitle())
+                      .courseName(testPaper.getUnit().getSection().getCourse().getCourseName())
+                      .unitName(testPaper.getUnit().getContent())
+                      .createdAt(LocalDate.from(testPaper.getCreatedAt()))
+                      .participationCount((int) participationCount)
+                      .totalCount((int) totalCount)
+                      .achievementRate(Double.valueOf(String.format("%.0f", avgAchievementRate)))
+                      .build();
+            })
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+
+    return new PageImpl<>(filteredTestPapers, pageable, filteredTestPapers.size());
   }
 
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
