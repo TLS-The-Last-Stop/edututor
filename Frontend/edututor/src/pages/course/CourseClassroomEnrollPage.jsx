@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseClassroomEnrollPage.css';
-import { PiStudentLight } from 'react-icons/pi';
-import { Link } from 'react-router-dom';
 import ExamShareModal from '../../components/exam/ExamShareModal';
 import MaterialPreviewModal from '../../components/material/MaterialPreviewModal';
 import TestPreviewModal from '../../components/exam/TestPreviewModal';
 import { LuBookOpenCheck } from 'react-icons/lu';
 import { VscOpenPreview } from 'react-icons/vsc';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const CourseClassroomEnrollPage = () => {
   const gradeLevels = ['초등학교', '중학교'];
@@ -80,11 +79,13 @@ const CourseClassroomEnrollPage = () => {
       const response = await publicApi.post('/course/enroll', null, {
         params: { courseId }
       });
-      alert(response.data.message);
+      const message = { icon: 'success', title: response.data.message };
+      showALert(message);
       window.history.back();
     } catch (error) {
+      const message = { icon: 'error', title: '과정 등록에 실패했습니다.' };
+      showALert(message);
       console.error('Error enrolling course:', error);
-      alert('과정 등록에 실패했습니다.');
     }
   };
 
@@ -93,8 +94,9 @@ const CourseClassroomEnrollPage = () => {
       const response = await publicApi.get(`/course/${courseId}`);
       setSelectedCourse(response.data.data); // 선택된 과정의 세부 정보 저장
     } catch (error) {
+      const message = { icon: 'error', title: '과정 미리보기를 불러오는 데 실패했습니다.' };
+      showALert(message);
       console.error('Error fetching course preview:', error);
-      alert('과정 미리보기를 불러오는 데 실패했습니다.');
     }
   };
 
@@ -104,8 +106,9 @@ const CourseClassroomEnrollPage = () => {
       setMaterialPreview(response.data.data);
       setIsMaterialModalOpen(true);
     } catch (error) {
+      const message = { icon: 'error', title: '학습 자료를 불러오는 데 실패했습니다.' };
+      showALert(message);
       console.error('Error fetching material preview:', error);
-      alert('학습 자료를 불러오는 데 실패했습니다.');
     }
   };
 
@@ -115,8 +118,9 @@ const CourseClassroomEnrollPage = () => {
       setTestPreview(response.data.data);
       setIsTestPreviewModalOpen(true);
     } catch (error) {
+      const message = { icon: 'error', title: '시험 미리보기를 불러오는 데 실패했습니다.' };
+      showALert(message);
       console.error('Error fetching test preview:', error);
-      alert('시험 미리보기를 불러오는 데 실패했습니다.');
     }
   };
 

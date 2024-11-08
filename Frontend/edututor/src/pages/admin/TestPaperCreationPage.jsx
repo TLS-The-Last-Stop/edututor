@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../assets/css/TestPaperCreationPage.css';
 import { publicApi } from '../../api/axios.js';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const TestPaperCreationPage = () => {
   const [formData, setFormData] = useState({
-    unitId: '',
-    title: '',
+    unitId   : '',
+    title    : '',
     questions: [
       {
-        content: '',
-        passage: '',
+        content   : '',
+        passage   : '',
         commentary: '',
-        type: 'OBJECTIVE',
+        type      : 'OBJECTIVE',
         answerText: '',
-        level: '1',
-        options: [
+        level     : '1',
+        options   : [
           { content: '', isCorrect: false },
           { content: '', isCorrect: false }
         ]
@@ -54,13 +55,13 @@ const TestPaperCreationPage = () => {
       questions: [
         ...formData.questions,
         {
-          content: '',
-          passage: '',
+          content   : '',
+          passage   : '',
           commentary: '',
-          type: 'OBJECTIVE',
+          type      : 'OBJECTIVE',
           answerText: '',
-          level: '1',
-          options: [
+          level     : '1',
+          options   : [
             { content: '', isCorrect: false },
             { content: '', isCorrect: false }
           ]
@@ -93,163 +94,165 @@ const TestPaperCreationPage = () => {
       ...formData,
       questions: formData.questions.map(question => ({
         ...question,
-        level: question.level,
+        level: question.level
       }))
     };
 
     try {
       await publicApi.post('/test-paper', modifiedFormData);
-      alert('시험지가 성공적으로 등록되었습니다.');
+      const message = { icon: 'success', title: '시험지가 성공적으로 등록되었습니다.' };
+      showALert(message);
       window.history.back();
     } catch (error) {
-      alert('시험지 등록 중 오류가 발생했습니다.');
+      const message = { icon: 'error', title: '시험지 등록 중 오류가 발생했습니다.' };
+      showALert(message);
     }
   };
 
   return (
-      <div className="test-paper-creation-container">
-        <h2>형성평가 생성</h2>
-        <form onSubmit={handleSubmit} className="test-paper-form">
-          <div className="form-field">
-            <label>시험지 제목:</label>
-            <input
+    <div className="test-paper-creation-container">
+      <h2>형성평가 생성</h2>
+      <form onSubmit={handleSubmit} className="test-paper-form">
+        <div className="form-field">
+          <label>시험지 제목:</label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        {formData.questions.map((question, questionIndex) => (
+          <div key={questionIndex} className="question-block">
+            <div className="question-header">
+              <h4>문제 {questionIndex + 1}</h4>
+              <button
+                type="button"
+                onClick={() => removeQuestion(questionIndex)}
+                className="remove-question-button"
+              >
+                문제 제거
+              </button>
+            </div>
+
+            <div className="form-field">
+              <label>유형:</label>
+              <select
+                name="type"
+                value={question.type}
+                onChange={(e) => handleInputChange(e, questionIndex)}
+              >
+                <option value="OBJECTIVE">객관식</option>
+                <option value="SUBJECTIVE">주관식</option>
+              </select>
+            </div>
+
+            <div className="form-field">
+              <label>문제 내용:</label>
+              <input
                 type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
+                name="content"
+                value={question.content}
+                onChange={(e) => handleInputChange(e, questionIndex)}
                 required
-            />
-          </div>
+              />
+            </div>
+            <div className="form-field">
+              <label>난이도:</label>
+              <select
+                name="level"
+                value={question.level}
+                onChange={(e) => handleInputChange(e, questionIndex)}
+              >
+                <option value="1">하</option>
+                <option value="2">중</option>
+                <option value="3">상</option>
+              </select>
+            </div>
+            <div className="form-field">
+              <label>지문:</label>
+              <textarea
+                name="passage"
+                value={question.passage}
+                onChange={(e) => handleInputChange(e, questionIndex)}
+                rows="3"
+              />
+            </div>
+            <div className="form-field">
+              <label>해설:</label>
+              <textarea
+                name="commentary"
+                value={question.commentary}
+                onChange={(e) => handleInputChange(e, questionIndex)}
+                rows="3"
+              />
+            </div>
 
-          {formData.questions.map((question, questionIndex) => (
-              <div key={questionIndex} className="question-block">
-                <div className="question-header">
-                  <h4>문제 {questionIndex + 1}</h4>
-                  <button
-                      type="button"
-                      onClick={() => removeQuestion(questionIndex)}
-                      className="remove-question-button"
-                  >
-                    문제 제거
-                  </button>
-                </div>
-
-                <div className="form-field">
-                  <label>유형:</label>
-                  <select
-                      name="type"
-                      value={question.type}
-                      onChange={(e) => handleInputChange(e, questionIndex)}
-                  >
-                    <option value="OBJECTIVE">객관식</option>
-                    <option value="SUBJECTIVE">주관식</option>
-                  </select>
-                </div>
-
-                <div className="form-field">
-                  <label>문제 내용:</label>
-                  <input
+            {question.type === 'OBJECTIVE' ? (
+              question.options.map((option, optionIndex) => (
+                <div key={optionIndex} className="option-block">
+                  <div className="form-field">
+                    <label>{optionIndex + 1}번:</label>
+                    <input
                       type="text"
                       name="content"
-                      value={question.content}
-                      onChange={(e) => handleInputChange(e, questionIndex)}
+                      value={option.content}
+                      onChange={(e) => handleInputChange(e, questionIndex, optionIndex)}
                       required
-                  />
-                </div>
-                <div className="form-field">
-                  <label>난이도:</label>
-                  <select
-                      name="level"
-                      value={question.level}
-                      onChange={(e) => handleInputChange(e, questionIndex)}
-                  >
-                    <option value="1">하</option>
-                    <option value="2">중</option>
-                    <option value="3">상</option>
-                  </select>
-                </div>
-                <div className="form-field">
-                  <label>지문:</label>
-                  <textarea
-                      name="passage"
-                      value={question.passage}
-                      onChange={(e) => handleInputChange(e, questionIndex)}
-                      rows="3"
-                  />
-                </div>
-                <div className="form-field">
-                  <label>해설:</label>
-                  <textarea
-                      name="commentary"
-                      value={question.commentary}
-                      onChange={(e) => handleInputChange(e, questionIndex)}
-                      rows="3"
-                  />
-                </div>
-
-                {question.type === 'OBJECTIVE' ? (
-                    question.options.map((option, optionIndex) => (
-                        <div key={optionIndex} className="option-block">
-                          <div className="form-field">
-                            <label>{optionIndex + 1}번:</label>
-                            <input
-                                type="text"
-                                name="content"
-                                value={option.content}
-                                onChange={(e) => handleInputChange(e, questionIndex, optionIndex)}
-                                required
-                            />
-                          </div>
-                          <div className="form-field">
-                            <label>정답 여부:</label>
-                            <input
-                                type="checkbox"
-                                name="isCorrect"
-                                checked={option.isCorrect}
-                                onChange={(e) => handleInputChange(e, questionIndex, optionIndex)}
-                            />
-                          </div>
-                          <button
-                              type="button"
-                              onClick={() => removeOption(questionIndex, optionIndex)}
-                              className="remove-button"
-                          >
-                            옵션 제거
-                          </button>
-                        </div>
-                    ))
-                ) : (
-                    <div className="form-field">
-                      <label>주관식 정답:</label>
-                      <input
-                          type="text"
-                          name="answerText"
-                          value={question.answerText}
-                          onChange={(e) => handleInputChange(e, questionIndex)}
-                          required
-                      />
-                    </div>
-                )}
-
-                <button
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>정답 여부:</label>
+                    <input
+                      type="checkbox"
+                      name="isCorrect"
+                      checked={option.isCorrect}
+                      onChange={(e) => handleInputChange(e, questionIndex, optionIndex)}
+                    />
+                  </div>
+                  <button
                     type="button"
-                    onClick={() => addOption(questionIndex)}
-                    className="add-button"
-                    disabled={question.type === 'SUBJECTIVE'}
-                >
-                  옵션 추가
-                </button>
+                    onClick={() => removeOption(questionIndex, optionIndex)}
+                    className="remove-button"
+                  >
+                    옵션 제거
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div className="form-field">
+                <label>주관식 정답:</label>
+                <input
+                  type="text"
+                  name="answerText"
+                  value={question.answerText}
+                  onChange={(e) => handleInputChange(e, questionIndex)}
+                  required
+                />
               </div>
-          ))}
+            )}
 
-          <button type="button" onClick={addQuestion} className="add-button">
-            문제 추가
-          </button>
-          <button type="submit" className="submit-button">
-            시험지 등록
-          </button>
-        </form>
-      </div>
+            <button
+              type="button"
+              onClick={() => addOption(questionIndex)}
+              className="add-button"
+              disabled={question.type === 'SUBJECTIVE'}
+            >
+              옵션 추가
+            </button>
+          </div>
+        ))}
+
+        <button type="button" onClick={addQuestion} className="add-button">
+          문제 추가
+        </button>
+        <button type="submit" className="submit-button">
+          시험지 등록
+        </button>
+      </form>
+    </div>
   );
 };
 

@@ -7,6 +7,7 @@ import { ErrorText } from '../../components/common/UserStyledComponents.js';
 import EmptyState from '../../components/classroom/EmptyState.jsx';
 import { getUserInfo, removeStudent } from '../../api/user/user.js';
 import StudentList from '../../components/classroom/StudentList.jsx';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const initStudent = {
   id      : '',
@@ -57,7 +58,8 @@ const Classroom = () => {
         setClassroomId(classroomId);
 
         if (userInfo.classroom.id !== Number(classroomId)) {
-          alert('본인의 반만 접근이 가능합니다.');
+          const message = { icon: 'error', title: '본인의 반만 접근이 가능합니다.' };
+          showALert(message);
           return;
         }
 
@@ -78,10 +80,11 @@ const Classroom = () => {
       const result = await removeStudent(studentId);
 
       if (result.status === 204) {
-        alert(result.message);
+        const message = { icon: 'success', title: result.message };
+        showALert(message);
         fetchAllStudent();
       } else {
-        console.error('뭔가 삭제 에러');
+        console.error(result.data);
       }
     } catch (error) {
       console.error('Failed to delete student ..', error);

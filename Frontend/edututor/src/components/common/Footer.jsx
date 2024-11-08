@@ -141,7 +141,7 @@ const FooterNav = styled.nav`
         }
     }
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         padding: 10px;
         gap: 10px;
@@ -155,7 +155,7 @@ const ContentWrapper = styled.div`
     margin: 0 auto;
     padding: 0 20px;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         padding: 0 10px;
     }
 `;
@@ -169,7 +169,7 @@ const CustomerSection = styled.div`
     padding: 0 20px;
     border-bottom: 1px solid #eee;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
@@ -187,7 +187,7 @@ const CustomerContent = styled(ContentWrapper)`
     padding-top: 20px;
     padding-bottom: 20px;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
@@ -208,7 +208,7 @@ const FamilyContent = styled(ContentWrapper)`
     align-items: center;
     height: 50px;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         height: auto;
         padding-top: 10px;

@@ -1,6 +1,5 @@
 import CourseSection from '../../components/main/CourseSection.jsx';
 import styled from 'styled-components';
-import React from 'react';
 import InfoSection from '../../components/main/InfoSection.jsx';
 
 const HomeContainer = styled.div`

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { getSchool } from '../../api/user/school.js';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const ModalOverlay = styled.div`
     position: fixed;
@@ -141,7 +142,8 @@ const SchoolSearchModal = ({ isOpen, onClose, onSelectSchool }) => {
 
   const handleSearch = async () => {
     if (searchKeyword.length < 2) {
-      alert('2글자 이상 입력해주세요.');
+      const message = { icon: 'warning', title: '2글자 이상 입력해주세요.' };
+      showALert(message);
       return;
     }
 

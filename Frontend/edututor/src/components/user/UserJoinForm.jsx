@@ -1,7 +1,6 @@
 import {
   Button,
   ClassroomGroup,
-  Container,
   DateGroup,
   DateInput,
   Divider,
@@ -16,7 +15,8 @@ import {
   InputGroup,
   JoinButtonGroup,
   Label,
-  Required, ScrolledContainer,
+  Required,
+  ScrolledContainer,
   Select,
   SelectGroup,
   SuccessText,
@@ -34,7 +34,8 @@ const UserJoinForm = ({
                         isIdChecked,
                         idCheckMessage,
                         handleCreateClassroom,
-                        classroom
+                        classroom,
+                        lastDay
                       }) => {
 
   return (
@@ -234,8 +235,12 @@ const UserJoinForm = ({
               {(errors.birthYear || errors.birthMonth || errors.birthDay) && (
                 <ErrorText>숫자만 입력 가능합니다.</ErrorText>
               )}
-              {errors.birthDateInvalid && (
-                <ErrorText>올바른 날짜를 입력해주세요.</ErrorText>
+              {(errors.birthYearInvalid || errors.birthMonthInvalid || errors.birthDayInvalid) && (
+                <>
+                  <ErrorText>{errors.birthYearInvalid && '올바른 연도를 입력해주세요. (1900~)'}</ErrorText>
+                  <ErrorText>{errors.birthMonthInvalid && '올바른 월을 입력해주세요. (1-12)'}</ErrorText>
+                  <ErrorText>{errors.birthDayInvalid && `올바른 일을 입력해주세요. (${lastDay})`}</ErrorText>
+                </>
               )}
             </FormGroup>
 
@@ -303,7 +308,7 @@ const UserJoinForm = ({
 
                 {/* 반 이름 입력 */}
                 <Input name="classroomName" value={classroom.classroomName} onChange={handleCreateClassroom}
-                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 갱스터 o)"
+                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 천재반 o)"
                        maxLength={10}
                        style={{ width: '200px' }}
                 />

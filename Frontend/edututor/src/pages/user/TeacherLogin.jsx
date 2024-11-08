@@ -10,7 +10,8 @@ import {
   Input,
   Label,
   LinkGroup,
-  LogoText, Required,
+  LogoText,
+  Required,
   SNSButton,
   SNSButtonGroup,
   SNSLoginSection,
@@ -20,13 +21,13 @@ import {
   Title
 } from '../../components/common/UserStyledComponents.js';
 import naver from '../../assets/icon/naver.png';
-import kakao from '../../assets/icon/kakao.png';
 import google from '../../assets/icon/google.png';
 import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext.jsx';
 import FindLoginInfoModal from '../../components/user/FindLoginInfoModal.jsx';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const initForm = {
   loginId : '',
@@ -108,7 +109,8 @@ const TeacherLogin = () => {
           }));
         }
       } else {
-        alert('로그인에 실패하셨습니다.');
+        const message = { icon: 'error', title: '로그인에 실패하셨습니다.' };
+        showALert(message);
       }
     }
   };

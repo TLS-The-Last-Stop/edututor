@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const ModalOverlay = styled.div`
@@ -68,35 +67,35 @@ const MaterialPreviewModal = ({ isOpen, onClose, material }) => {
     const videoId = videoIdMatch ? videoIdMatch[1] : null;
 
     return videoId ? (
-        <iframe
-            width="100%"
-            height="100%"
-            src={`https://www.youtube.com/embed/${videoId}`}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-        ></iframe>
+      <iframe
+        width="100%"
+        height="100%"
+        src={`https://www.youtube.com/embed/${videoId}`}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
     ) : (
-        <p>유효한 YouTube URL이 아닙니다.</p>
+      <p>유효한 YouTube URL이 아닙니다.</p>
     );
   };
 
   return (
-      <ModalOverlay onClick={onClose}>
-        <ModalContainer onClick={(e) => e.stopPropagation()}>
-          <ModalHeader>
-            <Title>{material?.title || '학습자료 미리보기'}</Title>
-            <CloseButton onClick={onClose}>&times;</CloseButton>
-          </ModalHeader>
-          <ModalContent>{material?.content || '내용이 없습니다.'}</ModalContent>
-          {material?.url && (
-              <VideoContainer>
-                {renderVideo(material.url)}
-              </VideoContainer>
-          )}
-        </ModalContainer>
-      </ModalOverlay>
+    <ModalOverlay onClick={onClose}>
+      <ModalContainer onClick={(e) => e.stopPropagation()}>
+        <ModalHeader>
+          <Title>{material?.title || '학습자료 미리보기'}</Title>
+          <CloseButton onClick={onClose}>&times;</CloseButton>
+        </ModalHeader>
+        <ModalContent>{material?.content || '내용이 없습니다.'}</ModalContent>
+        {material?.url && (
+          <VideoContainer>
+            {renderVideo(material.url)}
+          </VideoContainer>
+        )}
+      </ModalContainer>
+    </ModalOverlay>
   );
 };
 

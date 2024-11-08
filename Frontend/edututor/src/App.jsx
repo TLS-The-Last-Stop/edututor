@@ -1,7 +1,7 @@
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
 import MaterialCreationPage from './pages/admin/MaterialCreationPage.jsx';

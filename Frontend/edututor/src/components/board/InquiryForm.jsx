@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createInquiry } from '../../api/board/board.js';
 import '../../assets/css/InquiryForm.css';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const InquiryForm = () => {
   const [title, setTitle] = useState('');
@@ -12,13 +13,15 @@ const InquiryForm = () => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim()) {
-      alert('제목과 내용 모두 입력해주세요.');
+      const message = { icon: 'warning', title: '제목과 내용 모두 입력해주세요.' };
+      showALert(message);
       return;
     }
 
     await createInquiry(title, content);
 
-    alert('문의가 등록되었습니다!');
+    const message = { icon: 'success', title: '문의가 등록되었습니다!' };
+    showALert(message);
     navigate(`/cmmn/inquiry`);
   };
 
