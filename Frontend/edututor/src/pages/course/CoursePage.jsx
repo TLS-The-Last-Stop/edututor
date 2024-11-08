@@ -20,7 +20,9 @@ const CoursePage = () => {
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
   const [testPreview, setTestPreview] = useState(null);
   const [isTestPreviewModalOpen, setIsTestPreviewModalOpen] = useState(false);
-  const [selectedCourseId, setSelectedCourseId] = useState(null); // 선택된 과정 ID 상태 추가
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+
+  const [openSections, setOpenSections] = useState({});
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -55,6 +57,13 @@ const CoursePage = () => {
       setSelectedCourseId(id);
       navigate(`/course/${id}`);
     }
+  };
+
+  const toggleSection = (sectionId) => {
+    setOpenSections((prevState) => ({
+      ...prevState,
+      [sectionId]: !prevState[sectionId],
+    }));
   };
 
   const handleOpenTestPreview = async (testPaperId) => {
@@ -94,6 +103,8 @@ const CoursePage = () => {
       <div className="course-page">
         <div className="sidebar">
           <button className="new-course-btn" onClick={() => navigate('/course/enroll')}>새 과정 등록하기</button>
+          <h3 style={{ textAlign: 'center' }}>등록된 과정 목록</h3>
+
           <ul>
             {courses.length > 0 ? (
                 courses.map(course => (
@@ -125,39 +136,55 @@ const CoursePage = () => {
 
                 {courseData.sections.map((section, sectionIndex) => (
                     <div key={section.sectionId} className="section">
-                      <h3>{sectionIndex + 1}. {section.content}</h3> {/* 섹션 번호 추가 */}
+                      <h3
+                          className="section-header"
+                          style={{cursor: 'pointer'}}
+                          onClick={() => toggleSection(section.sectionId)}
+                      >
+                        {sectionIndex + 1}. {section.content}
+                      </h3>
 
-                      {section.units.map((unit, unitIndex) => (
-                          <div key={unit.unitId} className="unit">
-                            <div className="unit-header">
-                              <h4>{unitIndex + 1}. {unit.content}</h4> {/* 유닛 번호 추가 */}
+                      <div
+                          className={`section-content ${openSections[section.sectionId] ? 'open' : ''}`}
+                          style={{
+                            maxHeight: openSections[section.sectionId] ? '1000px' : '0',
+                            overflow: 'hidden',
+                            transition: 'max-height 0.5s ease-in-out',
+                          }}
+                      >
+                        {section.units.map((unit, unitIndex) => (
+                            <div key={unit.unitId} className="unit">
+                              <div className="unit-header">
+                                <h4>{unitIndex + 1}. {unit.content}</h4>
+                              </div>
+
+                              <div className="actions">
+                                <button
+                                    className="preview-btn"
+                                    onClick={() => handleOpenTestPreview(unit.testPaper.testPaperId)}
+                                >
+                                  형성평가 미리보기
+                                </button>
+                                <button className="share-btn" onClick={() => {
+                                  setIsModalOpen(true);
+                                  setSelectedTest(unit.unitId);
+                                }}>시험 공유하기
+                                </button>
+
+                                {unit.materials.map(material => (
+                                    <div key={material.materialId}>
+                                      <button
+                                          className="material-btn"
+                                          onClick={() => handleOpenMaterialModal(material.materialId)}
+                                      >
+                                        학습자료 미리보기
+                                      </button>
+                                    </div>
+                                ))}
+                              </div>
                             </div>
-
-                            <div className="actions"> {/* 버튼을 unit-header 바깥으로 이동 */}
-                              <button
-                                  className="preview-btn"
-                                  onClick={() => handleOpenTestPreview(unit.testPaper.testPaperId)}
-                              >
-                                형성평가 미리보기
-                              </button>
-                              <button className="share-btn" onClick={() => {
-                                setIsModalOpen(true);
-                                setSelectedTest(unit.unitId);
-                              }}>시험 공유하기</button>
-
-                              {unit.materials.map(material => (
-                                  <div key={material.materialId}>
-                                    <button
-                                        className="material-btn"
-                                        onClick={() => handleOpenMaterialModal(material.materialId)}
-                                    >
-                                      학습자료 미리보기
-                                    </button>
-                                  </div>
-                              ))}
-                            </div>
-                          </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                 ))}
 

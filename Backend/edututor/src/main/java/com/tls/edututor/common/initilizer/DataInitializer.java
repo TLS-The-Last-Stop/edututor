@@ -274,10 +274,10 @@ public class DataInitializer {
       initAll();
 
       List<String> courses = List.of(
-              "국어 기초 튼튼: 초등 국어 1학년 교과서",
-              "수학 첫걸음: 초등 수학 1학년 참고서",
-              "영어의 기본: 초등 및 중등 필수 참고서",
-              "이것이 과학이다: 초등 과학 교과서"
+              "국어 기초 튼튼: 국어 1학년 교과서",
+              "수학 첫걸음: 수학 1학년 참고서",
+              "영어의 기본: 초등 필수 참고서",
+              "이것이 사회이다: 사회 교과서"
       );
       AtomicLong idCounter = new AtomicLong(1);
 
@@ -298,7 +298,7 @@ public class DataInitializer {
         List<String> unitTitles;
 
         switch (courseName) {
-          case "국어 기초 튼튼: 초등 국어 1학년 교과서":
+          case "국어 기초 튼튼: 국어 1학년 교과서":
             sectionTitles = List.of("우리말 소리 익히기", "재미있는 단어 놀이", "문장 만들기 놀이", "이야기 듣고 상상하기", "감정을 표현하는 말");
             unitTitles = List.of(
                     "한글 자음과 모음 소리를 듣고 따라하며 기본 글자 익히기.",
@@ -309,7 +309,7 @@ public class DataInitializer {
             );
             break;
 
-          case "수학 첫걸음: 초등 수학 1학년 참고서":
+          case "수학 첫걸음: 수학 1학년 참고서":
             sectionTitles = List.of("숫자와 친해지기", "수와 수 비교하기", "덧셈과 뺄셈의 시작", "모양과 도형 탐구하기", "생활 속 문제 해결하기");
             unitTitles = List.of(
                     "1부터 10까지 숫자를 배우고 쓰는 연습",
@@ -320,7 +320,7 @@ public class DataInitializer {
             );
             break;
 
-          case "영어의 기본: 초등 및 중등 필수 참고서":
+          case "영어의 기본: 초등 필수 참고서":
             sectionTitles = List.of("기초 인사 표현 익히기", "나를 소개해요", "숫자와 색깔 배우기", "가족과 친구 소개하기", "일상 표현 배우기");
             unitTitles = List.of(
                     "Hello, How are you? 등의 기본적인 인사말 배우기",
@@ -331,13 +331,13 @@ public class DataInitializer {
             );
             break;
 
-          case "이것이 과학이다: 초등 과학 교과서":
-            sectionTitles = List.of("내 주변의 과학", "식물의 성장 과정", "물과 공기의 힘", "자연의 변화와 날씨", "우리 몸의 신비");
+          case "이것이 사회이다: 사회 교과서":
+            sectionTitles = List.of("내 주변의 사회", "사회의 성장 과정", "사회의 힘", "사회 변화와 날씨", "우리 몸의 신비");
             unitTitles = List.of(
-                    "일상 속에 숨겨진 과학 원리를 찾아보고 이해하기",
-                    "씨앗이 자라나는 과정과 식물의 성장 단계 관찰하기",
-                    "물의 특성과 공기의 성질, 이들의 상호작용 알아보기",
-                    "계절에 따른 날씨 변화와 그 원인 탐구하기",
+                    "일상 속에 숨겨진 사회 원리를 찾아보고 이해하기",
+                    "사회 씨앗이 자라나는 과정과 사회의 성장 단계 관찰하기",
+                    "사회 특성과 사회 성질, 이들의 상호작용 알아보기",
+                    "계절에 따른 사회 변화와 그 원인 탐구하기",
                     "신체 각 부위의 역할과 건강하게 유지하는 방법 배우기"
             );
             break;
@@ -362,7 +362,7 @@ public class DataInitializer {
 
             Material material = Material.builder()
                     .unit(unit)
-                    .title(unitTitle + " 자료")
+                    .title(unitTitle)
                     .content(unitTitle + "에 대한 학습 자료입니다.")
                     .url("https://www.youtube.com/watch?v=6Ox3OM_sw9E")
                     .build();

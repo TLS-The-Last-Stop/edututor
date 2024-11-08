@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const CourseClassroomEnrollPage = () => {
   const gradeLevels = ['초등학교', '중학교'];
   const years = ['1학년', '2학년', '3학년', '4학년', '5학년', '6학년'];
-  const semesters = ['1학기', '2학기', '구분없음'];
+  const semesters = ['1학기', '2학기'];
   const subjects = ['수학', '국어', '과학', '영어', '사회', '역사', '도덕'];
 
   const [selectedGradeLevel, setSelectedGradeLevel] = useState(null);
