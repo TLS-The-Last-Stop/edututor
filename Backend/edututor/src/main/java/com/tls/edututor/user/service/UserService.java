@@ -24,4 +24,5 @@ public interface UserService {
 
   <T> T findUser(Long userId);
 
+  void updateUser(UserTERequest request, Authentication authentication);
 }

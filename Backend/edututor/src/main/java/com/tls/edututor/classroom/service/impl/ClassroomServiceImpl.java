@@ -89,7 +89,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     AuthUser teacher = (AuthUser) principal;
 
     Classroom classroom = classroomRepository.findById(classroomId).orElseThrow(() -> new IllegalArgumentException("없는 반입니다."));
-    if (classroom.getWriter() != teacher.getId()) throw new IllegalArgumentException("잘못된 접근입니다.");
+    if (classroom.getId() != teacher.getClassroom().getId()) throw new IllegalArgumentException("잘못된 접근입니다.");
 
     User user = userRepository.findById(teacher.getId()).orElseThrow(() -> new UsernameNotFoundException("없는 유저일 수 있나?"));
 

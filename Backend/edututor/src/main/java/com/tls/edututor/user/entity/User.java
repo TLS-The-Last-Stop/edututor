@@ -103,6 +103,14 @@ public class User extends BaseEntity {
     return user;
   }
 
+  public User updateTeacher(UserTERequest dto) {
+    if (dto.getUsername() != null) this.username = dto.getUsername();
+    if (dto.getPassword() != null) this.password = dto.getPassword();
+    if (dto.getPhoneNum() != null) this.phoneNum = dto.getPhoneNum();
+
+    return this;
+  }
+
   public User updateStudent(UserSURequest dto) {
     this.username = dto.getUsername();
     if (dto.getPassword() != null) this.password = dto.getPassword();

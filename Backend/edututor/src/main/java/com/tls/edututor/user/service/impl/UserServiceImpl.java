@@ -131,9 +131,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Long saveTeacher(UserTERequest request) {
-    if (userRepository.existsByLoginId(request.getLoginId())) {
+    if (userRepository.existsByLoginId(request.getLoginId()))
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
-    }
 
     request.setPassword(passwordEncoder.encode(request.getPassword()));
 
@@ -143,7 +142,7 @@ public class UserServiceImpl implements UserService {
     School school = School.withDto()
             .request(request.getSchool())
             .build();
-    //school.setWriter(user.getId());
+    school.setWriter(user.getId());
     schoolRepository.save(school);
 
     Classroom classroom = Classroom.withDto()
@@ -151,11 +150,11 @@ public class UserServiceImpl implements UserService {
             .school(school)
             .type(school.getType())
             .build();
-    //classroom.setWriter(user.getId());
+    classroom.setWriter(user.getId());
     classroomRepository.save(classroom);
 
     user.setClassroom(classroom);
-    //user.setWriter(user.getId());
+    user.setWriter(user.getId());
 
     return user.getId();
   }
@@ -167,7 +166,6 @@ public class UserServiceImpl implements UserService {
       throw new DuplicateUserException(String.format("이미 %s로 회원가입이 되어있습니다.", request.getLoginId()));
     }
 
-    AuthUser teacher = (AuthUser) authentication.getPrincipal();
     Classroom classroom = classroomRepository.findById(request.getClassroom().getId()).orElseThrow(() -> new IllegalArgumentException("찾는 classroom이 없습니다."));
 
     request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -233,5 +231,15 @@ public class UserServiceImpl implements UserService {
     user.completeOAuthRegistration(classroom, request.getPhoneNum(), request.getBirthDay(), "TE");
 
     return 0L;
+  }
+
+  @Override
+  public void updateUser(UserTERequest request, Authentication authentication) {
+    AuthUser authUser = (AuthUser) authentication.getPrincipal();
+
+    User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
+    user.updateTeacher(request);
+
+    userRepository.save(user);
   }
 }

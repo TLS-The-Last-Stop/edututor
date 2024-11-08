@@ -16,7 +16,7 @@ export const teacherJoin = async (data) => {
 };
 
 export const additionalInfo = async (data) => {
-  const response = await publicApi.patch(`users/teachers`, data);
+  const response = await publicApi.put(`users/teachers`, data);
   return response.data;
 };
 
@@ -55,8 +55,13 @@ export const getAllUser = async () => {
   return response.data;
 };
 
-export const removeUser = async (userId) => {
+export const removeTeacher = async (userId) => {
   const response = await privateApi.remove(`/users/${userId}`);
+  return response.data;
+};
+
+export const updateTeacher = async (data) => {
+  const response = await publicApi.patch('/users/teachers', data);
   return response.data;
 };
 
@@ -69,6 +74,7 @@ export const findPassword = async (data) => {
   const response = await publicApi.post('/mail/password', data);
   return response.data;
 };
+
 
 export const getUserInfo = (required = false) => {
   try {

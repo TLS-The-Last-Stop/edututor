@@ -53,7 +53,7 @@ public class UserController {
     return CommonApiResponse.createNoContent("회원가입이 완료되었습니다.");
   }
 
-  @RequestMapping(path = "/teachers", method = {RequestMethod.PUT, RequestMethod.PATCH})
+  @PutMapping("/teachers")
   public CommonApiResponse<?> addInfo(@RequestBody UserTERequest request, HttpServletRequest req) {
     userService.updateInfo(request, req);
     return CommonApiResponse.createNoContent("회원가입이 완료되었습니다.");
@@ -75,6 +75,12 @@ public class UserController {
   public CommonApiResponse<?> deleteStudent(@PathVariable("studentId") Long id) {
     userService.deleteStudent(id);
     return CommonApiResponse.createNoContent("학생 계정 삭제가 완료되었습니다.");
+  }
+
+  @PatchMapping("/teachers")
+  public CommonApiResponse<?> updateUser(@RequestBody UserTERequest request, Authentication authentication) {
+    userService.updateUser(request, authentication);
+    return CommonApiResponse.createNoContent("정보 수정이 완료되었습니다.");
   }
 
 }

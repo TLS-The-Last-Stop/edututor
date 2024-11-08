@@ -37,7 +37,7 @@ public class ClassroomController {
   }
 
   @GetMapping("/{classroomId}")
-  public CommonApiResponse<?> getTeacher(@PathVariable("classroomId") Long classroomId, Authentication authentication) {
+  public CommonApiResponse<?> getTeacherByClassroomId(@PathVariable("classroomId") Long classroomId, Authentication authentication) {
     UserTEResponse teacher = classroomService.getTeacher(classroomId, authentication);
 
     return CommonApiResponse.createSuccess("조회된 선생", teacher);
