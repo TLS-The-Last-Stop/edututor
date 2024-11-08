@@ -188,10 +188,6 @@ const TeacherLogin = () => {
                     <img src={naver} alt="naver logo" />
                     <LogoText>네이버</LogoText>
                   </SNSButton>
-                  <SNSButton $provider="kakao" onClick={() => alert('카카오는 준비중')}>
-                    <img src={kakao} alt="naver logo" />
-                    카카오
-                  </SNSButton>
                   <SNSButton $provider="google" onClick={() => handleSocialLogin('google')}>
                     <img src={google} alt="naver logo" />
                     구글
