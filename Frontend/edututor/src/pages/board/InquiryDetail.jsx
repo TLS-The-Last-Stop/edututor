@@ -26,14 +26,6 @@ const InquiryDetail = () => {
     fetchInquiryDetail();
   }, [boardId]);
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-  };
-
   if (!inquiry) {
     return <div className="loading">로딩중...</div>;
   }
@@ -60,14 +52,16 @@ const InquiryDetail = () => {
           <tr>
             <th>상태</th>
             <td>
-              <button className="inquiry-status">{inquiry.status} 답변대기</button>
+              <button className="inquiry-status">
+                {inquiry.hasAnswer ? '답변완료' : '답변대기'}
+              </button>
             </td>
           </tr>
           <tr>
             <th>내용</th>
             <td>
               <div className="inquiry-info">
-                <span className="inquiry-writer">{inquiry.writer} 작성자아아아</span>
+                <span className="inquiry-writer">{inquiry.username}</span>
                 <span>문의</span>
               </div>
               <div
@@ -76,24 +70,21 @@ const InquiryDetail = () => {
               />
             </td>
           </tr>
-          {/*{inquiry.answer && (*/}
-          <tr>
-            <th>답변</th>
-            <td>
-              <div className="answer-info">
-                <span className="answer-writer">지니어튜터 고객센터</span>
-                <span>답변</span>
-                <span className="answer-date">
-                      답변일: {formatDate(inquiry.answerDate)}
-                    </span>
-              </div>
-              <div
-                className="answer-content"
-                dangerouslySetInnerHTML={{ __html: inquiry.answer }}
-              />
-            </td>
-          </tr>
-          {/*)}*/}
+          {inquiry.hasAnswer && (
+            <tr>
+              <th>답변</th>
+              <td>
+                <div className="answer-info">
+                  <span className="answer-writer">지니어튜터 고객센터</span>
+                  <span>답변</span>
+                </div>
+                <div
+                  className="answer-content"
+                  dangerouslySetInnerHTML={{ __html: inquiry.inquiryAnswer }}
+                />
+              </td>
+            </tr>
+          )}
           </tbody>
         </table>
 

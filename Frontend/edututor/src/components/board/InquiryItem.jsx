@@ -6,7 +6,11 @@ const InquiryItem = ({
   return (
     <tr>
       <td className="status-cell">
-        <button>답변대기</button>
+        <button
+          className={`status-button ${inquiry.hasAnswer ? 'completed' : 'waiting'}`}
+        >
+          {inquiry.hasAnswer ? '답변완료' : '답변대기'}
+        </button>
       </td>
       <td className="title-cell">
         <button
