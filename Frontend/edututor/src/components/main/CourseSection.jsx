@@ -22,7 +22,7 @@ const CourseContainer = styled.div`
     box-sizing: border-box;
     position: relative; // 슬라이드 버튼의 기준점
 
-    @media (min-width: 765px) {
+    @media (min-width: 768px) {
         padding: 40px 80px;
     }
 `;
@@ -39,7 +39,7 @@ const CourseListContainer = styled.div`
     margin: 20px 0;
     width: 100%;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         overflow-x: auto; // 모바일에서는 스크롤 가능하도록
         -webkit-overflow-scrolling: touch;
 
@@ -85,7 +85,7 @@ const SlideButton = styled.button`
     align-items: center;
     justify-content: center;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         display: none; // 모바일에서는 버튼 숨김
     }
 
@@ -119,7 +119,7 @@ const CourseItem = styled.div`
         flex: 0 0 calc(50% - 24px); // 태블릿에서는 2개씩
     }
 
-    @media (min-width: 765px) {
+    @media (min-width: 768px) {
         flex: 0 0 calc(33.333% - 24px); // 작은 데스크톱에서는 3개씩
     }
 

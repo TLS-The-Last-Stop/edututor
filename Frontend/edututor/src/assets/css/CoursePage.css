@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     padding: 0 10%;
-    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -43,19 +42,19 @@
 
 .course-details {
     flex: 1;
-    padding: 20px;
+    padding: 2rem;
 }
 
 .course-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
 }
 
 .course-header h2 {
-    font-size: 34px;
-    color: #333;
+    font-size: 1.8rem;
+    color: #2d3748;
 }
 
 .students-icon {
@@ -68,37 +67,106 @@
 }
 
 .section {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f7fafc;
+    border-radius: 8px;
+    border: none;
 }
 
-.section h3 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 13px;
+.section-header {
+    margin-bottom: 0 !important;
+    color: #2d3748;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.section-header:hover {
+    background-color: #edf2f7;
+    border-radius: 4px;
 }
 
 .unit {
-    margin-bottom: 15px;
+    position: relative; /* Add this to ensure proper stacking context */
+    z-index: 1; /* Add this to ensure proper stacking context */
 }
 
 .unit-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin-bottom: 0 !important;
+}
+
+.unit-header h4 {
+    color: #4a5568;
+    margin: 0;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 600px;
 }
 
 .actions {
+    padding: 0 !important;
     display: flex;
-    gap: 10px;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    position: relative;
 }
 
 .actions button {
-    background-color: #eee;
-    border: none;
-    padding: 5px 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    color: #4a5568;
     cursor: pointer;
-    border-radius: 5px;
+    transition: all 0.2s ease;
+    min-width: 40px;
+    height: 40px;
+}
+
+.actions button::before {
+    content: attr(data-tooltip); /* Changed from aria-label to data-tooltip */
+    position: absolute;
+    top: -40px; /* Changed from bottom: 100% to fixed distance */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 0.75rem;
+    background-color: #2d3748;
+    color: white;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.actions button::after {
+    content: '';
+    position: absolute;
+    top: -10px; /* Changed from bottom: 100% to fixed distance */
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #2d3748;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 1000;
 }
 
 .preview-btn {
@@ -124,6 +192,39 @@
 .testpaper-title {
     font-weight: bold;
     font-size: 1rem;
+}
+
+.actions button:hover::before,
+.actions button:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.actions button:hover {
+    background-color: #f7fafc;
+    border-color: #4299e1;
+    color: #4299e1;
+}
+
+.section-content {
+    transition: max-height 0.3s ease-in-out;
+    position: relative; /* 추가 */
+}
+
+.section-content.open {
+    max-height: none;
+    overflow: visible !important; /* overflow: hidden 대신 visible 사용 */
+}
+
+.section-content-inner {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.section-content.open .section-content-inner {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .material-btn,
@@ -157,4 +258,26 @@
 
 .actions {
     margin-top: 10px;
+}
+
+/* 호버 시 툴팁 표시 */
+.actions button:hover::before,
+.actions button:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 기존 호버 효과 유지 */
+.actions button:hover {
+    background-color: #f7fafc;
+    border-color: #4299e1;
+    color: #4299e1;
+}
+
+/* 툴팁이 잘리지 않도록 컨테이너 설정 */
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    padding-top: 1.5rem; /* 툴팁이 표시될 공간 확보 */
 }

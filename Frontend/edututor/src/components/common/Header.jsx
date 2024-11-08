@@ -97,7 +97,7 @@ const NavList = styled.ul`
         }
     }
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         display: none;
     }
 `;
@@ -110,7 +110,7 @@ const UserInfoContainer = styled.div`
     margin-left: auto;
     height: 100%;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         display: none;
     }
 `;
@@ -180,7 +180,7 @@ const AuthButtons = styled.div`
         }
     }
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         display: none;
     }
 `;
@@ -239,7 +239,7 @@ const HamburgerButton = styled.button`
     padding: 8px;
     margin-left: auto;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         display: block;
     }
 `;
@@ -247,7 +247,7 @@ const HamburgerButton = styled.button`
 const HamburgerMenu = styled.div`
     display: none;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         display: ${props => props.$isOpen ? 'block' : 'none'};
         position: fixed;
         top: 0;
@@ -333,7 +333,7 @@ const HamburgerAuthButtons = styled.div`
 const Overlay = styled.div`
     display: none;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         display: block;
         position: fixed;
         top: 0;

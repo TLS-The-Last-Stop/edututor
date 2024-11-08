@@ -230,7 +230,7 @@ const DownloadWrapper = styled.div`
     justify-content: center;
     gap: 12px;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
     }
 `;
@@ -261,7 +261,7 @@ const DownloadATag = styled.a`
         margin-left: 4px;
     }
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         width: 100%;
     }
 `;
