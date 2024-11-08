@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import ExamShareModal from '../../components/exam/ExamShareModal';
 import MaterialPreviewModal from '../../components/material/MaterialPreviewModal';
 import TestPreviewModal from '../../components/exam/TestPreviewModal';
+import { LuBookOpenCheck } from 'react-icons/lu';
+import { VscOpenPreview } from 'react-icons/vsc';
 
 const CourseClassroomEnrollPage = () => {
   const gradeLevels = ['초등학교', '중학교'];
@@ -119,133 +121,137 @@ const CourseClassroomEnrollPage = () => {
   };
 
   return (
-      <div className="course-filter-container">
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h2>학습 과정 필터링</h2>
-          <Link to="/classroom">
-            <PiStudentLight size={24} style={{ marginLeft: '10px', cursor: 'pointer' }} />
-          </Link>
-        </div>
-        <table className="filter-table">
-          <thead>
-          <tr>
-            <th>학교급</th>
-            <th>학년</th>
-            <th>학기</th>
-            <th>과목</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>
-              {gradeLevels.map((level, index) => (
-                  <button
-                      key={`gradeLevel-${index}`}
-                      className={selectedGradeLevel === level ? 'selected' : ''}
-                      onClick={() => handleFilterClick('gradeLevel', level)}
-                  >
-                    {level}
-                  </button>
-              ))}
-            </td>
-            <td>
-              {years.map((year, index) => (
-                  <button
-                      key={`year-${index}`}
-                      className={selectedYear === year ? 'selected' : ''}
-                      onClick={() => handleFilterClick('year', year)}
-                  >
-                    {year}
-                  </button>
-              ))}
-            </td>
-            <td>
-              {semesters.map((semester, index) => (
-                  <button
-                      key={`semester-${index}`}
-                      className={selectedSemester === semester ? 'selected' : ''}
-                      onClick={() => handleFilterClick('semester', semester)}
-                  >
-                    {semester}
-                  </button>
-              ))}
-            </td>
-            <td>
-              {subjects.map((subject, index) => (
-                  <button
-                      key={`subject-${index}`}
-                      className={selectedSubject === subject ? 'selected' : ''}
-                      onClick={() => handleFilterClick('subject', subject)}
-                  >
-                    {subject}
-                  </button>
-              ))}
-            </td>
-          </tr>
-          </tbody>
-        </table>
+    <div className="course-filter-container">
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+      </div>
+      <table className="filter-table">
+        <thead>
+        <tr>
+          <th>학교급</th>
+          <th>학년</th>
+          <th>학기</th>
+          <th>과목</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            {gradeLevels.map((level, index) => (
+              <button
+                key={`gradeLevel-${index}`}
+                className={selectedGradeLevel === level ? 'selected' : ''}
+                onClick={() => handleFilterClick('gradeLevel', level)}
+              >
+                {level}
+              </button>
+            ))}
+          </td>
+          <td>
+            {years.map((year, index) => (
+              <button
+                key={`year-${index}`}
+                className={selectedYear === year ? 'selected' : ''}
+                onClick={() => handleFilterClick('year', year)}
+              >
+                {year}
+              </button>
+            ))}
+          </td>
+          <td>
+            {semesters.map((semester, index) => (
+              <button
+                key={`semester-${index}`}
+                className={selectedSemester === semester ? 'selected' : ''}
+                onClick={() => handleFilterClick('semester', semester)}
+              >
+                {semester}
+              </button>
+            ))}
+          </td>
+          <td>
+            {subjects.map((subject, index) => (
+              <button
+                key={`subject-${index}`}
+                className={selectedSubject === subject ? 'selected' : ''}
+                onClick={() => handleFilterClick('subject', subject)}
+              >
+                {subject}
+              </button>
+            ))}
+          </td>
+        </tr>
+        </tbody>
+      </table>
 
-        <div className="course-list">
-          {loading ? (
-              <p>Loading...</p>
-          ) : courses.length > 0 ? (
-              courses.map(course => (
-                  <div
-                      key={course.courseId}
-                      className="course-card"
-                      onClick={() => handleCoursePreview(course.courseId)} // 과정 미리보기 기능 추가
-                  >
-                    <h3>{course.courseName}</h3>
-                  </div>
-              ))
-          ) : (
-              <p>해당 조건에 맞는 학습 과정이 없습니다.</p>
-          )}
-        </div>
+      <div className="course-list">
+        {loading ? (
+          <p>Loading...</p>
+        ) : courses.length > 0 ? (
+          courses.map(course => (
+            <div
+              key={course.courseId}
+              className={`course-card ${selectedCourse?.courseId === course.courseId ? 'active' : ''}`}
+              onClick={() => handleCoursePreview(course.courseId)} // 과정 미리보기 기능 추가
+            >
+              <h3>{course.courseName}</h3>
+            </div>
+          ))
+        ) : (
+          <p>해당 조건에 맞는 학습 과정이 없습니다.</p>
+        )}
+      </div>
 
-        {selectedCourse && (
-            <div className="course-preview">
-              <h2>{selectedCourse.courseName}</h2>
-              <p>{selectedCourse.description}</p>
-              <h3>단원 및 유닛:</h3>
-              {selectedCourse.sections.map((section, sectionIndex) => (
-                  <div key={section.sectionId} className="section">
-                    <h3>{sectionIndex + 1}. {section.content}</h3>
-                    {section.units.map((unit, unitIndex) => (
-                        <div key={unit.unitId} className="unit">
-                          <h4>{unitIndex + 1}. {unit.content}</h4>
-                          <div className="actions">
-                            <button onClick={() => handleOpenTestPreviewModal(unit.testPaper.testPaperId)}>
-                              형성평가 미리보기
-                            </button>
-                            {unit.materials.map(material => (
-                                <button key={material.materialId} onClick={() => handleOpenMaterialModal(material.materialId)}>
-                                  학습자료: {material.title}
-                                </button>
-                            ))}
-                          </div>
-                        </div>
+      {selectedCourse && (
+        <div className="course-preview">
+          <h2>{selectedCourse.courseName}</h2>
+          <p>{selectedCourse.description}</p>
+          <h3>단원 및 유닛</h3>
+          {selectedCourse.sections.map((section, sectionIndex) => (
+            <div key={section.sectionId} className="section">
+              <h3>{sectionIndex + 1}. {section.content}</h3>
+              {section.units.map((unit, unitIndex) => (
+                <div key={unit.unitId} className="unit">
+                  <h4>{unitIndex + 1}. {unit.content}</h4>
+
+                  <div className="actions">
+                    <button
+                      data-tooltip="형성평가 미리보기"
+                      onClick={() => handleOpenTestPreviewModal(unit.testPaper.testPaperId)}>
+                      <VscOpenPreview />
+                    </button>
+                    {unit.materials.map(material => (
+                      <button
+                        key={material.materialId}
+                        data-tooltip="학습자료 미리보기"
+                        onClick={() => handleOpenMaterialModal(material.materialId)}
+                      >
+                        <LuBookOpenCheck />
+                      </button>
                     ))}
                   </div>
-              ))}
-              <button onClick={() => handleEnrollCourse(selectedCourse.courseId)}>
-                이 과정 등록
-              </button>
-            </div>
-        )}
 
-        <ExamShareModal isOpen={isExamModalOpen} onClose={() => setIsExamModalOpen(false)} />
-        <MaterialPreviewModal
-            isOpen={isMaterialModalOpen}
-            onClose={() => setIsMaterialModalOpen(false)}
-            material={materialPreview}
-        />
-        <TestPreviewModal
-            isOpen={isTestPreviewModalOpen}
-            onClose={() => setIsTestPreviewModalOpen(false)}
-            testData={testPreview}
-        />
-      </div>
+                </div>
+              ))}
+            </div>
+          ))}
+          <button onClick={() => handleEnrollCourse(selectedCourse.courseId)}>
+            이 과정 등록
+          </button>
+        </div>
+      )}
+
+      <ExamShareModal isOpen={isExamModalOpen} onClose={() => setIsExamModalOpen(false)} />
+      <MaterialPreviewModal
+        isOpen={isMaterialModalOpen}
+        onClose={() => setIsMaterialModalOpen(false)}
+        material={materialPreview}
+      />
+      <TestPreviewModal
+        isOpen={isTestPreviewModalOpen}
+        onClose={() => setIsTestPreviewModalOpen(false)}
+        testData={testPreview}
+      />
+    </div>
   );
 };
 
