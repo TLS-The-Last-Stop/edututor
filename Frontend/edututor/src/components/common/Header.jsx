@@ -375,6 +375,7 @@ const StyledNavLink = styled(NavLink)`
 const Header = () => {
   const [hamburger, setHamburger] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedUser, setSelecetedUser] = useState({});
 
   const { userInfo, updateUserInfo, userRole } = useAuth?.() || {};
   const location = useLocation();
@@ -391,6 +392,14 @@ const Header = () => {
 
   const handleCloseModal = () => {
     setIsOpen(false);
+  };
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+
+    const userInfo = JSON.parse(localStorage.getItem('info'));
+
+    setSelecetedUser(userInfo);
   };
 
   return (
@@ -435,7 +444,10 @@ const Header = () => {
           {userInfo ? (
             <UserInfoContainer>
               <UserInfo>
-                <span onClick={() => setIsOpen(true)}>{userInfo.username}님</span>
+                <span onClick={() => {
+                  setIsOpen(true);
+                  handleOpenModal();
+                }}>{userInfo.username}님</span>
                 <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
               </UserInfo>
             </UserInfoContainer>
@@ -523,6 +535,7 @@ const Header = () => {
       <TeacherUpdateFormModal
         isOpen={isOpen}
         onClose={handleCloseModal}
+        selectedUser={selectedUser}
       />
     </HeaderContainer>
   );

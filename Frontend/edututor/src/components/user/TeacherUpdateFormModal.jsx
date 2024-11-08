@@ -24,7 +24,7 @@ const initErrors = {
   confirmPassword: ''
 };
 
-const TeacherUpdateFormModal = ({ isOpen, onClose }) => {
+const TeacherUpdateFormModal = ({ isOpen, onClose, selectedUser }) => {
   const [teacher, setTeacher] = useState({});
   const [updateForm, setUpdateForm] = useState(initForm);
   const [errors, setErrors] = useState(initErrors);
@@ -41,10 +41,9 @@ const TeacherUpdateFormModal = ({ isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('info'));
-    const { id } = userInfo.classroom;
+    const { id } = selectedUser.classroom;
 
-    fetchingUser(id);
+    if (id) fetchingUser(id);
   }, []);
 
   const handleSubmit = () => {
@@ -55,6 +54,7 @@ const TeacherUpdateFormModal = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
+
   return (
     <Overlay onClick={onClose}>
       <ModalContainer onClick={e => e.stopPropagation()}>
