@@ -32,7 +32,6 @@ import InquiryDetail from './pages/board/InquiryDetail.jsx';
 const GlobalStyle = createGlobalStyle`
     ${reset}
     html, body {
-        height: 100%;
         font-family: 'Noto Sans KR', sans-serif;
     }
 `;

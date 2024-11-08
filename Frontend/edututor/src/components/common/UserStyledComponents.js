@@ -37,7 +37,6 @@ const inputStyles = css`
 
 // 레이아웃 컴포넌트
 export const Container = styled.main`
-    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
