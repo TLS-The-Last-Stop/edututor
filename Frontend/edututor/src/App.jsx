@@ -71,6 +71,11 @@ function AppRoutes() {
     <>
       <GlobalStyle />
       <Routes>
+
+        <Route path="/admin/login" element={
+          <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>
+        } />
+
         <Route path="/admin" element={
           <Suspense fallback={<LoadingSpinner />}>
             <AdminLayout>
@@ -85,10 +90,6 @@ function AppRoutes() {
                 <AdminHome />
               </ProtectedRoute>
             </Suspense>
-          } />
-
-          <Route path="login" element={
-            <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>
           } />
 
           <Route path="course" element={

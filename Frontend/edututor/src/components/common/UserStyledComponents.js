@@ -37,6 +37,8 @@ const inputStyles = css`
 
 // 레이아웃 컴포넌트
 export const Container = styled.main`
+    position: fixed;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -225,45 +227,6 @@ export const DateGroup = styled.div`
     ${Divider} {
         padding: 0 4px;
         flex-shrink: 0; // 구분자는 크기 고정
-    }
-`;
-
-
-// 라디오 버튼 컴포넌트
-export const RadioGroup = styled.div`
-    display: flex;
-    gap: 2rem;
-    margin: 1rem 0;
-    width: 100%;
-`;
-
-export const RadioLabel = styled.label`
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: #333;
-`;
-
-export const RadioInput = styled.input`
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #d9d9d9;
-    border-radius: 50%;
-    outline: none;
-    cursor: pointer;
-    margin: 0;
-
-    &:checked {
-        border-color: #1890ff;
-        background: white;
-        border-width: 5px;
-    }
-
-    &:hover {
-        border-color: #40a9ff;
     }
 `;
 
