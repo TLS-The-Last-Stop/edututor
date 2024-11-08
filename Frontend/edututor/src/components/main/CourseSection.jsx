@@ -281,8 +281,7 @@ const CourseSection = () => {
 
     const { scrollLeft, scrollWidth, clientWidth } = listRef.current;
     setShowLeftButton(scrollLeft > 0);
-    setShowRightButton(scrollLeft + clientWidth < scrollWidth);
-
+    setShowRightButton(scrollLeft + clientWidth < scrollWidth - 10);
   };
 
   const handleSlide = (direction) => {
@@ -295,9 +294,8 @@ const CourseSection = () => {
     }));
 
     const scrollAmount = listRef.current.clientWidth;
-
-    listRef.current.scrollTo({
-      left    : listRef.current.scrollLeft + (direction === 'prev' ? -scrollAmount : scrollAmount),
+    listRef.current.scrollBy({
+      left    : direction === 'prev' ? -scrollAmount : scrollAmount,
       behavior: 'smooth'
     });
 
@@ -327,6 +325,7 @@ const CourseSection = () => {
   useEffect(() => {
     const list = listRef.current;
     if (list) {
+      updateButtonVisibility();
       list.addEventListener('scroll', updateButtonVisibility);
       return () => list.removeEventListener('scroll', updateButtonVisibility);
     }
