@@ -41,9 +41,12 @@ const TeacherUpdateFormModal = ({ isOpen, onClose, selectedUser }) => {
   };
 
   useEffect(() => {
-    const { id } = selectedUser.classroom;
+    const user = Object.keys(selectedUser);
+    if (user.length) {
+      const { id } = selectedUser?.classroom;
 
-    if (id) fetchingUser(id);
+      fetchingUser(id);
+    }
   }, []);
 
   const handleSubmit = () => {
