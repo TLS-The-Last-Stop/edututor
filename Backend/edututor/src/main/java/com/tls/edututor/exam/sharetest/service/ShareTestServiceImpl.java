@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 
 public interface ShareTestServiceImpl {
 
-  Long saveShareTest(ShareTestRequest shareTestRequest, Authentication authentication);
+  void saveShareTest(ShareTestRequest shareTestRequest, Authentication authentication);
 
+  void deleteShareTest(ShareTestRequest shareTestRequest, Authentication authentication);
 }

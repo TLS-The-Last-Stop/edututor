@@ -416,7 +416,7 @@ const Header = () => {
             <NavItem>
               {userRole === 'TE'
                 ? (<StyledNavLink to="/course/1">학습</StyledNavLink>)
-                : (<StyledNavLink to="/course/1">학습</StyledNavLink>)}
+                : (<StyledNavLink to="/course0/1">학습</StyledNavLink>)}
             </NavItem>
 
             <NavItem>

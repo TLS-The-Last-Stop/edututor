@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { getAllStudent } from '../../api/classroom/classroom.js';
 import { Button, Label } from '../common/UserStyledComponents.js';
-import { createShareTest } from '../../api/test-share/testShare.js';
+import { cancelShareTest, createShareTest } from '../../api/test-share/testShare.js';
 import Swal from 'sweetalert2';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const ModalOverlay = styled.div`
     position: fixed;
@@ -59,14 +60,6 @@ const Section = styled.div`
 const Title = styled.h2`
     font-size: 1.2rem;
     margin: 0 0 15px 0;
-`;
-
-const Select = styled.select`
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
 `;
 
 const StudentList = styled.div`
@@ -136,10 +129,11 @@ const SharedBadge = styled.span`
     border-radius: 4px;
 `;
 
-const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
+const ExamShareModal = ({ isOpen, onClose, selectedTest }) => {
   const [studentInfo, setStudentInfo] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [previouslySharedStudents, setPreviouslySharedStudents] = useState([]);
 
   const isShared = (studentIsShared, unitId) => {
     return studentIsShared[unitId] || false;
@@ -175,13 +169,28 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
   };
 
 
-  const handleStudentSelect = (studentId) => {
+  const handleStudentSelect = async (studentId) => {
     const isCurrentlyShared = studentInfo.find(student => student.id === studentId)?.isShared[selectedTest];
+
     if (isCurrentlyShared && !selectedStudents.includes(studentId)) {
-      if (confirm('이미 공유된 학생입니다. 다시 공유하시겠습니까? ')) setSelectedStudents([...selectedStudents, studentId]);
+      setSelectedStudents(prev => [...prev, studentId]);
+    } else if (isCurrentlyShared && selectedStudents.includes(studentId)) {
+      const message = {
+        icon             : 'warning',
+        title            : '공유를 취소하시겠습니까?',
+        text             : '학생의 과제 데이터는 유지됩니다.',
+        showCancelButton : true,
+        confirmButtonText: '취소하기',
+        cancelButtonText : '닫기'
+      };
+      const result = await showALert(message);
+
+      if (result.isConfirmed) setSelectedStudents(prev => prev.filter(id => id !== studentId));
     } else {
-      if (selectedStudents.includes(studentId)) setSelectedStudents(selectedStudents.filter(id => id !== studentId));
-      else setSelectedStudents([...selectedStudents, studentId]);
+      setSelectedStudents(prev => {
+        if (prev.includes(studentId)) return prev.filter(id => id !== studentId);
+        else return [...prev, studentId];
+      });
     }
   };
 
@@ -198,26 +207,36 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
   };
 
   const handleShare = async () => {
-    const dataToSend = {
-      unitId   : selectedTest,
-      studentId: selectedStudents
-    };
+    const newlySelectedStudents = selectedStudents.filter(id => !previouslySharedStudents.includes(id));
+    const studentsToCancel = previouslySharedStudents.filter(id => !selectedStudents.includes(id));
 
     try {
-      const result = await createShareTest(dataToSend);
-      if (result.status === 204) {
-        Swal.fire({
-          icon : 'success',
-          title: '시험 공유가 완료되었습니다.'
-        });
-        onClose();
-        setSelectedStudents([]);
-        fetchAllStudent();
-      }
-    } catch (error) {
-      console.error('Failed to share test...', error);
-    }
+      await Promise.all([
+        newlySelectedStudents.length > 0 && createShareTest({
+          unitId   : selectedTest,
+          studentId: newlySelectedStudents
+        }),
 
+        studentsToCancel.length > 0 && cancelShareTest({
+          unitId   : selectedTest,
+          studentId: studentsToCancel
+        })
+      ].filter(Boolean));
+
+      if (newlySelectedStudents.length > 0 || studentsToCancel.length > 0) {
+        const message = { icon: 'success', title: '시험 공유 상태가 업데이트되었습니다.' };
+        showALert(message);
+      }
+
+      onClose();
+      setSelectedStudents([]);
+      fetchAllStudent();
+    } catch (error) {
+      console.error('Failed to update test sharing: ', error);
+
+      const message = { icon: 'error', title: '시험 공유 업데이트 중 오류가 발생했습니다.' };
+      showALert(message);
+    }
   };
 
   useEffect(() => {
@@ -232,6 +251,7 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
         .map(student => student.id);
 
       setSelectedStudents(sharedStudents);
+      setPreviouslySharedStudents(sharedStudents);
     }
   }, [isOpen, selectedTest, studentInfo]);
 
@@ -301,7 +321,7 @@ const ExamShareModal = ({ isOpen, onClose, selectedTest, fetching }) => {
             <ButtonContainer>
               <Button
                 onClick={handleShare}
-                disabled={!selectedTest || selectedStudents.length === 0}
+                disabled={!selectedTest || selectedStudents.length === 0 && previouslySharedStudents.length === 0}
                 $primary
               >
                 공유하기

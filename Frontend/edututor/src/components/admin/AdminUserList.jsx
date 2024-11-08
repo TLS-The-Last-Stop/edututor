@@ -18,6 +18,9 @@ const TableContainer = styled.div`
 const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
+
+    th, td {
+        text-align: center;
 `;
 
 const Th = styled.th`
@@ -143,7 +146,12 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
         setSelectedUser(result.data);
         setIsOpen(true);
       } else {
-        alert('회원을 불러오는데 실패했습니다.');
+        Swal.fire({
+          icon : 'error',
+          title: '회원을 불러오는데 실패했습니다.'
+        });
+
+        return;
       }
     } catch (error) {
       console.error('Failed to fetch user info: ', error);
@@ -172,7 +180,10 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
               handleCloseModal();
               fetchingAllUser();
             } else {
-              alert('삭제 중 문제발생');
+              Swal.fire({
+                icon : 'error',
+                title: '회원을 불러오는데 실패했습니다.'
+              });
             }
           }
         });
@@ -194,7 +205,10 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
               handleCloseModal();
               fetchingAllUser();
             } else {
-              alert('삭제 중 문제발생');
+              Swal.fire({
+                icon : 'error',
+                title: '회원을 불러오는데 실패했습니다.'
+              });
             }
           }
         });
@@ -213,7 +227,7 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
         <Table>
           <thead>
           <tr>
-            <Th></Th>
+            <Th>등록된학생</Th>
             <Th>회원번호</Th>
             <Th>이름</Th>
             <Th>이메일</Th>
@@ -227,13 +241,11 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
             teachers.map(teacher => (
               <Fragment key={teacher.id}>
                 <Tr onClick={() => handleOpenModal(teacher.id)}>
-                  <Td>
-                    <ExpandButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleTeacher(teacher.id);
-                      }}
-                    >
+                  <Td onClick={(e) => {
+                    e.stopPropagation();
+                    toggleTeacher(teacher.id);
+                  }}>
+                    <ExpandButton>
                       {expandedTeachers.has(teacher.id) ? '▼' : '▶'}
                     </ExpandButton>
                   </Td>
