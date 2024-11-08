@@ -3,6 +3,9 @@ import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseClassroomEnrollPage.css';
 import { PiStudentLight } from 'react-icons/pi';
 import { Link } from 'react-router-dom';
+import ExamShareModal from '../../components/exam/ExamShareModal';
+import MaterialPreviewModal from '../../components/material/MaterialPreviewModal';
+import TestPreviewModal from '../../components/exam/TestPreviewModal';
 
 const CourseClassroomEnrollPage = () => {
   const gradeLevels = ['초등학교', '중학교'];
@@ -15,7 +18,15 @@ const CourseClassroomEnrollPage = () => {
   const [selectedSemester, setSelectedSemester] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null); // 선택된 과정
   const [loading, setLoading] = useState(false);
+
+  // 모달 상태들
+  const [isExamModalOpen, setIsExamModalOpen] = useState(false);
+  const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
+  const [isTestPreviewModalOpen, setIsTestPreviewModalOpen] = useState(false);
+  const [materialPreview, setMaterialPreview] = useState(null);
+  const [testPreview, setTestPreview] = useState(null);
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -72,6 +83,38 @@ const CourseClassroomEnrollPage = () => {
     } catch (error) {
       console.error('Error enrolling course:', error);
       alert('과정 등록에 실패했습니다.');
+    }
+  };
+
+  const handleCoursePreview = async (courseId) => {
+    try {
+      const response = await publicApi.get(`/course/${courseId}`);
+      setSelectedCourse(response.data.data); // 선택된 과정의 세부 정보 저장
+    } catch (error) {
+      console.error('Error fetching course preview:', error);
+      alert('과정 미리보기를 불러오는 데 실패했습니다.');
+    }
+  };
+
+  const handleOpenMaterialModal = async (materialId) => {
+    try {
+      const response = await publicApi.get(`/material/${materialId}`);
+      setMaterialPreview(response.data.data);
+      setIsMaterialModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching material preview:', error);
+      alert('학습 자료를 불러오는 데 실패했습니다.');
+    }
+  };
+
+  const handleOpenTestPreviewModal = async (testPaperId) => {
+    try {
+      const response = await publicApi.get(`/test-paper/${testPaperId}`);
+      setTestPreview(response.data.data);
+      setIsTestPreviewModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching test preview:', error);
+      alert('시험 미리보기를 불러오는 데 실패했습니다.');
     }
   };
 
@@ -150,7 +193,7 @@ const CourseClassroomEnrollPage = () => {
                   <div
                       key={course.courseId}
                       className="course-card"
-                      onClick={() => handleEnrollCourse(course.courseId)}
+                      onClick={() => handleCoursePreview(course.courseId)} // 과정 미리보기 기능 추가
                   >
                     <h3>{course.courseName}</h3>
                   </div>
@@ -159,6 +202,49 @@ const CourseClassroomEnrollPage = () => {
               <p>해당 조건에 맞는 학습 과정이 없습니다.</p>
           )}
         </div>
+
+        {selectedCourse && (
+            <div className="course-preview">
+              <h2>{selectedCourse.courseName}</h2>
+              <p>{selectedCourse.description}</p>
+              <h3>단원 및 유닛:</h3>
+              {selectedCourse.sections.map((section, sectionIndex) => (
+                  <div key={section.sectionId} className="section">
+                    <h3>{sectionIndex + 1}. {section.content}</h3>
+                    {section.units.map((unit, unitIndex) => (
+                        <div key={unit.unitId} className="unit">
+                          <h4>{unitIndex + 1}. {unit.content}</h4>
+                          <div className="actions">
+                            <button onClick={() => handleOpenTestPreviewModal(unit.testPaper.testPaperId)}>
+                              형성평가 미리보기
+                            </button>
+                            {unit.materials.map(material => (
+                                <button key={material.materialId} onClick={() => handleOpenMaterialModal(material.materialId)}>
+                                  학습자료: {material.title}
+                                </button>
+                            ))}
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+              ))}
+              <button onClick={() => handleEnrollCourse(selectedCourse.courseId)}>
+                이 과정 등록
+              </button>
+            </div>
+        )}
+
+        <ExamShareModal isOpen={isExamModalOpen} onClose={() => setIsExamModalOpen(false)} />
+        <MaterialPreviewModal
+            isOpen={isMaterialModalOpen}
+            onClose={() => setIsMaterialModalOpen(false)}
+            material={materialPreview}
+        />
+        <TestPreviewModal
+            isOpen={isTestPreviewModalOpen}
+            onClose={() => setIsTestPreviewModalOpen(false)}
+            testData={testPreview}
+        />
       </div>
   );
 };
