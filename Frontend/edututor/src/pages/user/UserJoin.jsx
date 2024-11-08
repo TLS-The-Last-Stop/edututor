@@ -3,6 +3,7 @@ import UserJoinForm from '../../components/user/UserJoinForm.jsx';
 import SchoolSearchModal from '../../components/user/SchoolSearchModal.jsx';
 import { checkDuplicateId, teacherJoin } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
+import { showALert } from '../../utils/SwalAlert.js';
 
 
 const initForm = {
@@ -57,6 +58,7 @@ const UserJoin = () => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [idCheckMessage, setIdCheckMessage] = useState('');
+  const [lastDay, setLastDay] = useState('');
 
   const navigate = useNavigate();
 
@@ -122,17 +124,20 @@ const UserJoin = () => {
   /* 아이디 중복체크 */
   const handleCheckDuplicatedId = async () => {
     if (!form.loginId) {
-      alert('아이디를 입력해주세요.');
+      const message = { icon: 'warning', title: '아이디를 입력해주세요.' };
+      showALert(message);
       return;
     }
 
     if (form.loginId.length < 6) {
-      alert('아이디가 너무 짧습니다.');
+      const message = { icon: 'warning', title: '아이디가 너무 짧습니다.' };
+      showALert(message);
       return;
     }
 
     if (form.loginId.length > 20) {
-      alert('아이디를 줄여주세요.');
+      const message = { icon: 'warning', title: '아이디를 줄여주세요.' };
+      showALert(message);
       return;
     }
 
@@ -147,7 +152,7 @@ const UserJoin = () => {
       }
 
     } catch (error) {
-      console.error('아이디 중복체크 실패: ', error);
+      console.error('Failed to duplicated id check: ', error);
       setIsIdChecked(false);
       setIdCheckMessage('중복 확인 중 오류가 발생하였습니다.');
     }
@@ -208,16 +213,14 @@ const UserJoin = () => {
     if (name.startsWith('birth')) {
       const formData = {
         ...form,
-        [name]: numberOnly // 현재 입력값 사용
+        [name]: numberOnly
       };
 
-      // 하나라도 입력이 되었다면 검증 시작
       if (formData.birthYear || formData.birthMonth || formData.birthDay) {
         let year = parseInt(formData.birthYear) || 0;
         let month = parseInt(formData.birthMonth) || 0;
         let day = parseInt(formData.birthDay) || 0;
 
-        // 현재 입력중인 필드의 값을 사용
         if (name === 'birthYear') year = parseInt(numberOnly) || 0;
         if (name === 'birthMonth') month = parseInt(numberOnly) || 0;
         if (name === 'birthDay') day = parseInt(numberOnly) || 0;
@@ -227,18 +230,18 @@ const UserJoin = () => {
         const isValidMonth = month >= 1 && month <= 12;
 
         let isValidDay = true;
-        if (year > 0 && month > 0 && day > 0) {
+        if (year > 0 || month > 0 || day > 0) {
           const lastDayOfMonth = new Date(year, month, 0).getDate();
           isValidDay = day >= 1 && day <= lastDayOfMonth;
+          setLastDay(lastDayOfMonth);
         }
 
+        // 각각의 유효성 상태를 따로 저장
         setErrors(prev => ({
           ...prev,
-          birthDateInvalid: Boolean(
-            (year && !isValidYear) ||
-            (month && !isValidMonth) ||
-            (day && !isValidDay)
-          )
+          birthYearInvalid : year > 0 && !isValidYear,
+          birthMonthInvalid: month > 0 && !isValidMonth,
+          birthDayInvalid  : day > 0 && !isValidDay
         }));
       }
     }
@@ -296,19 +299,22 @@ const UserJoin = () => {
   const validateForm = () => {
     // 아이디 중복 체크 확인
     if (!isIdChecked) {
-      alert('아이디 중복확인을 해주세요.');
+      const message = { icon: 'warning', title: '아이디 중복확인을 해주세요.' };
+      showALert(message);
       return false;
     }
 
     // 패스워드 일치 확인
     if (errors.passwordMatch) {
-      alert('비밀번호가 일치하지 않습니다.');
+      const message = { icon: 'warning', title: '비밀번호가 일치하지 않습니다.' };
+      showALert(message);
       return false;
     }
 
     // 기타 유효성 검사
     if (errors.loginId || errors.password) {
-      alert('입력한 정보를 다시 확인해주세요.');
+      const message = { icon: 'warning', title: '입력한 정보를 다시 확인해주세요.' };
+      showALert(message);
       return false;
     }
 
@@ -319,18 +325,21 @@ const UserJoin = () => {
 
     const currentYear = new Date().getFullYear();
     if (year < 1900 || year > currentYear) {
-      alert('올바른 연도를 입력해주세요.');
+      const message = { icon: 'warning', title: '올바른 연도를 입력해주세요.' };
+      showALert(message);
       return false;
     }
 
     if (month < 1 || month > 12) {
-      alert('올바른 월을 입력해주세요 (1-12)');
+      const message = { icon: 'warning', title: '올바른 월을 입력해주세요 (1-12)' };
+      showALert(message);
       return false;
     }
 
     const lastDayOfMonth = new Date(year, month, 0).getDate();
     if (day < 1 || day > lastDayOfMonth) {
-      alert(`올바른 일을 입력해주세요 (1-${lastDayOfMonth}`);
+      const message = { icon: 'warning', title: `올바른 일을 입력해주세요 (1-${lastDayOfMonth}` };
+      showALert(message);
       return false;
     }
 
@@ -338,14 +347,14 @@ const UserJoin = () => {
       !form.email || !form.phoneMiddle || !form.phoneLast ||
       !form.birthYear || !form.birthMonth || !form.birthDay ||
       !selectedSchool.name || !classroom.year || !classroom.grade || !classroom.classroomName) {
-      alert('모든 필수 항목을 입력해주세요.');
+      const message = { icon: 'warning', title: '모든 필수 항목을 입력해주세요.' };
+      showALert(message);
       return false;
     }
 
     return true;
   };
 
-  /* 학교 검색 */
   const handleSchoolSearch = () => {
     setIsSearchModalOpen(true);
   };
@@ -405,11 +414,15 @@ const UserJoin = () => {
     try {
       const result = await teacherJoin(submitData);
 
-      if (result.status === 204) navigate('/login');
-      if (result.status === 400) alert(result.message);
+      if (result.status === 204) {
+        navigate('/login');
+      }
+      if (result.status === 400) {
+        const message = { icon: 'warning', title: result.message };
+        showALert(message);
+      }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || '회원가입 처리 중 오류가 발생했습니다.';
-      alert(errorMessage);
+      console.error('Failed to join: ', error.response?.data?.message || '회원가입 처리 중 오류가 발생했습니다.');
     }
 
 
@@ -421,7 +434,7 @@ const UserJoin = () => {
                     handleCheckDuplicatedId={handleCheckDuplicatedId} isIdChecked={isIdChecked}
                     idCheckMessage={idCheckMessage}
                     handleCreateClassroom={handleCreateClassroom} classroom={classroom}
-                    handleSubmit={handleSubmit}
+                    handleSubmit={handleSubmit} lastDay={lastDay}
       />
       <SchoolSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)}
                          onSelectSchool={handleSelectSchool}
