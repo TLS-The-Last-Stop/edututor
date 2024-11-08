@@ -455,15 +455,15 @@ export const SNSTitle = styled.div`
 
 export const SNSButtonGroup = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
     margin-top: 1rem;
+
 `;
 
 export const SNSButton = styled.button`
     width: 100%;
     height: 45px;
-    border: 1px solid #e1e1e1;
     border-radius: 6px;
     display: flex;
     align-items: center;
