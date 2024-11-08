@@ -131,7 +131,7 @@ public class ReportServiceImpl implements ReportService {
 
     TestPaperDetailResponse testPaperDetailResponse = TestPaperDetailResponse.builder()
             .id(testPaper.getId())
-            .title(testPaper.getTitle())
+            .title(testPaper.getUnit().getSection().getCourse().getCourseName())
             .sectionName(testPaper.getUnit().getSection().getContent())
             .unitName(testPaper.getUnit().getContent())
             .userTestResponse2List(userTestResponses)

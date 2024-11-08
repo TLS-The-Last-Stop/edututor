@@ -7,9 +7,9 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 
 public interface BoardService {
-  List<BoardResponse> getBoardsByCategory(Long categoryId, String searchQuery);
+  List<BoardResponse> getBoardsByCategory(Long categoryId, String searchQuery, Authentication authentication);
 
-  List<BoardResponse> getBoardsByCategoryWithChildren(Long categoryId, String searchQuery);
+  List<BoardResponse> getBoardsByCategoryWithChildren(Long categoryId, String searchQuery, Authentication authentication);
 
   void saveInquiry(BoardRequest request);
 
