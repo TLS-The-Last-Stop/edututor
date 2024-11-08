@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { publicApi } from '../../api/axios.js';
 import '../../assets/css/IssueListPage.css';
 
@@ -31,39 +31,39 @@ const IssueListPage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-      <div className="issue-list-page">
-        <h2>신고 리스트</h2>
-        <table className="issue-table">
-          <thead>
+    <div className="issue-list-page">
+      <h2>신고 리스트</h2>
+      <table className="issue-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>문제 ID</th>
+          <th>작성자 ID</th>
+          <th>내용</th>
+          <th>상태</th>
+          <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        {issues.length > 0 ? (
+          issues.map((issue) => (
+            <tr key={issue.id}>
+              <td>{issue.id}</td>
+              <td>{issue.questionId}</td>
+              <td>{issue.writer}</td>
+              <td>{issue.content}</td>
+              <td>{issue.status}</td>
+              <td>{new Date(issue.createdAt).toLocaleString()}</td>
+            </tr>
+          ))
+        ) : (
           <tr>
-            <th>ID</th>
-            <th>문제 ID</th>
-            <th>작성자 ID</th>
-            <th>내용</th>
-            <th>상태</th>
-            <th>작성일</th>
+            <td colSpan="6">신고된 문제가 없습니다.</td>
           </tr>
-          </thead>
-          <tbody>
-          {issues.length > 0 ? (
-              issues.map((issue) => (
-                  <tr key={issue.id}>
-                    <td>{issue.id}</td>
-                    <td>{issue.questionId}</td>
-                    <td>{issue.writer}</td>
-                    <td>{issue.content}</td>
-                    <td>{issue.status}</td>
-                    <td>{new Date(issue.createdAt).toLocaleString()}</td>
-                  </tr>
-              ))
-          ) : (
-              <tr>
-                <td colSpan="6">신고된 문제가 없습니다.</td>
-              </tr>
-          )}
-          </tbody>
-        </table>
-      </div>
+        )}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

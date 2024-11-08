@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseCreationPage.css';

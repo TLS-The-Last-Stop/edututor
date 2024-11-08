@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import SchoolSearchModal from '../../components/user/SchoolSearchModal.jsx';
 import OAuthUserJoinForm from '../../components/user/OAuthUserJoinForm.jsx';
 import { useNavigate } from 'react-router-dom';

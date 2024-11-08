@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../assets/css/MaterialCreationPage.css';
 import { publicApi } from '../../api/axios.js';

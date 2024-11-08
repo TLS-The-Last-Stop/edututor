@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../../assets/css/TestPreviewModal.css';
 import { publicApi } from '../../api/axios.js';
 import { showALert } from '../../utils/SwalAlert.js';

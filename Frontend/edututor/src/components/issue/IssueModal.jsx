@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../../assets/css/IssueModal.css';
 import { showALert } from '../../utils/SwalAlert.js';
 

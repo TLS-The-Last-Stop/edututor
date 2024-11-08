@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { publicApi } from '../../api/axios';
 import '../../assets/css/CourseClassroomEnrollPage.css';
 import ExamShareModal from '../../components/exam/ExamShareModal';

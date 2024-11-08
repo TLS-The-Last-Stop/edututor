@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../assets/css/ExamPage.css';
 import { publicApi } from '../../api/axios.js';
