@@ -3,6 +3,8 @@ import StudentDetailModal from './StudentDetailModal.jsx';
 import { useState } from 'react';
 import { getStudentByStudentId } from '../../api/classroom/classroom.js';
 import { updateStudent } from '../../api/user/user.js';
+import Swal from 'sweetalert2';
+import 듬이 from '../../assets/icon/듬이.png';
 
 const StudentItem = styled.div`
     display: flex;
@@ -24,7 +26,16 @@ const Avatar = styled.div`
     width: 3rem; // 크기 증가
     height: 3rem; // 크기 증가
     background-color: #f3f4f6;
+    overflow: hidden;
     border-radius: 9999px;
+    display: flex;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
 `;
 
 const StudentName = styled.span`
@@ -76,12 +87,14 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
         setStudentDetail(result.data);
         setIsOpen(true);
       } else {
-        alert('학생 정보를 불러오는데 실패했습니다.');
+        Swal.fire({
+          icon : 'warning',
+          title: '학생 정보를 불러오는데 실패했습니다.'
+        });
       }
 
     } catch (error) {
       console.error('Failed to fetch student details:', error);
-      alert('서버 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -159,18 +172,28 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
     if (updateForm.password || updateForm.confirmPassword) {
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,20}$/;
       if (!passwordRegex.test(updateForm.password)) {
-        alert('비밀번호는 영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.');
+
+        Swal.fire({
+          icon : 'warning',
+          title: '비밀번호는 영문 대/소문자, 숫자, 특수문자를 모두 포함하여 9-20자로 입력해주세요.'
+        });
         return;
       }
 
       if (updateForm.password !== updateForm.confirmPassword) {
-        alert('비밀번호가 일치하지 않습니다.');
+        Swal.fire({
+          icon : 'warning',
+          title: '비밀번호가 일치하지 않습니다.'
+        });
         return;
       }
     }
 
     if (!studentDetail.username) {
-      alert('이름을 입력해주세요.');
+      Swal.fire({
+        icon : 'warning',
+        title: '이름을 입력해주세요.'
+      });
       return;
     }
 
@@ -182,15 +205,20 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
 
       const result = await updateStudent(studentDetail.id, updateData);
       if (result.status === 204) {
-        alert('수정이 완료되었습니다.');
+        Swal.fire({
+          icon : 'success',
+          title: '수정이 완료되었습니다.'
+        });
         handleCloseModal();
         fetchAllStudent();
       } else {
-        alert('업데이트에서 문제 생김');
+        Swal.fire({
+          icon : 'error',
+          title: '수정을 다시 해주세요.'
+        });
       }
     } catch (error) {
       console.error('Failed to update student:', error);
-      alert('학생 정보 수정에 실패했습니다.');
     }
   };
 
@@ -205,7 +233,7 @@ const StudentListItem = ({ classroomId, student, fetchAllStudent, handleDelete }
     <>
       <StudentItem onClick={handleOpenModal}>
         <StudentInfo>
-          <Avatar />
+          <Avatar><img src={듬이} alt="기본 이미지" /></Avatar>
           <StudentName>{student.username} ({student.loginId})</StudentName>
         </StudentInfo>
         <DeleteButton onClick={(e) => {
