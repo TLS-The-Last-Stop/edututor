@@ -1,15 +1,8 @@
-import styled from 'styled-components';
 import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import AdminLoginForm from '../../components/admin/AdminLoginForm.jsx';
-
-const Container = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9fafb;
-`;
+import { Container, FormSection, LoginTypeContainer } from '../../components/common/UserStyledComponents.js';
 
 const initForm = {
   loginId : '',
@@ -71,12 +64,16 @@ const AdminLogin = () => {
 
   return (
     <Container>
-      <AdminLoginForm
-        formData={formData}
-        errors={errors}
-        handleSubmit={handleSubmit}
-        handleInputChange={handleInputChange}
-      />
+      <FormSection>
+        <LoginTypeContainer>
+          <AdminLoginForm
+            formData={formData}
+            errors={errors}
+            handleSubmit={handleSubmit}
+            handleInputChange={handleInputChange}
+          />
+        </LoginTypeContainer>
+      </FormSection>
     </Container>
   );
 };

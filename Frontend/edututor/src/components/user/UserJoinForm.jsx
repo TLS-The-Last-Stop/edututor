@@ -16,7 +16,7 @@ import {
   InputGroup,
   JoinButtonGroup,
   Label,
-  Required,
+  Required, ScrolledContainer,
   Select,
   SelectGroup,
   SuccessText,
@@ -38,7 +38,7 @@ const UserJoinForm = ({
                       }) => {
 
   return (
-    <Container>
+    <ScrolledContainer>
       <FormSection>
         <FormHeader>
           <Title>회원가입</Title>
@@ -319,7 +319,7 @@ const UserJoinForm = ({
           </FieldSet>
         </FormContainer>
       </FormSection>
-    </Container>
+    </ScrolledContainer>
   );
 };
 
