@@ -1,5 +1,6 @@
 package com.tls.edututor.board.board.dto.response;
 
+import com.tls.edututor.board.answer.entity.Answer;
 import com.tls.edututor.board.board.entity.Board;
 import com.tls.edututor.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -17,14 +18,20 @@ public class BoardResponse {
   private String title;
   private String content;
   private LocalDateTime createdAt;
+  private String username;
+  private String inquiryAnswer;
+  private boolean hasAnswer;
 
-  public static BoardResponse dto(Board board) {
+  public static BoardResponse dto(Board board, String username, Answer answer) {
     return new BoardResponse(
             board.getId(),
             board.getCategory().getName(),
             board.getTitle(),
             board.getContent(),
-            board.getCreatedAt()
+            board.getCreatedAt(),
+            username,
+            answer != null ? answer.getContent() : null,
+            answer != null
     );
   }
 }

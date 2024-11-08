@@ -20,8 +20,6 @@ const CoursePage = () => {
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
   const [testPreview, setTestPreview] = useState(null);
   const [isTestPreviewModalOpen, setIsTestPreviewModalOpen] = useState(false);
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
-
   const [openSections, setOpenSections] = useState({});
 
   useEffect(() => {
@@ -38,11 +36,11 @@ const CoursePage = () => {
 
   useEffect(() => {
     if (courseId) {
-      setSelectedCourseId(courseId);
       setLoading(true);
       publicApi.get(`/course/${courseId}`)
           .then(response => {
-            setCourseData(response.data.data);
+            const { data } = response.data;
+            setCourseData(data);
             setLoading(false);
           })
           .catch(error => {
@@ -53,8 +51,7 @@ const CoursePage = () => {
   }, [courseId]);
 
   const handleCourseSelect = (id) => {
-    if (selectedCourseId !== id) {
-      setSelectedCourseId(id);
+    if (courseId !== id) {
       navigate(`/course/${id}`);
     }
   };
@@ -110,7 +107,7 @@ const CoursePage = () => {
                 courses.map(course => (
                     <li
                         key={course.courseId}
-                        className={`course-item ${selectedCourseId === course.courseId ? 'selected' : ''}`}
+                        className={`course-item ${courseData?.courseId === course.courseId ? 'selected' : ''}`}
                         onClick={() => handleCourseSelect(course.courseId)}
                     >
                       {course.courseName}
@@ -138,7 +135,7 @@ const CoursePage = () => {
                     <div key={section.sectionId} className="section">
                       <h3
                           className="section-header"
-                          style={{cursor: 'pointer'}}
+                          style={{ cursor: 'pointer' }}
                           onClick={() => toggleSection(section.sectionId)}
                       >
                         {sectionIndex + 1}. {section.content}
@@ -187,7 +184,6 @@ const CoursePage = () => {
                       </div>
                     </div>
                 ))}
-
               </>
           ) : (
               <p>코스를 선택하세요.</p>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createInquiry } from '../../api/board/board.js';
 import '../../assets/css/InquiryForm.css';
 
 const InquiryForm = () => {
@@ -7,10 +8,18 @@ const InquiryForm = () => {
   const [content, setContent] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 제출 로직 구현
-    console.log({ title, content });
+
+    if (!title.trim() || !content.trim()) {
+      alert('제목과 내용 모두 입력해주세요.');
+      return;
+    }
+
+    await createInquiry(title, content);
+
+    alert('문의가 등록되었습니다!');
+    navigate(`/cmmn/inquiry`);
   };
 
   const handleCencleClick = () => {

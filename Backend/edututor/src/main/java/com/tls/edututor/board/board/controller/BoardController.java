@@ -6,6 +6,7 @@ import com.tls.edututor.board.board.service.BoardService;
 import com.tls.edututor.common.api.CommonApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +22,12 @@ public class BoardController {
   public CommonApiResponse<List<BoardResponse>> getBoardsByCategory(
           @PathVariable Long categoryId,
           @RequestParam(required = false, defaultValue = "false") boolean includeChildren,
-          @RequestParam(required = false) String searchQuery) {
+          @RequestParam(required = false) String searchQuery,
+          Authentication authentication) {
     log.info("카테고리ID: {}, 하위카테고리포함: {}, 검색: {}", categoryId, includeChildren, searchQuery);
     List<BoardResponse> boards = includeChildren ?
-            boardService.getBoardsByCategoryWithChildren(categoryId, searchQuery) :
-            boardService.getBoardsByCategory(categoryId, searchQuery);
+            boardService.getBoardsByCategoryWithChildren(categoryId, searchQuery, authentication) :
+            boardService.getBoardsByCategory(categoryId, searchQuery, authentication);
     return CommonApiResponse.createSuccess("board", boards);
   }
 
