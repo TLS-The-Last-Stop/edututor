@@ -20,8 +20,8 @@ const StudentQuestionStatus = ({ userTestResponses }) => {
             {response.userAnswers.map((answer, idx) => (
               <td key={idx}>
                   <span className={`answer-cell ${response.isCorrect[idx] ? 'correct' : 'incorrect'}`}>
-                    {answer}
-                  </span>
+                {response.isCorrect[idx] ? 'O' : 'X'}
+              </span>
               </td>
             ))}
             <td>

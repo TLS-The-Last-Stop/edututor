@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getBoardsByCategory } from '../../api/board/board.js';
+import { deleteInquiry, getBoardsByCategory } from '../../api/board/board.js';
 import '../../assets/css/InquiryDetailPage.css';
 
 const InquiryDetail = () => {
@@ -15,6 +15,13 @@ const InquiryDetail = () => {
         (item) => item.boardId === parseInt(boardId)
       );
       setInquiry(selectedInquiry);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (confirm('문의를 삭제하시겠습니까?')) {
+      await deleteInquiry(boardId);
+      navigate('/cmmn/inquiry');
     }
   };
 
@@ -92,8 +99,7 @@ const InquiryDetail = () => {
           <button className="list-button" onClick={handleGoBack}>
             목록
           </button>
-          <button className="delete-button" onClick={() => {
-          }}>
+          <button className="delete-button" onClick={handleDelete}>
             삭제
           </button>
         </div>
