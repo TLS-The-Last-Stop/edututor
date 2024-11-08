@@ -13,18 +13,14 @@ import 역사 from '../../assets/icon/subject/역사.png';
 import 도덕 from '../../assets/icon/subject/도덕.png';
 
 const CourseContainer = styled.div`
-    margin: 60px auto 0; // auto로 중앙 정렬
-    padding: 40px 80px; // 좌우 패딩 증가로 화면 끝과 간격 확보
+    margin: 60px auto 0;
+    padding: 40px 80px;
     border: 1px solid #9b9b9b;
     border-radius: 15px;
-    max-width: 1300px; // 최대 너비 설정
+    max-width: 1300px;
     width: 100%;
     box-sizing: border-box;
-    position: relative; // 슬라이드 버튼의 기준점
-
-    @media (min-width: 768px) {
-        padding: 40px 80px;
-    }
+    position: relative;
 `;
 
 const TitleWrapper = styled.div`
@@ -38,24 +34,19 @@ const CourseListContainer = styled.div`
     position: relative;
     margin: 20px 0;
     width: 100%;
-
-    @media (max-width: 768px) {
-        overflow-x: auto; // 모바일에서는 스크롤 가능하도록
-        -webkit-overflow-scrolling: touch;
-
-        &::-webkit-scrollbar {
-            display: none; // 스크롤바 숨김
-        }
-    }
 `;
 
 const CourseList = styled.div`
     display: flex;
     gap: 16px;
-    overflow-x: hidden;
+    overflow-x: auto;
     scroll-behavior: smooth;
     padding: 10px 0;
     width: 100%;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
     &:active {
         cursor: grabbing;
@@ -66,7 +57,6 @@ const CourseList = styled.div`
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-
 `;
 
 const SlideButton = styled.button`
@@ -111,20 +101,20 @@ const SlideButton = styled.button`
 `;
 
 const CourseItem = styled.div`
-    flex: 0 0 calc(100% - 32px); // 모바일에서는 1개씩
+    flex: 0 0 calc(100% - 32px);
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 
     @media (min-width: 480px) {
-        flex: 0 0 calc(50% - 24px); // 태블릿에서는 2개씩
+        flex: 0 0 calc(50% - 24px);
     }
 
     @media (min-width: 768px) {
-        flex: 0 0 calc(33.333% - 24px); // 작은 데스크톱에서는 3개씩
+        flex: 0 0 calc(33.333% - 24px);
     }
 
     @media (min-width: 1024px) {
-        flex: 0 0 calc(20% - 19.2px); // 큰 데스크톱에서는 5개씩
+        flex: 0 0 calc(20% - 19.2px);
     }
 
     &:hover {
@@ -135,35 +125,20 @@ const CourseItem = styled.div`
 const ImageWrapper = styled.div`
     position: relative;
     width: 100%;
-    padding-bottom: 120%; // 비율 조정 (1:1.2)
+    padding-bottom: 120%;
     border-radius: 12px;
     overflow: hidden;
     background: transparent;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-
     img {
         position: absolute;
-        top: 50%; // 중앙 정렬을 위해 추가
-        left: 50%; // 중앙 정렬을 위해 추가
-        transform: translate(-50%, -50%); // 정중앙 배치
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         width: 100%;
         height: 100%;
-        object-fit: cover; // contain 대신 cover 사용
-    }
-
-    .magnify {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        width: 24px;
-        height: 24px;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1; // 돋보기 아이콘이 항상 위에 보이도록
+        object-fit: cover;
     }
 `;
 
@@ -280,8 +255,18 @@ const CourseSection = () => {
     if (!listRef.current) return;
 
     const { scrollLeft, scrollWidth, clientWidth } = listRef.current;
-    setShowLeftButton(scrollLeft > 0);
-    setShowRightButton(scrollLeft + clientWidth < scrollWidth - 10);
+    const canScroll = scrollWidth > clientWidth + 10;
+    console.log(canScroll);
+
+    if (canScroll) {
+      setShowLeftButton(scrollLeft > 0);
+      // 오른쪽 버튼은 약간의 여유를 둬서 체크
+      setShowRightButton(Math.ceil(scrollLeft + clientWidth) < scrollWidth);
+    } else {
+      // 스크롤이 불가능한 경우 양쪽 버튼 모두 숨김
+      setShowLeftButton(false);
+      setShowRightButton(false);
+    }
   };
 
   const handleSlide = (direction) => {
@@ -327,7 +312,12 @@ const CourseSection = () => {
     if (list) {
       updateButtonVisibility();
       list.addEventListener('scroll', updateButtonVisibility);
-      return () => list.removeEventListener('scroll', updateButtonVisibility);
+      window.addEventListener('resize', updateButtonVisibility);
+
+      return () => {
+        list.removeEventListener('scroll', updateButtonVisibility);
+        window.removeEventListener('resize', updateButtonVisibility);
+      };
     }
 
   }, [courses]);
