@@ -44,8 +44,12 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      if (result.data === 'AD') setUserRole('AD');
-      else setUserRole(result.data);
+      const role = result?.data === 'AD' ? 'AD' : result.data;
+      setUserRole(role);
+
+      if (role === 'SU' && location.pathname.match(/^\/course(?:\/|$)/)) {
+        navigator('/');
+      }
 
     } catch (error) {
       console.error('Failed to verify role:', error);
