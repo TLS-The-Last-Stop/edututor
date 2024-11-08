@@ -15,7 +15,6 @@ const initStudent = {
 };
 
 const Container = styled.main`
-    min-height: 100vh;
     padding: 2rem;
 `;
 

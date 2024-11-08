@@ -6,11 +6,20 @@ import { verifyAuth } from './auth.js';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [userInfo, setUserInfo] = useState(getUserInfo());
+  const [userInfo, setUserInfo] = useState(null);
   const [userRole, setUserRole] = useState('');
 
   const navigator = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    try {
+      const info = getUserInfo(true);
+      setUserInfo(info);
+    } catch (error) {
+      clearLocalStorage();
+    }
+  }, [navigator]);
 
   const verifyUserRole = async () => {
     try {

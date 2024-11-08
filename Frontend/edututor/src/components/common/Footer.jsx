@@ -8,8 +8,9 @@ import { Link } from 'react-router-dom';
 const FooterContainer = styled.footer`
     background: #ffffff;
     width: 100%;
-    position: relative;
-    transform: translateY(0%);
+    position: absolute;
+    height: 248px;
+    bottom: 0;
 `;
 
 // 좌측 네비게이션
