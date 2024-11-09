@@ -12,6 +12,7 @@ import com.tls.edututor.exam.useransewer.entity.UserAnswer;
 import com.tls.edututor.exam.useransewer.repositroy.UserAnswerRepository;
 import com.tls.edututor.exam.usertest.entity.UserTest;
 import com.tls.edututor.exam.usertest.repository.UserTestRepository;
+import com.tls.edututor.report.dto.response.ShareTestResponse;
 import com.tls.edututor.report.dto.response.TestPaperDetailResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
 import com.tls.edututor.report.dto.response.UserTestResponse2;
@@ -153,4 +154,12 @@ public class ReportServiceImpl implements ReportService {
     }
     return (double) correctAnswersCnt / isCorrect.size() * 100;
   }
+
+  @Override
+  public Page<ShareTestResponse> getSharedTests(Authentication authentication, Pageable pageable) {
+    Long userId = ((AuthUser) authentication.getPrincipal()).getId();
+    return shareTestRepository.findByUserId(userId, pageable)
+            .map(ShareTestResponse::fromEntity);
+  }
+
 }

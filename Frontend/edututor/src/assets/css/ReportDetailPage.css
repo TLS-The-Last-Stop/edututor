@@ -81,6 +81,16 @@
     margin: 0 5px;
 }
 
+.answer-cell.correct {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.answer-cell.incorrect {
+    background-color: #f44336;
+    color: white;
+}
+
 .achievement-bar {
     width: 100%;
     height: 20px;

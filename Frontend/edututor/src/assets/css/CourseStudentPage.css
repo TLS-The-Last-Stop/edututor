@@ -1,0 +1,159 @@
+.course-page {
+    display: flex;
+    justify-content: center;
+    padding: 0 10%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sidebar {
+    width: 250px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar h3 {
+    text-align: center;
+}
+
+.new-course-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #ffebec;
+    color: #f00;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.course-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.course-item:hover {
+    background-color: #f0f0f0;
+}
+
+.course-details {
+    flex: 1;
+    padding: 20px;
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.course-header h2 {
+    font-size: 34px;
+    color: #333;
+}
+
+.students-icon {
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.section h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 13px;
+}
+
+.unit {
+    margin-bottom: 15px;
+}
+
+.unit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions button {
+    background-color: #eee;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.preview-btn {
+    background-color: #f0f4ff;
+}
+
+.share-btn {
+    background-color: #eafff0;
+}
+
+.material-item,
+.testpaper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: #fafafa;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.material-title,
+.testpaper-title {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.material-btn,
+.testpaper-btn {
+    background-color: #fff0f4;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+.material-btn:hover,
+.testpaper-btn:hover {
+    background-color: #ffe6eb;
+}
+
+.testpaper-btn[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.course-item.selected {
+    background-color: #d0ebff;
+    font-weight: bold;
+    color: #0056b3;
+    border-left: 4px solid #0056b3;
+}
+
+.actions {
+    margin-top: 10px;
+}

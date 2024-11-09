@@ -1,6 +1,7 @@
 package com.tls.edututor.report.controller;
 
 import com.tls.edututor.common.api.CommonApiResponse;
+import com.tls.edututor.report.dto.response.ShareTestResponse;
 import com.tls.edututor.report.dto.response.TestPaperDetailResponse;
 import com.tls.edututor.report.dto.response.TestPaperResponse2;
 import com.tls.edututor.report.service.ReportService;
@@ -34,5 +35,17 @@ public class ReportController {
   @GetMapping("/{testPaperId}")
   public CommonApiResponse<TestPaperDetailResponse> getTestPaperDetail(@PathVariable Long testPaperId) {
     return CommonApiResponse.createSuccess("리포트 상세페이지 조회!", reportService.getTestPaperDetail(testPaperId));
+  }
+
+  @GetMapping("/shared-tests")
+  public CommonApiResponse<Page<ShareTestResponse>> getSharedTests(
+          Authentication authentication,
+          @PageableDefault Pageable pageable) {
+    try {
+      Page<ShareTestResponse> result = reportService.getSharedTests(authentication, pageable);
+      return CommonApiResponse.createSuccess("공유받은 시험 리스트 조회 성공!", result);
+    } catch (Exception e) {
+      return CommonApiResponse.createError("공유받은 시험 리스트 조회 실패: " + e.getMessage());
+    }
   }
 }

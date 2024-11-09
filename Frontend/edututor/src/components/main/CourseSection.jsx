@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { privateApi } from '../../api/axios.js';
 import { useAuth } from '../../utils/AuthContext.jsx';
 import Loading from '../common/Loading.jsx';
+import { StyledRouterLink } from '../common/UserStyledComponents.js';
 import 국어 from '../../assets/icon/subject/국어.png';
 import 영어 from '../../assets/icon/subject/영어.png';
 import 수학 from '../../assets/icon/subject/수학.png';
@@ -11,7 +12,6 @@ import 사회 from '../../assets/icon/subject/사회.png';
 import 과학 from '../../assets/icon/subject/과학.png';
 import 역사 from '../../assets/icon/subject/역사.png';
 import 도덕 from '../../assets/icon/subject/도덕.png';
-import { StyledRouterLink } from '../common/UserStyledComponents.js';
 
 const CourseContainer = styled.div`
     margin: 60px auto 0;
@@ -26,9 +26,34 @@ const CourseContainer = styled.div`
 
 const TitleWrapper = styled.div`
     margin-top: 12px;
-    font-size: 16px;
+    font-size: 35px;
     color: #333;
     text-align: center;
+    margin-bottom: 20px;
+`;
+
+const SubjectFilterContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+`;
+
+const SubjectButton = styled.button`
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: ${({ active }) => (active ? '#007bff' : '#e0e0e0')};
+    color: ${({ active }) => (active ? 'white' : '#333')};
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #007bff;
+        color: white;
+    }
 `;
 
 const CourseListContainer = styled.div`
@@ -44,6 +69,7 @@ const CourseList = styled.div`
     scroll-behavior: smooth;
     padding: 10px 0;
     width: 100%;
+    user-select: none;
 
     &::-webkit-scrollbar {
         display: none;
@@ -52,12 +78,6 @@ const CourseList = styled.div`
     &:active {
         cursor: grabbing;
     }
-
-    /* 드래그 시 텍스트 선택 방지 */
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
 `;
 
 const SlideButton = styled.button`
@@ -77,27 +97,11 @@ const SlideButton = styled.button`
     justify-content: center;
 
     @media (max-width: 768px) {
-        display: none; // 모바일에서는 버튼 숨김
+        display: none;
     }
 
     &:hover {
         background: #f8f8f8;
-    }
-
-    &.prev {
-        left: -20px; // 왼쪽 버튼 위치 조정
-
-        @media (min-width: 1024px) {
-            left: -60px;
-        }
-    }
-
-    &.next {
-        right: -20px; // 오른쪽 버튼 위치 조정
-
-        @media (min-width: 1024px) {
-            right: -60px;
-        }
     }
 `;
 
@@ -129,7 +133,6 @@ const ImageWrapper = styled.div`
     padding-bottom: 120%;
     border-radius: 12px;
     overflow: hidden;
-    background: transparent;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
     img {
@@ -161,20 +164,6 @@ const RegisterCourseWrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
-`;
-
-const RegisterCourseText = styled.p`
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-`;
-
-const RegisterCourseButton = styled.button`
-    max-width: 400px;
-    width: 100%;
-    font-size: 20px;
-    font-weight: bold;
 `;
 
 const LoginMessage = styled.div`
@@ -198,102 +187,25 @@ const LoginButton = styled.button`
     }
 `;
 
-const initDragState = {
-  isDragging : false,
-  isMouseDown: false,
-  startX     : 0,
-  scrollLeft : 0
-};
-
 const CourseSection = () => {
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showLeftButton, setShowLeftButton] = useState(false);
-  const [showRightButton, setShowRightButton] = useState(false);
-  const [dragState, setDragState] = useState(initDragState);
-
-
-  const { userInfo, userRole } = useAuth?.() ?? {};
-  const navigate = useNavigate();
+  const [selectedSubject, setSelectedSubject] = useState("전체");
   const listRef = useRef(null);
+  const navigate = useNavigate();
+  const { userInfo, userRole } = useAuth();
+  const subjectImages = { 국어, 수학, 영어, 사회, 과학, 역사, 도덕 };
+  const subjectFilters = ["전체", "국어", "수학", "영어", "사회", "과학", "역사", "도덕"];
 
-  /* 마우스 이벤트 핸들러 */
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-
-    if (!listRef.current) return;
-
-    setDragState({
-      isMouseDown: true,
-      isDragging : false,
-      startX     : e.pageX - listRef.current.offsetLeft,
-      scrollLeft : listRef.current.scrollLeft
-    });
-
+  const handleSubjectFilter = (subject) => {
+    setSelectedSubject(subject);
+    setFilteredCourses(subject === "전체" ? courses : courses.filter(course => course.subject === subject));
   };
 
-  const handleMouseUp = () => {
-    setDragState(prev => ({
-      ...prev,
-      isMouseDown: false,
-      isDragging : false
-    }));
-  };
-
-  const handleMouseMove = (e) => {
-    const { isMouseDown, startX, scrollLeft } = dragState;
-    if (!isMouseDown || !listRef.current) return;
-
-    e.preventDefault();
-    setDragState(prev => ({ ...prev, isDragging: true }));
-
-    const x = e.pageX - listRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    listRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const updateButtonVisibility = () => {
-    if (!listRef.current) return;
-
-    const { scrollLeft, scrollWidth, clientWidth } = listRef.current;
-    const canScroll = scrollWidth > clientWidth + 10;
-    console.log(canScroll);
-
-    if (canScroll) {
-      setShowLeftButton(scrollLeft > 0);
-      // 오른쪽 버튼은 약간의 여유를 둬서 체크
-      setShowRightButton(Math.ceil(scrollLeft + clientWidth) < scrollWidth);
-    } else {
-      // 스크롤이 불가능한 경우 양쪽 버튼 모두 숨김
-      setShowLeftButton(false);
-      setShowRightButton(false);
-    }
-  };
-
-  const handleSlide = (direction) => {
-    if (!listRef.current) return;
-
-    setDragState(prev => ({
-      ...prev,
-      isMouseDown: false,
-      isDragging : false
-    }));
-
-    const scrollAmount = listRef.current.clientWidth;
-    listRef.current.scrollBy({
-      left    : direction === 'prev' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
-    });
-
-  };
-
-  const handleCourseClick = (e, courseId) => {
-    if (dragState.isDragging) {
-      e.preventDefault();
-      return;
-    }
-
-    navigate(userRole === 'TE' ? `/course/${courseId}` : `/course0/${courseId}`);
+  const handleCourseClick = (courseId) => {
+    const coursePath = userRole === 'TE' ? `/course/${courseId}` : `/course0/${courseId}`;
+    navigate(coursePath);
   };
 
   const fetchFilteredCourses = async () => {
@@ -301,6 +213,7 @@ const CourseSection = () => {
     try {
       const response = await privateApi.get('/course/class-courses');
       setCourses(response.data.data);
+      setFilteredCourses(response.data.data);
     } catch (error) {
       console.error('과정을 불러오는데 실패했습니다 : ', error);
     } finally {
@@ -309,104 +222,50 @@ const CourseSection = () => {
   };
 
   useEffect(() => {
-    const list = listRef.current;
-    if (list) {
-      updateButtonVisibility();
-      list.addEventListener('scroll', updateButtonVisibility);
-      window.addEventListener('resize', updateButtonVisibility);
-
-      return () => {
-        list.removeEventListener('scroll', updateButtonVisibility);
-        window.removeEventListener('resize', updateButtonVisibility);
-      };
-    }
-
-  }, [courses]);
-
-  useEffect(() => {
     if (userInfo && userRole) fetchFilteredCourses();
   }, [userInfo, userRole]);
 
   if (!userInfo) {
     return (
-      <LoginMessage>
-        <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
-        <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
-      </LoginMessage>
+        <LoginMessage>
+          <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
+          <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
+        </LoginMessage>
     );
   }
 
-  if (!courses?.length) {
-    return (<RegisterCourseWrapper>
-      <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
-      <RegisterCourseButton>
-        {userRole === 'TE' ? (
-          <StyledRouterLink to="/course/enroll">새 과정 등록하기</StyledRouterLink>
-        ) : (
-          ''
-        )}
-      </RegisterCourseButton>
-    </RegisterCourseWrapper>);
-  }
-
-  const subjectImages = {
-    '국어': 국어,
-    '수학': 수학,
-    '영어': 영어,
-    '사회': 사회,
-    '과학': 과학,
-    '역사': 역사,
-    '도덕': 도덕
-  };
-
   return (
-    <CourseContainer>
-      <TitleWrapper>에듀튜터 학습 과정</TitleWrapper>
-      <CourseListContainer>
-        {showLeftButton && (
-          <SlideButton
-            className="prev"
-            onClick={() => handleSlide('prev')}
-            onMouseDown={e => e.stopPropagation()}
-          >
-            ←
-          </SlideButton>
-        )}
-        <CourseList
-          ref={listRef}
-          onScroll={updateButtonVisibility}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          onTouchEnd={handleMouseUp}
-        >
-          {loading ? (
-            <Loading />
-          ) : (
-            courses.map(course => (
-              <CourseItem
-                key={course.courseId}
-                onClick={(e) => handleCourseClick(e, course.courseId)}
+      <CourseContainer>
+        <TitleWrapper>우리반 학습 과정</TitleWrapper>
+        <SubjectFilterContainer>
+          {subjectFilters.map(subject => (
+              <SubjectButton
+                  key={subject}
+                  active={selectedSubject === subject}
+                  onClick={() => handleSubjectFilter(subject)}
               >
-                <ImageWrapper>
-                  <img src={subjectImages[course.subject]} alt={course.courseName} />
-                </ImageWrapper>
-                <CourseTitle>{course.courseName}</CourseTitle>
-              </CourseItem>
-            ))
+                {subject}
+              </SubjectButton>
+          ))}
+        </SubjectFilterContainer>
+
+        <CourseListContainer>
+          {loading ? (
+              <Loading />
+          ) : (
+              <CourseList ref={listRef}>
+                {filteredCourses.map(course => (
+                    <CourseItem key={course.courseId} onClick={() => handleCourseClick(course.courseId)}>
+                      <ImageWrapper>
+                        <img src={subjectImages[course.subject]} alt={course.courseName} />
+                      </ImageWrapper>
+                      <CourseTitle>{course.courseName}</CourseTitle>
+                    </CourseItem>
+                ))}
+              </CourseList>
           )}
-        </CourseList>
-        {showRightButton && (
-          <SlideButton
-            className="next"
-            onClick={() => handleSlide('next')}
-            onMouseDown={e => e.stopPropagation()}
-          >
-            →
-          </SlideButton>
-        )}
-      </CourseListContainer>
-    </CourseContainer>
+        </CourseListContainer>
+      </CourseContainer>
   );
 };
 

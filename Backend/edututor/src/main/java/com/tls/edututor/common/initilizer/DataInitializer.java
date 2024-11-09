@@ -364,7 +364,7 @@ public class DataInitializer {
                     .unit(unit)
                     .title(unitTitle)
                     .content(unitTitle + "에 대한 학습 자료입니다.")
-                    .url("https://www.youtube.com/watch?v=6Ox3OM_sw9E")
+                    .url("https://www.youtube.com/watch?v=lWCEvcRqCDk&list=PLbPxj9t5bO9hdEvCenkzR9s8cBdkaWe_W")
                     .build();
             materialRepository.save(material);
 
