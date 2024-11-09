@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,7 @@ public class MailServiceImpl implements MailService {
   @Override
   @Transactional(readOnly = true)
   public void findLoginId(FindUserRequest request) {
-    User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("해당 이메일로 사용자를 찾을 수 없습니다."));
+    User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
     String subject = "[에듀튜터] 아이디 찾기 안내";
     String text = String.format(
@@ -66,8 +66,9 @@ public class MailServiceImpl implements MailService {
   @Override
   @Transactional
   public void findPassword(FindUserRequest request) {
-    User user = userRepository.findByLoginIdAndEmail(request.getLoginId(), request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
-    user.updateUserPassword(passwordEncoder.encode(generateRandomPassword()));
+    User user = userRepository.findByLoginIdAndEmail(request.getLoginId(), request.getEmail()).orElseThrow(() -> new BadCredentialsException("AUTH001"));
+    String newPassword = generateRandomPassword();
+    user.updateUserPassword(passwordEncoder.encode(newPassword));
     userRepository.save(user);
 
     String subject = "[에듀튜터] 비밀번호 찾기 안내";
@@ -76,8 +77,14 @@ public class MailServiceImpl implements MailService {
                     "요청하신 비밀번호 찾기 결과를 알려드립니다.\n" +
                     "회원님의 비밀번호는 [ %s ] 입니다.\n\n" +
                     "감사합니다.",
-            user.getLoginId()
+            newPassword
     );
+
+    try {
+      sendEmail(request.getEmail(), subject, text);
+    } catch (MailSendException mse) {
+      throw new MailSendException("이메일 발송 중 오류가 발생했습니다.");
+    }
   }
 
   private String generateRandomPassword() {

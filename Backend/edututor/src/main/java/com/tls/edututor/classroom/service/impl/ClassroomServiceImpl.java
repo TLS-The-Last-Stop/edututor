@@ -14,8 +14,8 @@ import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +61,7 @@ public class ClassroomServiceImpl implements ClassroomService {
   @Override
   public UserSUResponse getStudent(Long classroomId, Long studentId) {
     Classroom classroom = classroomRepository.findById(classroomId).orElseThrow();
-    User user = userRepository.findByIdAndClassroom(studentId, classroom).orElseThrow(() -> new UsernameNotFoundException("없는 학생입니다."));
+    User user = userRepository.findByIdAndClassroom(studentId, classroom).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
     UserSUResponse student = UserSUResponse.builder()
             .id(user.getId())
@@ -91,7 +91,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     Classroom classroom = classroomRepository.findById(classroomId).orElseThrow(() -> new IllegalArgumentException("없는 반입니다."));
     if (classroom.getId() != teacher.getClassroom().getId()) throw new IllegalArgumentException("잘못된 접근입니다.");
 
-    User user = userRepository.findById(teacher.getId()).orElseThrow(() -> new UsernameNotFoundException("없는 유저일 수 있나?"));
+    User user = userRepository.findById(teacher.getId()).orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
     UserTEResponse userTEResponse = UserTEResponse.builder()
             .id(user.getId())
