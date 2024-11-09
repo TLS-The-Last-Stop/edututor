@@ -420,7 +420,11 @@ const Header = () => {
             </NavItem>
 
             <NavItem>
-              <StyledNavLink to="/report">리포트</StyledNavLink>
+              {userRole === 'SU' ? (
+              <StyledNavLink to="/report/student">리포트</StyledNavLink>
+              ):(
+              <StyledNavLink to="/report/teacher">리포트</StyledNavLink>
+              )}
             </NavItem>
 
             <NavItem>

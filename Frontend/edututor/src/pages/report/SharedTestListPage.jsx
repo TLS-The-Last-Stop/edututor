@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import SharedTestList from './SharedTestList';
-import './SharedTestList.css';
+import SharedTestList from '../../components/report/SharedTestList.jsx';
+import '../../assets/css/SharedTestList.css';
 import {publicApi} from "../../api/axios.js";
 
 const SharedTestListPage = () => {

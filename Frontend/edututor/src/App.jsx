@@ -53,6 +53,7 @@ const Classroom = lazy(() => import('./pages/classroom/Classroom.jsx'));
 const ExamShare = lazy(() => import('./pages/exam/ExamSharePage.jsx'));
 const AdditionalInfo = lazy(() => import('./pages/user/AdditionalInfo.jsx'));
 const OAuthSuccess = lazy(() => import('./pages/user/OAuthSuccess.jsx'));
+const StudentReport = lazy(()=>import('./pages/report/SharedTestListPage.jsx'))
 
 const LoadingSpinner = () => <Loading />;
 
@@ -221,10 +222,18 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}><InquiryForm /></Suspense>
           } />
 
-          <Route path="report" element={
+          <Route path="report/teacher" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="TE">
+                <Report />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="report/student" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="SU">
-                <Report />
+                <StudentReport />
               </ProtectedRoute>
             </Suspense>
           } />
