@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -198,9 +199,8 @@ public class UserServiceImpl implements UserService {
   @Override
   public Long deleteStudent(Long id) {
     User student = userRepository.findById(id).orElseThrow();
-    student.setIsDeleted(true);
 
-    userRepository.save(student);
+    userRepository.delete(student);
 
     return student.getId();
   }
@@ -237,7 +237,10 @@ public class UserServiceImpl implements UserService {
   public void updateUser(UserTERequest request, Authentication authentication) {
     AuthUser authUser = (AuthUser) authentication.getPrincipal();
 
-    User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
+    User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new BadCredentialsException("AUTH001"));
+
+    if (request.getPassword() != null) request.setPassword(passwordEncoder.encode(request.getPassword()));
+
     user.updateTeacher(request);
 
     userRepository.save(user);
