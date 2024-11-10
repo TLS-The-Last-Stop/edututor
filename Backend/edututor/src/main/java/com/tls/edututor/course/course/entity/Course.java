@@ -3,6 +3,7 @@ package com.tls.edututor.course.course.entity;
 import com.tls.edututor.code.codegroup.entity.CodeGroup;
 import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.course.section.entity.Section;
+import com.tls.edututor.image.entity.Image;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -21,6 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "COURSE")
 public class Course extends BaseEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -37,4 +39,7 @@ public class Course extends BaseEntity {
 
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Section> sections;
+
+	@OneToOne(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Image image;
 }

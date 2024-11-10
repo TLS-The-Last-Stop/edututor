@@ -27,6 +27,9 @@ import Inquiry from './pages/board/Inquiry.jsx';
 import IssueListPage from './pages/admin/IssueListPage.jsx';
 import InquiryForm from './components/board/InquiryForm.jsx';
 import InquiryDetail from './pages/board/InquiryDetail.jsx';
+import TestDetailPage from "./pages/exam/TestDetailPage.jsx";
+import IssueDetailPage from "./pages/admin/IssueDetailPage.jsx";
+import TestPaperEditPage from "./pages/admin/TestPaperEditPage.jsx";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -118,6 +121,14 @@ function AppRoutes() {
             </Suspense>
           } />
 
+          <Route path="test-paper/edit/:testPaperId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <TestPaperEditPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
           <Route path="create-course" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="AD">
@@ -192,6 +203,14 @@ function AppRoutes() {
             </Suspense>
           } />
 
+          <Route path="issue/:issueId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <IssueDetailPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
           <Route path="user-statistic" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="AD">
@@ -253,6 +272,14 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="SU">
                 <StudentReport />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="/tests/details/:userTestId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="SU">
+                <TestDetailPage />
               </ProtectedRoute>
             </Suspense>
           } />

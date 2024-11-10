@@ -12,5 +12,6 @@ public class CourseRegisterRequest {
   private Long classroomId;
   private String courseName;
   private String groupCode;
+  private String imageUrl;
   private List<SectionRegisterRequest> sections;
 }

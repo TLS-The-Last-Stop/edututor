@@ -8,8 +8,10 @@ import com.tls.edututor.course.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,10 +26,13 @@ public class CourseController {
   }
 
   @PostMapping
-  public CommonApiResponse<Void> createCourse(@RequestBody CourseRegisterRequest request) {
-    courseService.createCourseWithSectionsAndUnits(request);
+  public CommonApiResponse<Void> createCourse(
+          @RequestPart("request") Map<String, Object> request,
+          @RequestPart("imageFile") MultipartFile imageFile) {
+    courseService.createCourseWithSectionsAndUnits(request, imageFile);
     return CommonApiResponse.createSuccessWithNoContent("과정 생성 성공");
   }
+
 
   @GetMapping("/{courseId}")
   public CommonApiResponse<CourseResponse> getCourseDetails(@PathVariable Long courseId, Authentication authentication) {
