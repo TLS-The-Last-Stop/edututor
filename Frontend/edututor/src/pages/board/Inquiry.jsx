@@ -4,6 +4,8 @@ import { getBoardsByCategory } from '../../api/board/board.js';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/css/NoticePage.css';
 import Pagination from '../../components/common/Pagination.jsx';
+import { useAuth } from '../../utils/AuthContext.jsx';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const Inquiry = () => {
   const [inquiryData, setInquiryData] = useState([]);
@@ -11,6 +13,8 @@ const Inquiry = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const { userRole } = useAuth();
 
   const fetchInquiryData = async () => {
     const response = await getBoardsByCategory(3, false, searchQuery);
@@ -31,9 +35,9 @@ const Inquiry = () => {
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('ko-KR', {
-      year: '2-digit',
+      year : '2-digit',
       month: '2-digit',
-      day: '2-digit'
+      day  : '2-digit'
     });
   };
 
@@ -47,6 +51,11 @@ const Inquiry = () => {
   };
 
   const handleInquiryButtonClick = () => {
+    const message = { icon: 'error', title: '로그인 후 이용해주세요.' };
+    if (!userRole) {
+      showALert(message);
+      return;
+    }
     navigate(`/cmmn/inquiry/inquiry-form`);
   };
 
