@@ -24,6 +24,7 @@ const HeaderContainer = styled.header`
     width: 100%;
     border-bottom: 1px solid #eaeaea;
     background: white;
+    z-index: 99;
 `;
 
 const HeaderContent = styled.div`
@@ -421,9 +422,9 @@ const Header = () => {
 
             <NavItem>
               {userRole === 'SU' ? (
-              <StyledNavLink to="/report/student">리포트</StyledNavLink>
-              ):(
-              <StyledNavLink to="/report/teacher">리포트</StyledNavLink>
+                <StyledNavLink to="/report/student">리포트</StyledNavLink>
+              ) : (
+                <StyledNavLink to="/report/teacher">리포트</StyledNavLink>
               )}
             </NavItem>
 

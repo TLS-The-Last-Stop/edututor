@@ -318,11 +318,12 @@ function AppRoutes() {
               </ProtectedRoute>
             </Suspense>
           } />
-        </Route>
 
-        <Route path="/login" element={
-          <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
-        } />
+          <Route path="/login" element={
+            <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
+          } />
+
+        </Route>
 
         <Route path="/join" element={
           <Suspense fallback={<LoadingSpinner />}><UserJoin /></Suspense>
