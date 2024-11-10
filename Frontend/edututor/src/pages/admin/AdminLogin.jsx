@@ -56,7 +56,11 @@ const AdminLogin = () => {
 
     try {
       const result = await login(formData);
-      if (result) navigate('/admin');
+      if (result) {
+        const info = localStorage.getItem('info');
+        if (info) localStorage.removeItem('info');
+        navigate('/admin');
+      }
     } catch (error) {
       console.error('Login failed:', error);
     }
