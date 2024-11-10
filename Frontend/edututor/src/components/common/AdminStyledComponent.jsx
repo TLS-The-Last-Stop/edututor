@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useRef } from 'react';
 
 const InputWrapper = styled.div`
     width: 100%;
@@ -65,3 +66,68 @@ export const SelectInput = ({ children, ...props }) => (
     <Select {...props}>{children}</Select>
   </InputWrapper>
 );
+
+const FileInputWrapper = styled.div`
+    position: relative;
+    width: 100%;
+`;
+
+const HiddenFileInput = styled.input`
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+`;
+
+const FileInputButton = styled.button`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 40px;
+    padding: 0 1rem;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    color: #555;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e0;
+    }
+`;
+
+const FileNameDisplay = styled.div`
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #666;
+`;
+
+export const FileInput = ({ onChange, value }) => {
+  const fileInputRef = useRef(null);
+
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
+
+  return (
+    <FileInputWrapper>
+      <HiddenFileInput
+        type="file"
+        onChange={onChange}
+        ref={fileInputRef}
+        accept="image/*"
+      />
+      <FileInputButton type="button" onClick={handleClick}>
+        {value ? '이미지 변경' : '이미지 선택'}
+      </FileInputButton>
+      {value && (
+        <FileNameDisplay>
+          선택된 파일: {value.name}
+        </FileNameDisplay>
+      )}
+    </FileInputWrapper>
+  );
+};
