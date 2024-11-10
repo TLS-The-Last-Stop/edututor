@@ -123,6 +123,7 @@ const UserInfo = styled.div`
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
+    margin-top: 0;
 
     span {
         font-size: 14px;
@@ -518,7 +519,7 @@ const Header = () => {
           )}
 
           {userInfo ? (
-            <HamburgerMenuItem>
+            <HamburgerMenuItem style={{ justifyContent: 'center' }}>
               <UserInfo>
                 {userInfo.username}님
                 <HamburgerLogoutButton onClick={handleLogout}>로그아웃</HamburgerLogoutButton>
