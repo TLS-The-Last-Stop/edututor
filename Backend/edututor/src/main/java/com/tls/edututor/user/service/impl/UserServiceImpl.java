@@ -15,6 +15,7 @@ import com.tls.edututor.user.dto.request.UserTERequest;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
 import com.tls.edututor.user.service.UserService;
+import com.tls.edututor.user.service.UserStatisticsService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final SchoolRepository schoolRepository;
   private final ClassroomRepository classroomRepository;
+  private final UserStatisticsService userStatisticsService;
 
   @Override
   @Transactional(readOnly = true)
@@ -202,7 +204,22 @@ public class UserServiceImpl implements UserService {
 
     userRepository.delete(student);
 
+    userStatisticsService.refreshStatistics();
     return student.getId();
+  }
+
+  @Override
+  public void deleteTeacher(Long id) {
+    User teacher = userRepository.findById(id).orElseThrow();
+
+    Classroom classroom = classroomRepository.findById(teacher.getClassroom().getId()).orElseThrow();
+
+    List<User> students = userRepository.findByClassroomIdAndRole(classroom.getId(), "SU");
+    for (User student : students) userRepository.delete(student);
+
+    classroomRepository.delete(classroom);
+    userRepository.delete(teacher);
+    userStatisticsService.refreshStatistics();
   }
 
   @Override
