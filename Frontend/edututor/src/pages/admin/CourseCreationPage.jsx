@@ -9,7 +9,7 @@ const CourseCreationPage = () => {
   const gradeLevels = { 초등학교: 1004, 중학교: 1004, 고등학교: 1004 };
   const years = {
     초등학교: { '1학년': 1003, '2학년': 1003, '3학년': 1003, '4학년': 1003, '5학년': 1003, '6학년': 1003 },
-    중학교: { '1학년': 1003, '2학년': 1003, '3학년': 1003 },
+    중학교: { '1학년': 1003, '2학년': 1003 },
     고등학교: { '1학년': 1003, '2학년': 1003, '3학년': 1003 }
   };
   const semesters = { '1학기': 1002, '2학기': 1002 };
@@ -29,6 +29,7 @@ const CourseCreationPage = () => {
       }
     ]
   });
+  const [imageFile, setImageFile] = useState(null);
 
   const handleInputChange = (e, sectionIndex, unitIndex) => {
     const { name, value } = e.target;
@@ -53,6 +54,10 @@ const CourseCreationPage = () => {
     }
 
     setFormData(updatedFormData);
+  };
+
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
   };
 
   const addSection = () => {
@@ -87,28 +92,36 @@ const CourseCreationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const groupCode = `${formData.gradeLevel}-${formData.year}-${formData.semester}-${formData.subject}`;
-
-    const requestData = {
+    const requestData = new FormData();
+    const jsonBlob = new Blob([JSON.stringify({
       courseName: formData.courseName,
-      groupCode: groupCode,
+      groupCode: `${formData.gradeLevel}-${formData.year}-${formData.semester}-${formData.subject}`,
       sections: formData.sections
-    };
+    })], { type: 'application/json' });
+
+    requestData.append('request', jsonBlob);
+
+    if (imageFile) {
+      requestData.append('imageFile', imageFile);
+    }
 
     try {
-      const response = await publicApi.post('/course', requestData);
+      const response = await publicApi.post('/course', requestData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       if (response.data.status === 200) {
-        const message = { icon: 'success', title: '과정 생성 성공' };
-        showALert(message);
+        showALert({ icon: 'success', title: '과정 생성 성공' });
         navigate('/admin/course');
       } else {
         throw new Error(response.data.message || '과정 생성 실패');
       }
     } catch (error) {
-      const message = { icon: 'warning', title: `${error.message} || "과정 생성 중 오류가 발생했습니다."` };
-      showALert(message);
+      showALert({ icon: 'warning', title: error.message || '과정 생성 중 오류가 발생했습니다.' });
     }
   };
+
 
   return (
       <div className="course-creation-container">
@@ -121,6 +134,16 @@ const CourseCreationPage = () => {
                 name="courseName"
                 value={formData.courseName}
                 onChange={(e) => handleInputChange(e)}
+                className="input-field"
+            />
+          </div>
+
+          {/* 이미지 업로드 필드 추가 */}
+          <div className="form-field">
+            <label>이미지:</label>
+            <input
+                type="file"
+                onChange={handleFileChange}
                 className="input-field"
             />
           </div>
