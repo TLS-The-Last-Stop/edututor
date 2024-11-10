@@ -5,12 +5,14 @@ import com.tls.edututor.course.course.dto.response.CourseNameListResponse;
 import com.tls.edututor.course.course.dto.response.CourseResponse;
 import com.tls.edututor.course.course.entity.Course;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CourseService {
 
-  Course createCourseWithSectionsAndUnits(CourseRegisterRequest request);
+  Course createCourseWithSectionsAndUnits(Map<String, Object> request, MultipartFile imageFile);
 
   List<CourseNameListResponse> selectAllCourseList();
 

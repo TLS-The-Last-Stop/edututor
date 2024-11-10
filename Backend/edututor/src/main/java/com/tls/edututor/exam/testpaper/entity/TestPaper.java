@@ -27,7 +27,7 @@ public class TestPaper extends BaseEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "UNIT_ID", nullable = false)
+  @JoinColumn(name = "UNIT_ID")
   private Unit unit;
 
   @Column(name = "TITLE", nullable = false)

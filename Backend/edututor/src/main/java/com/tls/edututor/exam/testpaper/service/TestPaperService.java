@@ -8,4 +8,9 @@ public interface TestPaperService {
   void createTestPaperWithQuestionsAndOptions(TestPaperRegisterRequest request);
 
   TestPaperResponse getTestPaperById(Long id);
+
+  void updateTestPaper(Long testPaperId, TestPaperRegisterRequest request);
+
+  void deleteTestPaper(Long testPaperId);
+
 }

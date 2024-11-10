@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -64,6 +65,57 @@ public class TestPaperServiceImpl implements TestPaperService {
   }
 
   @Override
+  @Transactional
+  public void updateTestPaper(Long testPaperId, TestPaperRegisterRequest request) {
+    if (testPaperId == null) {
+      throw new IllegalArgumentException("시험지 ID는 null일 수 없습니다.");
+    }
+
+    TestPaper testPaper = testPaperRepository.findById(testPaperId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 시험지를 찾을 수 없습니다. ID: " + testPaperId));
+    Unit unit = unitRepository.findById(request.getUnitId())
+            .orElseThrow(() -> new IllegalArgumentException("Unit not found with id: " + request.getUnitId()));
+
+    testPaper.setUnit(unit);
+    testPaper.setTitle(request.getTitle());
+
+    for (QuestionRegisterRequest questionRegister : request.getQuestions()) {
+      Question question;
+
+      if (questionRegister.getId() != null) {
+        question = questionRepository.findById(questionRegister.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 질문을 찾을 수 없습니다. ID: " + questionRegister.getId()));
+      } else {
+        question = new Question();
+        question.setTestPaper(testPaper);
+      }
+
+      question.setContent(questionRegister.getContent());
+      question.setPassage(questionRegister.getPassage());
+      question.setCommentary(questionRegister.getCommentary());
+      question.setType(questionRegister.getType());
+      question.setLevel(questionRegister.getLevel());
+
+      if (questionRegister.getType() == QuestionType.SUBJECTIVE) {
+        question.setAnswerText(questionRegister.getAnswerText());
+      } else {
+        question.getOptions().clear();  // 기존 옵션 제거
+        for (OptionRegisterRequest optionRegister : questionRegister.getOptions()) {
+          Option option = new Option();
+          option.setContent(optionRegister.getContent());
+          option.setIsCorrect(optionRegister.getIsCorrect());
+          option.setQuestion(question);
+          question.getOptions().add(option);
+        }
+      }
+      questionRepository.save(question);
+    }
+
+    testPaperRepository.save(testPaper);
+  }
+
+
+  @Override
   public TestPaperResponse getTestPaperById(Long id) {
     TestPaper testPaper = testPaperRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 시험지를 찾을 수 없습니다. ID: " + id));
@@ -74,6 +126,7 @@ public class TestPaperServiceImpl implements TestPaperService {
     TestPaperResponse response = new TestPaperResponse();
     response.setTestPaperId(testPaper.getId());
     response.setTitle(testPaper.getTitle());
+    response.setUnitId(testPaper.getUnit().getId()); // 추가: unitId 설정
 
     List<QuestionResponse> questionResponses = testPaper.getQuestions().stream().map(question -> {
       QuestionResponse questionResponse = new QuestionResponse();
@@ -90,15 +143,21 @@ public class TestPaperServiceImpl implements TestPaperService {
         optionResponse.setContent(option.getContent());
         optionResponse.setIsCorrect(option.getIsCorrect());
         return optionResponse;
-      }).toList();
+      }).collect(Collectors.toList());
 
       questionResponse.setOptions(optionResponses);
       return questionResponse;
-    }).toList();
+    }).collect(Collectors.toList());
 
     response.setQuestions(questionResponses);
     return response;
   }
 
+  @Override
+  @Transactional
+  public void deleteTestPaper(Long testPaperId) {
+    TestPaper testPaper = testPaperRepository.findById(testPaperId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 시험지를 찾을 수 없습니다. ID: " + testPaperId));
+    testPaperRepository.delete(testPaper);
+  }
 }
-

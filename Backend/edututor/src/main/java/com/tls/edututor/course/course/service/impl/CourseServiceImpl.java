@@ -1,5 +1,8 @@
 package com.tls.edututor.course.course.service.impl;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.classroom.repository.ClassroomRepository;
 import com.tls.edututor.code.codedetail.repository.CodeDetailRepository;
@@ -27,14 +30,20 @@ import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
 import com.tls.edututor.exam.testpaper.dto.response.TestPaperResponse;
 import com.tls.edututor.exam.usertest.repository.UserTestRepository;
+import com.tls.edututor.image.entity.Image;
 import com.tls.edututor.user.dto.response.AuthUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -49,24 +58,90 @@ public class CourseServiceImpl implements CourseService {
   private final CodeDetailRepository codeDetailRepository;
   private final ShareTestRepository shareTestRepository;
   private final UserTestRepository userTestRepository;
+  private final AmazonS3 amazonS3;
+
+  @Value("${cloud.aws.s3.bucket}")
+  private String bucketName;
 
   @Override
   @Transactional
-  public Course createCourseWithSectionsAndUnits(CourseRegisterRequest request) {
-    Course course = buildCourse(request);
+  public Course createCourseWithSectionsAndUnits(Map<String, Object> request, MultipartFile imageFile) {
+    // Map 데이터를 Course로 변환하여 빌드
+    Course course = buildCourseFromMap(request);
     Course savedCourse = courseRepository.save(course);
 
-    for (SectionRegisterRequest sectionRegister : request.getSections()) {
-      Section section = buildSection(savedCourse, sectionRegister);
-      Section savedSection = sectionRepository.save(section);
+    // 이미지 업로드 처리
+    if (imageFile != null && !imageFile.isEmpty()) {
+      String imageUrl = uploadImageToS3(imageFile);
+      Image image = Image.builder()
+              .imageUrl(imageUrl)
+              .course(savedCourse)
+              .build();
+      savedCourse.setImage(image);
+    }
 
-      for (UnitRegisterRequest unitRegister : sectionRegister.getUnits()) {
-        Unit unit = buildUnit(savedSection, unitRegister);
+    // Section 목록 처리
+    List<Map<String, Object>> sections = (List<Map<String, Object>>) request.get("sections");
+    for (Map<String, Object> sectionMap : sections) {
+      Section section = buildSectionFromMap(savedCourse, sectionMap);
+      sectionRepository.save(section);
+
+      // Unit 목록 처리
+      List<Map<String, Object>> units = (List<Map<String, Object>>) sectionMap.get("units");
+      for (Map<String, Object> unitMap : units) {
+        Unit unit = buildUnitFromMap(section, unitMap);
         unitRepository.save(unit);
       }
     }
 
     return savedCourse;
+  }
+
+  private Course buildCourseFromMap(Map<String, Object> map) {
+    String groupCode = (String) map.get("groupCode");
+    String[] parts = groupCode.split("-");
+    if (parts.length != 4) {
+      throw new IllegalArgumentException("데이터가 맞지 않음 급수-학년-학기-과목");
+    }
+
+    List<String> names = List.of(parts[0], parts[1], parts[2], parts[3]);
+    long count = names.size();
+
+    Long codeGroupId = codeDetailRepository.findCodeGroupIdByCommonCodeNames(names, count)
+            .orElseThrow(() -> new RuntimeException("해당 groupCode에 해당하는 공통 코드 그룹이 존재하지 않음: " + groupCode));
+
+    CodeGroup codeGroup = codeGroupRepository.findById(codeGroupId)
+            .orElseThrow(() -> new RuntimeException("해당 그룹 ID에 해당하는 CodeGroup이 존재하지 않음: " + codeGroupId));
+
+    return Course.builder()
+            .courseName((String) map.get("courseName"))
+            .groupCode(codeGroup)
+            .build();
+  }
+
+  private Section buildSectionFromMap(Course course, Map<String, Object> map) {
+    return Section.builder()
+            .course(course)
+            .content((String) map.get("content"))
+            .build();
+  }
+
+  private Unit buildUnitFromMap(Section section, Map<String, Object> map) {
+    return Unit.builder()
+            .section(section)
+            .content((String) map.get("content"))
+            .build();
+  }
+
+  private String uploadImageToS3(MultipartFile file) {
+    String fileName = "images/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+    try {
+      amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), null)
+              .withCannedAcl(CannedAccessControlList.PublicRead));
+      return amazonS3.getUrl(bucketName, fileName).toString();
+    } catch (IOException e) {
+      throw new RuntimeException("S3에 이미지 업로드 실패", e);
+    }
   }
 
   private Course buildCourse(CourseRegisterRequest request) {

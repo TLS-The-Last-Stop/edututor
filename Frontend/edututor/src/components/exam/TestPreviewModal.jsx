@@ -6,7 +6,7 @@ import { showALert } from '../../utils/SwalAlert.js';
 const TestPreviewModal = ({ isOpen, onClose, testData }) => {
   const [isReportingIssue, setIsReportingIssue] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [reportContent, setReportContent] = useState(''); // 신고 내용 상태 추가
+  const [reportContent, setReportContent] = useState('');
 
   if (!isOpen || !testData) return null;
 

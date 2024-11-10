@@ -3,11 +3,15 @@ package com.tls.edututor.report.service.impl;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.course.course.entity.CourseClassroom;
 import com.tls.edututor.course.courseclassroom.repository.CourseClassroomRepository;
+import com.tls.edututor.exam.question.dto.response.QuestionDetailResponse;
+import com.tls.edututor.exam.question.dto.response.QuestionResponse;
 import com.tls.edututor.exam.question.entity.Question;
 import com.tls.edututor.exam.question.repository.QuestionRepository;
+import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import com.tls.edututor.exam.testpaper.repository.TestPaperRepository;
+import com.tls.edututor.exam.useransewer.dto.response.UserAnswerResponse;
 import com.tls.edututor.exam.useransewer.entity.UserAnswer;
 import com.tls.edututor.exam.useransewer.repositroy.UserAnswerRepository;
 import com.tls.edututor.exam.usertest.entity.UserTest;
@@ -158,8 +162,36 @@ public class ReportServiceImpl implements ReportService {
   @Override
   public Page<ShareTestResponse> getSharedTests(Authentication authentication, Pageable pageable) {
     Long userId = ((AuthUser) authentication.getPrincipal()).getId();
+
     return shareTestRepository.findByUserId(userId, pageable)
-            .map(ShareTestResponse::fromEntity);
+            .map(shareTest -> {
+              List<UserAnswerResponse> questionResponses = shareTest.getUserTests().stream()
+                      .flatMap(userTest -> userTest.getUserAnswers().stream())
+                      .map(UserAnswerResponse::fromUserAnswer)
+                      .collect(Collectors.toList());
+
+              // 총 점수를 계산
+              Double totalScore = questionResponses.stream()
+                      .filter(UserAnswerResponse::isCorrect)
+                      .mapToDouble(UserAnswerResponse::getScore)
+                      .sum();
+
+              // ShareTestResponse 객체 생성
+              return ShareTestResponse.builder()
+                      .userTestId(shareTest.getId())
+                      .testPaperName(shareTest.getTestPaper().getTitle())
+                      .questions(questionResponses)
+                      .totalScore(totalScore)
+                      .build();
+            });
   }
 
+
+  @Override
+  public ShareTestResponse getSharedTestDetail(Long userTestId) {
+    UserTest userTest = userTestRepository.findById(userTestId)
+            .orElseThrow(() -> new RuntimeException("유저 테스트를 찾을 수 없습니다."));
+
+    return ShareTestResponse.fromUserTest(userTest);
+  }
 }

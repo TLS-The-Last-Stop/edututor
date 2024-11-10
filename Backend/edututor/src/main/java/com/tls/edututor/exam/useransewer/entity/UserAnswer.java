@@ -23,17 +23,17 @@ public class UserAnswer extends BaseEntity {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "USER_TEST_ID", nullable = false)
+  @JoinColumn(name = "USER_TEST_ID")
   private UserTest userTest;
 
   @ManyToOne
-  @JoinColumn(name = "QUESTION_ID", nullable = false)
+  @JoinColumn(name = "QUESTION_ID")
   private Question question;
 
   @Column(name = "ANSWER")
   private String answer;
 
-  @Column(name = "SUBMITTED_AT", nullable = false)
+  @Column(name = "SUBMITTED_AT")
   private LocalDateTime submittedAt;
 
   @Column(name = "IS_CORRECT")

@@ -3,6 +3,7 @@ package com.tls.edututor.exam.sharetest.controller;
 import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.exam.sharetest.dto.request.ShareTestRequest;
 import com.tls.edututor.exam.sharetest.service.impl.ShareTestService;
+import com.tls.edututor.report.dto.response.ShareTestResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

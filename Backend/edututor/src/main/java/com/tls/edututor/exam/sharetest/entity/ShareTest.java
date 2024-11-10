@@ -43,9 +43,4 @@ public class ShareTest extends BaseEntity {
   @Column(name = "DEADLINE")
   private LocalDateTime deadline;
 
-  /*
-  @Override
-  public void setWriter(Long writer) {
-    super.setWriter(writer);
-  }*/
 }

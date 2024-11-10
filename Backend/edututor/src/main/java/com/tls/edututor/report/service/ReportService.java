@@ -13,4 +13,6 @@ public interface ReportService {
   TestPaperDetailResponse getTestPaperDetail(Long testPaperId);
 
   Page<ShareTestResponse> getSharedTests(Authentication authentication, Pageable pageable);
+
+  ShareTestResponse getSharedTestDetail(Long testId);
 }
