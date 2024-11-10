@@ -1,5 +1,7 @@
 package com.tls.edututor.common.initilizer;
 
+import com.tls.edututor.board.answer.entity.Answer;
+import com.tls.edututor.board.answer.repository.AnswerRepository;
 import com.tls.edututor.board.board.entity.Board;
 import com.tls.edututor.board.board.repository.BoardRepository;
 import com.tls.edututor.board.category.entity.Category;
@@ -76,6 +78,7 @@ public class DataInitializer {
   private final UserTestRepository userTestRepository;
   private final CategoryRepository categoryRepository;
   private final BoardRepository boardRepository;
+  private final AnswerRepository answerRepository;
 
   public DataInitializer(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
                          SchoolRepository schoolRepository, ClassroomRepository classroomRepository,
@@ -84,7 +87,7 @@ public class DataInitializer {
                          MaterialRepository materialRepository, TestPaperRepository testPaperRepository,
                          ShareTestRepository shareTestRepository, QuestionRepository questionRepository,
                          OptionRepository optionRepository, CodeGroupRepository codeGroupRepository, CodeDetailRepository codeDetailRepository,
-                         UserAnswerRepository userAnswerRepository, UserTestRepository userTestRepository, CategoryRepository categoryRepository, BoardRepository boardRepository) {
+                         UserAnswerRepository userAnswerRepository, UserTestRepository userTestRepository, CategoryRepository categoryRepository, BoardRepository boardRepository, AnswerRepository answerRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.schoolRepository = schoolRepository;
@@ -104,6 +107,7 @@ public class DataInitializer {
     this.userTestRepository = userTestRepository;
     this.categoryRepository = categoryRepository;
     this.boardRepository = boardRepository;
+    this.answerRepository = answerRepository;
   }
 
 
@@ -586,30 +590,11 @@ public class DataInitializer {
 
     Board board4 = new Board();
     board4.setIsDeleted(false);
-    board4.setCategory(categoryRepository.getReferenceById(5L));
+    board4.setCategory(categoryRepository.getReferenceById(1L));
     board4.setCreatedAt(LocalDateTime.now());
-    board4.setTitle("클래스 생성 및 관리는 어떻게 하나요?");
-    board4.setContent("지니아튜터의 클래스는 우리반T셀파(class.tsherpa.co.kr)의 클래스와 연동됩니다.\n" +
-            "\n" +
-            "따라서 클래스 생성과 관리는 우리반T셀파에서 하실 수 있습니다.");
-
-    Board board5 = new Board();
-    board5.setIsDeleted(false);
-    board5.setCategory(categoryRepository.getReferenceById(6L));
-    board5.setCreatedAt(LocalDateTime.now());
-    board5.setTitle("코스웨어는 어떤 기준으로 설정되어 있나요?");
-    board5.setContent("지니아튜터의 코스웨어는 크게 2가지 기준으로 나뉩니다.\n" +
-            "하나는 천재교과서에서 발행하는 교과서의 목차에 맞춰서 설정하였고\n" +
-            "\n" +
-            "천재교과서를 이용하지 않는 학교를 위해 성취기준에 맞춘 과정도 준비하였습니다.");
-
-    Board board6 = new Board();
-    board6.setIsDeleted(false);
-    board6.setCategory(categoryRepository.getReferenceById(1L));
-    board6.setCreatedAt(LocalDateTime.now());
-    board6.setTitle("\n" +
+    board4.setTitle("\n" +
             "10/5(목) 17:00~18:00 시스템 점검 안내");
-    board6.setContent("안녕하세요. 지니아튜터 관리자입니다.\n" +
+    board4.setContent("안녕하세요. 지니아튜터 관리자입니다.\n" +
             "\n" +
             "지니아튜터를 이용해 주시는 사용자분들께 감사드리며,  \n" +
             "\n" +
@@ -631,13 +616,13 @@ public class DataInitializer {
             "\n" +
             "감사합니다.");
 
-    Board board7 = new Board();
-    board7.setIsDeleted(false);
-    board7.setCategory(categoryRepository.getReferenceById(1L));
-    board7.setCreatedAt(LocalDateTime.now());
-    board7.setTitle("\n" +
+    Board board5 = new Board();
+    board5.setIsDeleted(false);
+    board5.setCategory(categoryRepository.getReferenceById(1L));
+    board5.setCreatedAt(LocalDateTime.now());
+    board5.setTitle("\n" +
             "11/30(목) 17시~18시 시스템 점검 안내");
-    board7.setContent("안녕하세요. 지니아튜터 관리자입니다.\n" +
+    board5.setContent("안녕하세요. 지니아튜터 관리자입니다.\n" +
             "\n" +
             "지니아튜터의 연동 사이트가 시스템 점검을 진행하여 일부 기능이 작동하지 않을 수 있음을 알려드립니다.\n" +
             "\n" +
@@ -656,6 +641,25 @@ public class DataInitializer {
             "사이트 이용에 불편을 드리게 된 점 양해 부탁드리며, 안정된 서비스 제공을 위해 최선을 다하겠습니다.\n" +
             "\n" +
             "감사합니다.");
+
+    Board board6 = new Board();
+    board6.setIsDeleted(false);
+    board6.setCategory(categoryRepository.getReferenceById(5L));
+    board6.setCreatedAt(LocalDateTime.now());
+    board6.setTitle("클래스 생성 및 관리는 어떻게 하나요?");
+    board6.setContent("지니아튜터의 클래스는 우리반T셀파(class.tsherpa.co.kr)의 클래스와 연동됩니다.\n" +
+            "\n" +
+            "따라서 클래스 생성과 관리는 우리반T셀파에서 하실 수 있습니다.");
+
+    Board board7 = new Board();
+    board7.setIsDeleted(false);
+    board7.setCategory(categoryRepository.getReferenceById(6L));
+    board7.setCreatedAt(LocalDateTime.now());
+    board7.setTitle("코스웨어는 어떤 기준으로 설정되어 있나요?");
+    board7.setContent("지니아튜터의 코스웨어는 크게 2가지 기준으로 나뉩니다.\n" +
+            "하나는 천재교과서에서 발행하는 교과서의 목차에 맞춰서 설정하였고\n" +
+            "\n" +
+            "천재교과서를 이용하지 않는 학교를 위해 성취기준에 맞춘 과정도 준비하였습니다.");
 
     Board board8 = new Board();
     board8.setIsDeleted(false);
@@ -694,8 +698,25 @@ public class DataInitializer {
     board10.setContent("선생님이 원하시면 배포취소는 언제든지 하실 수 있습니다.\n" +
             "다만 배포취소를 할 경우에 학생들이 푼 학습결과와 리포트는 모두 사라지게 됩니다.");
 
+    Board board11 = new Board();
+    board11.setIsDeleted(false);
+    board11.setCategory(categoryRepository.getReferenceById(3L));
+    board11.setCreatedAt(LocalDateTime.now());
+    board11.setTitle("문의입니다!");
+    board11.setContent("학생들에게 시험 공유는 어떻게 하는 건가요?");
+
     boardRepository.saveAll(List.of(board1, board2, board3, board4, board5, board6, board7,
-            board8, board9, board10));
+            board8, board9, board10, board11));
   }
 
+  @Transactional
+  protected void initializeAnswer() {
+    Answer answer1 = new Answer();
+    answer1.setIsDeleted(false);
+//    answer1.setId(1L);
+    answer1.setBoard(boardRepository.getReferenceById(11L));
+    answer1.setContent("학습 과정에서 두 번째 공유 아이콘을 누르면 됩니다.");
+
+    answerRepository.save(answer1);
+  }
 }
