@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.awt.print.Printable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     List<BoardResponse> boardResponses = new ArrayList<>();
+
+    if (authentication == null) {
+      for (Board board : boards) {
+        Answer answer = answerRepository.findByBoardId(board.getId());
+        boardResponses.add(BoardResponse.dto(board, "", answer));
+      }
+
+      return boardResponses;
+    }
+
     String username = ((AuthUser) authentication.getPrincipal()).getUsername();
 
     for (Board board : boards) {
