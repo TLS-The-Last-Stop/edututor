@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "USER_ANSWER")
-@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLDelete(sql = "UPDATE USER_ANSWER SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class UserAnswer extends BaseEntity {
   @Id

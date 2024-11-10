@@ -1,52 +1,82 @@
-.material-edit-page {
-    max-width: 800px;
-    margin: 0 auto;
+.material-edit-container {
     padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
     background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.material-edit-page h2 {
+.page-title {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
+    font-size: 2.4rem;
+    font-weight: 700;
+}
+
+.material-form {
+    display: flex;
+    flex-direction: column;
 }
 
 .form-field {
     margin-bottom: 15px;
 }
 
-.form-field label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+.input-field,
+.textarea-field {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
-.form-field input,
-.form-field textarea {
+.textarea-field {
+    height: 100px;
+}
+
+.submit-button,
+.delete-button {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
-    border: 1px solid #ddd;
+    margin-top: 10px;
     border-radius: 4px;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #007bff;
-    color: white;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-button.delete-button {
-    background-color: #dc3545;
-    margin-left: 10px;
+.submit-button0 {
+    background-color: #656ff5;
+    color: white;
 }
 
-button:hover {
-    opacity: 0.9;
+.submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.delete-button {
+    background-color: #e85562;
+    color: white;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.success-message {
+    color: green;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
 }

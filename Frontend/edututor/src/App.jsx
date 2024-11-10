@@ -141,6 +141,14 @@ function AppRoutes() {
             </Suspense>
           } />
 
+          <Route path="material/edit/:materialId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <MaterialEditPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
           <Route path="create-test-paper" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="AD">

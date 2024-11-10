@@ -1,28 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import '../../assets/css/MaterialEditPage.css';
 import { publicApi } from '../../api/axios.js';
 import { showALert } from '../../utils/SwalAlert.js';
-import Loading from '../../components/common/Loading.jsx';
 
 const MaterialEditPage = () => {
   const { materialId } = useParams();
-  const [formData, setFormData] = useState({ title: '', content: '' });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    url: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMaterial = async () => {
       try {
         const response = await publicApi.get(`/material/${materialId}`);
-        setFormData({ title: response.data.data.title, content: response.data.data.content });
-        setLoading(false);
-      } catch (err) {
-        setError('학습자료 데이터를 가져오는 중 오류가 발생했습니다.');
-        setLoading(false);
+        const { title, content, url } = response.data.data;
+        setFormData({ title, content, url });
+      } catch (error) {
+        setErrorMessage('학습자료 데이터를 불러오는 중 오류가 발생했습니다.');
+        console.error('Error loading material:', error);
       }
     };
-
     fetchMaterial();
   }, [materialId]);
 
@@ -31,60 +35,84 @@ const MaterialEditPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSuccessMessage('');
+    setErrorMessage('');
+
     try {
       await publicApi.put(`/material/${materialId}`, formData);
-      const message = { icon: 'success', title: '학습자료가 성공적으로 수정되었습니다!' };
-      showALert(message);
-      navigate(-1); // 이전 페이지로 이동
+      setSuccessMessage('학습자료가 성공적으로 수정되었습니다!');
+      showALert({ icon: 'success', title: '학습자료가 성공적으로 수정되었습니다!' });
+      navigate(-1);
     } catch (error) {
-      setError('학습자료 수정 중 오류가 발생했습니다.');
+      setErrorMessage('학습자료 수정 중 오류가 발생했습니다.');
+      console.error('Error updating material:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDelete = async () => {
     try {
       await publicApi.delete(`/material/${materialId}`);
-      const message = { icon: 'success', title: '학습자료가 성공적으로 삭제되었습니다!' };
-      showALert(message);
-      navigate(-1); // 이전 페이지로 이동
+      showALert({ icon: 'success', title: '학습자료가 성공적으로 삭제되었습니다!' });
+      navigate(-1);
     } catch (error) {
-      setError('학습자료 삭제 중 오류가 발생했습니다.');
+      setErrorMessage('학습자료 삭제 중 오류가 발생했습니다.');
+      console.error('Error deleting material:', error);
     }
   };
 
-  if (loading) return <p><Loading /></p>;
-  if (error) return <p>{error}</p>;
-
   return (
-    <div className="material-edit-page">
-      <h2>학습자료 수정</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-field">
-          <label>제목 (Title):</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-field">
-          <label>내용 (Content):</label>
-          <textarea
-            name="content"
-            value={formData.content}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+      <div className="material-edit-container">
+        <h2 className="page-title">학습 자료 수정</h2>
+        <form onSubmit={handleUpdate} className="material-form">
+          <div className="form-field">
+            <label>제목 (Title):</label>
+            <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className="input-field"
+                required
+            />
+          </div>
+          <div className="form-field">
+            <label>내용 (Content):</label>
+            <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleInputChange}
+                className="textarea-field"
+                required
+            />
+          </div>
+          <div className="form-field">
+            <label>학습자료 URL (선택):</label>
+            <input
+                type="text"
+                name="url"
+                value={formData.url}
+                onChange={handleInputChange}
+                className="input-field"
+                placeholder="https://www.youtube.com/watch?v=example"
+            />
+          </div>
 
-        <button type="submit">수정하기</button>
-        <button type="button" onClick={handleDelete} className="delete-button">삭제하기</button>
-      </form>
-    </div>
+          <button type="submit" className="submit-button0" disabled={isSubmitting}>
+            {isSubmitting ? '수정 중...' : '수정하기'}
+          </button>
+          <button type="button" onClick={handleDelete} className="delete-button">
+            삭제하기
+          </button>
+
+          {successMessage && <p className="success-message">{successMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </form>
+      </div>
   );
 };
 

@@ -170,31 +170,64 @@ public class CourseServiceImpl implements CourseService {
   }
 
 
-	@Override
-	@Transactional
-	public void updateCourse(Long courseId, CourseRegisterRequest request) {
-		Course course = courseRepository.findById(courseId)
-						.orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
+  @Override
+  @Transactional
+  public void updateCourse(Long courseId, CourseRegisterRequest request) {
+    Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
 
-		course.setCourseName(request.getCourseName());
+    course.setCourseName(request.getCourseName());
 
-		sectionRepository.deleteAll(course.getSections());
-		course.setSections(null);
+    List<Section> existingSections = course.getSections();
+    for (int i = 0; i < request.getSections().size(); i++) {
+      SectionRegisterRequest sectionRegister = request.getSections().get(i);
+      Section section;
 
-		for (SectionRegisterRequest sectionRegister : request.getSections()) {
-			Section section = buildSection(course, sectionRegister);
-			Section savedSection = sectionRepository.save(section);
+      if (i < existingSections.size()) {
+        section = existingSections.get(i);
+        section.setContent(sectionRegister.getContent());
+      } else {
+        section = buildSection(course, sectionRegister);
+        sectionRepository.save(section);
+      }
 
-			for (UnitRegisterRequest unitRegister : sectionRegister.getUnits()) {
-				Unit unit = buildUnit(savedSection, unitRegister);
-				unitRepository.save(unit);
-			}
-		}
+      List<Unit> existingUnits = section.getUnits();
+      for (int j = 0; j < sectionRegister.getUnits().size(); j++) {
+        UnitRegisterRequest unitRegister = sectionRegister.getUnits().get(j);
+        Unit unit;
 
-		courseRepository.save(course);
-	}
+        if (j < existingUnits.size()) {
+          unit = existingUnits.get(j);
+          unit.setContent(unitRegister.getContent());
+        } else {
+          unit = buildUnit(section, unitRegister);
+          unitRepository.save(unit);
+        }
+      }
 
-	@Override
+      if (existingUnits.size() > sectionRegister.getUnits().size()) {
+        List<Unit> unitsToDelete = existingUnits.subList(sectionRegister.getUnits().size(), existingUnits.size());
+        unitsToDelete.forEach(unit -> {
+          unitRepository.delete(unit);
+          unitRepository.flush();
+        });
+      }
+    }
+
+    if (existingSections.size() > request.getSections().size()) {
+      List<Section> sectionsToDelete = existingSections.subList(request.getSections().size(), existingSections.size());
+      sectionsToDelete.forEach(section -> {
+        sectionRepository.delete(section);
+        sectionRepository.flush();
+      });
+    }
+
+    courseRepository.save(course);
+  }
+
+
+
+  @Override
 	@Transactional
 	public void deleteCourse(Long courseId) {
 		Course course = courseRepository.findById(courseId)
