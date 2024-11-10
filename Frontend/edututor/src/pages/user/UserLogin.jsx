@@ -41,7 +41,6 @@ const Logo = styled.div`
     }
 `;
 
-
 const UserLogin = () => {
   const [selectedType, setSelectedType] = useState('teacher');
 
