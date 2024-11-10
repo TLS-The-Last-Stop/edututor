@@ -1,12 +1,9 @@
 package com.tls.edututor.user.service.impl;
 
-import com.tls.edututor.user.dto.response.TeacherStudentCount;
-import com.tls.edututor.user.dto.response.UserSignupStats;
-import com.tls.edututor.user.dto.response.UserStatisticsResponse;
+import com.tls.edututor.user.dto.response.*;
 import com.tls.edututor.user.repository.UserRepository;
 import com.tls.edututor.user.service.UserStatisticsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +22,11 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
   private static final String STATS_CACHE_KEY = "user:statistics";
   private static final Long CACHE_TTL_HOURS = 1L;
 
-  @Cacheable(value = "userStats", key = "'monthly'")
   public UserStatisticsResponse getUserStatistics() {
     UserStatisticsResponse cached = (UserStatisticsResponse) redisTemplate.opsForValue().get(STATS_CACHE_KEY);
 
     if (cached != null) return cached;
 
-    // 캐시가 없다면 db에서 조회
     UserStatisticsResponse response = calculateStatistics();
     redisTemplate.opsForValue().set(STATS_CACHE_KEY, response, CACHE_TTL_HOURS, TimeUnit.HOURS);
 
@@ -47,30 +42,79 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
   public UserStatisticsResponse calculateStatistics() {
     UserStatisticsResponse response = new UserStatisticsResponse();
 
-    // 전체 통계
-    Long teacherCount = userRepository.countByRole("TE");
-    Long studentCount = userRepository.countByRole("SU");
+    UserStatisticsResponse.SignupStats signupStats = new UserStatisticsResponse.SignupStats();
 
-    response.setTotalTeachers(teacherCount);
-    response.setTotalStudents(studentCount);
-    response.setTotalUsers(teacherCount + studentCount);
-
-    // 월별 가입자
-    List<UserSignupStats> monthlyStats = userRepository.getMonthlySignupStats();
-    List<UserStatisticsResponse.MonthlySignup> monthlySignups = monthlyStats.stream()
+    List<YearlySignupStats> yearlySignupStats = userRepository.getYearlySignupStats();
+    List<UserStatisticsResponse.YearlySignup> yearlySignups = yearlySignupStats.stream()
             .map(stat -> {
-              UserStatisticsResponse.MonthlySignup signup = new UserStatisticsResponse.MonthlySignup();
-              signup.setYearMonth(String.format("%d-%02d", stat.getYear(), stat.getMonth()));
-              signup.setCount(stat.getCount());
-              return signup;
+              UserStatisticsResponse.YearlySignup yearlySignup = new UserStatisticsResponse.YearlySignup();
+              yearlySignup.setYear(stat.getYear());
+              yearlySignup.setCount(stat.getCount());
+              return yearlySignup;
             }).collect(Collectors.toList());
+    signupStats.setYearlySignups(yearlySignups);
 
-    response.setMonthlySignups(monthlySignups);
+    List<MonthlySignupStats> monthlySignupStats = userRepository.getMonthlySignupStats();
+    List<UserStatisticsResponse.MonthlySignup> monthlySignups = monthlySignupStats.stream()
+            .map(stat -> {
+              UserStatisticsResponse.MonthlySignup monthlySignup = new UserStatisticsResponse.MonthlySignup();
+              monthlySignup.setYearMonth(String.format("%d-%02d", stat.getYear(), stat.getMonth()));
+              monthlySignup.setCount(stat.getCount());
+              return monthlySignup;
+            }).collect(Collectors.toList());
+    signupStats.setMonthlySignups(monthlySignups);
 
-    // 선생님별 학생 수
-    List<TeacherStudentCount> teacherStudentCounts = userRepository.getTeacherStudentCounts();
-    response.setTeacherStudentCounts(teacherStudentCounts);
+    List<DailySignupStats> dailySignupStats = userRepository.getDailySignupStats();
+    List<UserStatisticsResponse.DailySignup> dailySignups = dailySignupStats.stream()
+            .limit(30)
+            .map(stat -> {
+              UserStatisticsResponse.DailySignup dailySignup = new UserStatisticsResponse.DailySignup();
+              dailySignup.setDate(stat.getSignupDate());
+              dailySignup.setCount(stat.getCount());
+              return dailySignup;
+            }).collect(Collectors.toList());
+    signupStats.setDailySignups(dailySignups);
+
+    response.setSignupStats(signupStats);
+
+    UserStatisticsResponse.RatioStats ratioStats = new UserStatisticsResponse.RatioStats();
+    long teacherCount = userRepository.countByRole("TE");
+    long studentCount = userRepository.countByRole("SU");
+    long totalUsers = teacherCount + studentCount;
+
+    ratioStats.setTotalUsers(totalUsers);
+    ratioStats.setTeacherCount(teacherCount);
+    ratioStats.setStudentCount(studentCount);
+    ratioStats.setTeacherRatio(totalUsers > 0 ? (double) teacherCount / totalUsers * 100 : 0);
+    ratioStats.setStudentRatio(totalUsers > 0 ? (double) studentCount / totalUsers * 100 : 0);
+
+    response.setRatioStats(ratioStats);
+
+    List<UserDeletedStatsInterface> interfaces = userRepository.getDeletedUserStats();
+    UserStatisticsResponse.DeletedStats deletedStats = new UserStatisticsResponse.DeletedStats();
+
+    List<UserDeletedStats> deletedUserStats = interfaces.stream()
+            .map(i -> new UserDeletedStats(
+                    i.getRole(),
+                    i.getTotalCount(),
+                    i.getDeletedCount(),
+                    i.getLastDeletedAt()))
+            .collect(Collectors.toList());
+
+    deletedUserStats.forEach(stat -> {
+      UserStatisticsResponse.RoleDeletedStats roleDeletedStats = new UserStatisticsResponse.RoleDeletedStats();
+      roleDeletedStats.setRole(stat.getRole());
+      roleDeletedStats.setTotalCount(stat.getTotalCount());
+      roleDeletedStats.setDeletedCount(stat.getDeletedCount());
+      roleDeletedStats.setDeleteRate(stat.getDeleteRate());
+
+      if ("TE".equals(stat.getRole())) deletedStats.setTeacher(roleDeletedStats);
+      else if ("SU".equals(stat.getRole())) deletedStats.setStudent(roleDeletedStats);
+    });
+
+    response.setDeletedStats(deletedStats);
 
     return response;
   }
+
 }

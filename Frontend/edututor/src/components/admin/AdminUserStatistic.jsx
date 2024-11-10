@@ -3,6 +3,8 @@ import { getStatistics } from '../../api/user/user.js';
 import Loading from '../common/Loading.jsx';
 import styled from 'styled-components';
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Cell,
   Legend,
@@ -67,6 +69,10 @@ const ChartGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
+
+    > div {
+        height: 350px;
+    }
 `;
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -83,6 +89,37 @@ const initStats = {
 const AdminUserStatistic = () => {
   const [stats, setStats] = useState(initStats);
 
+  const yearlyData = stats.signupStats?.yearlySignups || [];
+  const monthlyData = stats.signupStats?.monthlySignups || [];
+  const dailyData = stats.signupStats?.dailySignups || [];
+  const sortedDailyData = [...dailyData].sort((a, b) => {
+    // "24-11-08" 형식의 문자열을 Date 객체로 변환하여 비교
+    const dateA = new Date('20' + a.date.replace(/-/g, '/'));
+    const dateB = new Date('20' + b.date.replace(/-/g, '/'));
+    return dateA - dateB;
+  });
+
+  const userRatioData = [
+    { name: '선생님', value: stats.ratioStats?.teacherCount || 0 },
+    { name: '학생', value: stats.ratioStats?.studentCount || 0 }
+  ];
+
+  const deletedData = [
+    {
+      name   : '선생님',
+      total  : stats.deletedStats?.teacher?.totalCount || 0,
+      deleted: stats.deletedStats?.teacher?.deletedCount || 0,
+      rate   : stats.deletedStats?.teacher?.deleteRate || 0
+    },
+    {
+      name   : '학생',
+      total  : stats.deletedStats?.student?.totalCount || 0,
+      deleted: stats.deletedStats?.student?.deletedCount || 0,
+      rate   : stats.deletedStats?.student?.deleteRate || 0
+    }
+  ];
+
+
   const fetchingStatistics = async () => {
     const statistics = await getStatistics();
     setStats(statistics.data);
@@ -96,11 +133,6 @@ const AdminUserStatistic = () => {
     }
   }, []);
 
-  const userRatioData = [
-    { name: '선생님', value: stats.totalTeachers },
-    { name: '학생', value: stats.totalStudents }
-  ];
-
   if (!stats) return <div><Loading /></div>;
 
   return (
@@ -108,43 +140,78 @@ const AdminUserStatistic = () => {
       <StatsCards>
         <StatCard>
           <h3>전체 사용자</h3>
-          <p>{stats.totalUsers}</p>
+          <p>
+            {stats.ratioStats?.totalUsers || 0} / {' '}
+            {(stats.deletedStats?.teacher?.deletedCount || 0) +
+              (stats.deletedStats?.student?.deletedCount || 0)}
+          </p>
+          <small>활성 / 탈퇴</small>
         </StatCard>
         <StatCard>
           <h3>선생님</h3>
-          <p>{stats.totalTeachers}</p>
+          <p>
+            {stats.ratioStats?.teacherCount || 0} / {' '}
+            {stats.deletedStats?.teacher?.deletedCount || 0}
+          </p>
+          <small>활성 / 탈퇴</small>
         </StatCard>
         <StatCard>
           <h3>학생</h3>
-          <p>{stats.totalStudents}</p>
+          <p>
+            {stats.ratioStats?.studentCount || 0} / {' '}
+            {stats.deletedStats?.student?.deletedCount || 0}
+          </p>
+          <small>활성 / 탈퇴</small>
         </StatCard>
       </StatsCards>
 
       <ChartGrid>
         {/* 월별 가입자 추이 */}
         <ChartSection>
+          <h3>연도별 가입자 추이</h3>
+          <ResponsiveContainer width="100%" height="90%">
+            <LineChart data={yearlyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="count" stroke="#8884d8" name="가입자 수" />
+            </LineChart>
+          </ResponsiveContainer>
+        </ChartSection>
+
+        {/* 월별 가입자 추이 */}
+        <ChartSection>
           <h3>월별 가입자 추이</h3>
           <ResponsiveContainer width="100%" height="90%">
-            <LineChart data={stats.monthlySignups.map(item => ({
-              ...item,
-              count: item.count - 1
-            }))}>
+            <LineChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="yearMonth" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line
-                type="monotone"
-                dataKey="count"
-                stroke="#8884d8"
-                name="가입자 수"
-              />
+              <Line type="monotone" dataKey="count" stroke="#82ca9d" name="가입자 수" />
             </LineChart>
           </ResponsiveContainer>
         </ChartSection>
 
-        {/* 선생님/학생 비율 */}
+        {/* 일별 가입자 추이 */}
+        <ChartSection>
+          <h3>최근 30일 가입자 추이</h3>
+          <ResponsiveContainer width="100%" height="90%">
+            <LineChart data={sortedDailyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="count" stroke="#ffc658" name="가입자 수" />
+            </LineChart>
+          </ResponsiveContainer>
+        </ChartSection>
+
+        {/* 사용자 구성 비율 (기존 파이 차트) */}
         <ChartSection>
           <h3>사용자 구성 비율</h3>
           <ResponsiveContainer width="100%" height="90%">
@@ -168,6 +235,17 @@ const AdminUserStatistic = () => {
             </PieChart>
           </ResponsiveContainer>
         </ChartSection>
+        
+        <BarChart data={deletedData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+          <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+          <Tooltip />
+          <Legend />
+          <Bar yAxisId="left" dataKey="total" fill="#8884d8" name="전체 회원" />
+          <Bar yAxisId="right" dataKey="deleted" fill="#82ca9d" name="탈퇴 회원" />
+        </BarChart>
 
       </ChartGrid>
     </Container>

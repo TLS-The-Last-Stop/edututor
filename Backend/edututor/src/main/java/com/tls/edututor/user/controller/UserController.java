@@ -77,6 +77,12 @@ public class UserController {
     return CommonApiResponse.createNoContent("학생 계정 삭제가 완료되었습니다.");
   }
 
+  @DeleteMapping("/teachers/{teacherId}")
+  public CommonApiResponse<?> deleteTeacher(@PathVariable("teacherId") Long id) {
+    userService.deleteTeacher(id);
+    return CommonApiResponse.createNoContent("학생 계정 삭제가 완료되었습니다.");
+  }
+
   @PatchMapping("/teachers")
   public CommonApiResponse<?> updateUser(@RequestBody UserTERequest request, Authentication authentication) {
     userService.updateUser(request, authentication);
