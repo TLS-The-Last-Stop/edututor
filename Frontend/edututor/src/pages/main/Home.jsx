@@ -1,6 +1,7 @@
 import CourseSection from '../../components/main/CourseSection.jsx';
 import styled from 'styled-components';
 import InfoSection from '../../components/main/InfoSection.jsx';
+import FloatingChat from '../../components/main/FloatingChat.jsx';
 
 const HomeContainer = styled.div`
     max-width: 1300px; // 전체 컨테이너 최대 너비 설정
@@ -27,6 +28,7 @@ const Home = () => {
       <Section>
         <InfoSection />
       </Section>
+      <FloatingChat />
     </HomeContainer>
   );
 };

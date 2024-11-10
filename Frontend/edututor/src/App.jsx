@@ -213,6 +213,8 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}><Home /></Suspense>
           } />
 
+          <Route path="/classroom/:classroomId" element={<Home />} />
+
           <Route path="cmmn" element={<Navigate to="/cmmn/notice" replace />} />
 
           <Route path="cmmn/notice" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
