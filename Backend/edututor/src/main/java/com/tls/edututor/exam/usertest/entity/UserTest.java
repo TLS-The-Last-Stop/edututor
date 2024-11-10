@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "USER_TEST")
-@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLDelete(sql = "UPDATE USER_TEST SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class UserTest extends BaseEntity {
   @Id

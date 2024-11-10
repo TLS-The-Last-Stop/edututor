@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Builder
-@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLDelete(sql = "UPDATE COURSE SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor

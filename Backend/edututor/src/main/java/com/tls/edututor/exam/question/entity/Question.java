@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "QUESTION")
-@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLDelete(sql = "UPDATE QUESTION SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Question extends BaseEntity {
 
