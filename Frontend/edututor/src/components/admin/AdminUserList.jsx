@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Fragment, useState } from 'react';
 import AdminUserDetailModal from './AdminUserDetailModal.jsx';
-import { getUser, removeStudent } from '../../api/user/user.js';
+import { getUser, removeStudent, removeTeacher } from '../../api/user/user.js';
 import { showALert } from '../../utils/SwalAlert.js';
 
 const Container = styled.div`
@@ -164,7 +164,7 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
     if (selectedUser.role === 'TE') {
       const message = {
         icon             : 'warning',
-        title            : '회원을 불러오는데 실패했습니다.',
+        title            : '등록된 학생들까지 삭제됩니다.',
         text             : '정말 삭제하시겠습니까?',
         showCancelButton : true,
         cancelButtonText : '아니오',
@@ -173,7 +173,7 @@ const AdminUserList = ({ teachers, students, fetchingAllUser }) => {
       showALert(message)
         .then(async (result) => {
           if (result.isConfirmed) {
-            const result = await removeStudent(selectedUser.id);
+            const result = await removeTeacher(selectedUser.id);
             if (result.status === 204) {
               handleCloseModal();
               fetchingAllUser();

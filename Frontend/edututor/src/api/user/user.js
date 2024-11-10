@@ -45,8 +45,8 @@ export const logout = async () => {
   return response.data;
 };
 
-export const getUser = async (userId) => {
-  const response = await privateApi.get(`/users/${userId}`);
+export const getUser = async (id) => {
+  const response = await privateApi.get(`/users/${id}`);
   return response.data;
 };
 
@@ -55,8 +55,8 @@ export const getAllUser = async () => {
   return response.data;
 };
 
-export const removeTeacher = async (userId) => {
-  const response = await privateApi.remove(`/users/${userId}`);
+export const removeTeacher = async (id) => {
+  const response = await privateApi.delete(`/users/teachers/${id}`);
   return response.data;
 };
 
@@ -75,6 +75,10 @@ export const findPassword = async (data) => {
   return response.data;
 };
 
+export const getStatistics = async () => {
+  const response = await privateApi.get('/statistics/users');
+  return response.data;
+};
 
 export const getUserInfo = (required = false) => {
   try {
