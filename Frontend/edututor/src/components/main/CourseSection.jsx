@@ -11,6 +11,8 @@ import 사회 from '../../assets/icon/subject/사회.png';
 import 과학 from '../../assets/icon/subject/과학.png';
 import 역사 from '../../assets/icon/subject/역사.png';
 import 도덕 from '../../assets/icon/subject/도덕.png';
+import { Button, LoginTypeContainer, StyledRouterLink } from '../common/UserStyledComponents.js';
+import { CiWarning } from 'react-icons/ci';
 
 const CourseContainer = styled.div`
     margin: 60px auto 0;
@@ -155,8 +157,7 @@ const CourseList = styled.div`
 
 const SlideButton = styled.button`
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 40%;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -210,13 +211,6 @@ const RegisterCourseWrapper = styled.div`
 
 const RegisterCourseText = styled.p`
     text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-`;
-
-const RegisterCourseButton = styled.button`
-    max-width: 400px;
-    width: 100%;
     font-size: 20px;
     font-weight: bold;
 `;
@@ -405,8 +399,9 @@ const CourseSection = () => {
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
               onMouseMove={handleMouseMove}
+              style={{ display: 'flex', justifyContent: 'center' }}
             >
-              {filteredCourses && (filteredCourses.map(course => (
+              {filteredCourses.length !== 0 ? (filteredCourses.map(course => (
                 <CourseItem
                   key={course.courseId}
                   onClick={(e) => handleCourseClick(e, course.courseId)}
@@ -416,7 +411,26 @@ const CourseSection = () => {
                   </ImageWrapper>
                   <CourseTitle>{course.courseName}</CourseTitle>
                 </CourseItem>
-              )))}
+              ))) : userRole === 'TE' ? (
+                <RegisterCourseWrapper>
+                  <div>
+                    <CiWarning size={50} />
+                  </div>
+                  <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
+                  <StyledRouterLink to="/course/enroll"
+                                    style={{
+                                      fontSize    : '20px',
+                                      fontWeight  : ' bold',
+                                      border      : '1px solid',
+                                      padding     : '10px',
+                                      background  : '#007bff',
+                                      color       : '#fff',
+                                      borderRadius: '10px'
+                                    }}>새 과정 등록하기</StyledRouterLink>
+                </RegisterCourseWrapper>
+              ) : (
+                <div>공유된 강의가 없습니다.</div>
+              )}
             </CourseList>
 
             {showRightButton && (
