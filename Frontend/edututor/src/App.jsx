@@ -41,6 +41,7 @@ const AdminLogin = lazy(() => import('./pages/admin/AdminLogin.jsx'));
 const CourseCreationPage = lazy(() => import('./pages/admin/CourseCreationPage.jsx'));
 const CourseListPage = lazy(() => import('./pages/admin/CourseListPage.jsx'));
 const AdminUser = lazy(() => import('./pages/admin/AdminUser.jsx'));
+const AdminUserStatistic = lazy(() => import('./components/admin/AdminUserStatistic.jsx'));
 
 /* 유저 라우팅 */
 const Home = lazy(() => import('./pages/main/Home.jsx'));
@@ -53,7 +54,7 @@ const Classroom = lazy(() => import('./pages/classroom/Classroom.jsx'));
 const ExamShare = lazy(() => import('./pages/exam/ExamSharePage.jsx'));
 const AdditionalInfo = lazy(() => import('./pages/user/AdditionalInfo.jsx'));
 const OAuthSuccess = lazy(() => import('./pages/user/OAuthSuccess.jsx'));
-const StudentReport = lazy(()=>import('./pages/report/SharedTestListPage.jsx'))
+const StudentReport = lazy(() => import('./pages/report/SharedTestListPage.jsx'));
 
 const LoadingSpinner = () => <Loading />;
 
@@ -187,6 +188,14 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="AD">
                 <IssueListPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="user-statistic" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <AdminUserStatistic />
               </ProtectedRoute>
             </Suspense>
           } />

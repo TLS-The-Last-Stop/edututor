@@ -75,6 +75,10 @@ export const findPassword = async (data) => {
   return response.data;
 };
 
+export const getStatistics = async () => {
+  const response = await privateApi.get('/statistics/users');
+  return response.data;
+};
 
 export const getUserInfo = (required = false) => {
   try {
