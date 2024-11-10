@@ -111,7 +111,7 @@ const TestPaperCreationPage = () => {
 
   return (
     <div className="test-paper-creation-container">
-      <h2>형성평가 생성</h2>
+      <h2>시험지 생성</h2>
       <form onSubmit={handleSubmit} className="test-paper-form">
         <div className="form-field">
           <label>시험지 제목:</label>

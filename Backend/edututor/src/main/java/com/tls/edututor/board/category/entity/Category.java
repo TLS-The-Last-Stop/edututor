@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SQLDelete(sql = "update user u set u.is_deleted = true where u.id = ?")
+@SQLDelete(sql = "UPDATE CATEGORY SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @Table(name = "CATEGORY")

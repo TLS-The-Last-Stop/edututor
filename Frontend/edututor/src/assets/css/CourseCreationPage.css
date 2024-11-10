@@ -7,13 +7,19 @@
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.course-creation-container h2 {
+    font-size: 3rem;
+    margin-bottom: 30px;
+
+}
+
 .course-form {
     display: flex;
     flex-direction: column;
 }
 
 .form-field {
-    display: flex;
+    display: flow;
     align-items: center;
     gap: 10px;
     margin-bottom: 10px;
@@ -25,15 +31,17 @@
 }
 
 .input-field {
-    flex: 1; /* input이 남은 공간을 차지하도록 설정 */
+    flex: 1;
     padding: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
     font-size: 1rem;
     border-radius: 4px;
     border: 1px solid #ddd;
 }
 
 .remove-button {
-    background-color: #dc3545;
+    background-color: #f1505f;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -63,23 +71,27 @@
     margin-bottom: 10px;
 }
 
+.section-header h3{
+    font-size: 2rem;
+}
 .unit-block {
     padding-left: 20px;
     margin-bottom: 15px;
 }
 
 .add-button {
-    background-color: #4CAF50;
+    background-color: #6a96f8;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .remove-button {
-    background-color: #f44336;
+    background-color: #fd6053;
     color: white;
     padding: 5px 10px;
     border: none;
@@ -87,12 +99,14 @@
     cursor: pointer;
 }
 
-.submit-button {
-    background-color: #2196F3;
+.submit-button2 {
+    background-color: #25a19b;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     margin-top: 20px;
+    font-size: 1rem;
+    margin-bottom: 20px;
 }

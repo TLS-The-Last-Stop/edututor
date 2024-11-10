@@ -8,7 +8,7 @@ const SharedTestList = ({ tests = [], onViewDetail }) => {
           <th>공유일</th>
           <th>단원</th>
           <th>리포트명</th>
-          <th>참여 현황</th>
+          <th>응시 현황</th>
           <th>성취도</th>
           <th>상세</th>
         </tr>
