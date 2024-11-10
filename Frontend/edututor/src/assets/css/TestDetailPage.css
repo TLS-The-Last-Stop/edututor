@@ -1,0 +1,158 @@
+/* 전체 페이지 컨테이너 스타일 */
+.test-detail-page {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.test-detail-page:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* 제목 스타일 */
+.test-detail-page h2 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #00aaff;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+/* 정보 섹션 스타일 */
+.test-detail-page p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+/* 총점 스타일 */
+.test-detail-page .total-score {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #0077cc;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* 문제 목록 제목 스타일 */
+.test-detail-page h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* 문제 목록 스타일 */
+.question-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 개별 문제 스타일 */
+.question-item {
+    position: relative;
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: #f3f6f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 문제 제목 스타일 */
+.question-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem; /* 문제 제목 크기 키우기 */
+    font-weight: bold;
+    color: #333;
+}
+
+/* 정답/오답 아이콘 스타일 */
+.question-title .icon {
+    margin-left: 10px; /* 제목과 아이콘 간격 */
+    font-size: 1.8rem;
+}
+
+.icon.correct {
+    color: #4caf50;
+}
+
+.icon.incorrect {
+    color: #d9534f;
+}
+
+/* 문제 텍스트 스타일 */
+.question-item .question-content {
+    margin-top: 15px;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+    color: #d9534f;
+    font-size: 1rem;
+    text-align: center;
+    margin: 20px 0;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 12px;
+    font-weight: 500;
+}
+
+/* 로딩 메시지 스타일 */
+.loading-message {
+    font-size: 1.2rem;
+    color: #666;
+    text-align: center;
+    padding: 20px;
+    font-weight: 500;
+}
+/* 옵션 스타일 */
+.options-list {
+    padding-left: 0;
+    margin: 0;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px; /* 옵션 간 간격 */
+}
+
+.option-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+}
+
+.option label {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+}

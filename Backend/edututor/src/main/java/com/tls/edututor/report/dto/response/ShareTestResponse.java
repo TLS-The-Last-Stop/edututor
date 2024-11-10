@@ -1,25 +1,36 @@
 package com.tls.edututor.report.dto.response;
 
-import com.tls.edututor.exam.sharetest.entity.ShareTest;
+import com.tls.edututor.exam.useransewer.dto.response.UserAnswerResponse;
+import com.tls.edututor.exam.usertest.entity.UserTest;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
 public class ShareTestResponse {
-  private Long id;
+  private Long userTestId;
   private String testPaperName;
-  private String unitName;
-  private LocalDateTime deadline;
+  private List<UserAnswerResponse> questions;
+  private Double totalScore;
 
-  public static ShareTestResponse fromEntity(ShareTest shareTest) {
+  public static ShareTestResponse fromUserTest(UserTest userTest) {
+    List<UserAnswerResponse> questionResponses = userTest.getUserAnswers().stream()
+            .map(UserAnswerResponse::fromUserAnswer)
+            .collect(Collectors.toList());
+
+    Double totalScore = questionResponses.stream()
+            .filter(UserAnswerResponse::isCorrect)
+            .mapToDouble(UserAnswerResponse::getScore)
+            .sum();
+
     return ShareTestResponse.builder()
-            .id(shareTest.getId())
-            .testPaperName(shareTest.getTestPaper().getTitle())
-            .unitName(shareTest.getTestPaper().getUnit().getContent())
-            .deadline(shareTest.getDeadline())
+            .userTestId(userTest.getId())
+            .testPaperName(userTest.getShareTest().getTestPaper().getTitle())
+            .questions(questionResponses)
+            .totalScore(totalScore)
             .build();
   }
 }

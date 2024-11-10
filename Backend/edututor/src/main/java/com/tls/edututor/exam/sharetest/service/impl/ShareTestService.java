@@ -1,11 +1,14 @@
 package com.tls.edututor.exam.sharetest.service.impl;
 
+import com.tls.edututor.exam.question.dto.response.QuestionResponse;
+import com.tls.edututor.exam.question.entity.Question;
 import com.tls.edututor.exam.sharetest.dto.request.ShareTestRequest;
 import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
 import com.tls.edututor.exam.sharetest.service.ShareTestServiceImpl;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import com.tls.edututor.exam.testpaper.repository.TestPaperRepository;
+import com.tls.edututor.report.dto.response.ShareTestResponse;
 import com.tls.edututor.user.dto.response.AuthUser;
 import com.tls.edututor.user.entity.User;
 import com.tls.edututor.user.repository.UserRepository;
@@ -14,7 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

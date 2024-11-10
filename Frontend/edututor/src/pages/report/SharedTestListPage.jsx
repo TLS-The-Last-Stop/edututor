@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SharedTestList from '../../components/report/SharedTestList.jsx';
 import '../../assets/css/SharedTestList.css';
 import { publicApi } from "../../api/axios.js";
@@ -6,6 +7,7 @@ import { publicApi } from "../../api/axios.js";
 const SharedTestListPage = () => {
   const [tests, setTests] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSharedTests = async () => {
@@ -21,13 +23,16 @@ const SharedTestListPage = () => {
     fetchSharedTests();
   }, []);
 
-  const handleViewDetail = (id) => {
-    console.log(`View detail for shared test ${id}`);
-    // 상세보기 로직 추가 가능
+  const handleViewDetail = (userTestId) => {
+    if (userTestId) {
+      navigate(`/tests/details/${userTestId}`);
+    } else {
+      console.error("UserTest ID가 없습니다.");
+    }
   };
 
   return (
-      <div>
+      <div className="shared-test-page-container">
         <h2>공유받은 시험 리스트</h2>
         {error && <p className="error-message">{error}</p>}
         <SharedTestList tests={tests} onViewDetail={handleViewDetail} />

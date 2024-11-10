@@ -48,4 +48,10 @@ public class ReportController {
       return CommonApiResponse.createError("공유받은 시험 리스트 조회 실패: " + e.getMessage());
     }
   }
+
+  @GetMapping("/shared-tests/{userTestId}")
+  public CommonApiResponse<ShareTestResponse> getSharedTestDetail(@PathVariable Long userTestId) {
+    ShareTestResponse response = reportService.getSharedTestDetail(userTestId);
+    return CommonApiResponse.createSuccess("시험 상세 정보를 조회했습니다.", response);
+  }
 }

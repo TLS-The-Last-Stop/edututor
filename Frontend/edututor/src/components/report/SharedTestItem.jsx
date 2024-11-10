@@ -1,16 +1,15 @@
-// SharedTestItem.js
 const SharedTestItem = ({ test, onViewDetail }) => {
-  const { id, testPaperName, unitName, deadline } = test;
+  console.log("Test Item ID:", test.id, "UserTest ID:", test.userTestId);
 
   return (
       <tr>
-        <td>{deadline ? new Date(deadline).toLocaleDateString() : '미정'}</td>
-        <td>{unitName}</td>
-        <td>{testPaperName}</td>
-        <td>{test.isParticipated ? '응시완료' : '미응시'}</td>
-        <td>{test.achievementRate ? `${test.achievementRate}%` : '-'}</td>
+        <td>{test.testPaperName}</td>
         <td>
-          <button onClick={() => onViewDetail(id)}>상세보기</button>
+          {test.userTestId ? (
+              <button onClick={() => onViewDetail(test.userTestId)}>상세보기</button>
+          ) : (
+              <button disabled>상세보기</button>
+          )}
         </td>
       </tr>
   );
