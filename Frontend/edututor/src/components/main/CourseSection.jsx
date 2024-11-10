@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import {useEffect, useRef, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {privateApi} from '../../api/axios.js';
-import {useAuth} from '../../utils/AuthContext.jsx';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { privateApi } from '../../api/axios.js';
+import { useAuth } from '../../utils/AuthContext.jsx';
 import Loading from '../common/Loading.jsx';
 import 국어 from '../../assets/icon/subject/국어.png';
 import 영어 from '../../assets/icon/subject/영어.png';
@@ -42,8 +42,8 @@ const SubjectButton = styled.button`
     padding: 10px 20px;
     border: none;
     border-radius: 20px;
-    background-color: ${({$active}) => ($active ? '#007bff' : '#e0e0e0')};
-    color: ${({$active}) => ($active ? 'white' : '#333')};
+    background-color: ${({ $active }) => ($active ? '#007bff' : '#e0e0e0')};
+    color: ${({ $active }) => ($active ? 'white' : '#333')};
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -232,20 +232,20 @@ const CourseSection = () => {
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSubject, setSelectedSubject] = useState("전체");
+  const [selectedSubject, setSelectedSubject] = useState('전체');
   const [dragState, setDragState] = useState(initDragState);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
 
   const listRef = useRef(null);
   const navigate = useNavigate();
-  const {userInfo, userRole} = useAuth();
-  const subjectImages = {국어, 수학, 영어, 사회, 과학, 역사, 도덕};
-  const subjectFilters = ["전체", "국어", "수학", "영어", "사회", "과학", "역사", "도덕"];
+  const { userInfo, userRole } = useAuth();
+  const subjectImages = { 국어, 수학, 영어, 사회, 과학, 역사, 도덕 };
+  const subjectFilters = ['전체', '국어', '수학', '영어', '사회', '과학', '역사', '도덕'];
 
   const handleSubjectFilter = (subject) => {
     setSelectedSubject(subject);
-    setFilteredCourses(subject === "전체" ? courses : courses.filter(course => course.subject === subject));
+    setFilteredCourses(subject === '전체' ? courses : courses.filter(course => course.subject === subject));
   };
 
   const fetchFilteredCourses = async () => {
@@ -271,11 +271,11 @@ const CourseSection = () => {
   };
 
   const handleMouseMove = (e) => {
-    const {isMouseDown, startX, scrollLeft} = dragState;
+    const { isMouseDown, startX, scrollLeft } = dragState;
     if (!isMouseDown || !listRef.current) return;
 
     e.preventDefault();
-    setDragState(prev => ({...prev, isDragging: true}));
+    setDragState(prev => ({ ...prev, isDragging: true }));
 
     const x = e.pageX - listRef.current.offsetLeft;
     const walk = (x - startX) * 2;
@@ -308,7 +308,7 @@ const CourseSection = () => {
   const updateButtonVisibility = () => {
     if (!listRef.current) return;
 
-    const {scrollLeft, scrollWidth, clientWidth} = listRef.current;
+    const { scrollLeft, scrollWidth, clientWidth } = listRef.current;
     const canScroll = scrollWidth > clientWidth + 10;
     console.log(canScroll);
 
@@ -361,75 +361,77 @@ const CourseSection = () => {
 
   if (!userInfo) {
     return (
-        <LoginMessage>
-          <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
-          <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
-        </LoginMessage>
+      <LoginMessage>
+        <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
+        <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
+      </LoginMessage>
     );
   }
 
+  console.log(filteredCourses);
+
   return (
-      <CourseContainer>
-        <TitleWrapper>우리반 학습 과정</TitleWrapper>
-        <SubjectFilterContainer>
-          {subjectFilters.map(subject => (
-              <SubjectButton
-                  key={subject}
-                  $active={selectedSubject === subject}
-                  onClick={() => handleSubjectFilter(subject)}
+    <CourseContainer>
+      <TitleWrapper>우리반 학습 과정</TitleWrapper>
+      <SubjectFilterContainer>
+        {subjectFilters.map(subject => (
+          <SubjectButton
+            key={subject}
+            $active={selectedSubject === subject}
+            onClick={() => handleSubjectFilter(subject)}
+          >
+            {subject}
+          </SubjectButton>
+        ))}
+      </SubjectFilterContainer>
+
+      <CourseListContainer>
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            {showLeftButton && (
+              <SlideButton
+                className="prev"
+                onClick={() => handleSlide('prev')}
+                onMouseDown={e => e.stopPropagation()}
               >
-                {subject}
-              </SubjectButton>
-          ))}
-        </SubjectFilterContainer>
-
-        <CourseListContainer>
-          {loading ? (
-              <Loading/>
-          ) : (
-              <>
-                {showLeftButton && (
-                    <SlideButton
-                        className="prev"
-                        onClick={() => handleSlide('prev')}
-                        onMouseDown={e => e.stopPropagation()}
-                    >
-                      ←
-                    </SlideButton>
-                )}
-                <CourseList
-                    ref={listRef}
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseUp}
-                    onMouseMove={handleMouseMove}
+                ←
+              </SlideButton>
+            )}
+            <CourseList
+              ref={listRef}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onMouseMove={handleMouseMove}
+            >
+              {filteredCourses && (filteredCourses.map(course => (
+                <CourseItem
+                  key={course.courseId}
+                  onClick={(e) => handleCourseClick(e, course.courseId)}
                 >
-                  {filteredCourses.map(course => (
-                      <CourseItem
-                          key={course.courseId}
-                          onClick={(e) => handleCourseClick(e, course.courseId)}
-                      >
-                        <ImageWrapper>
-                          <img src={subjectImages[course.subject]} alt={course.courseName}/>
-                        </ImageWrapper>
-                        <CourseTitle>{course.courseName}</CourseTitle>
-                      </CourseItem>
-                  ))}
-                </CourseList>
+                  <ImageWrapper>
+                    <img src={subjectImages[course.subject]} alt={course.courseName} />
+                  </ImageWrapper>
+                  <CourseTitle>{course.courseName}</CourseTitle>
+                </CourseItem>
+              )))}
+            </CourseList>
 
-                {showRightButton && (
-                    <SlideButton
-                        className="next"
-                        onClick={() => handleSlide('next')}
-                        onMouseDown={e => e.stopPropagation()}
-                    >
-                      →
-                    </SlideButton>
-                )}
-              </>
-          )}
-        </CourseListContainer>
-      </CourseContainer>
+            {showRightButton && (
+              <SlideButton
+                className="next"
+                onClick={() => handleSlide('next')}
+                onMouseDown={e => e.stopPropagation()}
+              >
+                →
+              </SlideButton>
+            )}
+          </>
+        )}
+      </CourseListContainer>
+    </CourseContainer>
   );
 };
 
