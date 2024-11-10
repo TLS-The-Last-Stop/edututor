@@ -1,16 +1,25 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getUserInfo } from '../api/user/user.js';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useNavigationType } from 'react-router-dom';
 import { verifyAuth } from './auth.js';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+// HOC를 만들어서 navigation 로직을 분리
+const AuthProviderWithNavigation = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return (
+    <AuthProvider navigate={navigate} location={location}>
+      {children}
+    </AuthProvider>
+  );
+};
+
+const AuthProvider = ({ children, navigate, location }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [userRole, setUserRole] = useState('');
-
-  const navigator = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     try {
@@ -19,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       clearLocalStorage();
     }
-  }, [navigator]);
+  }, [navigate]);
 
   const verifyUserRole = async () => {
     try {
@@ -48,25 +57,24 @@ export const AuthProvider = ({ children }) => {
       setUserRole(role);
 
       if (role === 'SU' && location.pathname.match(/^\/course(?:\/|$)/)) {
-        navigator('/');
+        navigate('/');
       }
 
     } catch (error) {
       console.error('Failed to verify role:', error);
       clearLocalStorage();
-      navigator('/');
+      navigate('/');
     }
   };
 
   const clearLocalStorage = () => {
     localStorage.removeItem('info');
     setUserInfo(null);
-    setUserInfo('');
+    setUserRole('');
   };
 
   const updateUserInfo = () => {
     setUserInfo(getUserInfo());
-
     window.dispatchEvent(new Event('auth-update'));
   };
 
@@ -99,5 +107,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
 export const useAuth = () => useContext(AuthContext);
+
+export { AuthProviderWithNavigation as AuthProvider };
