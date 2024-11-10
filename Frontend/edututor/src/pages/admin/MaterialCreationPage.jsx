@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import '../../assets/css/MaterialCreationPage.css';
 import { publicApi } from '../../api/axios.js';
 import { showALert } from '../../utils/SwalAlert.js';
+import { Required } from '../../components/common/UserStyledComponents.js';
 
 const MaterialCreationPage = () => {
   const [formData, setFormData] = useState({
@@ -67,8 +68,8 @@ const MaterialCreationPage = () => {
     <div className="material-creation-container">
       <h2 className="page-title">학습 자료 등록</h2>
       <form onSubmit={handleSubmit} className="material-form">
-        <div className="form-field">
-          <label>제목 (Title):</label>
+        <div className="form-field" style={{ display: 'flex' }}>
+          <label>제목 (Title)<Required>*</Required></label>
           <input
             type="text"
             name="title"
@@ -76,10 +77,11 @@ const MaterialCreationPage = () => {
             onChange={handleInputChange}
             className="input-field"
             required
+            style={{ margin: '0' }}
           />
         </div>
-        <div className="form-field">
-          <label>내용 (Content):</label>
+        <div className="form-field" style={{ display: 'flex' }}>
+          <label>내용 (Content)<Required>*</Required></label>
           <textarea
             name="content"
             value={formData.content}
@@ -88,8 +90,8 @@ const MaterialCreationPage = () => {
             required
           />
         </div>
-        <div className="form-field">
-          <label>학습자료 URL (선택):</label>
+        <div className="form-field" style={{ display: 'flex' }}>
+          <label>학습자료 URL</label>
           <input
             type="text"  // URL 타입을 text로 변경
             name="url"
@@ -97,6 +99,7 @@ const MaterialCreationPage = () => {
             onChange={handleInputChange}
             className="input-field"
             placeholder="https://www.youtube.com/watch?v=example"
+            style={{ margin: '0' }}
           />
         </div>
 
