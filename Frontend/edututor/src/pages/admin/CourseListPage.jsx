@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { privateApi } from '../../api/axios';
 import '../../assets/css/CourseListPage.css';
+import Loading from '../../components/common/Loading.jsx';
 
 const CourseListPage = () => {
   const [courses, setCourses] = useState([]);
@@ -24,7 +25,7 @@ const CourseListPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading"><Loading /></div>;
   }
 
   if (error) {
@@ -32,29 +33,29 @@ const CourseListPage = () => {
   }
 
   return (
-      <div className="course-list-page">
-        <h1 className="page-title">전체 과정 리스트</h1>
-        <table className="course-table">
-          <thead>
-          <tr>
-            <th>ID</th>
-            <th>과정명</th>
+    <div className="course-list-page">
+      <h1 className="page-title">전체 과정 리스트</h1>
+      <table className="course-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>과정명</th>
+        </tr>
+        </thead>
+        <tbody>
+        {courses.map((course) => (
+          <tr key={course.courseId}>
+            <td>{course.courseId}</td>
+            <td>
+              <Link to={`/admin/course-detail/${course.courseId}`} className="course-link">
+                {course.courseName}
+              </Link>
+            </td>
           </tr>
-          </thead>
-          <tbody>
-          {courses.map((course) => (
-              <tr key={course.courseId}>
-                <td>{course.courseId}</td>
-                <td>
-                  <Link to={`/admin/course-detail/${course.courseId}`} className="course-link">
-                    {course.courseName}
-                  </Link>
-                </td>
-              </tr>
-          ))}
-          </tbody>
-        </table>
-      </div>
+        ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

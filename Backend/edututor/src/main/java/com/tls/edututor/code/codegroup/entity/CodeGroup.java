@@ -4,11 +4,15 @@ import com.tls.edututor.code.codedetail.entity.CodeDetail;
 import com.tls.edututor.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
 @Entity
 @Table(name = "CODE_GROUP")
+@SQLDelete(sql = "UPDATE CODE_GROUP SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter

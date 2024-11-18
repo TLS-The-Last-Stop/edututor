@@ -81,13 +81,13 @@
     margin: 0 5px;
 }
 
-.correct {
-    background: #4CAF50;
+.answer-cell.correct {
+    background-color: #4CAF50;
     color: white;
 }
 
-.incorrect {
-    background: #f44336;
+.answer-cell.incorrect {
+    background-color: #f44336;
     color: white;
 }
 

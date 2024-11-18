@@ -4,6 +4,8 @@ import com.tls.edututor.common.entity.BaseEntity;
 import com.tls.edututor.exam.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
@@ -12,6 +14,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "OPTION")
+@SQLDelete(sql = "UPDATE OPTION SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class Option extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

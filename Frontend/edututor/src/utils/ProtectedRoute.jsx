@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Loading from '../components/common/Loading.jsx';
 import { verifyAuth } from './auth.js';
 import { useAuth } from './AuthContext.jsx';
@@ -11,7 +11,8 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
   const { userInfo, userRole } = useAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  
   const checkAuth = async () => {
     try {
       if (requiredRole === 'AD') {
@@ -21,7 +22,6 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
         if (!isAD && !hasAlerted) {
           setHasAlerted(true);
-          alert('관리자 권한이 필요합니다.');
           navigate('/');
         }
         return;
@@ -47,7 +47,6 @@ const ProtectedRoute = ({ children, requiredRole = 'SU' }) => {
 
       if (!hasRequiredRole(requiredRole, role) && !hasAlerted) {
         setHasAlerted(true);
-        alert('떽끼!');
         navigate('/');
         return;
       }

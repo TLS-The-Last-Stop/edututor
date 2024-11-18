@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class QuestionRegisterRequest {
+  private Long id;
   private String content;
   private String passage;
   private String commentary;

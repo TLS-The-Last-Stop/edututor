@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../../assets/css/MaterialDetailPage.css';
 import { publicApi } from '../../api/axios.js';
+import Loading from '../../components/common/Loading.jsx';
 
 const MaterialDetailPage = () => {
   const { materialId } = useParams();
+  const navigate = useNavigate();
   const [materialData, setMaterialData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,7 +25,7 @@ const MaterialDetailPage = () => {
     fetchMaterial();
   }, [materialId]);
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading) return <p><Loading /></p>;
   if (error) return <p>{error}</p>;
 
   const renderVideo = (url) => {
@@ -57,6 +59,12 @@ const MaterialDetailPage = () => {
                     {renderVideo(materialData.url)}
                   </div>
               )}
+              <button
+                  className="edit-button"
+                  onClick={() => navigate(`/admin/material/edit/${materialId}`)}
+              >
+                수정하기
+              </button>
             </div>
         ) : (
             <p>학습자료가 존재하지 않습니다.</p>

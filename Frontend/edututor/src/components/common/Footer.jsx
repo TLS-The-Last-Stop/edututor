@@ -8,11 +8,11 @@ import { Link } from 'react-router-dom';
 const FooterContainer = styled.footer`
     background: #ffffff;
     width: 100%;
-    position: relative;
-    transform: translateY(0%);
+    position: absolute;
+    height: 248px;
+    bottom: 0;
 `;
 
-// 좌측 네비게이션
 const NavLinks = styled.div`
     display: flex;
     gap: 24px;
@@ -97,8 +97,10 @@ const DropdownItem = styled(Link)`
 
 // 고객센터 정보
 const CustomerInfo = styled.div`
+    display: flex;
+    align-items: center;
+
     h3 {
-        display: inline-block;
         font-size: 18px;
         font-weight: bold;
     }
@@ -139,7 +141,7 @@ const FooterNav = styled.nav`
         }
     }
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         padding: 10px;
         gap: 10px;
@@ -153,7 +155,7 @@ const ContentWrapper = styled.div`
     margin: 0 auto;
     padding: 0 20px;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         padding: 0 10px;
     }
 `;
@@ -167,7 +169,7 @@ const CustomerSection = styled.div`
     padding: 0 20px;
     border-bottom: 1px solid #eee;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
@@ -185,7 +187,7 @@ const CustomerContent = styled(ContentWrapper)`
     padding-top: 20px;
     padding-bottom: 20px;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
@@ -206,7 +208,7 @@ const FamilyContent = styled(ContentWrapper)`
     align-items: center;
     height: 50px;
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         height: auto;
         padding-top: 10px;
@@ -260,9 +262,11 @@ const Footer = () => {
         <FamilyContent>
           <FooterNav>
             <NavLinks>
-              <StyledRouterLink to="https://chunjaetext.co.kr/">천재교과서</StyledRouterLink>
-              <StyledRouterLink to="https://pass.chunjae.co.kr/#/policy?site=52&tab=1">이용약관</StyledRouterLink>
-              <StyledRouterLink to="https://pass.chunjae.co.kr/#/policy?site=52&tab=2">개인정보처리방침</StyledRouterLink>
+              <StyledRouterLink to="https://chunjaetext.co.kr/" target="_blank">천재교과서</StyledRouterLink>
+              <StyledRouterLink to="https://pass.chunjae.co.kr/#/policy?site=52&tab=1"
+                                target="_blank">이용약관</StyledRouterLink>
+              <StyledRouterLink to="https://pass.chunjae.co.kr/#/policy?site=52&tab=2"
+                                target="_blank">개인정보처리방침</StyledRouterLink>
             </NavLinks>
           </FooterNav>
 
@@ -276,9 +280,10 @@ const Footer = () => {
                 패밀리 사이트
               </FamilySiteButton>
               <Dropdown $isOpen={isFamilySiteOpen}>
-                <DropdownItem to="https://www.milkt.co.kr/Main/Main_new">밀크티 초등</DropdownItem>
-                <DropdownItem to="https://mid.milkt.co.kr/Main/frm_Main.aspx">밀크티 중등</DropdownItem>
-                <DropdownItem to="https://hme.chunjae.co.kr/hme/main.asp">HME 전국 <p>해법수학 학력평가</p></DropdownItem>
+                <DropdownItem to="https://www.milkt.co.kr/Main/Main_new" target="_blank">밀크티 초등</DropdownItem>
+                <DropdownItem to="https://mid.milkt.co.kr/Main/frm_Main.aspx" target="_blank">밀크티 중등</DropdownItem>
+                <DropdownItem to="https://hme.chunjae.co.kr/hme/main.asp" target="_blank">HME 전국 <p>해법수학 학력평가</p>
+                </DropdownItem>
               </Dropdown>
             </FamilySite>
           </UtilitySection>

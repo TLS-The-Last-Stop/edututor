@@ -9,14 +9,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 카테고리 목록을 반환하는 엔드포인트를 제공합니다.
+ */
 @RestController
 @RequiredArgsConstructor
 public class CategoryController {
+
   private final CategoryService categoryService;
 
+  /**
+   * 모든 카테고리를 조회합니다.
+   *
+   * @return 카테고리 목록을 포함한 성공 응답 객체
+   */
   @GetMapping("/categories")
   public CommonApiResponse<List<CategoryResult>> getCategories() {
-    List<CategoryResult> list = categoryService.findAll();
-    return CommonApiResponse.createSuccess("list", list);
+    return CommonApiResponse.createSuccess("list", categoryService.findAll());
   }
 }

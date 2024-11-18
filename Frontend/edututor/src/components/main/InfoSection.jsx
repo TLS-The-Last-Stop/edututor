@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import featuresData from '../../data/features.json';
 import ai from '../../assets/icon/ai.png';
 import db from '../../assets/icon/db.png';
 import 시각화 from '../../assets/icon/시각화.png';
@@ -8,6 +9,9 @@ import 학생가이드 from '../../assets/file/지니아튜터+상세가이드(�
 import { BsChatDots, BsDownload, BsQuestionCircle } from 'react-icons/bs';
 import { StyledRouterLink } from '../common/UserStyledComponents.js';
 import { useNavigate } from 'react-router-dom';
+import { getBoardsByCategory } from '../../api/board/board.js';
+import { useEffect, useState } from 'react';
+import formatData from '../../utils/dateFormat.js';
 
 const InfoContainer = styled.div`
     padding: 40px;
@@ -171,6 +175,10 @@ const NoticeItem = styled.li`
             color: #108eff;
         }
 
+        &:after {
+            content: none !important;
+        }
+
     }
 
     span {
@@ -221,6 +229,10 @@ const DownloadWrapper = styled.div`
     display: flex;
     justify-content: center;
     gap: 12px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `;
 
 const DownloadATag = styled.a`
@@ -248,52 +260,50 @@ const DownloadATag = styled.a`
         height: 18px;
         margin-left: 4px;
     }
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `;
 
 const InfoSection = () => {
   const navigate = useNavigate();
-  const features = [
-    {
-      id     : 1,
-      title1 : '평가 문항',
-      title2 : '데이터 베이스',
-      primary: true,
-      icon   : db
-    },
-    {
-      id     : 2,
-      title1 : 'CBT 기반',
-      title2 : '온라인 평가서비스',
-      primary: false,
-      icon   : 평가
-    },
-    {
-      id     : 3,
-      title1 : 'AI 맞춤형',
-      title2 : '학습 서비스',
-      primary: false,
-      icon   : ai
-    },
-    {
-      id     : 4,
-      title1 : 'LMS 및 학습분석',
-      title2 : '시각화 리포트',
-      primary: true,
-      icon   : 시각화
-    }
-  ];
+  const [features, setFeatures] = useState([]);
+  const [fiveNotice, setFiveNotice] = useState([]);
+  useEffect(() => {
+    const iconMap = {
+      'db' : db,
+      '평가' : 평가,
+      'ai' : ai,
+      '시각화': 시각화
+    };
 
-  const notices = [
-    { id: 1, title: '[업데이트]평가기능 개선 안내', date: '2024.10.30' },
-    { id: 2, title: '[업데이트]공유 클래스룸의 \'자시 공유\' 버튼삭제 안내', date: '2024.10.28' },
-    { id: 3, title: '접속 장애 공지', date: '2024.10.24' },
-    { id: 4, title: '유료회원 적용이 안되는 경우, 해결 방안', date: '2024.10.11' },
-    { id: 5, title: '10월 14일, 17일 시스템 점검 안내', date: '2024.10.11' }
-  ];
+    const readFeatures = featuresData.features.map(feature => ({
+      ...feature,
+      icon: iconMap[feature.iconName]
+    }));
+
+    setFeatures(readFeatures);
+  }, []);
+
+  const fetchingAllNotice = async () => {
+    try {
+      const result = await getBoardsByCategory(1);
+
+      if (result.status === 200) setFiveNotice(result.data.slice(0, 5));
+
+    } catch (error) {
+      console.error('Failed to fetch notice: ', error);
+    }
+  };
 
   const handleMove = (to) => {
     navigate(`/cmmn/${to}`);
   };
+
+  useEffect(() => {
+    fetchingAllNotice();
+  }, []);
 
   return (
     <InfoContainer>
@@ -343,10 +353,10 @@ const InfoSection = () => {
           </NoticeHeader>
 
           <NoticeList>
-            {notices.map(notice => (
-              <NoticeItem key={notice.id}>
-                <StyledRouterLink to="#">{notice.title}</StyledRouterLink>
-                <span>{notice.date}</span>
+            {fiveNotice.map(notice => (
+              <NoticeItem key={notice.boardId}>
+                <StyledRouterLink to={`/cmmn/notice/${notice.boardId}`}>{notice.title}</StyledRouterLink>
+                <span>{formatData(notice.createdAt)}</span>
               </NoticeItem>
             ))}
           </NoticeList>

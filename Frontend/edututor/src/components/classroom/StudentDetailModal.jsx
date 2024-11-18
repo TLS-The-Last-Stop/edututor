@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import {
   Button,
   ErrorText,
@@ -9,36 +8,8 @@ import {
   Label,
   Title
 } from '../common/UserStyledComponents.js';
-
-const Overlay = styled.section`
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    pointer-events: auto;
-    opacity: 1;
-
-    &, &:hover {
-        background-color: rgba(0, 0, 0, 0.5);
-        opacity: 1;
-    }
-`;
-
-const ModalContainer = styled.div`
-    background-color: white;
-    width: 100%;
-    max-width: 600px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    opacity: 1;
-`;
-
-const ModalContent = styled.main`
-    padding: 2rem;
-`;
+import { ModalContainer, ModalContent, Overlay } from '../common/ModalOverlayComponent.js';
+import Loading from '../common/Loading.jsx';
 
 const StudentDetailModal = ({
                               isOpen,
@@ -57,7 +28,7 @@ const StudentDetailModal = ({
       <ModalContainer onClick={e => e.stopPropagation()}>
         <ModalContent>
           {isLoading ? (
-            <div>로딩 중...</div>
+            <div><Loading /></div>
           ) : student ? (
             <>
               <FormHeader>

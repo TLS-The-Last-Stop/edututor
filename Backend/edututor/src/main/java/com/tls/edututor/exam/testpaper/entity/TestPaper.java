@@ -7,6 +7,8 @@ import com.tls.edututor.exam.question.entity.Question;
 import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
@@ -17,13 +19,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TEST_PAPER")
+@SQLDelete(sql = "UPDATE TEST_PAPER SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class TestPaper extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "UNIT_ID", nullable = false)
+  @JoinColumn(name = "UNIT_ID")
   private Unit unit;
 
   @Column(name = "TITLE", nullable = false)

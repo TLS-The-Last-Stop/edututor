@@ -3,8 +3,6 @@ const NoticeItem = ({
                       onNoticeClick,
                       formatDate
                     }) => {
-
-
   return (
     <tr>
       <td className="number-cell">
@@ -23,7 +21,7 @@ const NoticeItem = ({
         </button>
       </td>
       <td className="date-cell">
-        {formatDate(notice.createAt)}
+        {formatDate(notice.createdAt)}
       </td>
     </tr>
   );

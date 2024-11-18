@@ -5,6 +5,8 @@ import com.tls.edututor.course.course.entity.Course;
 import com.tls.edututor.course.unit.entity.Unit;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ import java.util.List;
 @Setter
 @Entity
 @Builder
+@SQLDelete(sql = "UPDATE SECTION SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "SECTION")

@@ -2,6 +2,7 @@ package com.tls.edututor.user.service;
 
 import com.tls.edututor.user.dto.request.UserSURequest;
 import com.tls.edututor.user.dto.request.UserTERequest;
+import com.tls.edututor.user.dto.response.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
@@ -18,4 +19,12 @@ public interface UserService {
   Long deleteStudent(Long id);
 
   Long updateInfo(UserTERequest request, HttpServletRequest req);
+
+  UserResponse findAllUser(Authentication authentication, int page);
+
+  <T> T findUser(Long userId);
+
+  void updateUser(UserTERequest request, Authentication authentication);
+
+  void deleteTeacher(Long id);
 }

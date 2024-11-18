@@ -8,17 +8,20 @@ import com.tls.edututor.exam.usertest.entity.UserTest;
 import com.tls.edututor.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "SHARE_TEST")
+@SQLDelete(sql = "update share_test st set st.is_deleted = true where st.id = ?")
+@SQLRestriction("is_deleted = false")
 public class ShareTest extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +43,4 @@ public class ShareTest extends BaseEntity {
   @Column(name = "DEADLINE")
   private LocalDateTime deadline;
 
-  /*
-  @Override
-  public void setWriter(Long writer) {
-    super.setWriter(writer);
-  }*/
 }

@@ -1,6 +1,6 @@
 import { reset } from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import Loading from './components/common/Loading.jsx';
 import AdminLayout from './Layout/AdminLayout.jsx';
@@ -24,12 +24,17 @@ import Notice from './pages/board/Notice.jsx';
 import NoticeDetail from './pages/board/NoticeDetail.jsx';
 import Faq from './pages/board/Faq.jsx';
 import Inquiry from './pages/board/Inquiry.jsx';
+import IssueListPage from './pages/admin/IssueListPage.jsx';
+import InquiryForm from './components/board/InquiryForm.jsx';
+import InquiryDetail from './pages/board/InquiryDetail.jsx';
+import TestDetailPage from "./pages/exam/TestDetailPage.jsx";
+import IssueDetailPage from "./pages/admin/IssueDetailPage.jsx";
+import TestPaperEditPage from "./pages/admin/TestPaperEditPage.jsx";
 
 
 const GlobalStyle = createGlobalStyle`
     ${reset}
     html, body {
-        height: 100%;
         font-family: 'Noto Sans KR', sans-serif;
     }
 `;
@@ -38,6 +43,8 @@ const AdminHome = lazy(() => import('./pages/admin/AdminHome.jsx'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin.jsx'));
 const CourseCreationPage = lazy(() => import('./pages/admin/CourseCreationPage.jsx'));
 const CourseListPage = lazy(() => import('./pages/admin/CourseListPage.jsx'));
+const AdminUser = lazy(() => import('./pages/admin/AdminUser.jsx'));
+const AdminUserStatistic = lazy(() => import('./components/admin/AdminUserStatistic.jsx'));
 
 /* 유저 라우팅 */
 const Home = lazy(() => import('./pages/main/Home.jsx'));
@@ -50,6 +57,7 @@ const Classroom = lazy(() => import('./pages/classroom/Classroom.jsx'));
 const ExamShare = lazy(() => import('./pages/exam/ExamSharePage.jsx'));
 const AdditionalInfo = lazy(() => import('./pages/user/AdditionalInfo.jsx'));
 const OAuthSuccess = lazy(() => import('./pages/user/OAuthSuccess.jsx'));
+const StudentReport = lazy(() => import('./pages/report/SharedTestListPage.jsx'));
 
 const LoadingSpinner = () => <Loading />;
 
@@ -68,6 +76,11 @@ function AppRoutes() {
     <>
       <GlobalStyle />
       <Routes>
+
+        <Route path="/admin/login" element={
+          <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>
+        } />
+
         <Route path="/admin" element={
           <Suspense fallback={<LoadingSpinner />}>
             <AdminLayout>
@@ -82,10 +95,6 @@ function AppRoutes() {
                 <AdminHome />
               </ProtectedRoute>
             </Suspense>
-          } />
-
-          <Route path="login" element={
-            <Suspense fallback={<LoadingSpinner />}><AdminLogin /></Suspense>
           } />
 
           <Route path="course" element={
@@ -108,6 +117,14 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="AD">
                 <TestPaperDetailPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="test-paper/edit/:testPaperId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <TestPaperEditPage />
               </ProtectedRoute>
             </Suspense>
           } />
@@ -136,6 +153,14 @@ function AppRoutes() {
             </Suspense>
           } />
 
+          <Route path="material/edit/:materialId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <MaterialEditPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
           <Route path="create-test-paper" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="AD">
@@ -159,6 +184,40 @@ function AppRoutes() {
               </ProtectedRoute>
             </Suspense>
           } />
+
+          <Route path="users" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <AdminUser />
+              </ProtectedRoute>
+            </Suspense>
+          }
+          />
+
+
+          <Route path="issue-list" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <IssueListPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="issue/:issueId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <IssueDetailPage />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="user-statistic" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="AD">
+                <AdminUserStatistic />
+              </ProtectedRoute>
+            </Suspense>
+          } />
         </Route>
 
         <Route path="/" element={
@@ -172,6 +231,10 @@ function AppRoutes() {
           <Route index element={
             <Suspense fallback={<LoadingSpinner />}><Home /></Suspense>
           } />
+
+          <Route path="/classroom/:classroomId" element={<Home />} />
+
+          <Route path="cmmn" element={<Navigate to="/cmmn/notice" replace />} />
 
           <Route path="cmmn/notice" element={ // 아무나, 로그인, 권한에 따라 버튼만 수정
             <Suspense fallback={<LoadingSpinner />}><Notice /></Suspense>
@@ -189,10 +252,34 @@ function AppRoutes() {
             <Suspense fallback={<LoadingSpinner />}><Inquiry /></Suspense>
           } />
 
-          <Route path="report" element={
+          <Route path="cmmn/inquiry/:boardId" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}><InquiryDetail /></Suspense>
+          } />
+
+          <Route path="cmmn/inquiry/inquiry-form" element={ // SU(학생), TE(선생)만
+            <Suspense fallback={<LoadingSpinner />}><InquiryForm /></Suspense>
+          } />
+
+          <Route path="report/teacher" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="TE">
+                <Report />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="report/student" element={
             <Suspense fallback={<LoadingSpinner />}>
               <ProtectedRoute requiredRole="SU">
-                <Report />
+                <StudentReport />
+              </ProtectedRoute>
+            </Suspense>
+          } />
+
+          <Route path="/tests/details/:userTestId" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProtectedRoute requiredRole="SU">
+                <TestDetailPage />
               </ProtectedRoute>
             </Suspense>
           } />
@@ -260,11 +347,12 @@ function AppRoutes() {
               </ProtectedRoute>
             </Suspense>
           } />
-        </Route>
 
-        <Route path="/login" element={
-          <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
-        } />
+          <Route path="/login" element={
+            <Suspense fallback={<LoadingSpinner />}><UserLogin /></Suspense>
+          } />
+
+        </Route>
 
         <Route path="/join" element={
           <Suspense fallback={<LoadingSpinner />}><UserJoin /></Suspense>

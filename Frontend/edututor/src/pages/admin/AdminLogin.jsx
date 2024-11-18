@@ -1,17 +1,8 @@
-import styled from 'styled-components';
 import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import AdminLoginForm from '../../components/admin/AdminLoginForm.jsx';
-
-const Container = styled.div`
-    display: flex;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9fafb;
-`;
-
+import { Container, FormSection, LoginTypeContainer } from '../../components/common/UserStyledComponents.js';
 
 const initForm = {
   loginId : '',
@@ -19,31 +10,57 @@ const initForm = {
   type    : 'AD'
 };
 
+const initErrors = {
+  loginId : '',
+  password: ''
+};
+
 const AdminLogin = () => {
-  const [form, setForm] = useState(initForm);
+  const [formData, setFormData] = useState(initForm);
+  const [errors, setErrors] = useState(initErrors);
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setForm(prev => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+
+    setErrors(prev => ({
+      ...prev,
+      [name]: ''
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const submitData = {
-      ...form,
-      type: 'AD'
-    };
+    if (!formData.loginId) {
+      setErrors(prev => ({
+        ...prev,
+        loginId: '아이디를 입력해주세요.'
+      }));
+      return;
+    }
+
+    if (!formData.password) {
+      setErrors(prev => ({
+        ...prev,
+        password: '비밀번호를 입력해주세요.'
+      }));
+      return;
+    }
 
     try {
-      const result = await login(submitData);
-      if (result) navigate('/admin');
+      const result = await login(formData);
+      if (result) {
+        const info = localStorage.getItem('info');
+        if (info) localStorage.removeItem('info');
+        navigate('/admin');
+      }
     } catch (error) {
       console.error('Login failed:', error);
     }
@@ -51,11 +68,16 @@ const AdminLogin = () => {
 
   return (
     <Container>
-      <AdminLoginForm
-        form={form}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-      />
+      <FormSection>
+        <LoginTypeContainer>
+          <AdminLoginForm
+            formData={formData}
+            errors={errors}
+            handleSubmit={handleSubmit}
+            handleInputChange={handleInputChange}
+          />
+        </LoginTypeContainer>
+      </FormSection>
     </Container>
   );
 };

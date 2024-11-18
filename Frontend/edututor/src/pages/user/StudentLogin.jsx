@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext.jsx';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const initForm = {
   loginId : '',
@@ -91,7 +92,8 @@ const StudentLogin = () => {
           }));
         }
       } else {
-        alert('로그인에 실패하셨습니다.');
+        const message = { icon: 'error', title: '로그인에 실패하셨습니다.' };
+        showALert(message);
       }
     }
   };
@@ -124,6 +126,7 @@ const StudentLogin = () => {
                   <Input
                     id="password"
                     name="password"
+                    type="password"
                     onChange={handleInputChange}
                     $hasError={!!errors.password}
                   />

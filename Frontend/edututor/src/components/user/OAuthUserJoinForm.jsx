@@ -29,7 +29,8 @@ const OAuthUserJoinForm = ({
                              selectedSchool,
                              handleSubmit,
                              handleCreateClassroom,
-                             classroom
+                             classroom,
+                             lastDay
                            }) => {
   return (
     <Container>
@@ -90,7 +91,7 @@ const OAuthUserJoinForm = ({
                   placeholder="YYYY"
                   value={form.birthYear}
                   onChange={getInputHandler}
-                  $hasError={errors.birthYear}
+                  $hasError={errors.birthYear || errors.birthYearInvalid}
                   $isFilled={form.birthYear.length === 4}
                 />
                 <Divider>년</Divider>
@@ -101,7 +102,7 @@ const OAuthUserJoinForm = ({
                   placeholder="MM"
                   value={form.birthMonth}
                   onChange={getInputHandler}
-                  $hasError={errors.birthMonth}
+                  $hasError={errors.birthMonth || errors.birthMonthInvalid}
                   $isFilled={form.birthMonth.length === 2}
                 />
                 <Divider>월</Divider>
@@ -112,13 +113,20 @@ const OAuthUserJoinForm = ({
                   placeholder="DD"
                   value={form.birthDay}
                   onChange={getInputHandler}
-                  $hasError={errors.birthDay}
+                  $hasError={errors.birthDay || errors.birthDayInvalid}
                   $isFilled={form.birthDay.length === 2}
                 />
                 <Divider>일</Divider>
               </DateGroup>
               {(errors.birthYear || errors.birthMonth || errors.birthDay) && (
                 <ErrorText>숫자만 입력 가능합니다.</ErrorText>
+              )}
+              {(errors.birthYearInvalid || errors.birthMonthInvalid || errors.birthDayInvalid) && (
+                <>
+                  <ErrorText>{errors.birthYearInvalid && '올바른 연도를 입력해주세요. (1900~)'}</ErrorText>
+                  <ErrorText>{errors.birthMonthInvalid && '올바른 월을 입력해주세요. (1-12)'}</ErrorText>
+                  <ErrorText>{errors.birthDayInvalid && `올바른 일을 입력해주세요. (${lastDay})`}</ErrorText>
+                </>
               )}
             </FormGroup>
 
@@ -186,7 +194,7 @@ const OAuthUserJoinForm = ({
 
                 {/* 반 이름 입력 */}
                 <Input name="classroomName" value={classroom.classroomName} onChange={handleCreateClassroom}
-                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 갱스터 o)"
+                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 천재반 o)"
                        maxLength={10}
                        style={{ width: '200px' }}
                 />

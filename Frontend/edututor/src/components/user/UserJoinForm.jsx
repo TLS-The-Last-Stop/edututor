@@ -1,7 +1,6 @@
 import {
   Button,
   ClassroomGroup,
-  Container,
   DateGroup,
   DateInput,
   Divider,
@@ -17,6 +16,7 @@ import {
   JoinButtonGroup,
   Label,
   Required,
+  ScrolledContainer,
   Select,
   SelectGroup,
   SuccessText,
@@ -34,11 +34,12 @@ const UserJoinForm = ({
                         isIdChecked,
                         idCheckMessage,
                         handleCreateClassroom,
-                        classroom
+                        classroom,
+                        lastDay
                       }) => {
 
   return (
-    <Container>
+    <ScrolledContainer>
       <FormSection>
         <FormHeader>
           <Title>회원가입</Title>
@@ -91,6 +92,7 @@ const UserJoinForm = ({
               </Label>
               <Input
                 id="password"
+                type="password"
                 name="password"
                 value={form.password}
                 onChange={getInputHandler}
@@ -108,6 +110,7 @@ const UserJoinForm = ({
               </Label>
               <Input
                 id="confirmPassword"
+                type="password"
                 name="confirmPassword"
                 value={form.confirmPassword}
                 onChange={getInputHandler}
@@ -172,7 +175,7 @@ const UserJoinForm = ({
                   maxLength="4"
                   value={form.phoneMiddle}
                   onChange={getInputHandler}
-                  $hasError={errors.phoneMiddle}
+                  $hasError={errors.phoneMiddle || form.phoneMiddle.length > 0 && form.phoneMiddle.length < 4}
                   $isFilled={form.phoneMiddle.length === 4}
                 />
                 <Divider>-</Divider>
@@ -181,12 +184,16 @@ const UserJoinForm = ({
                   maxLength="4"
                   value={form.phoneLast}
                   onChange={getInputHandler}
-                  $hasError={errors.phoneLast}
+                  $hasError={errors.phoneLast || form.phoneLast.length > 0 && form.phoneLast.length < 4}
                   $isFilled={form.phoneLast.length === 4}
                 />
               </SelectGroup>
               {(errors.phoneMiddle || errors.phoneLast) && (
                 <ErrorText>숫자만 입력 가능합니다.</ErrorText>
+              )}
+              {((form.phoneMiddle.length > 0 && form.phoneMiddle.length < 4) ||
+                (form.phoneLast.length > 0 && form.phoneLast.length < 4)) && (
+                <ErrorText>휴대폰 번호는 4자리씩 입력해주세요.</ErrorText>
               )}
             </FormGroup>
 
@@ -202,7 +209,7 @@ const UserJoinForm = ({
                   placeholder="YYYY"
                   value={form.birthYear}
                   onChange={getInputHandler}
-                  $hasError={errors.birthYear}
+                  $hasError={errors.birthYear || errors.birthDateInvalid}
                   $isFilled={form.birthYear.length === 4}
                 />
                 <Divider>년</Divider>
@@ -213,7 +220,7 @@ const UserJoinForm = ({
                   placeholder="MM"
                   value={form.birthMonth}
                   onChange={getInputHandler}
-                  $hasError={errors.birthMonth}
+                  $hasError={errors.birthMonth || errors.birthDateInvalid}
                   $isFilled={form.birthMonth.length === 2}
                 />
                 <Divider>월</Divider>
@@ -224,7 +231,7 @@ const UserJoinForm = ({
                   placeholder="DD"
                   value={form.birthDay}
                   onChange={getInputHandler}
-                  $hasError={errors.birthDay}
+                  $hasError={errors.birthDay || errors.birthDateInvalid}
                   $isFilled={form.birthDay.length === 2}
                 />
                 <Divider>일</Divider>
@@ -232,44 +239,14 @@ const UserJoinForm = ({
               {(errors.birthYear || errors.birthMonth || errors.birthDay) && (
                 <ErrorText>숫자만 입력 가능합니다.</ErrorText>
               )}
+              {(errors.birthYearInvalid || errors.birthMonthInvalid || errors.birthDayInvalid) && (
+                <>
+                  <ErrorText>{errors.birthYearInvalid && '올바른 연도를 입력해주세요. (1900~)'}</ErrorText>
+                  <ErrorText>{errors.birthMonthInvalid && '올바른 월을 입력해주세요. (1-12)'}</ErrorText>
+                  <ErrorText>{errors.birthDayInvalid && `올바른 일을 입력해주세요. (${lastDay})`}</ErrorText>
+                </>
+              )}
             </FormGroup>
-
-            {/* 학교 유형 선택 - RadioGroup 활용 */}
-            {/*<FormGroup>
-              <Label>학교 유형</Label>
-              <RadioGroup>
-                <RadioLabel>
-                  <RadioInput
-                    type="radio"
-                    name="schoolType"
-                    value="초등"
-                    checked={form.schoolType === '초등'}
-                    onChange={getInputHandler}
-                  />
-                  초등
-                </RadioLabel>
-                <RadioLabel>
-                  <RadioInput
-                    type="radio"
-                    name="schoolType"
-                    value="중등"
-                    checked={form.schoolType === '중등'}
-                    onChange={getInputHandler}
-                  />
-                  중등
-                </RadioLabel>
-                <RadioLabel>
-                  <RadioInput
-                    type="radio"
-                    name="schoolType"
-                    value="고등"
-                    checked={form.schoolType === '고등'}
-                    onChange={getInputHandler}
-                  />
-                  고등
-                </RadioLabel>
-              </RadioGroup>
-            </FormGroup>*/}
 
             {/* 학교명 검색 - InputGroup 활용 */}
             <FormGroup>
@@ -335,7 +312,7 @@ const UserJoinForm = ({
 
                 {/* 반 이름 입력 */}
                 <Input name="classroomName" value={classroom.classroomName} onChange={handleCreateClassroom}
-                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 갱스터 o)"
+                       placeholder="반 이름 입력 (최대 10자, 반 빼고 ex. 천재반 o)"
                        maxLength={10}
                        style={{ width: '200px' }}
                 />
@@ -351,7 +328,7 @@ const UserJoinForm = ({
           </FieldSet>
         </FormContainer>
       </FormSection>
-    </Container>
+    </ScrolledContainer>
   );
 };
 

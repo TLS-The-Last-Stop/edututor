@@ -134,3 +134,24 @@
     color: #f44336;
 }
 
+.question-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.report-button {
+    background-color: #ff3e3e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    align-self: flex-end;
+}
+
+.report-button:hover {
+    background-color: #ff7875;
+}

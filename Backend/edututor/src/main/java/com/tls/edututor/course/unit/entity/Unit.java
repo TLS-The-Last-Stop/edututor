@@ -6,6 +6,8 @@ import com.tls.edututor.course.section.entity.Section;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ import java.util.List;
 @Setter
 @Entity
 @Builder
+@SQLDelete(sql = "UPDATE UNIT SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "UNIT")

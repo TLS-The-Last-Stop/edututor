@@ -1,5 +1,7 @@
 package com.tls.edututor.common.initilizer;
 
+import com.tls.edututor.board.answer.entity.Answer;
+import com.tls.edututor.board.answer.repository.AnswerRepository;
 import com.tls.edututor.board.board.entity.Board;
 import com.tls.edututor.board.board.repository.BoardRepository;
 import com.tls.edututor.board.category.entity.Category;
@@ -76,6 +78,7 @@ public class DataInitializer {
   private final UserTestRepository userTestRepository;
   private final CategoryRepository categoryRepository;
   private final BoardRepository boardRepository;
+  private final AnswerRepository answerRepository;
 
   public DataInitializer(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
                          SchoolRepository schoolRepository, ClassroomRepository classroomRepository,
@@ -84,7 +87,7 @@ public class DataInitializer {
                          MaterialRepository materialRepository, TestPaperRepository testPaperRepository,
                          ShareTestRepository shareTestRepository, QuestionRepository questionRepository,
                          OptionRepository optionRepository, CodeGroupRepository codeGroupRepository, CodeDetailRepository codeDetailRepository,
-                         UserAnswerRepository userAnswerRepository, UserTestRepository userTestRepository, CategoryRepository categoryRepository, BoardRepository boardRepository) {
+                         UserAnswerRepository userAnswerRepository, UserTestRepository userTestRepository, CategoryRepository categoryRepository, BoardRepository boardRepository, AnswerRepository answerRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.schoolRepository = schoolRepository;
@@ -104,6 +107,7 @@ public class DataInitializer {
     this.userTestRepository = userTestRepository;
     this.categoryRepository = categoryRepository;
     this.boardRepository = boardRepository;
+    this.answerRepository = answerRepository;
   }
 
 
@@ -242,7 +246,7 @@ public class DataInitializer {
       teacher.setClassroom(classroom);
       userRepository.save(teacher);
 
-      initStudents(classroom, i+1);
+      initStudents(classroom, i + 1);
     }
   }
 
@@ -274,10 +278,10 @@ public class DataInitializer {
       initAll();
 
       List<String> courses = List.of(
-              "국어 기초 튼튼: 초등 국어 1학년 교과서",
-              "수학 첫걸음: 초등 수학 1학년 참고서",
-              "영어의 기본: 초등 및 중등 필수 참고서",
-              "이것이 과학이다: 초등 과학 교과서"
+              "국어 기초 튼튼: 국어 1학년 교과서",
+              "수학 첫걸음: 수학 1학년 참고서",
+              "영어의 기본: 초등 필수 참고서",
+              "이것이 사회이다: 사회 교과서"
       );
       AtomicLong idCounter = new AtomicLong(1);
 
@@ -298,7 +302,7 @@ public class DataInitializer {
         List<String> unitTitles;
 
         switch (courseName) {
-          case "국어 기초 튼튼: 초등 국어 1학년 교과서":
+          case "국어 기초 튼튼: 국어 1학년 교과서":
             sectionTitles = List.of("우리말 소리 익히기", "재미있는 단어 놀이", "문장 만들기 놀이", "이야기 듣고 상상하기", "감정을 표현하는 말");
             unitTitles = List.of(
                     "한글 자음과 모음 소리를 듣고 따라하며 기본 글자 익히기.",
@@ -309,7 +313,7 @@ public class DataInitializer {
             );
             break;
 
-          case "수학 첫걸음: 초등 수학 1학년 참고서":
+          case "수학 첫걸음: 수학 1학년 참고서":
             sectionTitles = List.of("숫자와 친해지기", "수와 수 비교하기", "덧셈과 뺄셈의 시작", "모양과 도형 탐구하기", "생활 속 문제 해결하기");
             unitTitles = List.of(
                     "1부터 10까지 숫자를 배우고 쓰는 연습",
@@ -320,7 +324,7 @@ public class DataInitializer {
             );
             break;
 
-          case "영어의 기본: 초등 및 중등 필수 참고서":
+          case "영어의 기본: 초등 필수 참고서":
             sectionTitles = List.of("기초 인사 표현 익히기", "나를 소개해요", "숫자와 색깔 배우기", "가족과 친구 소개하기", "일상 표현 배우기");
             unitTitles = List.of(
                     "Hello, How are you? 등의 기본적인 인사말 배우기",
@@ -331,13 +335,13 @@ public class DataInitializer {
             );
             break;
 
-          case "이것이 과학이다: 초등 과학 교과서":
-            sectionTitles = List.of("내 주변의 과학", "식물의 성장 과정", "물과 공기의 힘", "자연의 변화와 날씨", "우리 몸의 신비");
+          case "이것이 사회이다: 사회 교과서":
+            sectionTitles = List.of("내 주변의 사회", "사회의 성장 과정", "사회의 힘", "사회 변화와 날씨", "우리 몸의 신비");
             unitTitles = List.of(
-                    "일상 속에 숨겨진 과학 원리를 찾아보고 이해하기",
-                    "씨앗이 자라나는 과정과 식물의 성장 단계 관찰하기",
-                    "물의 특성과 공기의 성질, 이들의 상호작용 알아보기",
-                    "계절에 따른 날씨 변화와 그 원인 탐구하기",
+                    "일상 속에 숨겨진 사회 원리를 찾아보고 이해하기",
+                    "사회 씨앗이 자라나는 과정과 사회의 성장 단계 관찰하기",
+                    "사회 특성과 사회 성질, 이들의 상호작용 알아보기",
+                    "계절에 따른 사회 변화와 그 원인 탐구하기",
                     "신체 각 부위의 역할과 건강하게 유지하는 방법 배우기"
             );
             break;
@@ -362,9 +366,9 @@ public class DataInitializer {
 
             Material material = Material.builder()
                     .unit(unit)
-                    .title(unitTitle + " 자료")
+                    .title(unitTitle)
                     .content(unitTitle + "에 대한 학습 자료입니다.")
-                    .url("https://www.youtube.com/watch?v=6Ox3OM_sw9E")
+                    .url("https://www.youtube.com/watch?v=lWCEvcRqCDk&list=PLbPxj9t5bO9hdEvCenkzR9s8cBdkaWe_W")
                     .build();
             materialRepository.save(material);
 
@@ -403,11 +407,13 @@ public class DataInitializer {
               questionRepository.save(question);
 
               if (question.getType() == QuestionType.OBJECTIVE) {
-                for (int j = 1; j <= 5; j++) {
+                String[] labels = {"가", "나", "다", "라", "마"};
+
+                for (int j = 0; j < labels.length; j++) {
                   Option option = Option.builder()
                           .question(question)
-                          .content("선택지 " + j)
-                          .isCorrect(j == 1)
+                          .content(labels[j])
+                          .isCorrect(j == 0)
                           .build();
                   optionRepository.save(option);
                 }
@@ -519,46 +525,38 @@ public class DataInitializer {
     category5.setName("클래스 운영");
 
     Category category6 = new Category();
-    category5.setDepth(2);
-    category5.setIsDeleted(false);
-    category5.setId(5L);
-    category5.setCreatedAt(LocalDateTime.now());
-    category5.setParent(category2);
-    category5.setName("코스웨어/문항");
+    category6.setDepth(2);
+    category6.setIsDeleted(false);
+    category6.setId(6L);
+    category6.setCreatedAt(LocalDateTime.now());
+    category6.setParent(category2);
+    category6.setName("코스웨어/문항");
 
     Category category7 = new Category();
-    category5.setDepth(2);
-    category5.setIsDeleted(false);
-    category5.setId(5L);
-    category5.setCreatedAt(LocalDateTime.now());
-    category5.setParent(category2);
-    category5.setName("서비스 이용");
+    category7.setDepth(2);
+    category7.setIsDeleted(false);
+    category7.setId(7L);
+    category7.setCreatedAt(LocalDateTime.now());
+    category7.setParent(category2);
+    category7.setName("서비스 이용");
 
     Category category8 = new Category();
-    category5.setDepth(2);
-    category5.setIsDeleted(false);
-    category5.setId(5L);
-    category5.setCreatedAt(LocalDateTime.now());
-    category5.setParent(category2);
-    category5.setName("시험지 배포");
+    category8.setDepth(2);
+    category8.setIsDeleted(false);
+    category8.setId(8L);
+    category8.setCreatedAt(LocalDateTime.now());
+    category8.setParent(category2);
+    category8.setName("시험지 배포");
 
     Category category9 = new Category();
-    category5.setDepth(2);
-    category5.setIsDeleted(false);
-    category5.setId(5L);
-    category5.setCreatedAt(LocalDateTime.now());
-    category5.setParent(category2);
-    category5.setName("리포트");
+    category9.setDepth(2);
+    category9.setIsDeleted(false);
+    category9.setId(9L);
+    category9.setCreatedAt(LocalDateTime.now());
+    category9.setParent(category2);
+    category9.setName("리포트");
 
-    Category category10 = new Category();
-    category5.setDepth(2);
-    category5.setIsDeleted(false);
-    category5.setId(5L);
-    category5.setCreatedAt(LocalDateTime.now());
-    category5.setParent(category2);
-    category5.setName("카테고리 테스트");
-
-    categoryRepository.saveAll(List.of(category1, category2, category3, category4, category5, category6, category7, category8, category9, category10));
+    categoryRepository.saveAll(List.of(category1, category2, category3, category4, category5, category6, category7, category8, category9));
   }
 
   @Transactional
@@ -594,24 +592,133 @@ public class DataInitializer {
 
     Board board4 = new Board();
     board4.setIsDeleted(false);
-    board4.setCategory(categoryRepository.getReferenceById(5L));
+    board4.setCategory(categoryRepository.getReferenceById(1L));
     board4.setCreatedAt(LocalDateTime.now());
-    board4.setTitle("클래스 생성 및 관리는 어떻게 하나요?");
-    board4.setContent("지니아튜터의 클래스는 우리반T셀파(class.tsherpa.co.kr)의 클래스와 연동됩니다.\n" +
+    board4.setTitle("\n" +
+            "10/5(목) 17:00~18:00 시스템 점검 안내");
+    board4.setContent("안녕하세요. 지니아튜터 관리자입니다.\n" +
             "\n" +
-            "따라서 클래스 생성과 관리는 우리반T셀파에서 하실 수 있습니다.");
+            "지니아튜터를 이용해 주시는 사용자분들께 감사드리며,  \n" +
+            "\n" +
+            "안정적인 서비스를 위하여 목요일(10/5) 오후 5시부터 일부 기능 업데이트 작업을 진행합니다.\n" +
+            "\n" +
+            "아래 작업 시간 동안에는 사이트 이용이 원활하지 않는 점 안내 드립니다.\n" +
+            "\n" +
+            "------------------------------------------------------------------------------------------------------------------------------\n" +
+            "\n" +
+            "<시스템 점검 안내>\n" +
+            "\n" +
+            "■ 작업일시 :  2023.10.05(목) 17:00 ~ 18:00     \n" +
+            "\n" +
+            "■ 작업내용 :  기능 개선을 위한 시스템 점검 작업\n" +
+            "\n" +
+            "------------------------------------------------------------------------------------------------------------------------------\n" +
+            "\n" +
+            "사이트 이용에 불편을 드리게 된 점 양해 부탁드리며, 안정된 서비스 제공을 위해 최선을 다하겠습니다.\n" +
+            "\n" +
+            "감사합니다.");
 
     Board board5 = new Board();
     board5.setIsDeleted(false);
-    board5.setCategory(categoryRepository.getReferenceById(6L));
+    board5.setCategory(categoryRepository.getReferenceById(1L));
     board5.setCreatedAt(LocalDateTime.now());
-    board5.setTitle("코스웨어는 어떤 기준으로 설정되어 있나요?");
-    board5.setContent("지니아튜터의 코스웨어는 크게 2가지 기준으로 나뉩니다.\n" +
+    board5.setTitle("\n" +
+            "11/30(목) 17시~18시 시스템 점검 안내");
+    board5.setContent("안녕하세요. 지니아튜터 관리자입니다.\n" +
+            "\n" +
+            "지니아튜터의 연동 사이트가 시스템 점검을 진행하여 일부 기능이 작동하지 않을 수 있음을 알려드립니다.\n" +
+            "\n" +
+            "아래 작업 시간 동안에는 사이트 이용이 원활하지 않는 점 안내 드립니다.\n" +
+            "\n" +
+            "------------------------------------------------------------------------------------------------------------------------------\n" +
+            "\n" +
+            "<시스템 점검 안내>\n" +
+            "\n" +
+            "■ 작업일시 : 2023.11.30(목) 17:00 ~ 18:00\n" +
+            "\n" +
+            "■ 작업내용 : 연동 사이트의 시스템 점검 작업\n" +
+            "\n" +
+            "------------------------------------------------------------------------------------------------------------------------------\n" +
+            "\n" +
+            "사이트 이용에 불편을 드리게 된 점 양해 부탁드리며, 안정된 서비스 제공을 위해 최선을 다하겠습니다.\n" +
+            "\n" +
+            "감사합니다.");
+
+    Board board6 = new Board();
+    board6.setIsDeleted(false);
+    board6.setCategory(categoryRepository.getReferenceById(5L));
+    board6.setCreatedAt(LocalDateTime.now());
+    board6.setTitle("클래스 생성 및 관리는 어떻게 하나요?");
+    board6.setContent("지니아튜터의 클래스는 우리반T셀파(class.tsherpa.co.kr)의 클래스와 연동됩니다.\n" +
+            "\n" +
+            "따라서 클래스 생성과 관리는 우리반T셀파에서 하실 수 있습니다.");
+
+    Board board7 = new Board();
+    board7.setIsDeleted(false);
+    board7.setCategory(categoryRepository.getReferenceById(6L));
+    board7.setCreatedAt(LocalDateTime.now());
+    board7.setTitle("코스웨어는 어떤 기준으로 설정되어 있나요?");
+    board7.setContent("지니아튜터의 코스웨어는 크게 2가지 기준으로 나뉩니다.\n" +
             "하나는 천재교과서에서 발행하는 교과서의 목차에 맞춰서 설정하였고\n" +
             "\n" +
             "천재교과서를 이용하지 않는 학교를 위해 성취기준에 맞춘 과정도 준비하였습니다.");
 
-    boardRepository.saveAll(List.of(board1, board2, board3, board4, board5));
+    Board board8 = new Board();
+    board8.setIsDeleted(false);
+    board8.setCategory(categoryRepository.getReferenceById(7L));
+    board8.setCreatedAt(LocalDateTime.now());
+    board8.setTitle("학교에서 유료버전 신청하고자 합니다. 가격이 어떻게 되나요?");
+    board8.setContent("기본 가격은 10,000원/학생1인, 1개월 기준이며\n" +
+            "\n" +
+            "신청(학생)인원이 30명이 넘거나 선도학교의 경우에는 7,000원/학생1인, 1개월 입니다.\n" +
+            "\n" +
+            " \n" +
+            "\n" +
+            "학교마다 학생수, 예산 등 다양한 환경이 존재하므로 자세한 내용은 영업담당자와 협의해 주시기 바랍니다. \n" +
+            "\n" +
+            "영업담당자 정보는 아래와 같습니다.\n" +
+            "담당자: 정대욱\n" +
+            "연락처: 010-7562-7488 / daewook86@chunjae.co.kr");
+
+    Board board9 = new Board();
+    board9.setIsDeleted(false);
+    board9.setCategory(categoryRepository.getReferenceById(6L));
+    board9.setCreatedAt(LocalDateTime.now());
+    board9.setTitle("평가 당 문항수는 몇개씩 인가요?");
+    board9.setContent("지니아튜터가 제공하는 평가는 진단평가, 형성평가, 단원평가 등입니다.\n" +
+            "제공하는 문항 수는 진단평가는 10문항, 형성평가는 5문항, 단원평가는 20문항입니다.\n" +
+            "\n" +
+            "다만, 선생님은 문항수를 조정하실 수 있습니다.\n" +
+            "\n" +
+            "문항편집 기능을 이용하여 문항을 추가하거나 삭제하면 문항수 조정됩니다.");
+
+    Board board10 = new Board();
+    board10.setIsDeleted(false);
+    board10.setCategory(categoryRepository.getReferenceById(8L));
+    board10.setCreatedAt(LocalDateTime.now());
+    board10.setTitle("배포 취소는 언제나 가능한 건가요?");
+    board10.setContent("선생님이 원하시면 배포취소는 언제든지 하실 수 있습니다.\n" +
+            "다만 배포취소를 할 경우에 학생들이 푼 학습결과와 리포트는 모두 사라지게 됩니다.");
+
+    Board board11 = new Board();
+    board11.setIsDeleted(false);
+    board11.setCategory(categoryRepository.getReferenceById(3L));
+    board11.setCreatedAt(LocalDateTime.now());
+    board11.setTitle("문의입니다!");
+    board11.setContent("학생들에게 시험 공유는 어떻게 하는 건가요?");
+
+    boardRepository.saveAll(List.of(board1, board2, board3, board4, board5, board6, board7,
+            board8, board9, board10, board11));
   }
 
+  @Transactional
+  protected void initializeAnswer() {
+    Answer answer1 = new Answer();
+    answer1.setIsDeleted(false);
+//    answer1.setId(1L);
+    answer1.setBoard(boardRepository.getReferenceById(11L));
+    answer1.setContent("학습 과정에서 두 번째 공유 아이콘을 누르면 됩니다.");
+
+    answerRepository.save(answer1);
+  }
 }

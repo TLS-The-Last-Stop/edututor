@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.List;
 
 @Slf4j
@@ -29,16 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
   private final JwtUtil jwtUtil;
   private final UserDetailsService userDetailsService;
-
-  @Override
-  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-    String path = request.getRequestURI();
-    return path.equals("/api/auth/refresh") ||
-            path.equals("/api/users/teachers") ||
-            path.equals("/api/login") ||
-            path.equals("/api/admin/login") ||
-            path.equals("/api/logout");
-  }
 
   @Override
   @Transactional(readOnly = true)
@@ -58,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
       }
 
       if (accessToken.isBlank()) {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        SecurityContextHolder.getContext().setAuthentication(null);
         filterChain.doFilter(request, response);
         return;
       }
@@ -77,19 +66,41 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     String loginId = jwtUtil.getLoginId(accessToken);
-    CustomUser user = (CustomUser) userDetailsService.loadUserByUsername(loginId);
-    String role = user.getAuthorities().stream()
-            .findFirst()
-            .map(GrantedAuthority::getAuthority)
-            .orElse("");
 
-    AuthUser authUser = new AuthUser(user.getId(), user.getUsername(), user.getEmail(), user.getClassroom(), role);
 
-    UsernamePasswordAuthenticationToken authentication =
-            new UsernamePasswordAuthenticationToken(authUser, null, List.of(new SimpleGrantedAuthority("ROLE_" + role)));
+    try { // 없는 쿠키로 요청을 보냈을때 반복되는 쿠키 검증 처리
+      CustomUser user = (CustomUser) userDetailsService.loadUserByUsername(loginId);
+      String role = user.getAuthorities().stream()
+              .findFirst()
+              .map(GrantedAuthority::getAuthority)
+              .orElse("");
 
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+      AuthUser authUser = new AuthUser(user.getId(), user.getUsername(), user.getEmail(), user.getClassroom(), role);
 
-    filterChain.doFilter(request, response);
+      UsernamePasswordAuthenticationToken authentication =
+              new UsernamePasswordAuthenticationToken(authUser, null, List.of(new SimpleGrantedAuthority("ROLE_" + role)));
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+
+      filterChain.doFilter(request, response);
+    } catch (BadCredentialsException bce) {
+      removeCookiesAndSendUnauthorized(request, response);
+    }
+  }
+
+  private void removeCookiesAndSendUnauthorized(HttpServletRequest request, HttpServletResponse response) {
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().startsWith("access") || cookie.getName().startsWith("refresh")) {
+          Cookie newCookie = new Cookie(cookie.getName(), null);
+          newCookie.setMaxAge(0);
+          newCookie.setPath("/");
+          response.addCookie(newCookie);
+        }
+      }
+    }
+
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
   }
 }

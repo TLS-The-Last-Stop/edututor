@@ -9,10 +9,12 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class TestPaperResponse {
   private Long testPaperId;
   private int testPaperStatus;
   private String title;
+  private Long unitId;
   private List<QuestionResponse> questions;
 
   public TestPaperResponse(Long testPaperId, int testPaperStatus, String title, List<QuestionResponse> questions) {

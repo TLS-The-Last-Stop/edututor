@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../assets/css/MaterialDetailPage.css';
 import { publicApi } from '../../api/axios.js';
+import { questionApi } from '../../api/questionApi.js'; // 새로 추가된 axios 인스턴스
+import Loading from '../../components/common/Loading.jsx';
 
 const MaterialDetailStudentPage = () => {
   const { materialId } = useParams();
   const [materialData, setMaterialData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [generatedQuestion, setGeneratedQuestion] = useState(''); // 생성된 시험 문제 상태
 
   useEffect(() => {
     const fetchMaterial = async () => {
@@ -42,7 +45,20 @@ const MaterialDetailStudentPage = () => {
     );
   };
 
-  if (loading) return <p>로딩 중...</p>;
+  const handleGenerateQuestion = async () => {
+    if (!materialData || !materialData.content) return;
+
+    try {
+      console.log("Sending request to /generate-question with content:", materialData.content); // 요청 내용 로그
+      const response = await questionApi.post('/generate-question', { content: materialData.content });
+      console.log("Response received:", response.data); // 응답 내용 로그
+      setGeneratedQuestion(response.data.question);
+    } catch (err) {
+      console.error("질문 생성 중 오류가 발생했습니다:", err);
+    }
+  };
+
+  if (loading) return <p><Loading /></p>;
   if (error) return <p>{error}</p>;
 
   return (
@@ -58,6 +74,15 @@ const MaterialDetailStudentPage = () => {
               )}
               <p>내용: {materialData.content}</p>
 
+              <button onClick={handleGenerateQuestion}>학습자료 요약하기</button>
+
+              {generatedQuestion && (
+                  <div className="generated-question">
+                    <h3>학습자료 Ai요약</h3>
+                    <p>{generatedQuestion}</p>
+                  </div>
+
+              )}
             </div>
         ) : (
             <p>학습자료가 존재하지 않습니다.</p>

@@ -1,0 +1,66 @@
+.shared-test-page-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-bottom: 200px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shared-test-page-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    text-align: center;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+    color: #d9534f;
+    font-size: 1rem;
+    text-align: center;
+    margin: 15px 0;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* 테이블 스타일 */
+.shared-test-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shared-test-table th, .shared-test-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.shared-test-table th {
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #495057;
+}
+
+/* 테이블 행에 마우스 오버 효과 */
+.shared-test-table tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* 빈 리스트 메시지 스타일 */
+.empty-message {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    padding: 20px 0;
+}

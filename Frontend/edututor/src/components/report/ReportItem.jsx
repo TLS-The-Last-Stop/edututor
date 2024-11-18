@@ -4,15 +4,15 @@ const ReportItem = ({
                     }) => {
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('ko-KR', {
-      year: '2-digit',
+      year : '2-digit',
       month: '2-digit',
-      day: '2-digit'
+      day  : '2-digit'
     });
   };
 
   return (
     <tr>
-      <td>{formatDate(report.createAt)}</td>
+      <td>{formatDate(report.createdAt)}</td>
       <td>{report.courseName}</td>
       <td>{report.unitName}</td>
       <td className="text-center">

@@ -1,20 +1,33 @@
 import {
   Button,
-  Container, ErrorText, FieldSet,
+  Container,
+  ErrorText,
+  FieldSet,
   FormContainer,
   FormGroup,
   FormHeader,
-  FormSection, Input,
-  Label, LinkGroup, LogoText, SNSButton, SNSButtonGroup, SNSLoginSection, SNSTitle, StyledRouterLink, SubTitle,
+  FormSection,
+  Input,
+  Label,
+  LinkGroup,
+  LogoText,
+  Required,
+  SNSButton,
+  SNSButtonGroup,
+  SNSLoginSection,
+  SNSTitle,
+  StyledRouterLink,
+  SubTitle,
   Title
 } from '../../components/common/UserStyledComponents.js';
 import naver from '../../assets/icon/naver.png';
-import kakao from '../../assets/icon/kakao.png';
 import google from '../../assets/icon/google.png';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { login } from '../../api/user/user.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext.jsx';
+import FindLoginInfoModal from '../../components/user/FindLoginInfoModal.jsx';
+import { showALert } from '../../utils/SwalAlert.js';
 
 const initForm = {
   loginId : '',
@@ -30,6 +43,8 @@ const initErrors = {
 const TeacherLogin = () => {
   const [formData, setFormData] = useState(initForm);
   const [errors, setErrors] = useState(initErrors);
+  const [isOpen, setIsOpen] = useState(false);
+  const [findType, setFindType] = useState('');
   const { updateUserInfo } = useAuth();
 
   const navigate = useNavigate();
@@ -94,7 +109,8 @@ const TeacherLogin = () => {
           }));
         }
       } else {
-        alert('로그인에 실패하셨습니다.');
+        const message = { icon: 'error', title: '로그인에 실패하셨습니다.' };
+        showALert(message);
       }
     }
   };
@@ -108,6 +124,16 @@ const TeacherLogin = () => {
         location.href = `${import.meta.env.VITE_OAUTH_BASE_URL}/oauth2/authorization/google`;
         break;
     }
+  };
+
+  const handleOpenModal = (type) => {
+    setIsOpen(true);
+
+    type === 'loginId' ? setFindType('loginId') : setFindType('password');
+  };
+
+  const onClose = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -125,7 +151,7 @@ const TeacherLogin = () => {
             <FieldSet>
               <form onSubmit={handleSubmit}>
                 <FormGroup>
-                  <Label htmlFor="loginId">아이디</Label>
+                  <Label htmlFor="loginId">아이디<Required>*</Required></Label>
                   <Input
                     id="loginId"
                     name="loginId"
@@ -136,7 +162,7 @@ const TeacherLogin = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="password">비밀번호</Label>
+                  <Label htmlFor="password">비밀번호<Required>*</Required></Label>
                   <Input
                     id="password"
                     name="password"
@@ -148,8 +174,8 @@ const TeacherLogin = () => {
                 </FormGroup>
 
                 <LinkGroup>
-                  <StyledRouterLink to="/find-id">아이디 찾기</StyledRouterLink>
-                  <StyledRouterLink to="/find-password">비밀번호 찾기</StyledRouterLink>
+                  <StyledRouterLink to="#" onClick={() => handleOpenModal('loginId')}>아이디 찾기</StyledRouterLink>
+                  <StyledRouterLink to="#" onClick={() => handleOpenModal('password')}>비밀번호 찾기</StyledRouterLink>
                   <StyledRouterLink to="/join">회원가입</StyledRouterLink>
                 </LinkGroup>
 
@@ -164,10 +190,6 @@ const TeacherLogin = () => {
                     <img src={naver} alt="naver logo" />
                     <LogoText>네이버</LogoText>
                   </SNSButton>
-                  <SNSButton $provider="kakao" onClick={() => alert('카카오는 준비중')}>
-                    <img src={kakao} alt="naver logo" />
-                    카카오
-                  </SNSButton>
                   <SNSButton $provider="google" onClick={() => handleSocialLogin('google')}>
                     <img src={google} alt="naver logo" />
                     구글
@@ -178,6 +200,13 @@ const TeacherLogin = () => {
             </FieldSet>
           </FormContainer>
         </FormSection>
+
+        <FindLoginInfoModal
+          isOpen={isOpen}
+          onClose={onClose}
+          findType={findType}
+        />
+
       </Container>
     </>
   );

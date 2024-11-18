@@ -112,3 +112,19 @@
     padding: 50px 0;
     color: #666;
 }
+
+.inquiry-submit {
+    background-color: #4285f4;
+    color: white;
+    margin-left: 20px;
+}
+
+.status-button.waiting {
+    background-color: #808080;
+    color: white;
+}
+
+.status-button.completed {
+    background-color: #4285f4;
+    color: white;
+}

@@ -3,7 +3,9 @@ package com.tls.edututor.common.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,14 +25,16 @@ public abstract class BaseEntity {
   @Column(name = "UPDATED_AT")
   private LocalDateTime updatedAt;
 
-  @Column(name = "WRITER")
+  @CreatedBy
+  @Column(name = "WRITER", updatable = false)
   private Long writer;
 
+  @LastModifiedBy
   @Column(name = "UPDATER")
   private Long updater;
 
   @Column(name = "IS_DELETED", nullable = false)
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;
 
   @PrePersist
   protected void onCreate() {
@@ -38,5 +42,4 @@ public abstract class BaseEntity {
       this.isDeleted = false;
     }
   }
-
 }
