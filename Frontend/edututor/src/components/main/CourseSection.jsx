@@ -345,20 +345,8 @@ const CourseSection = () => {
         list.removeEventListener('scroll', updateButtonVisibility);
         window.removeEventListener('resize', updateButtonVisibility);
       };
-    if (courses.length === 0) {
-      return (
-        <RegisterCourseWrapper>
-          <RegisterCourseText>등록된 학습 과정이 없습니다..</RegisterCourseText>
-          <RegisterCourseButton>
-            {userRole === 'TE' ? (
-              <Link to="/course/enroll">새 과정 등록하기</Link>
-            ) : (
-              '선생님에게 얘기하러 가기(채팅 ?)'
-            )}
-          </RegisterCourseButton>
-        </RegisterCourseWrapper>
-      );
     }
+
   }, [courses, filteredCourses]);
 
   useEffect(() => {
@@ -367,97 +355,97 @@ const CourseSection = () => {
 
   if (!userInfo) {
     return (
-      <LoginMessage>
-        <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
-        <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
-      </LoginMessage>
+        <LoginMessage>
+          <p>에듀튜터의 학습 과정을 보시려면 로그인이 필요합니다.</p>
+          <LoginButton onClick={() => navigate('/login')}>로그인 하기</LoginButton>
+        </LoginMessage>
     );
   }
 
   console.log(filteredCourses);
 
   return (
-    <CourseContainer>
-      <TitleWrapper>우리반 학습 과정</TitleWrapper>
-      <SubjectFilterContainer>
-        {subjectFilters.map(subject => (
-          <SubjectButton
-            key={subject}
-            $active={selectedSubject === subject}
-            onClick={() => handleSubjectFilter(subject)}
-          >
-            {subject}
-          </SubjectButton>
-        ))}
-      </SubjectFilterContainer>
-
-      <CourseListContainer>
-        {loading ? (
-          <Loading />
-        ) : (
-          <>
-            {showLeftButton && (
-              <SlideButton
-                className="prev"
-                onClick={() => handleSlide('prev')}
-                onMouseDown={e => e.stopPropagation()}
+      <CourseContainer>
+        <TitleWrapper>우리반 학습 과정</TitleWrapper>
+        <SubjectFilterContainer>
+          {subjectFilters.map(subject => (
+              <SubjectButton
+                  key={subject}
+                  $active={selectedSubject === subject}
+                  onClick={() => handleSubjectFilter(subject)}
               >
-                ←
-              </SlideButton>
-            )}
-            <CourseList
-              ref={listRef}
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-              onMouseMove={handleMouseMove}
-              style={{ display: 'flex', justifyContent: 'center' }}
-            >
-              {filteredCourses.length !== 0 ? (filteredCourses.map(course => (
-                <CourseItem
-                  key={course.courseId}
-                  onClick={(e) => handleCourseClick(e, course.courseId)}
+                {subject}
+              </SubjectButton>
+          ))}
+        </SubjectFilterContainer>
+
+        <CourseListContainer>
+          {loading ? (
+              <Loading />
+          ) : (
+              <>
+                {showLeftButton && (
+                    <SlideButton
+                        className="prev"
+                        onClick={() => handleSlide('prev')}
+                        onMouseDown={e => e.stopPropagation()}
+                    >
+                      ←
+                    </SlideButton>
+                )}
+                <CourseList
+                    ref={listRef}
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseUp}
+                    onMouseMove={handleMouseMove}
+                    style={{ display: 'flex', justifyContent: 'center' }}
                 >
-                  <ImageWrapper>
-                    <img src={subjectImages[course.subject]} alt={course.courseName} />
-                  </ImageWrapper>
-                  <CourseTitle>{course.courseName}</CourseTitle>
-                </CourseItem>
-              ))) : userRole === 'TE' ? (
-                <RegisterCourseWrapper>
-                  <div>
-                    <CiWarning size={50} />
-                  </div>
-                  <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
-                  <StyledRouterLink to="/course/enroll"
-                                    style={{
-                                      fontSize    : '20px',
-                                      fontWeight  : ' bold',
-                                      border      : '1px solid',
-                                      padding     : '10px',
-                                      background  : '#007bff',
-                                      color       : '#fff',
-                                      borderRadius: '10px'
-                                    }}>새 과정 등록하기</StyledRouterLink>
-                </RegisterCourseWrapper>
-              ) : (
-                <div>공유된 강의가 없습니다.</div>
-              )}
-            </CourseList>
+                  {filteredCourses.length !== 0 ? (filteredCourses.map(course => (
+                      <CourseItem
+                          key={course.courseId}
+                          onClick={(e) => handleCourseClick(e, course.courseId)}
+                      >
+                        <ImageWrapper>
+                          <img src={subjectImages[course.subject]} alt={course.courseName} />
+                        </ImageWrapper>
+                        <CourseTitle>{course.courseName}</CourseTitle>
+                      </CourseItem>
+                  ))) : userRole === 'TE' ? (
+                      <RegisterCourseWrapper>
+                        <div>
+                          <CiWarning size={50} />
+                        </div>
+                        <RegisterCourseText>등록된 학습 과정이 없습니다.</RegisterCourseText>
+                        <StyledRouterLink to="/course/enroll"
+                                          style={{
+                                            fontSize    : '20px',
+                                            fontWeight  : ' bold',
+                                            border      : '1px solid',
+                                            padding     : '10px',
+                                            background  : '#007bff',
+                                            color       : '#fff',
+                                            borderRadius: '10px'
+                                          }}>새 과정 등록하기</StyledRouterLink>
+                      </RegisterCourseWrapper>
+                  ) : (
+                      <div>공유된 강의가 없습니다.</div>
+                  )}
+                </CourseList>
 
-            {showRightButton && (
-              <SlideButton
-                className="next"
-                onClick={() => handleSlide('next')}
-                onMouseDown={e => e.stopPropagation()}
-              >
-                →
-              </SlideButton>
-            )}
-          </>
-        )}
-      </CourseListContainer>
-    </CourseContainer>
+                {showRightButton && (
+                    <SlideButton
+                        className="next"
+                        onClick={() => handleSlide('next')}
+                        onMouseDown={e => e.stopPropagation()}
+                    >
+                      →
+                    </SlideButton>
+                )}
+              </>
+          )}
+        </CourseListContainer>
+      </CourseContainer>
   );
 };
 
