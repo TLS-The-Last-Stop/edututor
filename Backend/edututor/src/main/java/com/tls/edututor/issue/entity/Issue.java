@@ -21,7 +21,7 @@ public class Issue extends BaseEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "QUESTION_ID", nullable = false, insertable = false, updatable = false)
+  @JoinColumn(name = "QUESTION_ID", insertable = false, updatable = false)
   private Question question;
 
   @Column(name = "STATUS")

@@ -10,12 +10,12 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<Board, Long> {
   List<Board> findByCategoryIdOrderByIdDesc(Long categoryId);
 
-  @Query("SELECT b \n" +
-          "FROM Board b\n" +
-          "JOIN Category c ON b.category.id = c.id\n" +
-          "WHERE c.id = :categoryId \n" +
-          "   OR c.parent.id = :categoryId")
+  @Query("SELECT b FROM Board b " +
+         "JOIN b.category c " +
+         "WHERE c.id = :categoryId " +
+         "OR c.parent.id = :categoryId")
   List<Board> findByCategoryIdIncludingChildren(Long categoryId);
+
 
   @Query("SELECT b FROM Board b WHERE b.category.id = :categoryId " +
           "AND (LOWER(b.title) LIKE LOWER(CONCAT('%', :searchQuery, '%')) " +

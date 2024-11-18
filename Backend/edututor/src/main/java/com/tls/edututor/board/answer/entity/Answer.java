@@ -15,6 +15,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE ANSWER SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Answer extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

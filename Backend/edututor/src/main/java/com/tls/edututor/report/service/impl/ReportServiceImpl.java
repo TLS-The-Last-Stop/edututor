@@ -3,11 +3,8 @@ package com.tls.edututor.report.service.impl;
 import com.tls.edututor.classroom.entity.Classroom;
 import com.tls.edututor.course.course.entity.CourseClassroom;
 import com.tls.edututor.course.courseclassroom.repository.CourseClassroomRepository;
-import com.tls.edututor.exam.question.dto.response.QuestionDetailResponse;
-import com.tls.edututor.exam.question.dto.response.QuestionResponse;
 import com.tls.edututor.exam.question.entity.Question;
 import com.tls.edututor.exam.question.repository.QuestionRepository;
-import com.tls.edututor.exam.sharetest.entity.ShareTest;
 import com.tls.edututor.exam.sharetest.repository.ShareTestRepository;
 import com.tls.edututor.exam.testpaper.entity.TestPaper;
 import com.tls.edututor.exam.testpaper.repository.TestPaperRepository;
@@ -37,6 +34,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * 리포트 서비스는 시험지 및 공유된 시험지에 대한 상세 정보와 관련된 기능을 제공합니다.
+ * 시험지 목록, 시험지 상세 정보, 공유된 시험지 목록 및 상세 정보를 조회하는 메서드를 구현합니다.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,16 @@ public class ReportServiceImpl implements ReportService {
   private final QuestionRepository questionRepository;
   private final ShareTestRepository shareTestRepository;
 
+  /**
+   * {@inheritDoc}
+   *
+   * 지정된 코스에 대한 시험지 목록을 페이지 형식으로 조회합니다.
+   *
+   * @param authentication 현재 인증된 사용자 정보
+   * @param pageable 페이지네이션 정보 (페이지 번호, 크기 등)
+   * @param courseId 조회할 코스의 ID
+   * @return 해당 코스에 대한 시험지 목록을 포함하는 페이지 객체
+   */
   public Page<TestPaperResponse2> getTestPapers(Authentication authentication, Pageable pageable, Long courseId) {
     List<Long> courseIds = new ArrayList<>();
     Classroom classroom = ((AuthUser) authentication.getPrincipal()).getClassroom();
@@ -101,6 +112,14 @@ public class ReportServiceImpl implements ReportService {
     return new PageImpl<>(filteredTestPapers, pageable, filteredTestPapers.size());
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * 특정 시험지의 상세 정보를 조회합니다.
+   *
+   * @param testPaperId 조회할 시험지의 ID
+   * @return 지정된 시험지의 상세 정보를 담은 객체
+   */
   public TestPaperDetailResponse getTestPaperDetail(Long testPaperId) {
     TestPaper testPaper = testPaperRepository.findByUnitId(testPaperId);
     List<UserTest> userTests = userTestRepository.findByTestPaperId(testPaperId);
@@ -127,7 +146,6 @@ public class ReportServiceImpl implements ReportService {
               .userName(userTest.getShareTest().getUser().getUsername())
               .achievementRate((long) achievementRate(isCorrect))
               .userAnswers(userAnswers)
-//              .correctAnswers(correctAnswers)
               .questionCount(questionCount)
               .isCorrect(isCorrect)
               .build();
@@ -145,6 +163,12 @@ public class ReportServiceImpl implements ReportService {
     return testPaperDetailResponse;
   }
 
+  /**
+   * 정답률을 계산하는 메서드입니다.
+   *
+   * @param isCorrect 사용자 정답 여부 리스트
+   * @return 정답률
+   */
   private double achievementRate(List<Boolean> isCorrect) {
     if (isCorrect.isEmpty()) {
       return 0;
@@ -159,6 +183,15 @@ public class ReportServiceImpl implements ReportService {
     return (double) correctAnswersCnt / isCorrect.size() * 100;
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * 사용자가 공유한 시험지 목록을 페이지 형식으로 조회합니다.
+   *
+   * @param authentication 현재 인증된 사용자 정보
+   * @param pageable 페이지네이션 정보 (페이지 번호, 크기 등)
+   * @return 사용자가 공유한 시험지 목록을 포함하는 페이지 객체
+   */
   @Override
   public Page<ShareTestResponse> getSharedTests(Authentication authentication, Pageable pageable) {
     Long userId = ((AuthUser) authentication.getPrincipal()).getId();
@@ -170,13 +203,11 @@ public class ReportServiceImpl implements ReportService {
                       .map(UserAnswerResponse::fromUserAnswer)
                       .collect(Collectors.toList());
 
-              // 총 점수를 계산
               Double totalScore = questionResponses.stream()
                       .filter(UserAnswerResponse::isCorrect)
                       .mapToDouble(UserAnswerResponse::getScore)
                       .sum();
 
-              // ShareTestResponse 객체 생성
               return ShareTestResponse.builder()
                       .userTestId(shareTest.getId())
                       .testPaperName(shareTest.getTestPaper().getTitle())
@@ -187,6 +218,14 @@ public class ReportServiceImpl implements ReportService {
   }
 
 
+  /**
+   * {@inheritDoc}
+   *
+   * 특정 공유된 시험지의 상세 정보를 조회합니다.
+   *
+   * @param userTestId 조회할 공유된 시험지의 ID
+   * @return 지정된 공유된 시험지의 상세 정보를 담은 객체
+   */
   @Override
   public ShareTestResponse getSharedTestDetail(Long userTestId) {
     UserTest userTest = userTestRepository.findById(userTestId)

@@ -152,6 +152,19 @@ const TestPaperDetailPage = () => {
     }
   };
 
+  const getLevelLabel = (level) => {
+    switch(level) {
+      case 1: return '하';
+      case 2: return '중';
+      case 3: return '상';
+      default: return '알 수 없음';
+    }
+  };
+
+  const getTypeLabel = (type) => {
+    return type === 'SUBJECTIVE' ? '주관식' : '객관식';
+  };
+
   if (loading) return <p><Loading /></p>;
   if (error) return <p>{error}</p>;
 
@@ -167,8 +180,8 @@ const TestPaperDetailPage = () => {
                       <QuestionBlock key={question.id}>
                         <QuestionHeader>문제 {index + 1}</QuestionHeader>
                         <QuestionDetails><span>내용:</span> {question.content}</QuestionDetails>
-                        <QuestionDetails><span>유형:</span> {question.type}</QuestionDetails>
-                        <QuestionDetails><span>난이도:</span> {question.level}</QuestionDetails>
+                        <QuestionDetails><span>유형:</span> {getTypeLabel(question.type)}</QuestionDetails>
+                        <QuestionDetails><span>난이도:</span> {getLevelLabel(question.level)}</QuestionDetails>
                         {question.commentary && (
                             <QuestionDetails><span>해설:</span> {question.commentary}</QuestionDetails>
                         )}
