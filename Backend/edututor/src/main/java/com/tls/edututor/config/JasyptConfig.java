@@ -1,4 +1,3 @@
-/*
 package com.tls.edututor.config;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
@@ -36,4 +35,4 @@ public class JasyptConfig {
     encryptor.setConfig(config);
     return encryptor;
   }
-}*/
+}
