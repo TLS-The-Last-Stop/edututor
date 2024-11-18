@@ -22,6 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 시험지 관련 비즈니스 로직을 처리하는 서비스 구현 클래스입니다.
+ * 시험지 생성, 수정, 조회, 삭제 등의 기능을 제공합니다.
+ */
 @RequiredArgsConstructor
 @Service
 public class TestPaperServiceImpl implements TestPaperService {
@@ -30,6 +34,11 @@ public class TestPaperServiceImpl implements TestPaperService {
   private final QuestionRepository questionRepository;
   private final UnitRepository unitRepository;
 
+  /**
+   * 새 시험지와 관련된 문제 및 옵션을 생성합니다.
+   *
+   * @param request 시험지 등록 요청 객체
+   */
   @Override
   @Transactional
   public void createTestPaperWithQuestionsAndOptions(TestPaperRegisterRequest request) {
@@ -40,7 +49,6 @@ public class TestPaperServiceImpl implements TestPaperService {
     testPaper.setUnit(unit);
     testPaper.setTitle(request.getTitle());
     TestPaper savedTestPaper = testPaperRepository.save(testPaper);
-
     for (QuestionRegisterRequest questionRegister : request.getQuestions()) {
       Question question = new Question();
       question.setTestPaper(savedTestPaper);
@@ -64,6 +72,13 @@ public class TestPaperServiceImpl implements TestPaperService {
     }
   }
 
+  /**
+   * 기존 시험지 정보를 수정합니다.
+   * 문제 및 옵션도 함께 수정할 수 있습니다.
+   *
+   * @param testPaperId 수정할 시험지 ID
+   * @param request 시험지 수정 요청 객체
+   */
   @Override
   @Transactional
   public void updateTestPaper(Long testPaperId, TestPaperRegisterRequest request) {
@@ -99,7 +114,7 @@ public class TestPaperServiceImpl implements TestPaperService {
       if (questionRegister.getType() == QuestionType.SUBJECTIVE) {
         question.setAnswerText(questionRegister.getAnswerText());
       } else {
-        question.getOptions().clear();  // 기존 옵션 제거
+        question.getOptions().clear();
         for (OptionRegisterRequest optionRegister : questionRegister.getOptions()) {
           Option option = new Option();
           option.setContent(optionRegister.getContent());
@@ -114,7 +129,12 @@ public class TestPaperServiceImpl implements TestPaperService {
     testPaperRepository.save(testPaper);
   }
 
-
+  /**
+   * 시험지 ID에 해당하는 시험지를 조회합니다.
+   *
+   * @param id 조회할 시험지 ID
+   * @return 시험지 조회 결과
+   */
   @Override
   public TestPaperResponse getTestPaperById(Long id) {
     TestPaper testPaper = testPaperRepository.findById(id)
@@ -122,6 +142,12 @@ public class TestPaperServiceImpl implements TestPaperService {
     return mapToTestPaperResponse(testPaper);
   }
 
+  /**
+   * TestPaper 엔티티를 TestPaperResponse로 변환합니다.
+   *
+   * @param testPaper 변환할 시험지 엔티티
+   * @return 변환된 시험지 응답 객체
+   */
   private TestPaperResponse mapToTestPaperResponse(TestPaper testPaper) {
     TestPaperResponse response = new TestPaperResponse();
     response.setTestPaperId(testPaper.getId());
@@ -153,6 +179,11 @@ public class TestPaperServiceImpl implements TestPaperService {
     return response;
   }
 
+  /**
+   * 시험지를 삭제합니다.
+   *
+   * @param testPaperId 삭제할 시험지 ID
+   */
   @Override
   @Transactional
   public void deleteTestPaper(Long testPaperId) {

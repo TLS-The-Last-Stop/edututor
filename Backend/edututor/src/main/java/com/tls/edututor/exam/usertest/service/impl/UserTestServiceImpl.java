@@ -28,6 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 사용자 시험 관련 서비스 구현 클래스입니다.
+ * 사용자가 시험지를 조회하고, 제출한 답안을 채점하여 결과를 반환하는 기능을 구현합니다.
+ */
 @RequiredArgsConstructor
 @Service
 public class UserTestServiceImpl implements UserTestService {
@@ -40,6 +44,9 @@ public class UserTestServiceImpl implements UserTestService {
   private final ShareTestRepository shareTestRepository;
   private final UserTestAdapter userTestAdapter;
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public StudentTestPaperResponse getTestPaper(Long testPaperId) {
     TestPaper testPaper = testPaperRepository.findById(testPaperId)
@@ -50,6 +57,9 @@ public class UserTestServiceImpl implements UserTestService {
     return new StudentTestPaperResponse(testPaper.getId(), testPaper.getTitle(), questionResponses);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   @Transactional
   public void submitAndGradeUserTest(UserTestRequest userTestRequest, Authentication authentication) {
@@ -92,7 +102,15 @@ public class UserTestServiceImpl implements UserTestService {
       userTestRepository.save(userTest);
     }
   }
+
+  /**
+   * 주관식 답안을 평가하는 메서드입니다.
+   *
+   * @param answer 주관식 답안
+   * @param question 평가할 질문
+   * @return 답안이 올바른지 여부
+   */
   private boolean evaluateSubjectiveAnswer(String answer, Question question) {
-    return userTestAdapter.evaluateSubjectiveAnswer(answer,question);
+    return userTestAdapter.evaluateSubjectiveAnswer(answer, question);
   }
 }

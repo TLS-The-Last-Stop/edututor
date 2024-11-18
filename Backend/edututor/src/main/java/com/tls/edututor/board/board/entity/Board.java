@@ -2,11 +2,8 @@ package com.tls.edututor.board.board.entity;
 
 import com.tls.edututor.board.category.entity.Category;
 import com.tls.edututor.common.entity.BaseEntity;
-import com.tls.edututor.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -15,6 +12,8 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @SQLDelete(sql = "UPDATE BOARD SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @Table(name = "BOARD")
@@ -32,4 +31,5 @@ public class Board extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CATEGORY_ID", nullable = false)
   private Category category;
+
 }

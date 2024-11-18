@@ -1,5 +1,6 @@
 package com.tls.edututor.common.exception;
 
+import com.tls.edututor.board.board.exception.BoardNotFoundException;
 import com.tls.edututor.common.api.CommonApiResponse;
 import com.tls.edututor.user.exception.DuplicateUserException;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,17 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(IllegalArgumentException.class)
   public CommonApiResponse<Void> handleBadRequestException(IllegalArgumentException ex) {
-    return CommonApiResponse.createBadRequest("(┬┬﹏┬┬) 서버에서 뭔가 잘못됨 ㅅㄱ    " + ex.getMessage());
+    return CommonApiResponse.createBadRequest("(┬┬﹏┬┬) 서버에서 뭔가 잘못됐어요    " + ex.getMessage());
   }
 
   @ExceptionHandler(DuplicateUserException.class)
   public CommonApiResponse<Void> handleDuplicateUserException(DuplicateUserException ex) {
-    return CommonApiResponse.createBadRequest("왓더쀀 ㅠㅠ 이미 가입했어용!" + ex.getMessage());
+    return CommonApiResponse.createBadRequest("(┬┬﹏┬┬) 이미 가입했어용!" + ex.getMessage());
+  }
+
+  @ExceptionHandler(BoardNotFoundException.class)
+  public CommonApiResponse<Void> handleBoardNotFoundException(BoardNotFoundException ex) {
+    return CommonApiResponse.createNotFound("(•̀ᴗ•́)و 찾을 수 없음! " + ex.getMessage());
   }
 
 }

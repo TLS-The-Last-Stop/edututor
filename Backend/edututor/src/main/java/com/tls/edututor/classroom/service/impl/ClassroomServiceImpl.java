@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * 교실 서비스의 구현체로, 교실과 관련된 비즈니스 로직을 처리합니다.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,10 +35,12 @@ public class ClassroomServiceImpl implements ClassroomService {
   private final UserRepository userRepository;
   private final ShareTestRepository shareTestRepository;
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<UserSUResponse> getAllStudent(Long classroomId) {
     List<User> students = userRepository.findByClassroomIdAndRole(classroomId, "SU");
-
     if (students.isEmpty()) {
       log.info("classroom Id {}의 학생이 없습니다.", classroomId);
       return Collections.emptyList();
@@ -46,7 +51,9 @@ public class ClassroomServiceImpl implements ClassroomService {
               Map<Long, Boolean> studentSharedTests = new HashMap<>();
               List<ShareTest> sharedTests = shareTestRepository.findAllByUser(student);
 
-              for (ShareTest shareTest : sharedTests) studentSharedTests.put(shareTest.getTestPaper().getId(), true);
+              for (ShareTest shareTest : sharedTests) {
+                studentSharedTests.put(shareTest.getTestPaper().getId(), true);
+              }
 
               return UserSUResponse.builder()
                       .id(student.getId())
@@ -58,20 +65,25 @@ public class ClassroomServiceImpl implements ClassroomService {
             .collect(Collectors.toList());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public UserSUResponse getStudent(Long classroomId, Long studentId) {
     Classroom classroom = classroomRepository.findById(classroomId).orElseThrow();
-    User user = userRepository.findByIdAndClassroom(studentId, classroom).orElseThrow(() -> new BadCredentialsException("AUTH001"));
+    User user = userRepository.findByIdAndClassroom(studentId, classroom)
+            .orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
-    UserSUResponse student = UserSUResponse.builder()
+    return UserSUResponse.builder()
             .id(user.getId())
             .loginId(user.getLoginId())
             .username(user.getUsername())
             .build();
-
-    return student;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   @Transactional
   public Long save(ClassroomRequest request) {
@@ -81,6 +93,9 @@ public class ClassroomServiceImpl implements ClassroomService {
     return classroomRepository.save(classroom).getId();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   @Transactional
   public UserTEResponse getTeacher(Long classroomId, Authentication authentication) {
@@ -88,12 +103,16 @@ public class ClassroomServiceImpl implements ClassroomService {
     if (principal == null) throw new IllegalArgumentException("잘못된 접근입니다.");
     AuthUser teacher = (AuthUser) principal;
 
-    Classroom classroom = classroomRepository.findById(classroomId).orElseThrow(() -> new IllegalArgumentException("없는 반입니다."));
-    if (classroom.getId() != teacher.getClassroom().getId()) throw new IllegalArgumentException("잘못된 접근입니다.");
+    Classroom classroom = classroomRepository.findById(classroomId)
+            .orElseThrow(() -> new IllegalArgumentException("없는 반입니다."));
+    if (!classroom.getId().equals(teacher.getClassroom().getId())) {
+      throw new IllegalArgumentException("잘못된 접근입니다.");
+    }
 
-    User user = userRepository.findById(teacher.getId()).orElseThrow(() -> new BadCredentialsException("AUTH001"));
+    User user = userRepository.findById(teacher.getId())
+            .orElseThrow(() -> new BadCredentialsException("AUTH001"));
 
-    UserTEResponse userTEResponse = UserTEResponse.builder()
+    return UserTEResponse.builder()
             .id(user.getId())
             .email(user.getEmail())
             .phoneNum(user.getPhoneNum())
@@ -101,7 +120,5 @@ public class ClassroomServiceImpl implements ClassroomService {
             .createdAt(user.getCreatedAt())
             .classroom(ClassroomResponse.from(classroom))
             .build();
-
-    return userTEResponse;
   }
 }

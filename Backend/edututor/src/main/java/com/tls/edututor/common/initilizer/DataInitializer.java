@@ -407,11 +407,13 @@ public class DataInitializer {
               questionRepository.save(question);
 
               if (question.getType() == QuestionType.OBJECTIVE) {
-                for (int j = 1; j <= 5; j++) {
+                String[] labels = {"가", "나", "다", "라", "마"};
+
+                for (int j = 0; j < labels.length; j++) {
                   Option option = Option.builder()
                           .question(question)
-                          .content("선택지 " + j)
-                          .isCorrect(j == 1)
+                          .content(labels[j])
+                          .isCorrect(j == 0)
                           .build();
                   optionRepository.save(option);
                 }
