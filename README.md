@@ -40,70 +40,156 @@
 
 ## 🔑 주요 기능 <a name="key-features"></a>
 
+## 일반
+
 ### 1. 로그인 및 회원가입
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/980a2c70-8447-414c-ad98-6aaf1c31cb05" alt="로그인 회원가입" width="45%">
+  <img src="https://github.com/user-attachments/assets/bb9ba0fa-9a8c-4dfc-8c01-578098f802e1" alt="로그인 회원가입" width="45%">
+</div>
+<br>
+
+
 - **기능**: JWT 기반 인증 및 OAuth 소셜 로그인 기능 제공
 - **설명**: 사용자는 간단한 절차를 통해 계정을 생성할 수 있으며, 보안을 강화한 JWT(JSON Web Token)를 활용해 안전한 인증을 제공합니다.<br> 또한 Google, Naver 등과 같은 소셜 플랫폼 계정을 이용한 OAuth 로그인도 지원하여 더 빠르고 편리한 접근을 제공합니다.<br>이를 통해 사용자는 번거로운 과정 없이 시스템에 접근할 수 있습니다.
 
 ---
 
-### 2. 학습 자료
+### 2. 메인화면 및 게시판
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/1c2994f7-5a20-41bb-a7a8-440b33e23559" alt="메인화면 및 게시판" width="45%">
+  <img src="https://github.com/user-attachments/assets/e89a8983-9c2d-4ec1-a313-d047bed940c7" alt="메인화면 및 게시판" width="45%">
+</div>
+<br>
+
+- **기능**: 메인pdf 다운 및 공지사항/FAQ/1:1 질의 서비스 제공
+- **설명**: 사용자는 서비스 이용 중 발생하는 문제나 궁금증을 해결하기 위해 고객센터를 이용할 수 있습니다.<br> 공지사항을 통해 최신 정보를 확인하고 FAQ에서 자주 묻는 질문을 빠르게 검색하거나 1:1 문의를 통해 구체적인 문제를 상담받을 수 있습니다.
+
+---
+
+## 선생님
+
+### 1. 우리반 과정등록 및 학생등록
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/a8b65fcc-1eca-4b00-a3a1-98378d81759e" alt="우리반 과정등록 및 학생등록" width="45%">
+  <img src="https://github.com/user-attachments/assets/6c10f12e-9127-4970-bb99-301389357e7c" alt="우리반 과정등록 및 학생등록" width="45%">
+</div>
+<br>
+
+- **기능**: 생성된 과정을 반에 등록하고 학생을 등록하는 기능 제공
+- **설명**:
+ 교사는 먼저 학습 과정을 생성한 후, 이를 특정 반(우리반)에 등록할 수 있습니다.<br>
+ 이후 학생들을 해당 반에 등록하면, 등록된 학생들은 우리반에 설정된 학습 과정을 열람하고 활용할 수 있습니다.<br>
+ 이 과정은 교사와 학생 간의 학습 연결을 효율적으로 관리하며, 학생 개개인의 학습 참여도를 높일 수 있습니다.
+
+---
+
+### 2. 시험 공유, 시험지/학습자료 미리보기, 리포트
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/817c9cf3-60e8-41b3-94cf-c8844f1b70f6" alt="미리보기" width="45%">
+  <img src="https://github.com/user-attachments/assets/8b8b6588-4368-4cf2-9620-a5cc8a78c6d9" alt="미리보기" width="45%">
+</div>
+<br>
+
+### 학습자료
 - **기능**: 교과서 학습 목차에 맞춘 형성평가, 학습자료 제공
 - **설명**: 사용자는 교과서와 성취 기준에 부합하는 체계적인 학습자료를 제공합니다.<br> 교사는 학생 개개인의 수준에 맞춘 맞춤형 학습 경로를 설계할 수 있으며 이를 통해 학생들은 학습 자료를 사용하여 효과적으로 학습할 수 있습니다.
 
----
-
-### 3. 과제 공유
+### 시험공유
 - **기능**: 학습자료에 기반한 형성평가 공유
 - **설명**: 교사는 간단한 클릭만으로 수업 중 사용한 학습자료를 기반으로 평가 과제를 생성하고 배포할 수 있습니다.<br> 학생들에게 개별적으로 맞춤화된 형성평가를 제공하여 학습 내용을 복습하고 이해도를 높이는 데 기여합니다.
 
----
-
-### 4. 형성평가
-- **기능**: URL을 통해 간편하게 학습 자료를 공유하는 기능
-- **설명**: 교사와 학생 모두 형성평가 자료를 URL로 쉽게 공유할 수 있습니다.<br> 이 평가 기능은 각 차시와 단원에 따라 맞춤형으로 제공되며 학생 개개인의 취약 유형을 분석하여 적합한 학습 유도를 가능하게 합니다.
+### 리포트
+- **기능**: 실질적 성취 기준 도달 여부를 리포트로 확인
+- **설명**: 학생들의 학습 성과를 보여주는 리포트를 제공합니다.<br>  이를 기반으로 학생들의 성취도를 진단하고 학습 효율성을 높이기 위한 개인 맞춤형 학습 관리를 가능하게 합니다.
 
 ---
 
-### 5. 리포트
-- **기능**: 실질적 성취 기준 도달 여부를 실시간으로 확인
-- **설명**: 학생들의 학습 성과를 시각적으로 보여주는 리포트를 제공합니다.<br> 각 학생의 수준을 진단하고 실시간으로 평가 데이터를 수집하여 분석합니다.<br> 이를 기반으로 학생들의 성취도를 진단하고 학습 효율성을 높이기 위한 개인 맞춤형 학습 관리를 가능하게 합니다.
+## 학생
+
+### 1. 학습자료 및 학습자료Ai 요약
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/4872bf52-dd98-403e-bc82-993e9b74e716" alt="학습자료 및 학습자료Ai" width="45%">
+  <img src="https://github.com/user-attachments/assets/18432335-194a-4b8b-a395-c8db008146a4" alt="학습자료 및 학습자료Ai" width="45%">
+</div>
+<br>
+
+- **기능**: 학생 학습자료 페이지 제공 및 학습자료 요약 Ai 서비스 제공
+- **설명**: KoGPT2 (한국어 GPT 모델)과 flask를 활용하여 학습자료를 분석하고 텍스트 기반 질문을 생성할 수 있습니다.
 
 ---
 
-### 6. 과정 생성
-- **기능**: 학급, 학년, 학기, 과목에 맞는 과정 생성
-- **설명**: 교사들이 학습을 체계적으로 관리할 수 있도록 과정 생성 기능을 제공합니다.<br> 학급, 학년, 학기, 과목별로 분류하여 과정을 설계할 수 있어 수업 준비와 진행이 용이해지며<br> 학생들의 학습 진행 상황을 효과적으로 관리할 수 있습니다.
+### 2. 문제풀이 및 채점 리포트
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/99e39562-265b-4d8d-b7f2-4b7a40f78bf7" alt="문제풀이 및 채점 리포트" width="45%">
+  <img src="https://github.com/user-attachments/assets/6353406b-ea00-4f9a-a4c6-fd2de4401b6c" alt="문제풀이 및 채점 리포트" width="45%">
+</div>
+<br>
+
+- **기능**: AI 기반 주관식 채점 및 학습 리포트 제공
+- **설명**: lask 서버를 활용하여 학생이 입력한 주관식 답안을 AI 모델로 채점합니다,<br> 채점 결과는 학습 리포트로 시각화되어 학생의 학습 성취도를 진단하고 부족한 부분을 확인할 수 있습니다.
 
 ---
 
-### 7. 학습자료 등록
-- **기능**: 과정에 따른 학습 자료를 URL과 함께 등록
-- **설명**: 교사들은 학습 과정에 맞는 자료를 등록하고 URL로 간편히 공유할 수 있습니다.<br> 이 기능을 통해 학생들에게 필요한 자료를 제공하고 수업 중 학습자료의 활용도를 높일 수 있습니다
+## 관리자
+
+### 1. 관리자 메인페이지 및 과정 생성
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/968807ff-6abe-46fc-9704-58fb406bd55e" alt="관리자 메인페이지 및 과정 생성" width="45%">
+  <img src="https://github.com/user-attachments/assets/c9a67d13-aaed-458b-af9d-cdac1f573165" alt="관리자 메인페이지 및 과정 생성" width="45%">
+</div>
+<br>
+
+- **기능**: 관리자 메인페이지에서 학습 과정을 생성하고 관리.
+- **설명**: 과정을 학급, 학년, 학기, 과목에 맞게 생성하여 교사와 학생 간의 학습 경로를 체계적으로 설계 할 수 있도록 합니다.
 
 ---
 
-### 8. 시험지 등록
-- **기능**: 차시/단원에 따른 시험지 등록
-- **설명**: 교사는 각 차시와 단원별로 시험지를 등록하고 관리할 수 있습니다.<br> 등록된 시험지는 학생들과 쉽게 공유할 수 있으며 이를 통해 학습한 내용을 효과적으로 평가하고 부족한 부분을 파악할 수 있습니다.
+### 2. 학습자료 및 시험지 관리
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/30e76829-b36d-444d-a250-eeea6f6ce23b" alt="학습자료 및 시험지 관리" width="45%">
+  <img src="https://github.com/user-attachments/assets/0f1c2fb7-8869-4eaa-a659-2961f6906c50" alt="학습자료 및 시험지 관리" width="45%">
+</div>
+<br>
+
+- **기능**: 학습자료와 시험지 등록 및 관리.
+- **설명**: 관리자는 학습 자료와 시험지/시험문제/보기/해설 등을 만들면서 체계적인 학습 기능을 제공합니다.
 
 ---
 
-### 9. 과정 및 사용자 관리
-- **기능**: 과정과 사용자에 대한 전반적인 관리
-- **설명**: 필요하지 않은 과정과 사용자를 관리할 수 있는 도구를 제공합니다.<br> 이를 통해 학습 과정이나 사용자 계정을 효과적으로 정리하고 관리 효율성을 높일 수 있습니다.
+### 3. 회원관리 및 통계
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/cc4bdf4f-06aa-4e2b-ab9f-b8fef48a9fab" alt="회원관리 및 통계" width="45%">
+  <img src="https://github.com/user-attachments/assets/67c96fe4-e08b-4333-81d3-4596a1965cef" alt="회원관리 및 통계" width="45%">
+</div>
+<br>
+
+- **기능**: 사용자 관리 및 학습 통계 제공.
+- **설명**: 학생 및 교사의 계정을 관리하고 회원별 통계를 제공하여 회원 상태를 효과적으로 모니터링 할 수 있도록 했습니다.
 
 ---
 
-### 10. 신고 기능
+### 4. 문제 오류신고 관리
+
+<div style="display: flex; gap: 20px;">
+  <img src="https://github.com/user-attachments/assets/f1a68799-cdd0-4133-a94a-5a89686a68c6" alt="문제 오류신고 관리" width="45%">
+  <img src="https://github.com/user-attachments/assets/71171dab-b108-4ee4-8bc8-9737e6bd51c0" alt="문제 오류신고 관리" width="45%">
+</div>
+<br>
+
 - **기능**: 문제에 대한 오류 문항 신고
-- **설명**: 학생과 교사는 문제 오류나 오탈자, 정답의 정확성에 대해 쉽게 신고할 수 있는 기능을 제공합니다.<br> 신고된 내용은 관리자가 검토 및 수정할 수 있어 학습 자료의 신뢰성과 정확성을 높이는 데 기여합니다.
+- **설명**: 교사는 문제 오류나 오탈자, 정답의 정확성에 대해 쉽게 신고할 수 있는 기능을 제공합니다.<br> 신고된 내용은 관리자가 검토 및 수정할 수 있어 학습 자료의 신뢰성과 정확성을 높이는 데 기여합니다.
 
 ---
-
-### 11. 고객센터
-- **기능**: 공지사항/FAQ/1:1 질의
-- **설명**: 사용자는 서비스 이용 중 발생하는 문제나 궁금증을 해결하기 위해 고객센터를 이용할 수 있습니다.<br> 공지사항을 통해 최신 정보를 확인하고 FAQ에서 자주 묻는 질문을 빠르게 검색하거나 1:1 문의를 통해 구체적인 문제를 상담받을 수 있습니다.
-
 
 <p align="right"><a href="#readme-top">⬆️ Top ⬆️</a></p>
 
@@ -177,7 +263,7 @@
 
 
 # 🗼 아키텍처 <a name="architecture"></a>
-<img src="https://github.com/user-attachments/assets/ac9ca7b1-3808-4cc5-aad1-4fa2f694ec44" width=80% />
+<img src="https://github.com/user-attachments/assets/a1177abd-f59f-401f-9f1d-f06cd9d714a6" width=100% />
 <br><br>
 
 ## Frontend
