@@ -1,4 +1,4 @@
-# 🧑🏻‍🎓 Eedututor - 우리반 완전학습 플랫폼  
+![image](https://github.com/user-attachments/assets/39957791-2a1c-40aa-b0f9-a929b50d30ab)# 🧑🏻‍🎓 Eedututor - 우리반 완전학습 플랫폼  
   <img src="https://github.com/user-attachments/assets/5b911f5d-a462-415f-bcb9-a95d122f2057" alt="메인" width="80%">
 
 ## 🔗 **[Edututor 서비스 바로가기](https://edututor.site)**  
@@ -40,7 +40,7 @@
 - **관련 URL**
   - [Edututor 서비스 바로가기](https://edututor.site)
   - [TLS 팀 노션 바로가기](https://rumbling-crest-74d.notion.site/12149e109b2b8010be35cc2987939cbc?pvs=4)
-  - [최종 발표 자료 바로가기](https://www.canva.com/design/DAGWBDun3gI/zdrTQ5OL6RLVWQNyqVEWWQ/edit?utm_content=DAGWBDun3gI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+  - [PPT 자료 바로가기](https://www.canva.com/design/DAGWBDun3gI/zdrTQ5OL6RLVWQNyqVEWWQ/edit?utm_content=DAGWBDun3gI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
     
 
 <p align="right"><a href="#readme-top">⬆️ Top ⬆️</a></p>
@@ -443,8 +443,110 @@
 
 <img src="https://github.com/user-attachments/assets/92fa1d1e-c5bd-4722-84e6-919587344c0c" width="70%" />
 
-## 3. WBS
+## 3. 일정관리 - WBS
 
-<img src="https://github.com/user-attachments/assets/f4160497-e368-46a1-810f-f979c3decc95" width="70%" />
-   
+## 일정 관리: WBS 기반 진행 상황
+
+프로젝트는 **WBS(Work Breakdown Structure)**를 활용하여 작업을 세분화하고 중요도와 작업 단계를 관리했습니다.  
+
+- **구분**: 작업의 범주 (예: 유저, 백엔드, 프론트엔드 등)
+- **중요도**: 작업의 우선 순위를 나타내며, 1에서 5로 평가.
+- **작업**: 작업의 카테고리 (예: 시험지, 계정, 게시판 등)
+- **기능 상세**: 각 작업의 세부적인 구현 내용.
+- **담당자**: 해당 작업을 수행하는 팀원.
+- **완료 여부**: "진행 전", "진행 중", "구현 완료"로 구분.
+- **일정**: 각 작업의 주별 진행 상황.
+
+---
+
+### WBS 작업 및 진행 상황 예시
+
+| 구분          | 중요도 | 작업   | 기능 상세                        | 담당자  | 완료 여부   |
+| ------------- | ------- | ------ | ------------------------------- | ------- | ----------- |
+| 유저          | 5       | 시험지 | 학생 과정 학습 현황 구현        | 한유리  | 구현 완료   |
+| 백엔드        | 4       | 계정   | 회원 가입 및 인증 기능 개발     | 김혁진  | 구현 완료   |
+| 백엔드        | 3       | 게시판 | FAQ 게시판 구현                 | 한유리  | 진행 중     |
+| 프론트엔드    | 5       | 과정   | 과정별 단원 생성 페이지 구현    | 이수완  | 진행 중     |
+| 관리자        | 4       | 시험지 | 시험지 자동 생성 기능 구현      | 김혁진  | 구현 완료   |
+
+---
+
+### WBS 엑셀 파일 예시
+
+<img src="https://github.com/user-attachments/assets/98d0d7a1-45d6-4458-9108-383aaf81d3fe" width="80%" />
+
+---
+
+### 일정 관리 방법
+
+1. **작업 분해**  
+   - WBS를 통해 프로젝트를 구분별로 세분화하여 관리.  
+     예: 유저 → 학습 현황 구현, 시험지 기능 개발 등
+     
+2. **진행 상태 모니터링**  
+   - 각 작업별 상태를 주차별로 업데이트하여 시각화(위 이미지처럼)했습니다.
+   - 상태는 "진행 전", "진행 중", "구현 완료"로 표시했습니다.
+
+3. **담당자 배정 및 중요도 설정**  
+   - 작업별 담당자를 명시하고, 중요도를 설정하여 우선순위를 명확히 했습니다.
+
+4. **주차별 관리**  
+   - WBS에서 주차별로 각 작업의 진행 상황을 기록하여 일정 관리의 가시성을 높였습니다.
+
+---
+
+
+### 공통 Response API 설계
+
+ **공통 Response API**를 통해 모든 API 응답 형식을 통일하여 응답에 대한 일관성을 확보합니다.  
+
+-응답 데이터
+```json
+{
+  "status": 0,
+  "message": "string",
+  "data": {}
+}
+```
+
+- 사용예시
+```java
+@GetMapping("/example")
+public CommonApiResponse<String> exampleEndpoint() {
+    return CommonApiResponse.createCreated("요청이 성공적으로 처리되었습니다.", "Example Data");
+}
+```
+
+- **`status`**: HTTP 상태 코드를 나타냅니다.  
+  - 예: `200` (OK), `400` (Bad Request), `404` (Not Found) 등
+
+- **`message`**: 응답 상태에 대한 설명을 제공합니다.  
+  - 예: `"요청이 성공적으로 처리되었습니다."`, `"잘못된 요청입니다."`
+
+- **`data`**: 응답 데이터의 본문을 포함합니다. 데이터가 없는 경우 빈 객체 `{}`로 반환됩니다.
+
+![image](https://github.com/user-attachments/assets/8b9b8d17-be1c-4ad8-a935-daeeb41556d5)
+
+
+
+# 주요 기능 다이어그램
+
+## 1. OAuth2 로그인
+![image](https://github.com/user-attachments/assets/a6eb5e52-1c31-4df4-b0fe-b8e9888309d0)
+status: HTTP 상태 코드를 나타냅니다.
+예: 200 (OK), 400 (Bad Request), 404 (Not Found) 등
+message: 응답 상태에 대한 설명을 제공합니다.
+예: "요청이 성공적으로 처리되었습니다.", "잘못된 요청입니다."
+data: 응답 데이터의 본문을 포함합니다. 데이터가 없는 경우 빈 객체 {}로 반환됩니다.
+
+로그인 성공 처리(LoginSuccessHandler):
+LoginSuccessHandler가 액세스 토큰과 리프레시 토큰을 수신하고, 이를 OAuth2User와
+localStorage에 저장합니다. 이 과정에서 사용자 정보도 함께 저장됩니다.Edututor – 프로그램 설계서
+9
+보호된 리소스 접근:
+클라이언트는 저장된 액세스 토큰을 사용하여 보호된 리소스에 접근합니다.
+서버는 요청을 검증하고 필요한 경우 리소스를 반환합니다.
+로그인 성공 처리 완료:
+최종적으로 클라이언트는 보호된 리소스에 접근할 수 있으며, 이로써 로그인 과정이
+성공적으로 완료됩니다.
 
