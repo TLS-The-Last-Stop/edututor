@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/39957791-2a1c-40aa-b0f9-a929b50d30ab)# 🧑🏻‍🎓 Eedututor - 우리반 완전학습 플랫폼  
+# 🧑🏻‍🎓 Eedututor - 우리반 완전학습 플랫폼  
   <img src="https://github.com/user-attachments/assets/5b911f5d-a462-415f-bcb9-a95d122f2057" alt="메인" width="80%">
 
 ## 🔗 **[Edututor 서비스 바로가기](https://edututor.site)**  
@@ -404,9 +404,11 @@
 
 # 프로젝트 관리
 
+## 1. Gitflow Convention
+
+
 ![깃 플로우 (1)](https://github.com/user-attachments/assets/98d0d7a1-45d6-4458-9108-383aaf81d3fe)
 
-### 1. flow 전략
 
 1. **rdev 브랜치와 feat 브랜치 기반 개발**  
    - `rdev` 브랜치를 메인 개발 브랜치로 사용합니다.
@@ -422,6 +424,8 @@
 
 4. **브랜치 정리**  
    - 병합이 완료되면 해당 `feat/<기능명>` 브랜치를 삭제하여 깔끔한 브랜치 관리를 유지합니다.
+
+<br>
 
 ## 2. Merge
 
@@ -443,11 +447,11 @@
 
 <img src="https://github.com/user-attachments/assets/92fa1d1e-c5bd-4722-84e6-919587344c0c" width="70%" />
 
+<br>
+
 ## 3. 일정관리 - WBS
 
-## 일정 관리: WBS 기반 진행 상황
-
-프로젝트는 **WBS(Work Breakdown Structure)**를 활용하여 작업을 세분화하고 중요도와 작업 단계를 관리했습니다.  
+WBS(Work Breakdown Structure)를 활용하여 작업을 세분화하고 중요도와 작업 단계를 관리했습니다.  
 
 - **구분**: 작업의 범주 (예: 유저, 백엔드, 프론트엔드 등)
 - **중요도**: 작업의 우선 순위를 나타내며, 1에서 5로 평가.
@@ -473,7 +477,7 @@
 
 ### WBS 엑셀 파일 예시
 
-<img src="https://github.com/user-attachments/assets/98d0d7a1-45d6-4458-9108-383aaf81d3fe" width="80%" />
+<img src="https://github.com/user-attachments/assets/39957791-2a1c-40aa-b0f9-a929b50d30ab" width="80%" />
 
 ---
 
@@ -495,12 +499,28 @@
 
 ---
 
+<Br>
 
-### 공통 Response API 설계
+## 4. 공통 Response API 설계
 
- **공통 Response API**를 통해 모든 API 응답 형식을 통일하여 응답에 대한 일관성을 확보합니다.  
+ **공통 Response API**를 통해 모든 API 응답 형식을 통일하여 응답에 대한 일관성을 유지했습니다
+ 
+<img src="https://github.com/user-attachments/assets/dc8fd72b-8883-45fd-8530-ee05a176200c" width="55%" />
+<img src="https://github.com/user-attachments/assets/8b9b8d17-be1c-4ad8-a935-daeeb41556d5" width="35%" />
 
--응답 데이터
+## Common API Response 종류 및 설명 예시
+
+| **상태 코드**       | **메서드**                                                                                       | **설명**                                                                                          |
+|---------------------|------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| **성공 (Success)**   | `CommonApiResponse.createSuccess("요청이 성공적으로 처리되었습니다.", data)`                    | 요청이 성공적으로 처리되었고, 응답 데이터(`data`)가 함께 반환됩니다.                              |
+| **내용 없음 (No Content)** | `CommonApiResponse.createNoContent("요청이 성공적으로 처리되었지만, 반환할 데이터가 없습니다.")` | 요청은 성공했으나, 반환할 데이터가 없을 때 사용됩니다.                                           |
+| **잘못된 요청 (Bad Request)** | `CommonApiResponse.createBadRequest("잘못된 요청입니다.")`                                  | 클라이언트 요청이 올바르지 않을 때 반환됩니다.                                                   |
+| **인증 실패 (Unauthorized)** | `CommonApiResponse.createUnauthorized("인증되지 않은 요청입니다.")`                         | 인증되지 않은 요청일 경우에 반환됩니다.                                                          |
+| **리소스 없음 (Not Found)**   | `CommonApiResponse.createNotFound("요청한 리소스를 찾을 수 없습니다.")`                    | 요청한 리소스를 찾지 못했을 때 반환됩니다.                                                       |
+| **서버 내부 오류 (Internal Server Error)** | `CommonApiResponse.createInternalServerError("서버 내부 오류가 발생했습니다.")`        | 서버에서 예기치 못한 오류가 발생했을 때 반환됩니다.                                              |
+
+
+- 응답 데이터 구조
 ```json
 {
   "status": 0,
@@ -525,28 +545,119 @@ public CommonApiResponse<String> exampleEndpoint() {
 
 - **`data`**: 응답 데이터의 본문을 포함합니다. 데이터가 없는 경우 빈 객체 `{}`로 반환됩니다.
 
-![image](https://github.com/user-attachments/assets/8b9b8d17-be1c-4ad8-a935-daeeb41556d5)
+<br>
+<br>
 
 
-
-# 주요 기능 다이어그램
+# 주요 다이어그램
 
 ## 1. OAuth2 로그인
-![image](https://github.com/user-attachments/assets/a6eb5e52-1c31-4df4-b0fe-b8e9888309d0)
-status: HTTP 상태 코드를 나타냅니다.
-예: 200 (OK), 400 (Bad Request), 404 (Not Found) 등
-message: 응답 상태에 대한 설명을 제공합니다.
-예: "요청이 성공적으로 처리되었습니다.", "잘못된 요청입니다."
-data: 응답 데이터의 본문을 포함합니다. 데이터가 없는 경우 빈 객체 {}로 반환됩니다.
 
-로그인 성공 처리(LoginSuccessHandler):
-LoginSuccessHandler가 액세스 토큰과 리프레시 토큰을 수신하고, 이를 OAuth2User와
-localStorage에 저장합니다. 이 과정에서 사용자 정보도 함께 저장됩니다.Edututor – 프로그램 설계서
-9
-보호된 리소스 접근:
-클라이언트는 저장된 액세스 토큰을 사용하여 보호된 리소스에 접근합니다.
-서버는 요청을 검증하고 필요한 경우 리소스를 반환합니다.
-로그인 성공 처리 완료:
-최종적으로 클라이언트는 보호된 리소스에 접근할 수 있으며, 이로써 로그인 과정이
-성공적으로 완료됩니다.
+<img src="https://github.com/user-attachments/assets/a6eb5e52-1c31-4df4-b0fe-b8e9888309d0" width="70%" />
+
+
+### 설명
+일반로그인을 제외한 OAuth2 인증 흐름에서 클라이언트와 서버 간의 상호작용을 보여줍니다. 주요 컴포넌트와 단계는 다음과 같습니다:
+
+### 주요 컴포넌트
+1. **Client**: 인증 요청을 시작하는 사용자.
+2. **JWTFilter**: 요청에서 JWT(JSON Web Token)를 처리하여 인증 정보를 전달.
+3. **OAuth2AuthorizationRequestDirectFilter**: 인증 요청을 OAuth2로 전달하는 필터.
+4. **OAuth2LoginAuthenticationFilter**: OAuth2 로그인 요청을 처리.
+5. **OAuth2LoginAuthenticationProvider**: OAuth2 인증 제공자로서 자격 증명 검증.
+6. **LoginSuccessHandler**: 인증 성공 시 후속 처리를 담당.
+7. **OAuth2ToService**: 인증 정보를 서비스 계층으로 전달.
+8. **OAuth2User**: 인증된 사용자 정보 관리.
+9. **localStorage**: 클라이언트 측 토큰과 사용자 정보를 저장.
+
+---
+
+### 단계별 프로세스
+1. **클라이언트 요청**:
+   - 사용자가 리소스에 접근하려고 시도하면 **Client**에서 **JWTFilter**로 요청이 전달됩니다.
+
+2. **JWT 필터 처리**:
+   - **JWTFilter**가 요청을 확인하고, 인증되지 않은 경우 요청을 **OAuth2AuthorizationRequestDirectFilter**로 전달합니다.
+
+3. **OAuth2 인증 요청**:
+   - **OAuth2AuthorizationRequestDirectFilter**가 요청을 OAuth2 프로세스로 포워딩합니다.
+   - **OAuth2LoginAuthenticationFilter**에서 인증 프로세스를 처리하기 위한 작업이 시작됩니다.
+
+4. **자격 증명 검증**:
+   - **OAuth2LoginAuthenticationProvider**가 자격 증명을 검증합니다.
+   - 검증이 성공하면 액세스 토큰(Access Token)과 갱신 토큰(Refresh Token)을 반환합니다.
+
+5. **로그인 성공 처리**:
+   - **LoginSuccessHandler**가 인증 성공을 처리하고, 토큰을 **localStorage**에 저장합니다.
+   - 사용자 정보는 **OAuth2User**로 저장되며, 필요에 따라 **OAuth2ToService**로 전달됩니다.
+
+6. **보호된 리소스 접근**:
+   - 인증된 사용자는 보호된 리소스에 접근할 수 있으며, 서버는 보호된 리소스를 반환합니다.
+
+---
+
+<br>
+
+## 2. 과정/단원/차시/이미지 생성
+
+<img src="https://github.com/user-attachments/assets/b27f95d4-d767-4a59-be53-7fbe511db043" width="70%" />
+
+### 설명
+이 다이어그램은 과정(Course) 생성 과정에서 클라이언트와 서버 간의 데이터 흐름 및 처리 단계를 보여줍니다. 강좌 데이터와 이미지 파일을 서버에 전송하여 강좌와 관련된 섹션 및 차시를 생성하고 저장하는 과정을 단계별로 설명합니다.
+
+---
+
+### 주요 컴포넌트
+1. **Client**: 과정 생성 요청을 시작하는 사용자 인터페이스.
+2. **CourseController**: 클라이언트 요청을 처리하는 컨트롤러.
+3. **CourseService**: 과정 데이터를 처리하고 저장하는 서비스 계층.
+4. **AmazonS3**: 업로드된 이미지 파일을 저장하는 클라우드 스토리지.
+5. **CourseRepository**: 과정 데이터를 데이터베이스에 저장하는 리포지토리.
+6. **Database**: 과정, 섹션 및 차시 데이터를 영구적으로 저장.
+7. **SectionRepository**: 섹션 데이터를 데이터베이스에 저장하는 리포지토리.
+8. **UnitRepository**: 차시 데이터를 데이터베이스에 저장하는 리포지토리.
+
+---
+
+### 단계별 프로세스
+
+1. **과정 생성 요청**:
+   - 클라이언트에서 강좌 데이터와 이미지 파일을 포함한 요청을 **POST /courses** 엔드포인트로 전송합니다.
+
+2. **과정 데이터 처리**:
+   - **CourseController**는 요청을 받아 **CourseService**의 `createCourseWithSectionsAndUnits` 메서드를 호출하여 강좌 생성 프로세스를 시작합니다.
+
+3. **과정 저장**:
+   - **CourseService**는 요청 데이터를 기반으로 강좌 객체를 생성하고, **CourseRepository**를 통해 데이터베이스에 저장합니다.
+   - 저장된 강좌 데이터를 반환합니다.
+
+4. **이미지 파일 처리**:
+   - 이미지 파일이 존재하면 **AmazonS3**를 통해 이미지를 업로드하고, 반환된 이미지 URL을 강좌 객체에 추가합니다.
+   - 업데이트된 강좌 데이터는 **CourseRepository**를 통해 데이터베이스에 업데이트됩니다.
+
+5. **섹션 생성**:
+   - 요청에 포함된 섹션 데이터를 반복적으로 처리하며 **SectionRepository**를 통해 데이터베이스에 저장합니다.
+   - 저장된 섹션 데이터를 반환합니다.
+
+6. **차시 생성**:
+   - 각 섹션에 포함된 단위 데이터를 반복적으로 처리하며 **UnitRepository**를 통해 데이터베이스에 저장합니다.
+   - 저장된 차시 데이터를 반환합니다.
+
+7. **응답 반환**:
+   - 모든 데이터가 저장되면 생성된 강좌 데이터를 클라이언트에 반환합니다.
+
+---
+
+### 메시지 흐름 요약
+
+| **단계**                   | **설명**                                                                                   |
+|----------------------------|-------------------------------------------------------------------------------------------|
+| **1. 강좌 생성 요청**       | 클라이언트가 강좌 데이터와 이미지 파일을 포함한 요청을 서버로 전송.                           |
+| **2. 강좌 데이터 저장**     | 서버는 강좌 데이터를 데이터베이스에 저장하고 저장된 데이터를 반환.                             |
+| **3. 이미지 파일 업로드**   | Amazon S3를 사용하여 이미지 파일을 업로드하고 URL을 강좌 데이터에 추가.                       |
+| **4. 섹션 생성**            | 요청된 섹션 데이터를 반복 처리하며 데이터베이스에 저장.                                       |
+| **5. 단위 생성**            | 각 섹션에 포함된 단위 데이터를 반복 처리하며 데이터베이스에 저장.                              |
+| **6. 응답 반환**            | 생성된 강좌 데이터를 클라이언트에 반환.                                                      |
+
+---
 
