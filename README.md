@@ -1,5 +1,5 @@
 # 🧑🏻‍🎓 Eedututor - 우리반 완전학습 플랫폼  
-![메인 화면](https://github.com/user-attachments/assets/5b911f5d-a462-415f-bcb9-a95d122f2057)  
+  <img src="https://github.com/user-attachments/assets/5b911f5d-a462-415f-bcb9-a95d122f2057" alt="메인" width="80%">
 
 ## 🔗 **[Edututor 서비스 바로가기](https://edututor.site)**  
 ## 🧪 테스트 계정
@@ -19,6 +19,15 @@
 <br>
 
 ## 📢 프로젝트 소개 <a name="about-project">
+
+## 👨‍👩‍👦‍👦 개발팀 <a name="authors"></a>
+
+|      김혁진       |       이수완    |   한유리         |
+| :----------------: | :-----------------: | :-----------------: |
+| <img src="https://github.com/user-attachments/assets/25e52caa-196d-44c0-b9d0-8269e8419105" width="200" /> | <img src="https://github.com/user-attachments/assets/b99e243e-19ec-4c9b-9bda-450b075a606f" width="200" /> | <img src="https://github.com/user-attachments/assets/42cb937f-0f3c-48f9-a220-45dc875d09e9" width="200" /> |
+|   [@hyoekjin](https://github.com/HS-hyeokjin)   |   [@ssuwwann](https://github.com/ssuwwann)  | [@YUL554](https://github.com/YUL554)  |
+|  학습/단원/차시 기능 개발 <br> 시험지 생성 및 문제풀이 개발  <br> 관리자 기능 및 CI/CD인프라 담당 | 회원 인증 및 인가 서비스 <br> 클래스룸 관리 및 학생 관리 <br> 메인페이지 및 프론트 UI 개발 담당 | 공지사항/QnA/1:1문의 게시판 개발 <br> 학생/선생 리포트 개발 <br> 데이터베이스 설계 및 관리  |
+
 
 - **프로젝트 기간**
   - 2024.10.15 - 2024.11.11
@@ -312,10 +321,9 @@
 
 
 
-## 🗄️ ERD <a name="erd"></a>
+# 📊 Eedututor 데이터베이스 ERD 
 ![image](https://github.com/user-attachments/assets/6affac3d-a04b-4fe8-9033-9f640ef3a301)
 <br><br>
-# 📊 Eedututor 데이터베이스 ERD 설명
 
 ## 1. 주요 테이블 그룹 설명
 
@@ -393,3 +401,50 @@
 <p align="right"><a href="#readme-top">⬆️ Top ⬆️</a></p>
 
 <br>
+
+# 프로젝트 관리
+
+![깃 플로우 (1)](https://github.com/user-attachments/assets/98d0d7a1-45d6-4458-9108-383aaf81d3fe)
+
+### 1. flow 전략
+
+1. **rdev 브랜치와 feat 브랜치 기반 개발**  
+   - `rdev` 브랜치를 메인 개발 브랜치로 사용합니다.
+   - 각 기능별로 독립된 `feat/<기능명>` 브랜치를 생성하여 기능을 구현합니다.
+   
+2. **테스트 완료 후 release 브랜치 생성**  
+   - 모든 기능 개발 및 테스트가 완료되면 `release/x.0` 브랜치를 생성합니다.
+   - 이 브랜치는 안정적인 버전을 위한 브랜치로 사용됩니다.
+
+3. **자동화 배포**  
+   - `release/x.0` 브랜치로 병합된 코드는 **Jenkins**를 통해 자동으로 배포됩니다.
+   - 이를 통해 수동 작업을 최소화하고, 빠르고 안정적인 배포를 보장합니다.
+
+4. **브랜치 정리**  
+   - 병합이 완료되면 해당 `feat/<기능명>` 브랜치를 삭제하여 깔끔한 브랜치 관리를 유지합니다.
+
+## 2. Merge
+
+<img src="https://github.com/user-attachments/assets/1d6e9270-1c18-477b-ab9d-966bd7bc6041" width=35% /> 
+<img src="https://github.com/user-attachments/assets/17430f87-77f2-4d78-9fa3-991fd99fe814" width=30% /> 
+<img src="https://github.com/user-attachments/assets/9d52f825-2bf9-431c-8f85-d62e2cfeacac" width=34% />
+
+1. **기능 개발 완료 후 PR 작성**  
+   - 변경사항과 추가된 기능을 명확히 기록하여 PR을 생성합니다.
+   - 코드 변경과 관련된 설명(코드 추가 이유, 해결된 이슈 번호 등)을 포함하여 팀원에게 전달합니다.
+
+2. **변경사항 및 전달사항 공유**  
+   - PR 메시지를 통해 주요 변경 내용을 간결하게 설명합니다.
+   - 팀원들이 리뷰를 쉽게 이해할 수 있도록 코드에 주석을 추가하거나 추가적인 문서를 첨부합니다.
+
+3. **병합 후 관리**  
+   - 병합 완료 후 관련된 브랜치를 삭제하여 깔끔한 브랜치 관리를 유지합니다.
+   - 해당 PR에 Label을 달아 기능 목록별 확인 가능하도록 합니다.
+
+<img src="https://github.com/user-attachments/assets/92fa1d1e-c5bd-4722-84e6-919587344c0c" width="70%" />
+
+## 3. WBS
+
+<img src="https://github.com/user-attachments/assets/f4160497-e368-46a1-810f-f979c3decc95" width="70%" />
+   
+
