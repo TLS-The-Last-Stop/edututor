@@ -1,8 +1,8 @@
-# 🧑🏻‍🎓 Eedututor - 우리반 완전학습 플랫폼  
+# Eedututor - 우리반 완전학습 플랫폼  
   <img src="https://github.com/user-attachments/assets/5b911f5d-a462-415f-bcb9-a95d122f2057" alt="메인" width="80%">
 
-## 🔗 **[Edututor 서비스 바로가기](https://edututor.site)**  
-## 🧪 테스트 계정
+## **[Edututor 서비스 바로가기](https://edututor.site) - 서비스종료**  
+##  테스트 계정
 - **선생님 계정**  
   - **ID**: `teacher1`  
   - **비밀번호**: `qwer1234!!`  
@@ -18,9 +18,9 @@
 
 <br>
 
-## 📢 프로젝트 소개 <a name="about-project">
+## 프로젝트 소개 <a name="about-project">
 
-## 👨‍👩‍👦‍👦 개발팀 <a name="authors"></a>
+## 개발팀 <a name="authors"></a>
 
 |      김혁진       |       이수완    |   한유리         |
 | :----------------: | :-----------------: | :-----------------: |
@@ -47,7 +47,7 @@
 
 
 
-## 🔑 주요 기능 <a name="key-features"></a>
+## 주요 기능 <a name="key-features"></a>
 
 ## 일반
 
@@ -321,13 +321,13 @@
 
 
 
-# 📊 Eedututor 데이터베이스 ERD 
+# Eedututor 데이터베이스 ERD 
 ![image](https://github.com/user-attachments/assets/6affac3d-a04b-4fe8-9033-9f640ef3a301)
 <br><br>
 
 ## 1. 주요 테이블 그룹 설명
 
-### 1️⃣ **과정 - 단원 - 차시 - 학습자료**
+###  **과정 - 단원 - 차시 - 학습자료**
 - **구성 테이블**: `COURSE`, `SECTION`, `UNIT`, `MATERIAL`
 - **설명**:
   - **COURSE(과정)**: 학습의 기본 단위로 수업명 및 관련 정보를 저장.
@@ -337,7 +337,7 @@
 
 ---
 
-### 2️⃣ **유저 - 학교 - 학급 - 시험공유**
+###  **유저 - 학교 - 학급 - 시험공유**
 - **구성 테이블**: `USER`, `SCHOOL`, `CLASSROOM`, `SHARE_TEST`
 - **설명**:
   - **USER(사용자)**: 학생, 선생님, 관리자 등 사용자 정보를 저장.
@@ -347,7 +347,7 @@
 
 ---
 
-### 3️⃣ **카테고리 - 게시판 - 일대일문의답변**
+###  **카테고리 - 게시판 - 일대일문의답변**
 - **구성 테이블**: `CATEGORY`, `BOARD`, `ANSWER`
 - **설명**:
   - **CATEGORY(카테고리)**: 게시판을 그룹으로 묶는 단위.
@@ -356,7 +356,7 @@
 
 ---
 
-### 4️⃣ **시험지 - 문제 - 보기 - 유저시험 - 문제신고**
+###  **시험지 - 문제 - 보기 - 유저시험 - 문제신고**
 - **구성 테이블**: `TEST_PAPER`, `QUESTION`, `OPTION`, `USER_TEST`, `ISSUE`
 - **설명**:
   - **TEST_PAPER(시험지)**: 시험에 포함된 문제 정보를 저장.
@@ -367,7 +367,7 @@
 
 ---
 
-### 5️⃣ **공통코드그룹 - 공통코드**
+###  **공통코드그룹 - 공통코드**
 - **구성 테이블**: `COMMON_CODE_GROUP`, `COMMON_CODE`
 - **설명**:
   - **COMMON_CODE_GROUP(공통코드그룹)**: 코드의 그룹화를 통해 관리.
